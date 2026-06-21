@@ -129,7 +129,7 @@ function hexToHsl(hex) {
 }
 
 // Overrides the CSS custom properties defined in index.css :root at runtime.
-// Theme state is NOT persisted to localStorage — palette choice is intentionally session-only.
+// Theme state is NOT persisted to localStorage - palette choice is intentionally session-only.
 function applyPalette(palette) {
   const root = document.documentElement;
   root.style.setProperty('--background', hexToHsl(palette.background));

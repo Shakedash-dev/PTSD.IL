@@ -28,7 +28,7 @@ import Sources from '@/pages/Sources';
 import Admin from '@/pages/Admin';
 
 // Provider order matters: QueryClientProvider must be outermost (hooks used inside all children).
-// Toaster sits outside ThemeProvider — it uses its own portal and doesn't need theme context.
+// Toaster sits outside ThemeProvider - it uses its own portal and doesn't need theme context.
 function App() {
   return (
     <QueryClientProvider client={queryClientInstance}>

@@ -20,7 +20,7 @@ function NoBackendNotice() {
   );
 }
 
-// This page is a non-functional stub. Tab selection renders nothing — all content management
+// This page is a non-functional stub. Tab selection renders nothing - all content management
 // requires a backend that doesn't exist yet. See entities/ for the planned data schemas.
 export default function Admin() {
   const [activeTab, setActiveTab] = useState('faq');

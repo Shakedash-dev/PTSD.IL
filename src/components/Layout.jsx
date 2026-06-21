@@ -30,7 +30,7 @@ export default function Layout() {
   );
 }
 
-// SanctuaryNav intentionally uses hardcoded Hebrew and a tel: anchor — it's a minimal safety strip,
+// SanctuaryNav intentionally uses hardcoded Hebrew and a tel: anchor - it's a minimal safety strip,
 // not a full i18n'd nav. The crisis line (1201) is Israel-specific and needs no translation.
 function SanctuaryNav() {
   const location = useLocation();

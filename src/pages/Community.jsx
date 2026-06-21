@@ -25,7 +25,7 @@ const LOCATION_OPTIONS = [
 
 const STATIC_COMMUNITIES = [
   {
-    name: 'נט"ל — קבוצות תמיכה',
+    name: 'נט"ל - קבוצות תמיכה',
     description_he: 'קבוצות תמיכה לנפגעי טראומה ופוסט-טראומה, בניחוח של חברות ושיתוף.',
     target_audience: ['security_forces', 'general'],
     location: 'center',
@@ -34,7 +34,7 @@ const STATIC_COMMUNITIES = [
     contact_url: 'https://www.natal.org.il',
   },
   {
-    name: 'ניצן — מרכז תמיכה לנפגעי תקיפה מינית',
+    name: 'ניצן - מרכז תמיכה לנפגעי תקיפה מינית',
     description_he: 'קבוצות תמיכה וטיפול ייחודיות לנפגעי תקיפה מינית ומשפחותיהם.',
     target_audience: ['sexual_harassment'],
     location: 'center',
@@ -43,7 +43,7 @@ const STATIC_COMMUNITIES = [
     contact_url: 'https://www.1202.org.il/',
   },
   {
-    name: 'קבוצת תמיכה מקוונת — PTSD Israel',
+    name: 'קבוצת תמיכה מקוונת - PTSD Israel',
     description_he: 'קבוצה פתוחה בזום לנפגעי פוסט-טראומה מכל רחבי הארץ.',
     target_audience: ['general', 'security_forces'],
     location: 'online',
@@ -52,7 +52,7 @@ const STATIC_COMMUNITIES = [
     contact_url: 'https://www.natal.org.il',
   },
   {
-    name: 'שותפים לדרך — בני/בנות זוג',
+    name: 'שותפים לדרך - בני/בנות זוג',
     description_he: 'קבוצת תמיכה ייחודית לבני ובנות זוג של נפגעי PTSD.',
     target_audience: ['spouses'],
     location: 'center',
@@ -61,7 +61,7 @@ const STATIC_COMMUNITIES = [
     contact_url: 'https://www.natal.org.il',
   },
   {
-    name: 'מרכז חוסן — ירושלים',
+    name: 'מרכז חוסן - ירושלים',
     description_he: 'מרכז טיפול ותמיכה לנפגעי פעולות איבה ומשפחותיהם.',
     target_audience: ['hostilities', 'general'],
     location: 'jerusalem',
@@ -70,7 +70,7 @@ const STATIC_COMMUNITIES = [
     contact_url: 'https://www.idf.il',
   },
   {
-    name: 'קבוצת ריפוי — אזור הדרום',
+    name: 'קבוצת ריפוי - אזור הדרום',
     description_he: 'קבוצה לתמיכה ועיבוד טראומה לתושבי הדרום.',
     target_audience: ['general', 'security_forces'],
     location: 'south',

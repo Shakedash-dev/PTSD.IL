@@ -50,7 +50,7 @@ const PCL5_QUESTIONS_EN = [
   'Trouble falling or staying asleep?',
 ];
 
-// Array index IS the score value (0–4), matching PCL-5 scoring where each item is rated 0–4.
+// Array index IS the score value (0-4), matching PCL-5 scoring where each item is rated 0-4.
 const SCALE_LABELS = ['not_at_all', 'a_little', 'moderately', 'quite_a_bit', 'extremely'];
 
 export default function Questionnaire() {

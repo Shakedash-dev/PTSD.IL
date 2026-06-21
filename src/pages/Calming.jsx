@@ -43,7 +43,7 @@ export default function Calming() {
 
         <div className="mt-10 text-center">
           <a href="tel:1201" className="text-sm text-muted-foreground hover:text-foreground transition-colors duration-300">
-            {t(lang, 'eran_link')} — 1201
+            {t(lang, 'eran_link')} - 1201
           </a>
         </div>
       </div>

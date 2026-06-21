@@ -12,7 +12,7 @@ module.exports = {
         'super-sm': '1.25rem',
       },
       // Colors reference CSS custom properties so ThemeContext.applyPalette() can swap the
-      // entire palette at runtime by updating :root variables — no class toggling needed.
+      // entire palette at runtime by updating :root variables - no class toggling needed.
       colors: {
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
@@ -51,7 +51,7 @@ module.exports = {
           DEFAULT: 'hsl(var(--sanctuary))',
           foreground: 'hsl(var(--sanctuary-foreground))',
         },
-        // teal/clay/sage are semantic aliases for the same base color — used to signal intent
+        // teal/clay/sage are semantic aliases for the same base color - used to signal intent
         // in class names (teal = positive/calm, clay = warm/neutral, sage = muted/secondary).
         teal: {
           DEFAULT: '#608A7B',

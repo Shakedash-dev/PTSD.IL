@@ -4,7 +4,7 @@ import { useLang } from '@/lib/LanguageContext';
 const PHASES_HE = [
   { label: 'קמצו את כפות הידיים לאגרוף חזק', sub: 'חזק ככל שניתן', action: 'squeeze', duration: 5000 },
   { label: 'שחררו לאט', sub: 'שימו לב לתחושת השחרור', action: 'release', duration: 5000 },
-  { label: 'עכשיו כתפיים — הרימו אותן לאוזניים', sub: 'עצרו שם', action: 'squeeze', duration: 5000 },
+  { label: 'עכשיו כתפיים - הרימו אותן לאוזניים', sub: 'עצרו שם', action: 'squeeze', duration: 5000 },
   { label: 'שחררו', sub: 'שימו לב כמה כבד כל שריר עכשיו', action: 'release', duration: 5000 },
   { label: 'קמצו את שרירי הבטן', sub: 'בעדינות אך בבירור', action: 'squeeze', duration: 5000 },
   { label: 'שחררו', sub: 'נשמו עמוק', action: 'release', duration: 5000 },

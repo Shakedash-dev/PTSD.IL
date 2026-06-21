@@ -68,6 +68,10 @@ This site serves trauma survivors. When touching content (text, screening questi
 - **Do not invent clinical content.** The README explicitly flags that current content is unvalidated and needs professional review. If asked to write new mental-health copy, default to "this needs a clinician to author" rather than generating it.
 - **Don't remove disclaimers or anonymity language** from the screening questionnaire without explicit instruction.
 
+## Punctuation rules
+
+- **Never use em-dashes (`—`) or en-dashes (`–`) anywhere in the codebase** - not in JSX, strings, comments, or markdown. Use a regular hyphen (`-`) instead. This applies to all languages and all files.
+
 ## Style for changes
 
 - Match the existing JSX style (functional components, hooks, named exports for utilities, default export for pages/components).

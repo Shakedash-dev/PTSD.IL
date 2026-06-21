@@ -6,11 +6,11 @@ import PageHeader from '@/components/PageHeader';
 import { Brain, Heart, FileText, Users, Baby, ArrowLeft, ArrowRight, Shield } from 'lucide-react';
 
 const sections = [
-  { key: 'ptsd_info', path: '/ptsd-info', icon: Brain, description_he: 'הבנת מה זה PTSD — כדי להבין טוב יותר את מי שאתה/את מלווה' },
+  { key: 'ptsd_info', path: '/ptsd-info', icon: Brain, description_he: 'הבנת מה זה PTSD - כדי להבין טוב יותר את מי שאתה/את מלווה' },
   { key: 'second_circle', path: '/second-circle-tools', icon: Shield, description_he: 'כלים מעשיים לתקשורת, זיהוי מצוקה ומניעת שחיקה עצמית', label_override: 'כלים להתמודדות עם נפגע/ת PTSD' },
-  { key: 'rights', path: '/rights', icon: FileText, description_he: 'גם בני/בנות משפחה יכולים לקבל סיוע — הכירו את הזכויות' },
-  { key: 'treatment', path: '/treatment', icon: Heart, description_he: 'מסלולי הטיפול האפשריים — כדי לעזור לאהוב/ה עליך למצוא את הדרך' },
-  { key: 'children_content', path: '/children', icon: Baby, description_he: 'איך לדבר עם ילדים על מה שקורה בבית — חומרים לפי גיל' },
+  { key: 'rights', path: '/rights', icon: FileText, description_he: 'גם בני/בנות משפחה יכולים לקבל סיוע - הכירו את הזכויות' },
+  { key: 'treatment', path: '/treatment', icon: Heart, description_he: 'מסלולי הטיפול האפשריים - כדי לעזור לאהוב/ה עליך למצוא את הדרך' },
+  { key: 'children_content', path: '/children', icon: Baby, description_he: 'איך לדבר עם ילדים על מה שקורה בבית - חומרים לפי גיל' },
   { key: 'community', path: '/community', icon: Users, description_he: 'קהילות ייעודיות גם לבני/בנות משפחה ומלווים' },
 ];
 

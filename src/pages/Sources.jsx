@@ -6,7 +6,7 @@ import { BookOpen, ExternalLink, Globe } from 'lucide-react';
 
 const STATIC_SOURCES = [
   {
-    title: 'DSM-5 — Diagnostic and Statistical Manual of Mental Disorders',
+    title: 'DSM-5 - Diagnostic and Statistical Manual of Mental Disorders',
     authors: 'American Psychiatric Association',
     year: '2013',
     url: 'https://www.psychiatry.org/psychiatrists/practice/dsm',
@@ -14,15 +14,15 @@ const STATIC_SOURCES = [
     category: 'research',
   },
   {
-    title: 'PCL-5 — PTSD Checklist for DSM-5',
+    title: 'PCL-5 - PTSD Checklist for DSM-5',
     authors: 'Weathers, F.W., et al.',
     year: '2013',
     url: 'https://www.ptsd.va.gov/professional/assessment/adult-sr/ptsd-checklist.asp',
-    description_he: 'השאלון המשמש לסקירת תסמיני PTSD — פותח על ידי מכון ה-PTSD הלאומי של ה-VA',
+    description_he: 'השאלון המשמש לסקירת תסמיני PTSD - פותח על ידי מכון ה-PTSD הלאומי של ה-VA',
     category: 'clinical',
   },
   {
-    title: 'אתר נט"ל — הסברה ומידע',
+    title: 'אתר נט"ל - הסברה ומידע',
     authors: 'עמותת נט"ל',
     year: '2024',
     url: 'https://www.natal.org.il',
@@ -30,7 +30,7 @@ const STATIC_SOURCES = [
     category: 'ngo',
   },
   {
-    title: 'PTSD — National Institute of Mental Health',
+    title: 'PTSD - National Institute of Mental Health',
     authors: 'NIMH',
     year: '2023',
     url: 'https://www.nimh.nih.gov/health/topics/post-traumatic-stress-disorder-ptsd',
@@ -46,7 +46,7 @@ const STATIC_SOURCES = [
     category: 'clinical',
   },
   {
-    title: 'ביטוח לאומי — זכויות נפגעי עבודה',
+    title: 'ביטוח לאומי - זכויות נפגעי עבודה',
     authors: 'המוסד לביטוח לאומי',
     year: '2024',
     url: 'https://www.btl.gov.il',
@@ -54,7 +54,7 @@ const STATIC_SOURCES = [
     category: 'official',
   },
   {
-    title: 'אגף השיקום — משרד הביטחון',
+    title: 'אגף השיקום - משרד הביטחון',
     authors: 'משרד הביטחון הישראלי',
     year: '2024',
     url: 'https://www.idf.il',

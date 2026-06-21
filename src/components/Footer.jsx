@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useLang } from '@/lib/LanguageContext';
 import { t } from '@/lib/i18n';
-import { Phone } from 'lucide-react';
+import { Phone, MessageCircle } from 'lucide-react';
 
 export default function Footer() {
   const { lang } = useLang();
@@ -39,22 +39,32 @@ export default function Footer() {
 
           {/* Emergency */}
           <div>
-            <h4 className="font-semibold text-sm mb-3 text-foreground">קו חירום — ער״ן</h4>
-            <a
-              href="tel:1201"
-              className="inline-flex items-center gap-2 px-4 py-2.5 bg-muted hover:bg-border text-foreground rounded-xl text-sm font-medium transition-colors duration-300"
-            >
-              <Phone className="w-4 h-4" />
-              1201
-            </a>
+            <h4 className="font-semibold text-sm mb-3 text-foreground">קו חירום - ער״ן</h4>
+            <div className="flex gap-2">
+              <a
+                href="tel:1201"
+                className="inline-flex items-center gap-2 px-4 py-2.5 bg-muted hover:bg-border text-foreground rounded-xl text-sm font-medium transition-colors duration-300"
+              >
+                <Phone className="w-4 h-4" />
+                1201
+              </a>
+              <a
+                href="https://api.whatsapp.com/send?phone=9720528451201"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-4 py-2.5 bg-muted hover:bg-border text-foreground rounded-xl text-sm font-medium transition-colors duration-300"
+              >
+                <MessageCircle className="w-4 h-4" />
+                WhatsApp
+              </a>
+            </div>
             <p className="text-xs text-muted-foreground mt-3 leading-relaxed">
               {t(lang, 'footer_disclaimer')}
             </p>
           </div>
         </div>
 
-        <div className="border-t border-border pt-6 flex flex-wrap items-center justify-between gap-3 text-xs text-muted-foreground">
-          <span>© 2024 — {t(lang, 'footer_rights')}</span>
+        <div className="border-t border-border pt-6 flex flex-wrap items-center justify-end gap-3 text-xs text-muted-foreground">
           <Link to="/sources" className="hover:text-primary transition-natural">
             {t(lang, 'sources')}
           </Link>

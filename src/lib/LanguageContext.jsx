@@ -4,7 +4,7 @@ import { DEFAULT_LANG, getDir } from './i18n';
 const LanguageContext = createContext(null);
 
 export function LanguageProvider({ children }) {
-  // 'natal_lang' is legacy from the original project name — do not rename, existing visitors would lose their preference.
+  // 'natal_lang' is legacy from the original project name - do not rename, existing visitors would lose their preference.
   const [lang, setLang] = useState(() => {
     return localStorage.getItem('natal_lang') || DEFAULT_LANG;
   });

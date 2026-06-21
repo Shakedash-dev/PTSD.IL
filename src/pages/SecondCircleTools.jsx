@@ -34,11 +34,11 @@ function FAQItem({ q, a, side = 'left' }) {
 }
 
 const PAGE_HEADINGS = {
-  he: { title: 'כלים להתמודדות', subtitle: 'לאדם שמלווה מישהו עם PTSD — כלים מעשיים לתקשורת, תמיכה, ושמירה על עצמך', intro: 'ללוות מישהו עם PTSD הוא מסע שדורש כוח, סבלנות, ובעיקר — הבנה. הכלים כאן לא יפתרו הכל, אבל יכולים להקל מאוד על הדרך.' },
-  ar: { title: 'أدوات التعامل', subtitle: 'للشخص الذي يرافق شخصاً مصاباً باضطراب ما بعد الصدمة — أدوات عملية للتواصل والدعم والاعتناء بنفسك', intro: 'مرافقة شخص مصاب باضطراب ما بعد الصدمة رحلة تتطلب قوة وصبراً وفهماً. الأدوات هنا لن تحل كل شيء، لكنها يمكن أن تُيسّر الطريق كثيراً.' },
-  en: { title: 'Coping Tools', subtitle: 'For the person supporting someone with PTSD — practical tools for communication, support, and self-care', intro: 'Supporting someone with PTSD is a journey that takes strength, patience, and understanding. These tools won\'t solve everything, but they can make the path much easier.' },
-  ru: { title: 'Инструменты поддержки', subtitle: 'Для тех, кто поддерживает человека с ПТСР — практические инструменты для общения, поддержки и заботы о себе', intro: 'Поддерживать человека с ПТСР — это путь, требующий силы, терпения и понимания. Эти инструменты не решат всё, но могут сильно облегчить дорогу.' },
-  fr: { title: 'Outils d\'adaptation', subtitle: 'Pour la personne qui accompagne quelqu\'un souffrant de PTSD — outils pratiques pour communiquer, soutenir et prendre soin de soi', intro: 'Accompagner quelqu\'un souffrant de PTSD est un chemin qui demande force, patience et compréhension. Ces outils ne résoudront pas tout, mais peuvent grandement faciliter le parcours.' },
+  he: { title: 'כלים להתמודדות', subtitle: 'לאדם שמלווה מישהו עם PTSD - כלים מעשיים לתקשורת, תמיכה, ושמירה על עצמך', intro: 'ללוות מישהו עם PTSD הוא מסע שדורש כוח, סבלנות, ובעיקר - הבנה. הכלים כאן לא יפתרו הכל, אבל יכולים להקל מאוד על הדרך.' },
+  ar: { title: 'أدوات التعامل', subtitle: 'للشخص الذي يرافق شخصاً مصاباً باضطراب ما بعد الصدمة - أدوات عملية للتواصل والدعم والاعتناء بنفسك', intro: 'مرافقة شخص مصاب باضطراب ما بعد الصدمة رحلة تتطلب قوة وصبراً وفهماً. الأدوات هنا لن تحل كل شيء، لكنها يمكن أن تُيسّر الطريق كثيراً.' },
+  en: { title: 'Coping Tools', subtitle: 'For the person supporting someone with PTSD - practical tools for communication, support, and self-care', intro: 'Supporting someone with PTSD is a journey that takes strength, patience, and understanding. These tools won\'t solve everything, but they can make the path much easier.' },
+  ru: { title: 'Инструменты поддержки', subtitle: 'Для тех, кто поддерживает человека с ПТСР - практические инструменты для общения, поддержки и заботы о себе', intro: 'Поддерживать человека с ПТСР - это путь, требующий силы, терпения и понимания. Эти инструменты не решат всё, но могут сильно облегчить дорогу.' },
+  fr: { title: 'Outils d\'adaptation', subtitle: 'Pour la personne qui accompagne quelqu\'un souffrant de PTSD - outils pratiques pour communiquer, soutenir et prendre soin de soi', intro: 'Accompagner quelqu\'un souffrant de PTSD est un chemin qui demande force, patience et compréhension. Ces outils ne résoudront pas tout, mais peuvent grandement faciliter le parcours.' },
 };
 
 export default function SecondCircleTools() {

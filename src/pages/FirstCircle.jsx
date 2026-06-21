@@ -8,9 +8,9 @@ import { Brain, Wrench, FileText, Heart, Users, ArrowLeft, ArrowRight, User } fr
 const sections = [
   { key: 'ptsd_info', path: '/ptsd-info', icon: Brain, description_he: 'הבנת מה זה PTSD, הסימפטומים, ממה זה נובע ואיך לזהות אותו' },
   { key: 'self_help', path: '/self-help', icon: Wrench, description_he: 'תרגילים וכלים שאפשר להתחיל מיד, ללא צורך בעזרה חיצונית' },
-  { key: 'rights', path: '/rights', icon: FileText, description_he: 'כל מה שמגיע לך — הסבר פשוט על זכויות ואיך לקבל אותן' },
+  { key: 'rights', path: '/rights', icon: FileText, description_he: 'כל מה שמגיע לך - הסבר פשוט על זכויות ואיך לקבל אותן' },
   { key: 'treatment', path: '/treatment', icon: Heart, description_he: 'מפת הדרכים מהטיפול העצמי ועד הטיפול המקצועי' },
-  { key: 'community', path: '/community', icon: Users, description_he: 'קהילות תמיכה, קבוצות ומפגשים — פרונטלי ומקוון' },
+  { key: 'community', path: '/community', icon: Users, description_he: 'קהילות תמיכה, קבוצות ומפגשים - פרונטלי ומקוון' },
 ];
 
 export default function FirstCircle() {
