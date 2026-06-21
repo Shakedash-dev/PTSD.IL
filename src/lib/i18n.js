@@ -104,7 +104,7 @@ export const translations = {
 
     // Treatment
     treatment_title: 'מפת הדרכים לטיפול',
-    treatment_subtitle: 'כל מסע מתחיל בצעד אחד. המפה הזו מציגה את הדרכים האפשריות מהקל אל המקצועי.',
+    treatment_subtitle: 'כל מסע מתחיל בצעד אחד. המפה הזאת מציגה את הדרכים האפשריות לטיפול בפוסט-טראומה.',
     how_to_start: 'איך מתחילים?',
     step_label: 'שלב',
 
