@@ -11,6 +11,8 @@ module.exports = {
         super: '2rem',
         'super-sm': '1.25rem',
       },
+      // Colors reference CSS custom properties so ThemeContext.applyPalette() can swap the
+      // entire palette at runtime by updating :root variables — no class toggling needed.
       colors: {
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
@@ -49,6 +51,8 @@ module.exports = {
           DEFAULT: 'hsl(var(--sanctuary))',
           foreground: 'hsl(var(--sanctuary-foreground))',
         },
+        // teal/clay/sage are semantic aliases for the same base color — used to signal intent
+        // in class names (teal = positive/calm, clay = warm/neutral, sage = muted/secondary).
         teal: {
           DEFAULT: '#608A7B',
           light: '#7AA090',
@@ -132,7 +136,7 @@ module.exports = {
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
-        'breathe': 'breathe 8s ease-in-out infinite',
+        'breathe': 'breathe 8s ease-in-out infinite', // 8s = 4s inhale + 4s exhale, matches CalmingBreathing.jsx instruction timing
         'fade-in': 'fade-in 0.5s ease-out forwards',
         'pulse-gentle': 'pulse-gentle 2s ease-in-out infinite',
       },

@@ -50,6 +50,7 @@ const PCL5_QUESTIONS_EN = [
   'Trouble falling or staying asleep?',
 ];
 
+// Array index IS the score value (0–4), matching PCL-5 scoring where each item is rated 0–4.
 const SCALE_LABELS = ['not_at_all', 'a_little', 'moderately', 'quite_a_bit', 'extremely'];
 
 export default function Questionnaire() {
@@ -60,6 +61,7 @@ export default function Questionnaire() {
   const [answers, setAnswers] = useState({});
   const [result, setResult] = useState(null);
 
+  // Only Hebrew and English have validated translations; all other languages fall back to Hebrew.
   const questions = lang === 'en' ? PCL5_QUESTIONS_EN : PCL5_QUESTIONS_HE;
   const total = questions.length;
   const answered = Object.keys(answers).length;
@@ -81,6 +83,7 @@ export default function Questionnaire() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
+  // 33 is the PCL-5 clinical cutoff for probable PTSD (National Center for PTSD).
   const isHigh = result !== null && result >= 33;
 
   return (
@@ -214,7 +217,7 @@ export default function Questionnaire() {
               <div className="h-3 rounded-full overflow-hidden bg-gradient-to-r from-teal via-yellow-400 to-clay">
                 <div
                   className="h-full w-1.5 bg-foreground rounded-full transition-all duration-1000 relative"
-                  style={{ marginInlineStart: `${(result / 80) * 100}%` }}
+                  style={{ marginInlineStart: `${(result / 80) * 100}%` }}  /* max 80 = 20 items × 4 */
                 />
               </div>
               <div className="flex justify-between text-xs text-muted-foreground mt-1">

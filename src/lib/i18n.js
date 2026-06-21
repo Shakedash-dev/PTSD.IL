@@ -520,17 +520,20 @@ export const translations = {
   },
 };
 
+// Falls back to Hebrew (assumed complete), then to the key string itself so missing translations are visible in UI.
 export function t(lang, key) {
-  return (translations[lang] && translations[lang][key]) 
-    || (translations['he'] && translations['he'][key]) 
+  return (translations[lang] && translations[lang][key])
+    || (translations['he'] && translations['he'][key])
     || key;
 }
 
+// Unknown language codes default to RTL — safe for a Hebrew-first app.
 export function getDir(lang) {
   const found = LANGUAGES.find(l => l.code === lang);
   return found ? found.dir : 'rtl';
 }
 
+// Fallback chain: requested lang → Hebrew → bare field (for legacy/backend data without lang suffix).
 export function getFieldByLang(obj, fieldName, lang) {
   if (!obj) return '';
   return obj[`${fieldName}_${lang}`] || obj[`${fieldName}_he`] || obj[fieldName] || '';

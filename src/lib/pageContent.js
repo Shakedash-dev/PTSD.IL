@@ -640,6 +640,7 @@ export function getSecondCircleTools(lang) {
   return SECOND_CIRCLE_TOOLS[lang] || SECOND_CIRCLE_TOOLS.he;
 }
 
+// Double fallback: lang may exist but lack the specific category, so fall through to Hebrew category.
 export function getRightsFaqs(lang, category) {
   const langData = RIGHTS_FAQS[lang] || RIGHTS_FAQS.he;
   return langData[category] || RIGHTS_FAQS.he[category] || [];

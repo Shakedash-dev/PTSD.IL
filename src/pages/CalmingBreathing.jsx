@@ -10,6 +10,7 @@ export default function CalmingBreathing() {
       <div className="w-full max-w-md flex flex-col items-center">
         {!started ? (
           <div className="text-center">
+            {/* Only Hebrew and English are translated here — other languages see Hebrew. */}
             <p className="text-card-foreground mb-10 text-lg leading-relaxed">
               {lang === 'en' ? 'Follow the circle as it grows and shrinks' : 'עקבו אחרי העיגול בזמן שהוא גדל ומתכווץ'}
             </p>
@@ -23,6 +24,8 @@ export default function CalmingBreathing() {
         ) : (
           <div className="flex flex-col items-center">
             <div className="flex items-center justify-center w-72 h-72">
+              {/* Color is hardcoded — intentionally fixed so the circle stays calm and consistent
+                  regardless of which palette the user has selected. */}
               <div
                 className="rounded-full breathing-circle"
                 style={{ width: '260px', height: '260px', backgroundColor: '#8EA89D' }}

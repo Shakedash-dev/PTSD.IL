@@ -6,7 +6,7 @@ import path from 'path'
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 export default defineConfig({
-  logLevel: 'error',
+  logLevel: 'error', // suppress warnings (mostly Radix/third-party); change to 'warn' to debug build noise
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "."),

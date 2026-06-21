@@ -89,7 +89,7 @@
   }
 
   html {
-    font-size: 18px;
+    font-size: 18px; /* intentionally larger than browser default (16px) for readability; all rem values are relative to this */
     scroll-behavior: smooth;
   }
 

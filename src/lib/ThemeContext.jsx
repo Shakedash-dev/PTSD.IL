@@ -128,6 +128,8 @@ function hexToHsl(hex) {
   return `${Math.round(h * 360)} ${Math.round(s * 100)}% ${Math.round(l * 100)}%`;
 }
 
+// Overrides the CSS custom properties defined in index.css :root at runtime.
+// Theme state is NOT persisted to localStorage — palette choice is intentionally session-only.
 function applyPalette(palette) {
   const root = document.documentElement;
   root.style.setProperty('--background', hexToHsl(palette.background));

@@ -5,6 +5,7 @@ import Footer from './Footer';
 import ChatbotFAB from './ChatbotFAB';
 import TextureOverlay from './TextureOverlay';
 
+// Sanctuary pages are therapeutic exercises; they get a minimal header so nothing distracts users mid-session.
 const SANCTUARY_PATHS = ['/calming', '/calming/breathing', '/calming/grounding', '/calming/muscle'];
 
 export default function Layout() {
@@ -18,6 +19,7 @@ export default function Layout() {
       {!isSanctuary && <Navbar />}
       {isSanctuary && <SanctuaryNav />}
       <main className="flex-1">
+        {/* key forces a remount on route change to re-trigger the page-enter CSS animation. */}
         <div key={location.pathname} className="page-enter">
           <Outlet />
         </div>
@@ -28,6 +30,8 @@ export default function Layout() {
   );
 }
 
+// SanctuaryNav intentionally uses hardcoded Hebrew and a tel: anchor — it's a minimal safety strip,
+// not a full i18n'd nav. The crisis line (1201) is Israel-specific and needs no translation.
 function SanctuaryNav() {
   const location = useLocation();
   const backTo = location.pathname === '/calming' ? '/' : '/calming';

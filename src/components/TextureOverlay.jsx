@@ -2,6 +2,7 @@ import React from 'react';
 import { useTheme } from '@/lib/ThemeContext';
 
 function getTextureSvg(id, color) {
+  // '#' in a hex color breaks inline SVG data URLs; encode the whole string to escape it.
   const c = encodeURIComponent(color);
 
   switch (id) {
