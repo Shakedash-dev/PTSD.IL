@@ -1,0 +1,91 @@
+{
+  "name": "CommunityGroup",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "title": "\u05e9\u05dd \u05d4\u05e7\u05d4\u05d9\u05dc\u05d4"
+    },
+    "description_he": {
+      "type": "string",
+      "title": "\u05ea\u05d9\u05d0\u05d5\u05e8 - \u05e2\u05d1\u05e8\u05d9\u05ea"
+    },
+    "description_ar": {
+      "type": "string",
+      "title": "\u05ea\u05d9\u05d0\u05d5\u05e8 - \u05e2\u05e8\u05d1\u05d9\u05ea"
+    },
+    "description_ru": {
+      "type": "string",
+      "title": "\u05ea\u05d9\u05d0\u05d5\u05e8 - \u05e8\u05d5\u05e1\u05d9\u05ea"
+    },
+    "description_en": {
+      "type": "string",
+      "title": "\u05ea\u05d9\u05d0\u05d5\u05e8 - \u05d0\u05e0\u05d2\u05dc\u05d9\u05ea"
+    },
+    "description_fr": {
+      "type": "string",
+      "title": "\u05ea\u05d9\u05d0\u05d5\u05e8 - \u05e6\u05e8\u05e4\u05ea\u05d9\u05ea"
+    },
+    "target_audience": {
+      "type": "array",
+      "title": "\u05e7\u05d4\u05dc \u05d9\u05e2\u05d3",
+      "items": {
+        "type": "string",
+        "enum": [
+          "security_forces",
+          "hostilities",
+          "sexual_harassment",
+          "accidents",
+          "violence",
+          "spouses",
+          "parents",
+          "children",
+          "friends",
+          "general"
+        ]
+      }
+    },
+    "location": {
+      "type": "string",
+      "title": "\u05de\u05d9\u05e7\u05d5\u05dd",
+      "enum": [
+        "north",
+        "center",
+        "south",
+        "jerusalem",
+        "online"
+      ]
+    },
+    "meeting_type": {
+      "type": "string",
+      "title": "\u05d0\u05d5\u05e4\u05d9 \u05de\u05e4\u05d2\u05e9\u05d9\u05dd",
+      "enum": [
+        "frontal",
+        "digital",
+        "hybrid"
+      ]
+    },
+    "meeting_schedule": {
+      "type": "string",
+      "title": "\u05dc\u05d5\u05d7 \u05d6\u05de\u05e0\u05d9\u05dd"
+    },
+    "contact_url": {
+      "type": "string",
+      "title": "\u05e7\u05d9\u05e9\u05d5\u05e8 \u05dc\u05d4\u05e6\u05d8\u05e8\u05e4\u05d5\u05ea / \u05d9\u05e6\u05d9\u05e8\u05ea \u05e7\u05e9\u05e8"
+    },
+    "organization": {
+      "type": "string",
+      "title": "\u05d0\u05e8\u05d2\u05d5\u05df \u05de\u05d0\u05e8\u05d7"
+    },
+    "is_published": {
+      "type": "boolean",
+      "title": "\u05e4\u05d5\u05e8\u05e1\u05dd",
+      "default": true
+    }
+  },
+  "required": [
+    "name",
+    "location",
+    "contact_url"
+  ]
+}
