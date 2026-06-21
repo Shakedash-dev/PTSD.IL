@@ -33,6 +33,21 @@ npm run lint       # ESLint
 npm run typecheck  # type checking
 ```
 
+## Deployment (GitHub Pages)
+
+Live at: `https://shakedash-dev.github.io/PTSD.IL/`
+
+The base path (`/PTSD.IL/`) is defined in `src/base-path.js` and consumed by both `vite.config.js` (build `base`) and `App.jsx` (Router `basename`). Change it there if the repo is ever renamed.
+
+`main` is the development branch. `gh-pages` is the release branch - never edit it directly.
+
+```bash
+cd src
+npm run deploy     # builds and pushes dist/ to the gh-pages branch
+```
+
+The `gh-pages` branch is managed by the `gh-pages` npm package. GitHub Pages is configured to serve from that branch.
+
 ## Project structure
 
 ```
