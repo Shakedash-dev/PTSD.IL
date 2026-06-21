@@ -37,24 +37,24 @@ export default function Home() {
       </section>
 
       {/* ── Three path panels ── */}
-      <section className="max-w-3xl mx-auto px-5 sm:px-6 pb-16">
-        <div className="flex flex-col gap-6">
+      <section className="max-w-5xl mx-auto px-5 sm:px-6 pb-16">
+        <div className="flex flex-col md:flex-row gap-6">
           {paths.map((panel) => (
             <Link
               key={panel.path}
               to={panel.path}
-              className="group block bg-card rounded-xl border border-border p-7 sm:p-8 transition-colors duration-300 hover:border-primary"
+              className="group flex-1 block bg-card rounded-xl border border-border p-7 sm:p-8 transition-colors duration-300 hover:border-primary"
             >
-              <div className="flex items-center justify-between gap-5">
+              <div className="flex md:flex-col items-center md:items-start justify-between md:justify-start gap-5 h-full">
                 <div>
-                  <h2 className="text-xl sm:text-2xl font-heading font-semibold text-foreground mb-2 leading-snug">
+                  <h2 className="text-xl font-heading font-semibold text-foreground mb-2 leading-snug">
                     {t(lang, panel.titleKey)}
                   </h2>
                   <p className="text-card-foreground leading-relaxed">
                     {t(lang, panel.subtitleKey)}
                   </p>
                 </div>
-                <ArrowIcon className="w-6 h-6 text-primary flex-shrink-0 transition-colors duration-300 group-hover:text-accent" />
+                <ArrowIcon className="w-6 h-6 text-primary flex-shrink-0 transition-colors duration-300 group-hover:text-accent md:mt-auto" />
               </div>
             </Link>
           ))}
