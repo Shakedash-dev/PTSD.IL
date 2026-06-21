@@ -150,7 +150,7 @@ function applyPalette(palette) {
 
 export function ThemeProvider({ children }) {
   const [paletteId, setPaletteId] = useState('current');
-  const [textureId, setTextureId] = useState('none');
+  const [textureId, setTextureId] = useState('bubbles');
 
   const palette = PALETTES.find(p => p.id === paletteId) || PALETTES[0];
 
