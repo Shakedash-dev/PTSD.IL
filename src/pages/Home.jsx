@@ -29,7 +29,7 @@ export default function Home() {
       {/* ── Intro ── */}
       <section className="max-w-3xl mx-auto px-5 sm:px-6 pt-28 sm:pt-32 pb-10 text-center">
         <p className="text-sm text-muted-foreground mb-4">
-          נט״ל — מרכז תכלול לנפגעי פוסט-טראומה
+          פוסט טראומה - אתה לא לבד
         </p>
         <h1 className="text-3xl sm:text-4xl font-heading font-semibold text-foreground mb-5 leading-snug">
           {t(lang, 'hero_tagline')}
