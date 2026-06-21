@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { BASE_PATH } from '@/base-path';
 import { Link } from 'react-router-dom';
 import { useLang } from '@/lib/LanguageContext';
 import { t } from '@/lib/i18n';
@@ -14,7 +15,7 @@ const STATIC_TOOLS = [
     iconBg: 'bg-teal/15',
     content_he: `<p><strong>נשימה סרעפתית</strong> — נשמו עמוק דרך האף, 4 שניות. עצרו 2 שניות. נשפו דרך הפה, 6 שניות.</p>
     <p>חזרו על כך 5 פעמים. הנשימה האיטית "מאותתת" למוח שהסכנה עברה ומפעילה את מערכת ה"מנוחה ועיכול".</p>
-    <p><a href="/calming/breathing" class="text-primary font-medium">לתרגיל הנשימות האינטראקטיבי →</a></p>`,
+    <p><a href="${BASE_PATH}/calming/breathing" class="text-primary font-medium">לתרגיל הנשימות האינטראקטיבי →</a></p>`,
   },
   {
     category: 'grounding',
@@ -24,7 +25,7 @@ const STATIC_TOOLS = [
     iconBg: 'bg-clay/15',
     content_he: `<p>כשאתה/את מרגיש/ה ש"יצאת מהגוף" או שהזיכרון חוטף אותך — תרגיל הקרקוע עוזר לחזור להווה.</p>
     <p>מצא/י: 5 דברים שרואים, 4 שנוגעים, 3 שומעים, 2 מריחים, 1 טועמים.</p>
-    <p><a href="/calming/grounding" class="text-primary font-medium">לתרגיל הקרקוע האינטראקטיבי →</a></p>`,
+    <p><a href="${BASE_PATH}/calming/grounding" class="text-primary font-medium">לתרגיל הקרקוע האינטראקטיבי →</a></p>`,
   },
   {
     category: 'sleep',
@@ -71,7 +72,7 @@ const STATIC_TOOLS = [
     iconBg: 'bg-secondary/15',
     content_he: `<p>הרפיה שרירית פרוגרסיבית מפחיתה מתח גופני שמצטבר בגלל עוררות-יתר.</p>
     <p>עברו על קבוצות שרירים שונות — כפות ידיים, כתפיים, בטן, ירכיים — לחצו 5-10 שניות ואז שחררו.</p>
-    <p><a href="/calming/muscle" class="text-primary font-medium">לתרגיל האינטראקטיבי →</a></p>`,
+    <p><a href="${BASE_PATH}/calming/muscle" class="text-primary font-medium">לתרגיל האינטראקטיבי →</a></p>`,
   },
 ];
 
