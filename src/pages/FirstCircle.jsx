@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useLang } from '@/lib/LanguageContext';
 import { t } from '@/lib/i18n';
 import PageHeader from '@/components/PageHeader';
-import { Brain, Wrench, FileText, Heart, Users, ArrowLeft, ArrowRight, User } from 'lucide-react';
+import { Brain, Wrench, FileText, Heart, Users, Baby, ArrowLeft, ArrowRight, User } from 'lucide-react';
 
 const sections = [
   { key: 'ptsd_info', path: '/ptsd-info', icon: Brain, description_he: 'הבנת מה זה PTSD, הסימפטומים, ממה זה נובע ואיך לזהות אותו' },
@@ -11,6 +11,7 @@ const sections = [
   { key: 'rights', path: '/rights', icon: FileText, description_he: 'כל מה שמגיע לך - הסבר פשוט על זכויות ואיך לקבל אותן' },
   { key: 'treatment', path: '/treatment', icon: Heart, description_he: 'מפת הדרכים מהטיפול העצמי ועד הטיפול המקצועי' },
   { key: 'community', path: '/community', icon: Users, description_he: 'קהילות תמיכה, קבוצות ומפגשים - פרונטלי ומקוון' },
+  { key: 'children_content', path: '/children', icon: Baby, description_he: 'תכנים מותאמי-גיל לילדים שגדלים לצד הורה עם פוסט-טראומה' },
 ];
 
 export default function FirstCircle() {
