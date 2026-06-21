@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from 'react';
-import { base44 } from '@/api/base44Client';
+import React, { useState } from 'react';
 import { useLang } from '@/lib/LanguageContext';
 import { t } from '@/lib/i18n';
 import PageHeader from '@/components/PageHeader';
@@ -92,16 +91,7 @@ export default function Community() {
   const { lang } = useLang();
   const [audienceFilter, setAudienceFilter] = useState('all');
   const [locationFilter, setLocationFilter] = useState('all');
-  const [dbCommunities, setDbCommunities] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    base44.entities.CommunityGroup.filter({ is_published: true })
-      .then(items => { setDbCommunities(items || []); setLoading(false); })
-      .catch(() => { setLoading(false); });
-  }, []);
-
-  const communities = dbCommunities.length > 0 ? dbCommunities : STATIC_COMMUNITIES;
+  const communities = STATIC_COMMUNITIES;
 
   const filtered = communities.filter(c => {
     const audMatch = audienceFilter === 'all' ||
@@ -164,9 +154,7 @@ export default function Community() {
         </div>
 
         {/* Results */}
-        {loading ? (
-          <div className="text-center py-12 text-muted-foreground">{t(lang, 'loading')}</div>
-        ) : filtered.length === 0 ? (
+        {filtered.length === 0 ? (
           <div className="text-center py-12 text-muted-foreground bg-card rounded-super border border-border">
             <Users className="w-12 h-12 mx-auto mb-3 opacity-30" />
             <p>{t(lang, 'no_communities')}</p>

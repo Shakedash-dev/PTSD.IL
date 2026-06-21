@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from 'react';
-import { base44 } from '@/api/base44Client';
+import React from 'react';
 import { useLang } from '@/lib/LanguageContext';
 import { t } from '@/lib/i18n';
 import PageHeader from '@/components/PageHeader';
@@ -82,15 +81,7 @@ const CATEGORY_COLORS = {
 
 export default function Sources() {
   const { lang } = useLang();
-  const [dbSources, setDbSources] = useState([]);
-
-  useEffect(() => {
-    base44.entities.SourceReference.list('sort_order')
-      .then(items => setDbSources(items || []))
-      .catch(() => {});
-  }, []);
-
-  const sources = dbSources.length > 0 ? dbSources : STATIC_SOURCES;
+  const sources = STATIC_SOURCES;
 
   return (
     <div className="min-h-screen bg-background">

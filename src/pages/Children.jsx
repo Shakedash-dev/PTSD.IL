@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from 'react';
-import { base44 } from '@/api/base44Client';
+import React, { useState } from 'react';
 import { useLang } from '@/lib/LanguageContext';
 import { t } from '@/lib/i18n';
 import PageHeader from '@/components/PageHeader';
@@ -95,18 +94,9 @@ const RESOURCE_ICONS = {
 export default function Children() {
   const { lang } = useLang();
   const [activeAge, setActiveAge] = useState('0-4');
-  const [dbContent, setDbContent] = useState([]);
-
-  useEffect(() => {
-    base44.entities.ChildAgeContent.list('sort_order')
-      .then(items => setDbContent(items || []))
-      .catch(() => {});
-  }, []);
-
-  const currentContent = dbContent.find(c => c.age_range === activeAge) || null;
   const staticContent = STATIC_CONTENT[activeAge] || {};
-  const guidelines = currentContent?.guidelines_he || staticContent.guidelines || '';
-  const resources = currentContent?.resources || staticContent.resources || [];
+  const guidelines = staticContent.guidelines || '';
+  const resources = staticContent.resources || [];
 
   return (
     <div className="min-h-screen bg-background">

@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { base44 } from '@/api/base44Client';
+import React, { useState } from 'react';
 import { useLang } from '@/lib/LanguageContext';
-import { t, getFieldByLang } from '@/lib/i18n';
+import { t } from '@/lib/i18n';
 import { getPTSDInfoFaqs } from '@/lib/pageContent';
 import PageHeader from '@/components/PageHeader';
 import { ChevronDown, Brain } from 'lucide-react';
@@ -40,20 +39,7 @@ function FAQAccordion({ question, answer, side = 'left' }) {
 
 export default function PTSDInfo() {
   const { lang } = useLang();
-  const [dbFaqs, setDbFaqs] = useState([]);
-
-  useEffect(() => {
-    base44.entities.FAQItem.filter({ category: 'ptsd_info', is_published: true }, 'sort_order')
-      .then(items => setDbFaqs(items || []))
-      .catch(() => {});
-  }, []);
-
-  const faqs = dbFaqs.length > 0
-    ? dbFaqs.map(item => ({
-        q: getFieldByLang(item, 'question', lang),
-        a: getFieldByLang(item, 'answer', lang),
-      }))
-    : getPTSDInfoFaqs(lang);
+  const faqs = getPTSDInfoFaqs(lang);
 
   return (
     <div className="min-h-screen bg-background">

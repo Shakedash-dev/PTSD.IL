@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { base44 } from '@/api/base44Client';
 import { useLang } from '@/lib/LanguageContext';
-import { t, getFieldByLang } from '@/lib/i18n';
+import { t } from '@/lib/i18n';
 import PageHeader from '@/components/PageHeader';
 import { Wrench, Building2, Brain, Leaf, Pill, ChevronDown, ArrowLeft, ArrowRight, ExternalLink, Map } from 'lucide-react';
 
@@ -158,23 +157,7 @@ function StepCard({ step, isActive, onToggle, index }) {
 export default function Treatment() {
   const { lang } = useLang();
   const [activeStep, setActiveStep] = useState(null);
-  const [dbSteps, setDbSteps] = useState([]);
-
-  useEffect(() => {
-    base44.entities.TreatmentStep.list('step_number')
-      .then(items => setDbSteps(items || []))
-      .catch(() => {});
-  }, []);
-
-  const steps = dbSteps.length > 0
-    ? dbSteps.map((s, i) => ({
-        ...STATIC_STEPS[i] || STATIC_STEPS[0],
-        title_he: s.title_he || STATIC_STEPS[i]?.title_he,
-        description_he: s.description_he || STATIC_STEPS[i]?.description_he,
-        how_to_start_he: s.how_to_start_he || STATIC_STEPS[i]?.how_to_start_he,
-        links: s.links || STATIC_STEPS[i]?.links || [],
-      }))
-    : STATIC_STEPS;
+  const steps = STATIC_STEPS;
 
   return (
     <div className="min-h-screen bg-background">

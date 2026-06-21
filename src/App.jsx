@@ -3,14 +3,11 @@ import { QueryClientProvider } from '@tanstack/react-query'
 import { queryClientInstance } from '@/lib/query-client'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import PageNotFound from './lib/PageNotFound';
-import { AuthProvider, useAuth } from '@/lib/AuthContext';
-import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import ScrollToTop from './components/ScrollToTop';
 import { LanguageProvider } from '@/lib/LanguageContext';
 import { ThemeProvider } from '@/lib/ThemeContext';
 import Layout from '@/components/Layout';
 
-// Page imports
 import Home from '@/pages/Home';
 import FirstCircle from '@/pages/FirstCircle';
 import SecondCircle from '@/pages/SecondCircle';
@@ -29,70 +26,40 @@ import CalmingMuscle from '@/pages/CalmingMuscle';
 import Sources from '@/pages/Sources';
 import Admin from '@/pages/Admin';
 
-const AuthenticatedApp = () => {
-  const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
-
-  if (isLoadingPublicSettings || isLoadingAuth) {
-    return (
-      <div className="fixed inset-0 flex items-center justify-center bg-oatmeal">
-        <div className="flex flex-col items-center gap-4">
-          <div className="w-12 h-12 rounded-full border-2 border-teal/30 border-t-teal animate-spin" />
-          <p className="text-muted-foreground text-sm">טוען...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (authError) {
-    if (authError.type === 'user_not_registered') {
-      return <UserNotRegisteredError />;
-    } else if (authError.type === 'auth_required') {
-      navigateToLogin();
-      return null;
-    }
-  }
-
-  return (
-    <Routes>
-      <Route element={<Layout />}>
-        <Route path="/" element={<Home />} />
-        <Route path="/first-circle" element={<FirstCircle />} />
-        <Route path="/second-circle" element={<SecondCircle />} />
-        <Route path="/second-circle-tools" element={<SecondCircleTools />} />
-        <Route path="/questionnaire" element={<Questionnaire />} />
-        <Route path="/ptsd-info" element={<PTSDInfo />} />
-        <Route path="/self-help" element={<SelfHelp />} />
-        <Route path="/treatment" element={<Treatment />} />
-        <Route path="/rights" element={<Rights />} />
-        <Route path="/community" element={<Community />} />
-        <Route path="/children" element={<Children />} />
-        <Route path="/calming" element={<Calming />} />
-        <Route path="/calming/breathing" element={<CalmingBreathing />} />
-        <Route path="/calming/grounding" element={<CalmingGrounding />} />
-        <Route path="/calming/muscle" element={<CalmingMuscle />} />
-        <Route path="/sources" element={<Sources />} />
-        <Route path="/admin" element={<Admin />} />
-      </Route>
-      <Route path="*" element={<PageNotFound />} />
-    </Routes>
-  );
-};
-
 function App() {
   return (
-    <AuthProvider>
-      <QueryClientProvider client={queryClientInstance}>
-        <LanguageProvider>
+    <QueryClientProvider client={queryClientInstance}>
+      <LanguageProvider>
         <ThemeProvider>
-        <Router>
+          <Router>
             <ScrollToTop />
-            <AuthenticatedApp />
+            <Routes>
+              <Route element={<Layout />}>
+                <Route path="/" element={<Home />} />
+                <Route path="/first-circle" element={<FirstCircle />} />
+                <Route path="/second-circle" element={<SecondCircle />} />
+                <Route path="/second-circle-tools" element={<SecondCircleTools />} />
+                <Route path="/questionnaire" element={<Questionnaire />} />
+                <Route path="/ptsd-info" element={<PTSDInfo />} />
+                <Route path="/self-help" element={<SelfHelp />} />
+                <Route path="/treatment" element={<Treatment />} />
+                <Route path="/rights" element={<Rights />} />
+                <Route path="/community" element={<Community />} />
+                <Route path="/children" element={<Children />} />
+                <Route path="/calming" element={<Calming />} />
+                <Route path="/calming/breathing" element={<CalmingBreathing />} />
+                <Route path="/calming/grounding" element={<CalmingGrounding />} />
+                <Route path="/calming/muscle" element={<CalmingMuscle />} />
+                <Route path="/sources" element={<Sources />} />
+                <Route path="/admin" element={<Admin />} />
+              </Route>
+              <Route path="*" element={<PageNotFound />} />
+            </Routes>
           </Router>
-          </ThemeProvider>
-          <Toaster />
-        </LanguageProvider>
-      </QueryClientProvider>
-    </AuthProvider>
+        </ThemeProvider>
+        <Toaster />
+      </LanguageProvider>
+    </QueryClientProvider>
   );
 }
 
