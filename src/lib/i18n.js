@@ -93,7 +93,7 @@ export const translations = {
 
     // Rights
     rights_title: 'זכויות ובירוקרטיה',
-    rights_subtitle: 'מערכת הזכויות מסובכת. עשינו את העבודה - בחר/י את הסיטואציה שלך.',
+    rights_subtitle: 'מה שמגיע לך - בשפה פשוטה, לפי הסיטואציה שלך.',
     rights_security: 'כוחות הביטחון',
     rights_sexual: 'הטרדות מיניות',
     rights_hostilities: 'נפגעי פעולות איבה',
