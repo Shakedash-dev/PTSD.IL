@@ -51,5 +51,5 @@ npm run typecheck  # type checking
 
 - [ ] Replace all content with validated content (reviewed by professionals/verified sources)
 - [ ] Make every piece of content dynamic - move all content to a database so the site parses data from it, enabling updates without code changes
-- [ ] Change the background texture - generate a set of good-looking texture options, then pick the best one along with the best matching color palette
+- [ ] Change the background texture - pick the best one along with the best matching color palette
 - [ ] Create a full design system/theme from the site that will serve as the foundation for the mobile application development
