@@ -107,6 +107,17 @@ export default function Community() {
       <PageHeader icon={Users} title={t(lang, 'community_title')} subtitle={t(lang, 'community_subtitle')} />
 
       <div className="max-w-5xl mx-auto px-4 sm:px-6 py-12">
+
+        {/* Why community matters */}
+        <div className="bg-card rounded-super border border-border p-6 mb-8 max-w-3xl mx-auto">
+          <p className="text-foreground leading-relaxed mb-3">
+            מחקרים מראים שחיבור עם אנשים שעוברים חוויה דומה הוא אחד הגורמים המשמעותיים ביותר בהחלמה מפוסט-טראומה. כשאת/ה מדבר/ת עם מישהו שמבין/ה מבפנים - אין צורך להסביר. יש פחות בושה, פחות בדידות, ולעיתים - תשובות פשוטות שרק מי שחי את זה יכול לתת.
+          </p>
+          <p className="text-muted-foreground leading-relaxed">
+            זה נכון גם למי שמלווה: קבוצת תמיכה של משפחות ובני זוג היא מקום שבו אפשר לדבר בכנות על הקושי - בלי לפגוע בקרוב שאת/ה אוהב/ת.
+          </p>
+        </div>
+
         {/* Filters */}
         <div className="bg-card rounded-super border border-border p-5 mb-8 shadow-card">
           <div className="flex items-center gap-2 mb-4">
