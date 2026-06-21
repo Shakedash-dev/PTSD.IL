@@ -1,5 +1,5 @@
 import React from 'react';
-import { Outlet, useLocation } from 'react-router-dom';
+import { Outlet, useLocation, Link } from 'react-router-dom';
 import Navbar from './Navbar';
 import Footer from './Footer';
 import ChatbotFAB from './ChatbotFAB';
@@ -37,9 +37,9 @@ function SanctuaryNav() {
   const backTo = location.pathname === '/calming' ? '/' : '/calming';
   return (
     <header className="fixed top-0 inset-x-0 z-50 px-5 h-14 flex items-center justify-between bg-background border-b border-border">
-      <a href={backTo} className="text-muted-foreground hover:text-foreground text-sm transition-colors duration-300">
+      <Link to={backTo} className="text-muted-foreground hover:text-foreground text-sm transition-colors duration-300">
         חזרה
-      </a>
+      </Link>
       <a href="tel:1201" className="text-muted-foreground hover:text-foreground text-xs transition-colors duration-300">ער״ן: 1201</a>
     </header>
   );

@@ -2,6 +2,7 @@ import { Toaster } from "@/components/ui/toaster"
 import { QueryClientProvider } from '@tanstack/react-query'
 import { queryClientInstance } from '@/lib/query-client'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BASE_PATH } from '@/base-path';
 import PageNotFound from './lib/PageNotFound';
 import ScrollToTop from './components/ScrollToTop';
 import { LanguageProvider } from '@/lib/LanguageContext';
@@ -33,7 +34,7 @@ function App() {
     <QueryClientProvider client={queryClientInstance}>
       <LanguageProvider>
         <ThemeProvider>
-          <Router>
+          <Router basename={BASE_PATH}>
             <ScrollToTop />
             <Routes>
               <Route element={<Layout />}>
