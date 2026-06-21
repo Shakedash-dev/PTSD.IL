@@ -74,6 +74,48 @@ This site serves trauma survivors. When touching content (text, screening questi
 - Keep new components in line with the Radix-plus-Tailwind pattern already in use - don't introduce a competing UI library.
 - When adding a page: create the file in `src/pages/`, register the route in `src/App.jsx`, add any nav strings to `src/lib/i18n.js` for all 5 languages (Hebrew is required, others can be stubbed with a ipsum lorem if needed).
 
+## GitHub Pages compatibility
+
+The site runs on both local dev (`localhost:5173`) and GitHub Pages (`https://shakedash-dev.github.io/PTSD.IL/`). Every new page or piece of content must work on both.
+
+### The base path
+
+The deployment lives under `/PTSD.IL/`, not at the root. The base path is defined once in `src/base-path.js`:
+
+```js
+export const BASE_PATH = '/PTSD.IL';
+```
+
+`vite.config.js` reads it for the build `base`, and `App.jsx` reads it for the Router `basename`. On local dev, Vite's dev server handles `base` transparently so routes work at `/` too.
+
+### Rules for new code
+
+**Always use React Router for internal navigation - never raw HTML or `window.location`.**
+
+| Wrong | Right |
+|---|---|
+| `<a href="/some-page">` | `<Link to="/some-page">` |
+| `window.location.href = '/some-page'` | `useNavigate()('/some-page')` |
+
+The only exception is links inside raw HTML strings (e.g. `dangerouslySetInnerHTML` content). There, React Router can't be used, so prepend `BASE_PATH`:
+
+```js
+import { BASE_PATH } from '@/base-path';
+// inside a template string:
+`<a href="${BASE_PATH}/calming/breathing">...</a>`
+```
+
+**Never hardcode `/PTSD.IL/` as a string literal.** Always import from `@/base-path`.
+
+### Git workflow
+
+- **All commits go to `main`.** Never commit directly to `gh-pages`.
+- `gh-pages` is the release branch managed by the `gh-pages` npm package. Only the user deploys to it:
+  ```bash
+  cd src && npm run deploy
+  ```
+- When asked to commit, push to `main` only and tell the user to run `npm run deploy` if they want the live site updated.
+
 ## Out-of-scope warnings
 
 If the user asks for something that requires a backend (auth, persistence, admin CRUD, the chatbot in `ChatbotFAB.jsx`, Stripe checkout), surface that the backend doesn't exist yet rather than mocking it silently.
