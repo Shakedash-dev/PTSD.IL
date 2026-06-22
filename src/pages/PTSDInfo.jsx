@@ -3,27 +3,33 @@ import { useLang } from '@/lib/LanguageContext';
 import { t } from '@/lib/i18n';
 import { usePTSDInfoFaqs } from '@/api/hooks';
 import PageHeader from '@/components/PageHeader';
-import { ChevronDown, Brain } from 'lucide-react';
+import { ChevronDown } from 'lucide-react';
+import { useImages } from '@/lib/ImageSetContext';
 
-function FAQAccordion({ question, answer, side = 'left' }) {
+// Design A: 2-column accordion grid.
+// Each card stays compact (just the question) until clicked, expanding the answer inline.
+// On desktop the grid keeps two questions visible per row so the user can scan many
+// questions at once without long vertical scrolling. On mobile it collapses to one column.
+function FAQCard({ question, answer }) {
   const [open, setOpen] = useState(false);
-  const isRight = side === 'right';
 
   return (
-    <div className={`border transition-natural overflow-hidden ${
-      isRight
-        ? 'rounded-tl-2xl rounded-bl-2xl rounded-br-2xl rounded-tr-sm'
-        : 'rounded-tr-2xl rounded-br-2xl rounded-bl-2xl rounded-tl-sm'
-    } ${
-      open ? 'bg-primary/15 border-primary/40' : 'bg-card border-border hover:bg-primary/8'
-    }`}>
+    <div
+      className={`border rounded-2xl overflow-hidden transition-all duration-300 ${
+        open
+          ? 'bg-primary/10 border-primary/40 shadow-card'
+          : 'bg-card border-border hover:border-primary/30 hover:shadow-card'
+      }`}
+    >
       <button
-        className="w-full text-start px-6 py-5 flex items-center justify-between gap-4 transition-natural"
+        className="w-full text-start px-6 py-5 flex items-center justify-between gap-4"
         onClick={() => setOpen(o => !o)}
         aria-expanded={open}
       >
         <span className="font-heading font-semibold text-foreground leading-snug">{question}</span>
-        <ChevronDown className={`w-5 h-5 text-primary flex-shrink-0 transition-transform duration-300 ${open ? 'rotate-180' : ''}`} />
+        <ChevronDown
+          className={`w-5 h-5 text-primary flex-shrink-0 transition-transform duration-300 ${open ? 'rotate-180' : ''}`}
+        />
       </button>
       {open && (
         <div
@@ -37,28 +43,32 @@ function FAQAccordion({ question, answer, side = 'left' }) {
 
 export default function PTSDInfo() {
   const { lang } = useLang();
+  const IMAGES = useImages();
   const { data: faqs = [], isLoading, error } = usePTSDInfoFaqs({ lang });
 
   return (
     <div className="min-h-screen bg-background">
-      <PageHeader icon={Brain} title={t(lang, 'ptsd_info_title')} subtitle={t(lang, 'ptsd_info_subtitle')} />
+      <PageHeader
+        size="hero"
+        align="center"
+        tone="card"
+        image={IMAGES.ptsdinfo_hero}
+        eyebrow={t(lang, 'ptsd_info')}
+        title={t(lang, 'ptsd_info_title')}
+        subtitle={t(lang, 'ptsd_info_subtitle')}
+      />
 
-      {/* FAQ */}
-      <div className="max-w-xl mx-auto px-4 sm:px-6 py-16">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-16">
         {isLoading && <p className="text-center text-muted-foreground mb-4">{t(lang, 'loading')}</p>}
         {error && <p className="text-center text-muted-foreground mb-4">{t(lang, 'content_error')}</p>}
-        <p className="text-muted-foreground mb-8 text-center leading-relaxed">
+        <p className="text-muted-foreground mb-10 text-center leading-relaxed">
           {t(lang, 'ptsd_info_instruction')}
         </p>
-        <div className="flex flex-col gap-3">
-          {faqs.map((faq, i) => {
-            const side = i % 2 === 0 ? 'left' : 'right';
-            return (
-              <div key={i} className={`w-[78%] ${side === 'left' ? 'mr-auto' : 'ml-auto'}`}>
-                <FAQAccordion question={faq.q} answer={faq.a} side={side} />
-              </div>
-            );
-          })}
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          {faqs.map((faq, i) => (
+            <FAQCard key={i} question={faq.q} answer={faq.a} />
+          ))}
         </div>
       </div>
     </div>

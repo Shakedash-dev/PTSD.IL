@@ -31,7 +31,7 @@ export const translations = {
     hero_subtitle: 'מידע, כלים ותמיכה - הכל במקום אחד, בשפה ברורה.',
     path1_title: 'אני מתמודד/ת עם פוסט-טראומה',
     path1_subtitle: 'מידע, כלים וזכויות - הכל במקום אחד',
-    path2_title: 'אני מלווה/ת קרוב/ה שמתמודד/ת',
+    path2_title: 'אני קרוב/ה של מתמודד/ת עם פוסט-טראומה',
     path2_subtitle: 'איך לתמוך, להבין, ולשמור גם על עצמך',
     path3_title: 'אני לא בטוח/ה, רוצה לבדוק',
     path3_subtitle: 'שאלון קצר ואנונימי לבדיקה עצמית',
@@ -42,7 +42,7 @@ export const translations = {
     read_more: 'קרא/י עוד',
     
     // Quick nav
-    quick_nav_title: 'מה תרצה/י לגלות?',
+    quick_nav_title: 'מה הביא אותך לפה?',
 
     // First circle page
     first_circle_welcome: 'הגעת למקום הנכון. כאן תמצא/י מידע, כלים וזכויות - הכל במקום אחד, בקצב שלך.',
@@ -106,7 +106,6 @@ export const translations = {
     // Treatment
     treatment_title: 'מפת הדרכים לטיפול',
     treatment_subtitle: 'כל מסע מתחיל בצעד אחד. המפה הזאת מציגה את הדרכים האפשריות לטיפול בפוסט-טראומה.',
-    treatment_instruction: 'לחץ/י על כל שלב לפרטים ולמדריך "איך מתחילים"',
     how_to_start: 'איך מתחילים?',
     step_label: 'שלב',
     step_by_step: 'צעד אחר צעד',

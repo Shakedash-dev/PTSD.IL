@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import { useLang } from '@/lib/LanguageContext';
 import { t } from '@/lib/i18n';
 import { ArrowLeft, ArrowRight, CheckCircle, AlertCircle, RefreshCw } from 'lucide-react';
+import PageHeader from '@/components/PageHeader';
+import { useImages } from '@/lib/ImageSetContext';
 
 // ─── Hebrew: friendly/conversational, grouped by symptom cluster ──────────────
 const PCL5_SECTIONS_HE = [
@@ -129,6 +131,7 @@ function QuestionCard({ idx, question, scale, useRawScale, answers, onAnswer, la
 
 export default function Questionnaire() {
   const { lang } = useLang();
+  const IMAGES = useImages();
   const isRTL = document.documentElement.getAttribute('dir') === 'rtl';
   const ArrowIcon = isRTL ? ArrowLeft : ArrowRight;
   const isHebrew = lang !== 'en';
@@ -159,16 +162,19 @@ export default function Questionnaire() {
   const isHigh = result !== null && result >= 33;
 
   return (
-    <div className="min-h-screen bg-background pt-20">
-      {/* Header */}
-      <div className="max-w-3xl mx-auto px-4 sm:px-6 py-12 text-center">
-        <h1 className="text-4xl font-heading font-black text-foreground mb-4">
-          {t(lang, 'questionnaire_title')}
-        </h1>
-        <p className="text-muted-foreground leading-relaxed max-w-2xl mx-auto">
-          {t(lang, 'questionnaire_intro')}
-        </p>
-        <p className="text-xs text-muted-foreground/60 mt-3">
+    <div className="min-h-screen bg-background">
+      <PageHeader
+        size="editorial"
+        align="center"
+        tone="dark"
+        image={IMAGES.questionnaire_hero}
+        imageOpacity={0.55}
+        title={t(lang, 'questionnaire_title')}
+        subtitle={t(lang, 'questionnaire_intro')}
+      />
+
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 pt-8 pb-4 text-center">
+        <p className="text-xs text-muted-foreground/70">
           {t(lang, 'questionnaire_anonymous_note')}
         </p>
       </div>

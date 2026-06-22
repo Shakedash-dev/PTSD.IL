@@ -4,7 +4,8 @@ import { useLang } from '@/lib/LanguageContext';
 import { t } from '@/lib/i18n';
 import LanguageSwitcher from './LanguageSwitcher';
 import ThemePicker from './ThemePicker';
-import { Menu, X, Home } from 'lucide-react';
+import ImageSetPicker from './ImageSetPicker';
+import { Menu, X } from 'lucide-react';
 
 const navItems = [
   { key: 'ptsd_info', path: '/ptsd-info' },
@@ -26,9 +27,11 @@ export default function Navbar() {
   return (
     <header className="fixed top-0 inset-x-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border">
       <nav className="max-w-5xl mx-auto px-5 sm:px-6 h-16 flex items-center justify-between gap-4">
-        {/* Logo */}
-        <Link to="/" className="flex items-center flex-shrink-0">
-          <Home className="w-5 h-5 text-primary" />
+        {/* Wordmark */}
+        <Link to="/" className="flex items-center flex-shrink-0 group">
+          <span className="font-heading font-bold text-lg tracking-tight text-foreground group-hover:text-primary transition-colors duration-300">
+            PTSD<span className="text-primary">.IL</span>
+          </span>
         </Link>
 
         {/* Desktop nav */}
@@ -51,6 +54,7 @@ export default function Navbar() {
         {/* Right controls */}
         <div className="flex items-center gap-3">
           <ThemePicker />
+          <ImageSetPicker />
           <LanguageSwitcher />
           <button
             className="md:hidden p-2 rounded-lg text-foreground hover:bg-muted transition-colors duration-300"

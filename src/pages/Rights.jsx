@@ -4,6 +4,7 @@ import { t } from '@/lib/i18n';
 import { useRightsFaqs } from '@/api/hooks';
 import PageHeader from '@/components/PageHeader';
 import { Shield, Heart, Users, Car, HelpCircle, ChevronDown, ExternalLink, MessageCircle, Scale } from 'lucide-react';
+import { useImages } from '@/lib/ImageSetContext';
 
 const CATEGORIES = [
   { key: 'security_forces', labelKey: 'rights_security', icon: Shield },
@@ -64,13 +65,23 @@ function FAQAccordion({ q, a, steps, links, side = 'left', lang }) {
 
 export default function Rights() {
   const { lang } = useLang();
+  const IMAGES = useImages();
   const [activeCategory, setActiveCategory] = useState('security_forces');
 
   const { data: currentFaqs = [], isLoading, error } = useRightsFaqs({ lang, category: activeCategory });
 
   return (
     <div className="min-h-screen bg-background">
-      <PageHeader icon={Scale} title={t(lang, 'rights_title')} subtitle={t(lang, 'rights_subtitle')} />
+      <PageHeader
+        size="default"
+        align="start"
+        tone="muted"
+        image={IMAGES.rights_hero}
+        imageOpacity={0.7}
+        eyebrow={t(lang, 'rights')}
+        title={t(lang, 'rights_title')}
+        subtitle={t(lang, 'rights_subtitle')}
+      />
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 py-12">
         {isLoading && <p className="text-center text-muted-foreground mb-4">{t(lang, 'loading')}</p>}

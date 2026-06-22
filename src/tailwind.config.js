@@ -101,6 +101,9 @@ module.exports = {
         '3xl': ['1.875rem', { lineHeight: '1.3' }],
         '4xl': ['2.25rem', { lineHeight: '1.2' }],
         '5xl': ['3rem', { lineHeight: '1.15' }],
+        '6xl': ['3.75rem', { lineHeight: '1.05', letterSpacing: '-0.02em' }],
+        '7xl': ['4.5rem', { lineHeight: '1.0', letterSpacing: '-0.025em' }],
+        '8xl': ['6rem', { lineHeight: '0.95', letterSpacing: '-0.03em' }],
       },
       boxShadow: {
         'atmospheric': '0 1px 4px rgba(26, 58, 50, 0.05)',

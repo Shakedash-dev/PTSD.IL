@@ -4,6 +4,7 @@ import { t } from '@/lib/i18n';
 import { useChildrenContent } from '@/api/hooks';
 import PageHeader from '@/components/PageHeader';
 import { Baby, BookOpen, Video, Download, Star } from 'lucide-react';
+import { useImages } from '@/lib/ImageSetContext';
 
 const AGE_TABS = [
   { key: '0-4', labelKey: 'age_until4' },
@@ -24,6 +25,7 @@ const RESOURCE_ICONS = {
 
 export default function Children() {
   const { lang } = useLang();
+  const IMAGES = useImages();
   const [activeAge, setActiveAge] = useState('0-4');
   const { data: allContent = {}, isLoading, error } = useChildrenContent();
   const activeContent = allContent[activeAge] || {};
@@ -32,7 +34,15 @@ export default function Children() {
 
   return (
     <div className="min-h-screen bg-background">
-      <PageHeader icon={Baby} title={t(lang, 'children_title')} subtitle={t(lang, 'children_intro')} />
+      <PageHeader
+        size="editorial"
+        align="center"
+        tone="card"
+        image={IMAGES.children_hero}
+        eyebrow={t(lang, 'children_content')}
+        title={t(lang, 'children_title')}
+        subtitle={t(lang, 'children_intro')}
+      />
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 py-12">
         {isLoading && <p className="text-center text-muted-foreground mb-4">{t(lang, 'loading')}</p>}

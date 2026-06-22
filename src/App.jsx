@@ -7,6 +7,7 @@ import PageNotFound from './lib/PageNotFound';
 import ScrollToTop from './components/ScrollToTop';
 import { LanguageProvider } from '@/lib/LanguageContext';
 import { ThemeProvider } from '@/lib/ThemeContext';
+import { ImageSetProvider } from '@/lib/ImageSetContext';
 import Layout from '@/components/Layout';
 
 import Home from '@/pages/Home';
@@ -15,6 +16,7 @@ import SecondCircle from '@/pages/SecondCircle';
 import SecondCircleTools from '@/pages/SecondCircleTools';
 import Questionnaire from '@/pages/Questionnaire';
 import PTSDInfo from '@/pages/PTSDInfo';
+import PTSDInfo2 from '@/pages/PTSDInfo2';
 import SelfHelp from '@/pages/SelfHelp';
 import Treatment from '@/pages/Treatment';
 import Rights from '@/pages/Rights';
@@ -34,7 +36,8 @@ function App() {
     <QueryClientProvider client={queryClientInstance}>
       <LanguageProvider>
         <ThemeProvider>
-          <Router basename={BASE_PATH}>
+          <ImageSetProvider>
+            <Router basename={BASE_PATH}>
             <ScrollToTop />
             <Routes>
               <Route element={<Layout />}>
@@ -44,6 +47,7 @@ function App() {
                 <Route path="/second-circle-tools" element={<SecondCircleTools />} />
                 <Route path="/questionnaire" element={<Questionnaire />} />
                 <Route path="/ptsd-info" element={<PTSDInfo />} />
+                <Route path="/ptsd-info-2" element={<PTSDInfo2 />} />
                 <Route path="/self-help" element={<SelfHelp />} />
                 <Route path="/treatment" element={<Treatment />} />
                 <Route path="/rights" element={<Rights />} />
@@ -59,6 +63,7 @@ function App() {
               <Route path="*" element={<PageNotFound />} />
             </Routes>
           </Router>
+          </ImageSetProvider>
         </ThemeProvider>
         <Toaster />
       </LanguageProvider>

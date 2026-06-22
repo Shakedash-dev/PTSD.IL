@@ -19,7 +19,14 @@ export default function Sources() {
 
   return (
     <div className="min-h-screen bg-background">
-      <PageHeader icon={BookOpen} title={t(lang, 'sources_title')} subtitle={t(lang, 'sources_subtitle')} />
+      <PageHeader
+        size="default"
+        align="start"
+        tone="canvas"
+        eyebrow={t(lang, 'sources')}
+        title={t(lang, 'sources_title')}
+        subtitle={t(lang, 'sources_subtitle')}
+      />
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 py-16">
         {isLoading && <p className="text-center text-muted-foreground">{t(lang, 'loading')}</p>}

@@ -4,6 +4,7 @@ import { useLang } from '@/lib/LanguageContext';
 import { t } from '@/lib/i18n';
 import PageHeader from '@/components/PageHeader';
 import { Brain, Heart, FileText, Users, Baby, ArrowLeft, ArrowRight, Shield } from 'lucide-react';
+import { useImages } from '@/lib/ImageSetContext';
 
 const sections = [
   { key: 'ptsd_info', path: '/ptsd-info', icon: Brain, description_he: 'הבנת מה זה PTSD - כדי להבין טוב יותר את מי שאתה/את מלווה' },
@@ -16,12 +17,20 @@ const sections = [
 
 export default function SecondCircle() {
   const { lang } = useLang();
+  const IMAGES = useImages();
   const isRTL = document.documentElement.getAttribute('dir') === 'rtl';
   const ArrowIcon = isRTL ? ArrowLeft : ArrowRight;
 
   return (
     <div className="min-h-screen bg-background">
-      <PageHeader icon={Shield} title={t(lang, 'path2_title')} subtitle={t(lang, 'second_circle_welcome')} />
+      <PageHeader
+        size="editorial"
+        align="center"
+        tone="muted"
+        image={IMAGES.secondcircle_hero}
+        title={t(lang, 'path2_title')}
+        subtitle={t(lang, 'second_circle_welcome')}
+      />
 
       <div className="max-w-3xl mx-auto px-5 sm:px-6 py-16">
         <div className="flex flex-col gap-6">

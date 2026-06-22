@@ -5,6 +5,7 @@ import { t } from '@/lib/i18n';
 import { useSelfHelpTools } from '@/api/hooks';
 import PageHeader from '@/components/PageHeader';
 import { Wind, Moon, PenLine, Smartphone, Zap, ChevronDown, ArrowLeft, ArrowRight, Compass, Wrench } from 'lucide-react';
+import { useImages } from '@/lib/ImageSetContext';
 
 const TOOL_ICON_MAP = { Wind, Moon, PenLine, Smartphone, Zap, Compass, Wrench };
 
@@ -36,13 +37,22 @@ function ToolCard({ tool }) {
 
 export default function SelfHelp() {
   const { lang } = useLang();
+  const IMAGES = useImages();
   const isRTL = document.documentElement.getAttribute('dir') === 'rtl';
   const ArrowIcon = isRTL ? ArrowLeft : ArrowRight;
   const { data: tools = [], isLoading, error } = useSelfHelpTools();
 
   return (
     <div className="min-h-screen bg-background">
-      <PageHeader icon={Wrench} title={t(lang, 'self_help_title')} subtitle={t(lang, 'self_help_intro')} />
+      <PageHeader
+        size="editorial"
+        align="start"
+        tone="card"
+        image={IMAGES.selfhelp_hero}
+        eyebrow={t(lang, 'self_help')}
+        title={t(lang, 'self_help_title')}
+        subtitle={t(lang, 'self_help_intro')}
+      />
 
       <div className="max-w-3xl mx-auto px-4 sm:px-6 py-16">
         {/* Quick calming shortcut */}

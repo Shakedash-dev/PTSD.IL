@@ -77,6 +77,9 @@ function applyPalette(palette) {
   root.style.setProperty('--border', hexToHsl(palette.border));
   root.style.setProperty('--input', hexToHsl(palette.border));
   root.style.setProperty('--ring', hexToHsl(palette.primary));
+  // sanctuary = deepest palette color (text), used as background for dark hero blocks
+  root.style.setProperty('--sanctuary', hexToHsl(palette.text));
+  root.style.setProperty('--sanctuary-foreground', hexToHsl(palette.background));
 }
 
 export function ThemeProvider({ children }) {

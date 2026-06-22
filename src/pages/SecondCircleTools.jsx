@@ -2,7 +2,9 @@ import React, { useState } from 'react';
 import { useLang } from '@/lib/LanguageContext';
 import { t } from '@/lib/i18n';
 import { useSecondCircleTools } from '@/api/hooks';
-import { ChevronDown, Shield } from 'lucide-react';
+import PageHeader from '@/components/PageHeader';
+import { ChevronDown } from 'lucide-react';
+import { useImages } from '@/lib/ImageSetContext';
 
 function FAQItem({ q, a, side = 'left' }) {
   const [open, setOpen] = useState(false);
@@ -33,26 +35,19 @@ function FAQItem({ q, a, side = 'left' }) {
 
 export default function SecondCircleTools() {
   const { lang } = useLang();
+  const IMAGES = useImages();
   const { data: tools = [], isLoading, error } = useSecondCircleTools({ lang });
 
   return (
-    <div className="min-h-screen bg-background pt-16">
-      <div
-        className="relative py-20 px-4 text-center overflow-hidden"
-        style={{ background: 'linear-gradient(135deg, #B36D45 0%, #8A5234 100%)' }}
-      >
-        <div className="relative z-10 max-w-3xl mx-auto pt-8">
-          <div className="w-16 h-16 rounded-full bg-white/15 flex items-center justify-center mx-auto mb-6">
-            <Shield className="w-8 h-8 text-white" />
-          </div>
-          <h1 className="text-4xl sm:text-5xl font-heading font-black text-white mb-4">
-            {t(lang, 'second_circle_tools_title')}
-          </h1>
-          <p className="text-lg text-white/80 leading-relaxed max-w-2xl mx-auto">
-            {t(lang, 'second_circle_tools_subtitle')}
-          </p>
-        </div>
-      </div>
+    <div className="min-h-screen bg-background">
+      <PageHeader
+        size="editorial"
+        align="center"
+        tone="dark"
+        image={IMAGES.secondcircletools_hero}
+        title={t(lang, 'second_circle_tools_title')}
+        subtitle={t(lang, 'second_circle_tools_subtitle')}
+      />
 
       <div className="max-w-3xl mx-auto px-4 sm:px-6 py-16">
         {isLoading && <p className="text-center text-muted-foreground mb-4">{t(lang, 'loading')}</p>}
