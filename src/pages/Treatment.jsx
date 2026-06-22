@@ -5,7 +5,7 @@ import { t } from '@/lib/i18n';
 import PageHeader from '@/components/PageHeader';
 import { Wrench, Building2, Brain, Leaf, Pill, ChevronDown, ArrowLeft, ArrowRight, ExternalLink, Map } from 'lucide-react';
 
-const STATIC_STEPS = [
+export const STATIC_STEPS = [
   {
     step_number: 1,
     title_he: 'התחלה עצמאית',

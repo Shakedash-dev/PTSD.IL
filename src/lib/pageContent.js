@@ -3,7 +3,7 @@
 //
 // Fallback chain: selected lang → 'he'
 
-const PTSD_INFO_FAQS = {
+export const PTSD_INFO_FAQS = {
   he: [
     {
       q: 'מה זה טראומה ומה זה פוסט-טראומה?',
@@ -143,7 +143,7 @@ const PTSD_INFO_FAQS = {
   ],
 };
 
-const SECOND_CIRCLE_TOOLS = {
+export const SECOND_CIRCLE_TOOLS = {
   he: [
     {
       q: 'מה לעשות בזמן התקף / פלאשבק?',
@@ -316,7 +316,7 @@ const SECOND_CIRCLE_TOOLS = {
   ],
 };
 
-const RIGHTS_FAQS = {
+export const RIGHTS_FAQS = {
   he: {
     security_forces: [
       {

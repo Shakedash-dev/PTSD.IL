@@ -1,0 +1,68 @@
+// Extracted from src/pages/Sources.jsx as part of the backend-prep migration.
+// See docs/preparing_for_db.md.
+
+export const STATIC_SOURCES = [
+  {
+    id: 'dsm-5',
+    title: 'DSM-5 - Diagnostic and Statistical Manual of Mental Disorders',
+    authors: 'American Psychiatric Association',
+    year: '2013',
+    url: 'https://www.psychiatry.org/psychiatrists/practice/dsm',
+    description_he: 'המדריך האבחוני הסטנדרטי לפסיכיאטריה, כולל הגדרות ואבחנות PTSD',
+    category: 'research',
+  },
+  {
+    id: 'pcl-5',
+    title: 'PCL-5 - PTSD Checklist for DSM-5',
+    authors: 'Weathers, F.W., et al.',
+    year: '2013',
+    url: 'https://www.ptsd.va.gov/professional/assessment/adult-sr/ptsd-checklist.asp',
+    description_he: 'השאלון המשמש לסקירת תסמיני PTSD - פותח על ידי מכון ה-PTSD הלאומי של ה-VA',
+    category: 'clinical',
+  },
+  {
+    id: 'natal',
+    title: 'אתר נט"ל - הסברה ומידע',
+    authors: 'עמותת נט"ל',
+    year: '2024',
+    url: 'https://www.natal.org.il',
+    description_he: 'מידע ומשאבים לנפגעי טראומה ופוסט-טראומה בישראל',
+    category: 'ngo',
+  },
+  {
+    id: 'nimh-ptsd',
+    title: 'PTSD - National Institute of Mental Health',
+    authors: 'NIMH',
+    year: '2023',
+    url: 'https://www.nimh.nih.gov/health/topics/post-traumatic-stress-disorder-ptsd',
+    description_he: 'מידע מדעי עדכני על PTSD מהמכון הלאומי האמריקאי לבריאות הנפש',
+    category: 'international',
+  },
+  {
+    id: 'trauma-yoga',
+    title: 'Trauma-Sensitive Yoga',
+    authors: 'Emerson, D. & Hopper, E.',
+    year: '2012',
+    url: 'https://www.traumasensitiveyoga.com',
+    description_he: 'גישת יוגה מותאמת לנפגעי טראומה',
+    category: 'clinical',
+  },
+  {
+    id: 'btl-work',
+    title: 'ביטוח לאומי - זכויות נפגעי עבודה',
+    authors: 'המוסד לביטוח לאומי',
+    year: '2024',
+    url: 'https://www.btl.gov.il',
+    description_he: 'מידע רשמי על זכויות נפגעי עבודה ונכות',
+    category: 'official',
+  },
+  {
+    id: 'idf-rehab',
+    title: 'אגף השיקום - משרד הביטחון',
+    authors: 'משרד הביטחון הישראלי',
+    year: '2024',
+    url: 'https://www.idf.il',
+    description_he: 'מידע על זכויות נפגעי כוחות הביטחון ונפגעי פעולות איבה',
+    category: 'official',
+  },
+];

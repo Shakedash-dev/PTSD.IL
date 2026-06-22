@@ -68,6 +68,32 @@ This site serves trauma survivors. When touching content (text, screening questi
 - **Do not invent clinical content.** The README explicitly flags that current content is unvalidated and needs professional review. If asked to write new mental-health copy, default to "this needs a clinician to author" rather than generating it.
 - **Don't remove disclaimers or anonymity language** from the screening questionnaire without explicit instruction.
 
+## Data access (mock backend)
+
+Backend is not built yet, but the data access layer is wired up so components don't import static data directly. See `docs/preparing_for_db.md` for the full plan.
+
+**Layers (top to bottom)**:
+```
+src/pages/*.jsx       <- components use React Query hooks
+src/api/hooks.js      <- useSources(), useCommunities(), etc.
+src/api/source.js     <- fetchSources() etc. - the ONLY swap point when backend ships
+src/data/db.js        <- aggregates all entities into one object
+src/data/static/*.js  <- standalone data files (sources, communities)
+src/lib/pageContent.js, src/pages/*.jsx (exported STATIC_*)  <- larger entities, still inline
+```
+
+**When adding a new entity**:
+1. Add the data to `src/data/static/<entity>.js` (or `export const STATIC_X` in its current file if moving the content is risky)
+2. Add it to `src/data/db.js`
+3. Add a `fetchX()` to `src/api/source.js`
+4. Add a `useX()` hook to `src/api/hooks.js`
+
+**When editing a component that reads content**:
+- Use the React Query hook (`const { data, isLoading, error } = useX()`)
+- Never `import` from `src/data/` or `src/lib/pageContent.js` directly. Sources.jsx is the reference implementation.
+
+**When the real backend ships**: rewrite `src/api/source.js` to call HTTP. Nothing else changes.
+
 ## Punctuation rules
 
 - **Never use em-dashes (`—`) or en-dashes (`–`) anywhere in the codebase** - not in JSX, strings, comments, or markdown. Use a regular hyphen (`-`) instead. This applies to all languages and all files.

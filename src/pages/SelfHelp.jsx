@@ -6,7 +6,7 @@ import { t } from '@/lib/i18n';
 import PageHeader from '@/components/PageHeader';
 import { Wind, Moon, PenLine, Smartphone, Zap, ChevronDown, ArrowLeft, ArrowRight, Compass, Wrench } from 'lucide-react';
 
-const STATIC_TOOLS = [
+export const STATIC_TOOLS = [
   {
     category: 'breathing',
     icon: Wind,

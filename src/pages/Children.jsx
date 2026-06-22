@@ -13,7 +13,7 @@ const AGE_TABS = [
   { key: '16+', labelKey: 'age_16plus' },
 ];
 
-const STATIC_CONTENT = {
+export const STATIC_CONTENT = {
   '0-4': {
     guidelines: `<p><strong>בגיל הזה, ילדים חשים את הרגשות של ההורה אבל לא מבינים מה קורה.</strong> הם זקוקים לתחושת ביטחון פיזי.</p>
     <ul>

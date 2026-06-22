@@ -1,67 +1,9 @@
 import React from 'react';
 import { useLang } from '@/lib/LanguageContext';
 import { t } from '@/lib/i18n';
+import { useSources } from '@/api/hooks';
 import PageHeader from '@/components/PageHeader';
 import { BookOpen, ExternalLink, Globe } from 'lucide-react';
-
-const STATIC_SOURCES = [
-  {
-    title: 'DSM-5 - Diagnostic and Statistical Manual of Mental Disorders',
-    authors: 'American Psychiatric Association',
-    year: '2013',
-    url: 'https://www.psychiatry.org/psychiatrists/practice/dsm',
-    description_he: 'המדריך האבחוני הסטנדרטי לפסיכיאטריה, כולל הגדרות ואבחנות PTSD',
-    category: 'research',
-  },
-  {
-    title: 'PCL-5 - PTSD Checklist for DSM-5',
-    authors: 'Weathers, F.W., et al.',
-    year: '2013',
-    url: 'https://www.ptsd.va.gov/professional/assessment/adult-sr/ptsd-checklist.asp',
-    description_he: 'השאלון המשמש לסקירת תסמיני PTSD - פותח על ידי מכון ה-PTSD הלאומי של ה-VA',
-    category: 'clinical',
-  },
-  {
-    title: 'אתר נט"ל - הסברה ומידע',
-    authors: 'עמותת נט"ל',
-    year: '2024',
-    url: 'https://www.natal.org.il',
-    description_he: 'מידע ומשאבים לנפגעי טראומה ופוסט-טראומה בישראל',
-    category: 'ngo',
-  },
-  {
-    title: 'PTSD - National Institute of Mental Health',
-    authors: 'NIMH',
-    year: '2023',
-    url: 'https://www.nimh.nih.gov/health/topics/post-traumatic-stress-disorder-ptsd',
-    description_he: 'מידע מדעי עדכני על PTSD מהמכון הלאומי האמריקאי לבריאות הנפש',
-    category: 'international',
-  },
-  {
-    title: 'Trauma-Sensitive Yoga',
-    authors: 'Emerson, D. & Hopper, E.',
-    year: '2012',
-    url: 'https://www.traumasensitiveyoga.com',
-    description_he: 'גישת יוגה מותאמת לנפגעי טראומה',
-    category: 'clinical',
-  },
-  {
-    title: 'ביטוח לאומי - זכויות נפגעי עבודה',
-    authors: 'המוסד לביטוח לאומי',
-    year: '2024',
-    url: 'https://www.btl.gov.il',
-    description_he: 'מידע רשמי על זכויות נפגעי עבודה ונכות',
-    category: 'official',
-  },
-  {
-    title: 'אגף השיקום - משרד הביטחון',
-    authors: 'משרד הביטחון הישראלי',
-    year: '2024',
-    url: 'https://www.idf.il',
-    description_he: 'מידע על זכויות נפגעי כוחות הביטחון ונפגעי פעולות איבה',
-    category: 'official',
-  },
-];
 
 const CATEGORY_LABELS = {
   research: 'מחקר',
@@ -81,13 +23,15 @@ const CATEGORY_COLORS = {
 
 export default function Sources() {
   const { lang } = useLang();
-  const sources = STATIC_SOURCES;
+  const { data: sources = [], isLoading, error } = useSources();
 
   return (
     <div className="min-h-screen bg-background">
       <PageHeader icon={BookOpen} title={t(lang, 'sources_title')} subtitle={t(lang, 'sources_subtitle')} />
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 py-16">
+        {isLoading && <p className="text-center text-muted-foreground">טוען...</p>}
+        {error && <p className="text-center text-muted-foreground">שגיאה בטעינת התכנים. נסה לרענן.</p>}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {sources.map((source, i) => (
             <div key={i} className="bg-card rounded-super border border-border p-5 shadow-card hover:shadow-card-hover transition-natural hover:border-primary/30 flex flex-col">
