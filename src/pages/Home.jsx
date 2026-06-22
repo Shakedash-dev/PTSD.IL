@@ -35,7 +35,7 @@ const PATHS_META = [
     subtitleKey: 'path2_subtitle',
     imageKey: 'home_path2',
     placeholder: 'bg-gradient-to-br from-secondary/35 via-muted to-card',
-    shape: 'capsule',
+    shape: 'arch',
   },
   {
     path: '/questionnaire',
@@ -43,7 +43,7 @@ const PATHS_META = [
     subtitleKey: 'path3_subtitle',
     imageKey: 'home_path3',
     placeholder: 'bg-gradient-to-br from-accent/30 via-muted to-primary/15',
-    shape: 'card',
+    shape: 'arch',
   },
 ];
 
@@ -114,7 +114,7 @@ export default function Home() {
                   src={panel.image}
                   alt={t(lang, panel.titleKey)}
                   shape={panel.shape}
-                  aspect={idx === 1 ? 'square' : 'portrait'}
+                  aspect="portrait"
                   placeholderClass={panel.placeholder}
                   className="mb-6 transition-transform duration-500 group-hover:-translate-y-1 shadow-card group-hover:shadow-card-hover"
                 />
