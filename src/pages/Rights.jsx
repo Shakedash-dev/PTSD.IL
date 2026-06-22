@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useLang } from '@/lib/LanguageContext';
 import { t } from '@/lib/i18n';
-import { getRightsFaqs } from '@/lib/pageContent';
+import { useRightsFaqs } from '@/api/hooks';
 import PageHeader from '@/components/PageHeader';
 import { Shield, Heart, Users, Car, HelpCircle, ChevronDown, ExternalLink, MessageCircle, Scale } from 'lucide-react';
 
@@ -14,7 +14,7 @@ const CATEGORIES = [
 ];
 
 
-function FAQAccordion({ q, a, steps, links, side = 'left' }) {
+function FAQAccordion({ q, a, steps, links, side = 'left', lang }) {
   const [open, setOpen] = useState(false);
   const isRight = side === 'right';
   return (
@@ -39,7 +39,7 @@ function FAQAccordion({ q, a, steps, links, side = 'left' }) {
           <div className="text-muted-foreground leading-relaxed prose prose-sm max-w-none" dangerouslySetInnerHTML={{ __html: a }} />
           {steps && (
             <div className="p-4 bg-primary/5 rounded-lg">
-              <p className="text-xs font-bold text-primary uppercase tracking-wide mb-2">צעד אחר צעד</p>
+              <p className="text-xs font-bold text-primary uppercase tracking-wide mb-2">{t(lang, 'step_by_step')}</p>
               <div className="text-sm text-foreground prose prose-sm max-w-none" dangerouslySetInnerHTML={{ __html: steps }} />
             </div>
           )}
@@ -69,13 +69,15 @@ export default function Rights() {
   const { lang } = useLang();
   const [activeCategory, setActiveCategory] = useState('security_forces');
 
-  const currentFaqs = getRightsFaqs(lang, activeCategory);
+  const { data: currentFaqs = [], isLoading, error } = useRightsFaqs({ lang, category: activeCategory });
 
   return (
     <div className="min-h-screen bg-background">
       <PageHeader icon={Scale} title={t(lang, 'rights_title')} subtitle={t(lang, 'rights_subtitle')} />
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 py-12">
+        {isLoading && <p className="text-center text-muted-foreground mb-4">{t(lang, 'loading')}</p>}
+        {error && <p className="text-center text-muted-foreground mb-4">{t(lang, 'content_error')}</p>}
         {/* Category filter */}
         <div className="flex flex-wrap gap-2 mb-8 justify-center">
           {CATEGORIES.map(cat => {
@@ -103,7 +105,7 @@ export default function Rights() {
             const side = i % 2 === 0 ? 'left' : 'right';
             return (
               <div key={i} className={`w-[85%] ${side === 'left' ? 'mr-auto' : 'ml-auto'}`}>
-                <FAQAccordion {...faq} side={side} />
+                <FAQAccordion {...faq} side={side} lang={lang} />
               </div>
             );
           })}
@@ -114,7 +116,7 @@ export default function Rights() {
           <MessageCircle className="w-8 h-8 text-primary/40 mx-auto mb-3" />
           <p className="font-medium text-muted-foreground">{t(lang, 'chatbot_soon')}</p>
           <p className="text-sm text-muted-foreground/70 mt-1">
-            בקרוב תוכל/י לשאול שאלות ולקבל ענות מותאמות אישית
+            {t(lang, 'chatbot_description')}
           </p>
         </div>
       </div>

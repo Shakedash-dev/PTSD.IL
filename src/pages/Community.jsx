@@ -1,17 +1,18 @@
 import React, { useState } from 'react';
 import { useLang } from '@/lib/LanguageContext';
 import { t } from '@/lib/i18n';
+import { useCommunities } from '@/api/hooks';
 import PageHeader from '@/components/PageHeader';
-import { Users, MapPin, Monitor, User, ExternalLink, Filter } from 'lucide-react';
+import { Users, MapPin, User, ExternalLink, Filter } from 'lucide-react';
 
 const AUDIENCE_OPTIONS = [
   { key: 'all', labelKey: 'all_audiences' },
-  { key: 'security_forces', label_he: 'כוחות ביטחון' },
-  { key: 'hostilities', label_he: 'נפגעי איבה' },
-  { key: 'sexual_harassment', label_he: 'נפגעי הטרדה מינית' },
-  { key: 'accidents', label_he: 'נפגעי תאונות' },
-  { key: 'spouses', label_he: 'בני/בנות זוג' },
-  { key: 'general', label_he: 'כללי' },
+  { key: 'security_forces', labelKey: 'audience_security_forces' },
+  { key: 'hostilities', labelKey: 'audience_hostilities' },
+  { key: 'sexual_harassment', labelKey: 'audience_sexual_harassment' },
+  { key: 'accidents', labelKey: 'audience_accidents' },
+  { key: 'spouses', labelKey: 'audience_spouses' },
+  { key: 'general', labelKey: 'audience_general' },
 ];
 
 const LOCATION_OPTIONS = [
@@ -23,75 +24,11 @@ const LOCATION_OPTIONS = [
   { key: 'online', labelKey: 'location_online' },
 ];
 
-const STATIC_COMMUNITIES = [
-  {
-    name: 'נט"ל - קבוצות תמיכה',
-    description_he: 'קבוצות תמיכה לנפגעי טראומה ופוסט-טראומה, בניחוח של חברות ושיתוף.',
-    target_audience: ['security_forces', 'general'],
-    location: 'center',
-    meeting_type: 'frontal',
-    organization: 'עמותת נט"ל',
-    contact_url: 'https://www.natal.org.il',
-  },
-  {
-    name: 'ניצן - מרכז תמיכה לנפגעי תקיפה מינית',
-    description_he: 'קבוצות תמיכה וטיפול ייחודיות לנפגעי תקיפה מינית ומשפחותיהם.',
-    target_audience: ['sexual_harassment'],
-    location: 'center',
-    meeting_type: 'hybrid',
-    organization: 'מרכז ניצן',
-    contact_url: 'https://www.1202.org.il/',
-  },
-  {
-    name: 'קבוצת תמיכה מקוונת - PTSD Israel',
-    description_he: 'קבוצה פתוחה בזום לנפגעי פוסט-טראומה מכל רחבי הארץ.',
-    target_audience: ['general', 'security_forces'],
-    location: 'online',
-    meeting_type: 'digital',
-    organization: 'מתנדבים',
-    contact_url: 'https://www.natal.org.il',
-  },
-  {
-    name: 'שותפים לדרך - בני/בנות זוג',
-    description_he: 'קבוצת תמיכה ייחודית לבני ובנות זוג של נפגעי PTSD.',
-    target_audience: ['spouses'],
-    location: 'center',
-    meeting_type: 'frontal',
-    organization: 'עמותת נט"ל',
-    contact_url: 'https://www.natal.org.il',
-  },
-  {
-    name: 'מרכז חוסן - ירושלים',
-    description_he: 'מרכז טיפול ותמיכה לנפגעי פעולות איבה ומשפחותיהם.',
-    target_audience: ['hostilities', 'general'],
-    location: 'jerusalem',
-    meeting_type: 'frontal',
-    organization: 'משרד הביטחון',
-    contact_url: 'https://www.idf.il',
-  },
-  {
-    name: 'קבוצת ריפוי - אזור הדרום',
-    description_he: 'קבוצה לתמיכה ועיבוד טראומה לתושבי הדרום.',
-    target_audience: ['general', 'security_forces'],
-    location: 'south',
-    meeting_type: 'frontal',
-    organization: 'מכבי שרותי בריאות',
-    contact_url: 'https://www.macabi.co.il',
-  },
-];
-
-const LOCATION_LABELS = {
-  north: 'צפון', center: 'מרכז', south: 'דרום', jerusalem: 'ירושלים', online: 'מקוון'
-};
-const MEETING_LABELS = {
-  frontal: 'פרונטלי', digital: 'דיגיטלי', hybrid: 'היברידי'
-};
-
 export default function Community() {
   const { lang } = useLang();
   const [audienceFilter, setAudienceFilter] = useState('all');
   const [locationFilter, setLocationFilter] = useState('all');
-  const communities = STATIC_COMMUNITIES;
+  const { data: communities = [], isLoading, error } = useCommunities();
 
   const filtered = communities.filter(c => {
     const audMatch = audienceFilter === 'all' ||
@@ -107,22 +44,20 @@ export default function Community() {
       <PageHeader icon={Users} title={t(lang, 'community_title')} subtitle={t(lang, 'community_subtitle')} />
 
       <div className="max-w-5xl mx-auto px-4 sm:px-6 py-12">
+        {isLoading && <p className="text-center text-muted-foreground mb-4">{t(lang, 'loading')}</p>}
+        {error && <p className="text-center text-muted-foreground mb-4">{t(lang, 'content_error')}</p>}
 
         {/* Why community matters */}
         <div className="bg-card rounded-super border border-border p-6 mb-8 max-w-3xl mx-auto">
-          <p className="text-foreground leading-relaxed mb-3">
-            מחקרים מראים שחיבור עם אנשים שעוברים חוויה דומה הוא אחד הגורמים המשמעותיים ביותר בהחלמה מפוסט-טראומה. כשאת/ה מדבר/ת עם מישהו שמבין/ה מבפנים - אין צורך להסביר. יש פחות בדידות, ולעיתים - תשובות פשוטות שרק מי שחי את זה יכול לתת.
-          </p>
-          <p className="text-muted-foreground leading-relaxed">
-            זה נכון גם למי שמלווה: קבוצת תמיכה של משפחות ובני זוג היא מקום שבו אפשר לדבר בכנות על הקושי - בלי לפגוע בקרוב שאת/ה אוהב/ת.
-          </p>
+          <p className="text-foreground leading-relaxed mb-3">{t(lang, 'community_why_p1')}</p>
+          <p className="text-muted-foreground leading-relaxed">{t(lang, 'community_why_p2')}</p>
         </div>
 
         {/* Filters */}
         <div className="bg-card rounded-super border border-border p-5 mb-8 shadow-card">
           <div className="flex items-center gap-2 mb-4">
             <Filter className="w-4 h-4 text-muted-foreground" />
-            <span className="text-sm font-medium text-muted-foreground">סינון</span>
+            <span className="text-sm font-medium text-muted-foreground">{t(lang, 'community_filter')}</span>
           </div>
           <div className="space-y-3">
             <div>
@@ -138,7 +73,7 @@ export default function Community() {
                         : 'border-border text-muted-foreground hover:border-primary/40 hover:text-foreground'
                     }`}
                   >
-                    {opt.labelKey ? t(lang, opt.labelKey) : opt.label_he}
+                    {t(lang, opt.labelKey)}
                   </button>
                 ))}
               </div>
@@ -181,7 +116,7 @@ export default function Community() {
                     c.meeting_type === 'hybrid' ? 'bg-clay/10 text-clay' :
                     'bg-secondary/10 text-secondary'
                   }`}>
-                    {MEETING_LABELS[c.meeting_type] || c.meeting_type}
+                    {t(lang, 'meeting_' + c.meeting_type) || c.meeting_type}
                   </span>
                 </div>
 
@@ -193,7 +128,7 @@ export default function Community() {
                   {c.location && (
                     <div className="flex items-center gap-1">
                       <MapPin className="w-3.5 h-3.5" />
-                      {LOCATION_LABELS[c.location] || c.location}
+                      {t(lang, 'location_' + c.location) || c.location}
                     </div>
                   )}
                   {c.organization && (

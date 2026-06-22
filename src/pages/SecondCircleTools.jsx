@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useLang } from '@/lib/LanguageContext';
-import { getSecondCircleTools } from '@/lib/pageContent';
+import { t } from '@/lib/i18n';
+import { useSecondCircleTools } from '@/api/hooks';
 import { ChevronDown, Shield } from 'lucide-react';
 
 function FAQItem({ q, a, side = 'left' }) {
@@ -33,18 +34,9 @@ function FAQItem({ q, a, side = 'left' }) {
   );
 }
 
-const PAGE_HEADINGS = {
-  he: { title: 'כלים להתמודדות', subtitle: 'לאדם שמלווה מישהו עם PTSD - כלים מעשיים לתקשורת, תמיכה, ושמירה על עצמך', intro: 'ללוות מישהו עם PTSD הוא מסע שדורש כוח, סבלנות, ובעיקר - הבנה. הכלים כאן לא יפתרו הכל, אבל יכולים להקל מאוד על הדרך.' },
-  ar: { title: 'أدوات التعامل', subtitle: 'للشخص الذي يرافق شخصاً مصاباً باضطراب ما بعد الصدمة - أدوات عملية للتواصل والدعم والاعتناء بنفسك', intro: 'مرافقة شخص مصاب باضطراب ما بعد الصدمة رحلة تتطلب قوة وصبراً وفهماً. الأدوات هنا لن تحل كل شيء، لكنها يمكن أن تُيسّر الطريق كثيراً.' },
-  en: { title: 'Coping Tools', subtitle: 'For the person supporting someone with PTSD - practical tools for communication, support, and self-care', intro: 'Supporting someone with PTSD is a journey that takes strength, patience, and understanding. These tools won\'t solve everything, but they can make the path much easier.' },
-  ru: { title: 'Инструменты поддержки', subtitle: 'Для тех, кто поддерживает человека с ПТСР - практические инструменты для общения, поддержки и заботы о себе', intro: 'Поддерживать человека с ПТСР - это путь, требующий силы, терпения и понимания. Эти инструменты не решат всё, но могут сильно облегчить дорогу.' },
-  fr: { title: 'Outils d\'adaptation', subtitle: 'Pour la personne qui accompagne quelqu\'un souffrant de PTSD - outils pratiques pour communiquer, soutenir et prendre soin de soi', intro: 'Accompagner quelqu\'un souffrant de PTSD est un chemin qui demande force, patience et compréhension. Ces outils ne résoudront pas tout, mais peuvent grandement faciliter le parcours.' },
-};
-
 export default function SecondCircleTools() {
   const { lang } = useLang();
-  const tools = getSecondCircleTools(lang);
-  const h = PAGE_HEADINGS[lang] || PAGE_HEADINGS.he;
+  const { data: tools = [], isLoading, error } = useSecondCircleTools({ lang });
 
   return (
     <div className="min-h-screen bg-background pt-16">
@@ -57,18 +49,20 @@ export default function SecondCircleTools() {
             <Shield className="w-8 h-8 text-white" />
           </div>
           <h1 className="text-4xl sm:text-5xl font-heading font-black text-white mb-4">
-            {h.title}
+            {t(lang, 'second_circle_tools_title')}
           </h1>
           <p className="text-lg text-white/80 leading-relaxed max-w-2xl mx-auto">
-            {h.subtitle}
+            {t(lang, 'second_circle_tools_subtitle')}
           </p>
         </div>
       </div>
 
       <div className="max-w-3xl mx-auto px-4 sm:px-6 py-16">
+        {isLoading && <p className="text-center text-muted-foreground mb-4">{t(lang, 'loading')}</p>}
+        {error && <p className="text-center text-muted-foreground mb-4">{t(lang, 'content_error')}</p>}
         <div className="bg-primary/5 border border-primary/20 rounded-super p-5 mb-8">
           <p className="text-foreground leading-relaxed">
-            {h.intro}
+            {t(lang, 'second_circle_tools_intro')}
           </p>
         </div>
 

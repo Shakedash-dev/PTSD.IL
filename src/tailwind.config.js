@@ -51,24 +51,23 @@ module.exports = {
           DEFAULT: 'hsl(var(--sanctuary))',
           foreground: 'hsl(var(--sanctuary-foreground))',
         },
-        // teal/clay/sage are semantic aliases for the same base color - used to signal intent
-        // in class names (teal = positive/calm, clay = warm/neutral, sage = muted/secondary).
+        // teal = calm/positive (cool green), clay = warm/earthy (terracotta), sage = neutral muted green
         teal: {
-          DEFAULT: '#608A7B',
-          light: '#7AA090',
-          dark: '#4D7063',
+          DEFAULT: '#2A8D6E',
+          light: '#4BA88C',
+          dark: '#1E6E55',
         },
         clay: {
-          DEFAULT: '#608A7B',
-          light: '#7AA090',
-          dark: '#4D7063',
+          DEFAULT: '#C4705A',
+          light: '#D48870',
+          dark: '#A85842',
         },
         sage: {
-          DEFAULT: '#608A7B',
-          deep: '#4D7063',
+          DEFAULT: '#6B8B7A',
+          deep: '#4E6B5C',
         },
-        oatmeal: '#FAF2EB',
-        midnight: '#1A3336',
+        oatmeal: '#FAF0E5',
+        midnight: '#1A2E2A',
         chart: {
           '1': 'hsl(var(--chart-1))',
           '2': 'hsl(var(--chart-2))',
@@ -104,11 +103,11 @@ module.exports = {
         '5xl': ['3rem', { lineHeight: '1.15' }],
       },
       boxShadow: {
-        'atmospheric': '0 1px 2px rgba(0, 0, 0, 0.01)',
-        'atmospheric-md': '0 1px 3px rgba(0, 0, 0, 0.02)',
-        'atmospheric-lg': '0 1px 3px rgba(0, 0, 0, 0.02)',
-        'card': '0 1px 2px rgba(0, 0, 0, 0.01)',
-        'card-hover': '0 1px 3px rgba(0, 0, 0, 0.02)',
+        'atmospheric': '0 1px 4px rgba(26, 58, 50, 0.05)',
+        'atmospheric-md': '0 2px 8px rgba(26, 58, 50, 0.09)',
+        'atmospheric-lg': '0 4px 16px rgba(26, 58, 50, 0.13)',
+        'card': '0 2px 8px rgba(26, 58, 50, 0.07)',
+        'card-hover': '0 6px 20px rgba(26, 58, 50, 0.13)',
       },
       keyframes: {
         'accordion-down': {

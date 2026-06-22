@@ -6,36 +6,40 @@
 
 @layer base {
   :root {
-    /* Warm Alive Palette */
-    --background: 30 67% 95%;         /* #FAF2EB Warm peach-cream linen */
-    --foreground: 188 33% 15%;        /* #1A3336 Deep ocean-teal charcoal */
-    --card: 160 20% 90%;             /* #E4ECE9 Soft pale sage mist */
-    --card-foreground: 188 20% 30%;   /* #3D5A5E Sub-header teal */
-    --popover: 184 33% 93%;
-    --popover-foreground: 188 20% 30%;
-    --primary: 160 19% 46%;           /* #608A7B Eucalyptus green */
-    --primary-foreground: 40 71% 97%; /* ivory on buttons */
-    --secondary: 188 20% 30%;         /* #3D5A5E */
-    --secondary-foreground: 40 71% 97%;
-    --muted: 184 25% 88%;            /* soft seafoam hover tint */
-    --muted-foreground: 188 20% 38%;
-    --accent: 160 18% 37%;            /* #4D7063 Button hover */
-    --accent-foreground: 40 71% 97%;
-    --destructive: 0 60% 50%;
+    /* ── Theme 1: Forest Canopy (default) ─────────────────────────────────────
+       Page: pale sage #EEF4ED  ·  Cards: warm parchment #F6F2E7
+       Primary: muted moss #4A7A58  ·  Accent: clay #A86E48
+       Text: forest charcoal #1E2E22
+    ── */
+    --background: 115 22% 94%;        /* #EEF4ED pale sage canvas */
+    --foreground: 135 21% 15%;        /* #1E2E22 deep forest charcoal */
+    --card: 43 44% 94%;               /* #F6F2E7 warm parchment */
+    --card-foreground: 133 19% 29%;   /* #3C5842 mid-dark forest text */
+    --popover: 43 44% 94%;
+    --popover-foreground: 133 19% 29%;
+    --primary: 138 24% 38%;           /* #4A7A58 muted moss green */
+    --primary-foreground: 115 22% 94%;
+    --secondary: 24 40% 47%;          /* #A86E48 muted clay — badge/secondary accent */
+    --secondary-foreground: 43 44% 94%;
+    --muted: 38 27% 85%;              /* #E4DDD0 warm sand */
+    --muted-foreground: 133 19% 29%;
+    --accent: 140 25% 30%;            /* #3A6047 deeper moss hover */
+    --accent-foreground: 115 22% 94%;
+    --destructive: 0 55% 48%;
     --destructive-foreground: 0 0% 98%;
-    --border: 184 22% 84%;           /* soft seafoam border */
-    --input: 184 22% 84%;
-    --ring: 160 19% 46%;
-    --radius: 1rem;                  /* 16px */
+    --border: 120 17% 76%;            /* #BACFBA sage border */
+    --input: 120 17% 76%;
+    --ring: 138 24% 38%;
+    --radius: 1rem;
 
     /* Custom tokens */
-    --sanctuary: 188 33% 15%;
-    --sanctuary-foreground: 40 71% 97%;
-    --sage: 160 19% 54%;
-    --sage-deep: 160 19% 46%;
-    --oatmeal: 30 67% 95%;
-    --shadow-teal: rgba(0, 0, 0, 0.01);
-    --shadow-teal-md: rgba(0, 0, 0, 0.02);
+    --sanctuary: 135 21% 15%;
+    --sanctuary-foreground: 43 44% 94%;
+    --sage: 120 17% 60%;
+    --sage-deep: 138 24% 38%;
+    --oatmeal: 43 44% 94%;
+    --shadow-teal: rgba(30, 46, 34, 0.07);
+    --shadow-teal-md: rgba(30, 46, 34, 0.13);
 
     --font-heading: 'Rubik', ui-sans-serif, system-ui, sans-serif;
     --font-body: 'Assistant', ui-sans-serif, system-ui, sans-serif;

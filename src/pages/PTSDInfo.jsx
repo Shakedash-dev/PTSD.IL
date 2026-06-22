@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useLang } from '@/lib/LanguageContext';
 import { t } from '@/lib/i18n';
-import { getPTSDInfoFaqs } from '@/lib/pageContent';
+import { usePTSDInfoFaqs } from '@/api/hooks';
 import PageHeader from '@/components/PageHeader';
 import { ChevronDown, Brain } from 'lucide-react';
 
@@ -39,7 +39,7 @@ function FAQAccordion({ question, answer, side = 'left' }) {
 
 export default function PTSDInfo() {
   const { lang } = useLang();
-  const faqs = getPTSDInfoFaqs(lang);
+  const { data: faqs = [], isLoading, error } = usePTSDInfoFaqs({ lang });
 
   return (
     <div className="min-h-screen bg-background">
@@ -47,8 +47,10 @@ export default function PTSDInfo() {
 
       {/* FAQ */}
       <div className="max-w-xl mx-auto px-4 sm:px-6 py-16">
+        {isLoading && <p className="text-center text-muted-foreground mb-4">{t(lang, 'loading')}</p>}
+        {error && <p className="text-center text-muted-foreground mb-4">{t(lang, 'content_error')}</p>}
         <p className="text-muted-foreground mb-8 text-center leading-relaxed">
-          לחץ/י על כל שאלה כדי לקרוא את התשובה
+          {t(lang, 'ptsd_info_instruction')}
         </p>
         <div className="flex flex-col gap-3">
           {faqs.map((faq, i) => {

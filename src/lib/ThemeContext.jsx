@@ -1,101 +1,112 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
 export const PALETTES = [
+  // ─────────────────────────────────────────────────────────────────────────────
+  // THEME 1 · Forest Canopy - Earth & Grounding
+  //
+  // Page canvas: pale sage (#EEF4ED) - cool, outdoor, canopy light
+  // Cards:       warm parchment (#F6F2E7) - earth underfoot, grounded warmth
+  // Primary:     muted moss green (#4A7A58) - organic, deep, stabilizing
+  // Accent:      muted clay-terracotta (#A86E48) - warm contrast, not aggressive
+  // Typography:  deep forest charcoal (#1E2E22) - soft on eyes, earthy root
+  // ─────────────────────────────────────────────────────────────────────────────
   {
-    id: 'current',
-    label: 'עכשווי',
-    background: '#FAF2EB',
-    card: '#E4ECE9',
-    primary: '#608A7B',
-    primaryHover: '#4D7063',
-    text: '#1A3336',
-    secondary: '#3D5A5E',
-    muted: '#C8D8D5',
-    border: '#C8D8D5',
+    id: 'forest-canopy',
+    label: 'חופת יער',
+    background: '#EEF4ED',
+    card:       '#F6F2E7',
+    primary:    '#4A7A58',
+    primaryHover: '#3A6047',
+    highlight:  '#A86E48',
+    text:       '#1E2E22',
+    secondary:  '#3C5842',
+    muted:      '#E4DDD0',
+    border:     '#BACFBA',
   },
+
+  // ─────────────────────────────────────────────────────────────────────────────
+  // THEME 2 · Twilight - Calm & Serene Reflection
+  //
+  // Page canvas: dusty blue-slate (#ECF0F7) - dusk sky, cool and receding
+  // Cards:       muted lavender (#F2EFF9) - the hue shifts family entirely,
+  //              creating depth without any harsh jump in brightness
+  // Primary:     deep dusty slate-blue (#4A6888) - authoritative but not cold
+  // Accent:      muted violet (#887AAA) - gentle purple whisper
+  // Typography:  deep navy-charcoal (#1C2838) - low-strain, high legibility
+  // ─────────────────────────────────────────────────────────────────────────────
   {
-    id: 'warm-sand',
-    label: 'חול חם',
-    background: '#F6F1E8',
-    card: '#EDE8DF',
-    primary: '#8FA68E',
-    primaryHover: '#7B927A',
-    text: '#36413E',
-    secondary: '#5A6B68',
-    muted: '#E8E1D5',
-    border: '#D8D0C4',
+    id: 'twilight',
+    label: 'דמדומים',
+    background: '#ECF0F7',
+    card:       '#F2EFF9',
+    primary:    '#4A6888',
+    primaryHover: '#3A5472',
+    highlight:  '#887AAA',
+    text:       '#1C2838',
+    secondary:  '#485A72',
+    muted:      '#D8E2F0',
+    border:     '#BEC8DC',
   },
+
+  // ─────────────────────────────────────────────────────────────────────────────
+  // THEME 3 · Early Dawn - Warmth & Hopeful Comfort
+  //
+  // Page canvas: warm almond (#FAF4EC) - morning light on parchment, inviting
+  // Cards:       soft blush-peach (#FFF4EE) - cards are a shade warmer and
+  //              rosier, creating gentle depth without white-on-white flatness
+  // Primary:     muted warm terracotta (#A86448) - earthy, human, not orange
+  // Accent:      dusty rose (#B8788A) - community warmth, soft
+  // Typography:  dark espresso (#2A1E18) - warm, not harsh, low reading strain
+  // ─────────────────────────────────────────────────────────────────────────────
   {
-    id: 'terracotta',
-    label: 'טרקוטה',
+    id: 'early-dawn',
+    label: 'שחר מוקדם',
     background: '#FAF4EC',
-    card: '#EEE8E0',
-    primary: '#C9856D',
-    primaryHover: '#B8745D',
-    text: '#4A403A',
-    secondary: '#7A6A62',
-    muted: '#EAE0D4',
-    border: '#D8CCBE',
+    card:       '#FFF4EE',
+    primary:    '#A86448',
+    primaryHover: '#8A5038',
+    highlight:  '#B8788A',
+    text:       '#2A1E18',
+    secondary:  '#5E4840',
+    muted:      '#F0E5D8',
+    border:     '#D8C8B5',
   },
-  {
-    id: 'dusty-green',
-    label: 'ירוק עמום',
-    background: '#F9F5EE',
-    card: '#EDEAE2',
-    primary: '#6F8F7A',
-    primaryHover: '#5C7A67',
-    text: '#2F3630',
-    secondary: '#506058',
-    muted: '#E4DFD6',
-    border: '#D0C8BC',
-  },
-  {
-    id: 'slate-blue',
-    label: 'כחול-אפור',
-    background: '#EEF1F4',
-    card: '#E3E9F0',
-    primary: '#6B7F99',
-    primaryHover: '#5A6E87',
-    text: '#2E3A45',
-    secondary: '#506070',
-    muted: '#DCE3EB',
-    border: '#C8D2DC',
-  },
-  {
-    id: 'healing-teal',
-    label: 'טיל ריפוי',
-    background: '#F2EFE6',
-    card: '#E6E0D2',
-    primary: '#5E8B82',
-    primaryHover: '#4E7A71',
-    text: '#2C3A36',
-    secondary: '#4E6560',
-    muted: '#E0D8C8',
-    border: '#CCC4B4',
-  },
+
+  // ─────────────────────────────────────────────────────────────────────────────
+  // THEME 4 · Lavender - soft monochromatic purple
+  // Single-hue: all surfaces are purple-family tones, cards barely shift.
+  // ─────────────────────────────────────────────────────────────────────────────
   {
     id: 'lavender',
     label: 'לבנדר',
-    background: '#F3F0F4',
-    card: '#E7E2EC',
-    primary: '#8B82A6',
-    primaryHover: '#786F94',
-    text: '#38323F',
-    secondary: '#625A70',
-    muted: '#E0DAE8',
-    border: '#CCC4D8',
+    background: '#F5F0FA',
+    card:       '#FDF8FF',
+    primary:    '#8050B8',
+    primaryHover: '#6840A0',
+    highlight:  '#C4708A',
+    text:       '#28183A',
+    secondary:  '#5E4878',
+    muted:      '#EAE5F2',
+    border:     '#D0C0E0',
   },
+
+  // ─────────────────────────────────────────────────────────────────────────────
+  // THEME 5 · Sky & Ocean - light blue + deeper blue, no purple
+  // Very pale sky-blue page, soft powder-blue cards.
+  // Deeper ocean blue for interactive elements - all within the blue family.
+  // ─────────────────────────────────────────────────────────────────────────────
   {
-    id: 'forest',
-    label: 'יער',
-    background: '#F4F1E9',
-    card: '#E5E0D3',
-    primary: '#5A7058',
-    primaryHover: '#495E47',
-    text: '#2B332A',
-    secondary: '#4E5E4C',
-    muted: '#DDD8CC',
-    border: '#C8C0B0',
+    id: 'sky-ocean',
+    label: 'תכלת + כחול',
+    background: '#EDF5FB',
+    card:       '#DDEEF8',
+    primary:    '#3A78A8',
+    primaryHover: '#2C5F88',
+    highlight:  '#6AAED4',
+    text:       '#162538',
+    secondary:  '#385878',
+    muted:      '#D0E6F4',
+    border:     '#AACCE0',
   },
 ];
 
@@ -130,6 +141,7 @@ function hexToHsl(hex) {
 
 // Overrides the CSS custom properties defined in index.css :root at runtime.
 // Theme state is NOT persisted to localStorage - palette choice is intentionally session-only.
+// highlight = complementary accent color used for badges/secondary buttons (separate from secondary which is text-only)
 function applyPalette(palette) {
   const root = document.documentElement;
   root.style.setProperty('--background', hexToHsl(palette.background));
@@ -138,7 +150,8 @@ function applyPalette(palette) {
   root.style.setProperty('--card-foreground', hexToHsl(palette.secondary));
   root.style.setProperty('--primary', hexToHsl(palette.primary));
   root.style.setProperty('--primary-foreground', hexToHsl(palette.background));
-  root.style.setProperty('--secondary', hexToHsl(palette.secondary));
+  root.style.setProperty('--secondary', hexToHsl(palette.highlight || palette.primaryHover));
+  root.style.setProperty('--secondary-foreground', hexToHsl(palette.background));
   root.style.setProperty('--accent', hexToHsl(palette.primaryHover));
   root.style.setProperty('--accent-foreground', hexToHsl(palette.background));
   root.style.setProperty('--muted', hexToHsl(palette.muted));
@@ -149,8 +162,8 @@ function applyPalette(palette) {
 }
 
 export function ThemeProvider({ children }) {
-  const [paletteId, setPaletteId] = useState('current');
-  const [textureId, setTextureId] = useState('bubbles');
+  const [paletteId, setPaletteId] = useState('forest-canopy');
+  const [textureId, setTextureId] = useState('constellation');
 
   const palette = PALETTES.find(p => p.id === paletteId) || PALETTES[0];
 

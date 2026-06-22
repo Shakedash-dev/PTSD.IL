@@ -16,5 +16,18 @@ export default defineConfig({
   base: BASE_PATH + '/',
   plugins: [
     react(),
+    {
+      name: 'redirect-bare-base',
+      configureServer(server) {
+        server.middlewares.use((req, res, next) => {
+          if (req.url === BASE_PATH) {
+            res.writeHead(301, { Location: BASE_PATH + '/' });
+            res.end();
+          } else {
+            next();
+          }
+        });
+      },
+    },
   ]
 });
