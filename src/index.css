@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&family=Assistant:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -11,25 +11,25 @@
        Primary: muted moss #4A7A58  ·  Accent: clay #A86E48
        Text: forest charcoal #1E2E22
     ── */
-    --background: 115 22% 94%;        /* #EEF4ED pale sage canvas */
+    --background: 147 46% 91%;        /* #DCF2E6 fresh light green canvas */
     --foreground: 135 21% 15%;        /* #1E2E22 deep forest charcoal */
-    --card: 43 44% 94%;               /* #F6F2E7 warm parchment */
+    --card: 151 49% 96%;              /* #F0FAF5 near-white green card */
     --card-foreground: 133 19% 29%;   /* #3C5842 mid-dark forest text */
-    --popover: 43 44% 94%;
+    --popover: 151 49% 96%;
     --popover-foreground: 133 19% 29%;
-    --primary: 138 24% 38%;           /* #4A7A58 muted moss green */
+    --primary: 140 45% 33%;           /* #2E7A48 forest green — passes WCAG AA 4.5:1 on light bg */
     --primary-foreground: 115 22% 94%;
     --secondary: 24 40% 47%;          /* #A86E48 muted clay — badge/secondary accent */
     --secondary-foreground: 43 44% 94%;
-    --muted: 38 27% 85%;              /* #E4DDD0 warm sand */
+    --muted: 148 35% 81%;             /* #BEE0CE clearly green muted */
     --muted-foreground: 133 19% 29%;
-    --accent: 140 25% 30%;            /* #3A6047 deeper moss hover */
+    --accent: 143 51% 25%;            /* #206040 darker forest hover */
     --accent-foreground: 115 22% 94%;
     --destructive: 0 55% 48%;
     --destructive-foreground: 0 0% 98%;
-    --border: 120 17% 76%;            /* #BACFBA sage border */
-    --input: 120 17% 76%;
-    --ring: 138 24% 38%;
+    --border: 144 31% 66%;            /* #8EC4A4 medium green border */
+    --input: 144 31% 66%;
+    --ring: 140 45% 33%;
     --radius: 1rem;
 
     /* Custom tokens */
@@ -41,9 +41,9 @@
     --shadow-teal: rgba(30, 46, 34, 0.07);
     --shadow-teal-md: rgba(30, 46, 34, 0.13);
 
-    --font-heading: 'Rubik', ui-sans-serif, system-ui, sans-serif;
-    --font-body: 'Assistant', ui-sans-serif, system-ui, sans-serif;
-    --font-display: 'Rubik', ui-sans-serif, system-ui, sans-serif;
+    --font-heading: 'Fredoka', ui-sans-serif, system-ui, sans-serif;
+    --font-body: 'Fredoka', ui-sans-serif, system-ui, sans-serif;
+    --font-display: 'Fredoka', ui-sans-serif, system-ui, sans-serif;
     --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 
     --sidebar-background: 37 20% 95%;

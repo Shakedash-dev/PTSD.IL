@@ -83,6 +83,50 @@ const SCALE_KEYS = ['not_at_all', 'a_little', 'moderately', 'quite_a_bit', 'extr
 
 const TOTAL = 20;
 
+function QuestionCard({ idx, question, scale, useRawScale, answers, onAnswer, lang }) {
+  const isAnswered = answers[idx] !== undefined;
+  return (
+    <div className={`p-6 rounded-super bg-card border transition-natural shadow-card ${
+      isAnswered ? 'border-primary/30' : 'border-border'
+    }`}>
+      <div className="flex gap-3 mb-5">
+        <span className="text-2xl font-heading font-bold text-clay/40 flex-shrink-0 leading-tight mt-0.5">
+          {String(idx + 1).padStart(2, '0')}
+        </span>
+        <p className="text-foreground leading-relaxed font-medium">{question}</p>
+      </div>
+      <div className="grid grid-cols-5 gap-2">
+        {scale.map((label, val) => (
+          <button
+            key={val}
+            onClick={() => onAnswer(idx, val)}
+            className={`
+              flex flex-col items-center gap-1 p-2 rounded-lg border transition-natural text-center
+              ${answers[idx] === val
+                ? 'bg-primary border-primary text-white'
+                : 'bg-background border-border hover:border-primary/50 hover:bg-primary/5'
+              }
+            `}
+          >
+            <span className="text-base font-bold">{val}</span>
+            <span className="text-[10px] leading-tight text-current opacity-70 hidden sm:block">
+              {useRawScale ? label : t(lang, label)}
+            </span>
+          </button>
+        ))}
+      </div>
+      <div className="flex justify-between mt-1 px-1">
+        <span className="text-xs text-muted-foreground">
+          {useRawScale ? scale[0] : t(lang, 'not_at_all')}
+        </span>
+        <span className="text-xs text-muted-foreground">
+          {useRawScale ? scale[4] : t(lang, 'extremely')}
+        </span>
+      </div>
+    </div>
+  );
+}
+
 export default function Questionnaire() {
   const { lang } = useLang();
   const isRTL = document.documentElement.getAttribute('dir') === 'rtl';
@@ -113,50 +157,6 @@ export default function Questionnaire() {
 
   // 33 is the PCL-5 clinical cutoff for probable PTSD (National Center for PTSD).
   const isHigh = result !== null && result >= 33;
-
-  function QuestionCard({ idx, question, scale, useRawScale }) {
-    const isAnswered = answers[idx] !== undefined;
-    return (
-      <div className={`p-6 rounded-super bg-card border transition-natural shadow-card ${
-        isAnswered ? 'border-primary/30' : 'border-border'
-      }`}>
-        <div className="flex gap-3 mb-5">
-          <span className="text-2xl font-heading font-bold text-clay/40 flex-shrink-0 leading-tight mt-0.5">
-            {String(idx + 1).padStart(2, '0')}
-          </span>
-          <p className="text-foreground leading-relaxed font-medium">{question}</p>
-        </div>
-        <div className="grid grid-cols-5 gap-2">
-          {scale.map((label, val) => (
-            <button
-              key={val}
-              onClick={() => handleAnswer(idx, val)}
-              className={`
-                flex flex-col items-center gap-1 p-2 rounded-lg border transition-natural text-center
-                ${answers[idx] === val
-                  ? 'bg-primary border-primary text-white'
-                  : 'bg-background border-border hover:border-primary/50 hover:bg-primary/5'
-                }
-              `}
-            >
-              <span className="text-base font-bold">{val}</span>
-              <span className="text-[10px] leading-tight text-current opacity-70 hidden sm:block">
-                {useRawScale ? label : t(lang, label)}
-              </span>
-            </button>
-          ))}
-        </div>
-        <div className="flex justify-between mt-1 px-1">
-          <span className="text-xs text-muted-foreground">
-            {useRawScale ? scale[0] : t(lang, 'not_at_all')}
-          </span>
-          <span className="text-xs text-muted-foreground">
-            {useRawScale ? scale[4] : t(lang, 'extremely')}
-          </span>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-background pt-20">
@@ -212,6 +212,9 @@ export default function Questionnaire() {
                               question={q}
                               scale={PCL5_SCALE_HE}
                               useRawScale
+                              answers={answers}
+                              onAnswer={handleAnswer}
+                              lang={lang}
                             />
                           );
                         })}
@@ -231,6 +234,9 @@ export default function Questionnaire() {
                   question={q}
                   scale={SCALE_KEYS}
                   useRawScale={false}
+                  answers={answers}
+                  onAnswer={handleAnswer}
+                  lang={lang}
                 />
               ))}
             </div>
@@ -271,8 +277,8 @@ export default function Questionnaire() {
             </div>
 
             {isHigh
-              ? <AlertCircle className="w-8 h-8 text-primary mx-auto mb-4 opacity-60" />
-              : <CheckCircle className="w-8 h-8 text-teal mx-auto mb-4 opacity-60" />
+              ? <AlertCircle className="w-8 h-8 text-primary mx-auto mb-4" />
+              : <CheckCircle className="w-8 h-8 text-teal mx-auto mb-4" />
             }
 
             <h2 className="text-2xl font-heading font-bold text-foreground mb-4">

@@ -6,16 +6,13 @@ import { ChevronDown, Shield } from 'lucide-react';
 
 function FAQItem({ q, a, side = 'left' }) {
   const [open, setOpen] = useState(false);
-  const isRight = side === 'right';
   return (
     <div className={`border transition-natural overflow-hidden ${
-      isRight
+      side === 'right'
         ? 'rounded-tl-2xl rounded-bl-2xl rounded-br-2xl rounded-tr-sm'
         : 'rounded-tr-2xl rounded-br-2xl rounded-bl-2xl rounded-tl-sm'
     } ${
-      isRight
-        ? open ? 'bg-primary/20 border-primary/50' : 'bg-primary/12 border-primary/30 hover:bg-primary/18'
-        : open ? 'bg-muted border-muted-foreground/25' : 'bg-muted/50 border-muted-foreground/15 hover:bg-muted'
+      open ? 'bg-primary/15 border-primary/40' : 'bg-card border-border hover:bg-primary/8'
     }`}>
       <button
         className="w-full text-start px-6 py-5 flex items-center justify-between gap-4 hover:bg-muted/30 transition-natural"

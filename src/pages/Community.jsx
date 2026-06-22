@@ -102,7 +102,7 @@ export default function Community() {
         {/* Results */}
         {filtered.length === 0 ? (
           <div className="text-center py-12 text-muted-foreground bg-card rounded-super border border-border">
-            <Users className="w-12 h-12 mx-auto mb-3 opacity-30" />
+            <Users className="w-12 h-12 mx-auto mb-3 opacity-60" />
             <p>{t(lang, 'no_communities')}</p>
           </div>
         ) : (

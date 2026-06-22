@@ -65,7 +65,7 @@ function StepCard({ step, isActive, onToggle, index, total, lang }) {
                     <Link
                       key={i}
                       to={link.url}
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-primary/10 text-primary rounded-full text-sm hover:bg-primary/20 transition-natural"
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-primary/10 text-foreground rounded-full text-sm hover:bg-primary/20 transition-natural"
                     >
                       {link.label}
                     </Link>
@@ -75,7 +75,7 @@ function StepCard({ step, isActive, onToggle, index, total, lang }) {
                       href={link.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-primary/10 text-primary rounded-full text-sm hover:bg-primary/20 transition-natural"
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-primary/10 text-foreground rounded-full text-sm hover:bg-primary/20 transition-natural"
                     >
                       {link.label}
                       <ExternalLink className="w-3 h-3" />

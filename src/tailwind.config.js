@@ -91,7 +91,7 @@ module.exports = {
         body: ['var(--font-body)'],
         display: ['var(--font-display)'],
         mono: ['var(--font-mono)'],
-        heebo: ['Heebo', 'sans-serif'],
+        heebo: ['Fredoka', 'sans-serif'],
       },
       fontSize: {
         'base': ['1rem', { lineHeight: '1.75' }],

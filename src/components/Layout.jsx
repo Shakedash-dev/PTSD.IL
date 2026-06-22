@@ -4,7 +4,6 @@ import { AnimatePresence, motion } from 'framer-motion';
 import Navbar from './Navbar';
 import Footer from './Footer';
 import ChatbotFAB from './ChatbotFAB';
-import TextureOverlay from './TextureOverlay';
 
 // Sanctuary pages are therapeutic exercises; they get a minimal header so nothing distracts users mid-session.
 const SANCTUARY_PATHS = ['/calming', '/calming/breathing', '/calming/grounding', '/calming/muscle'];
@@ -16,17 +15,16 @@ export default function Layout() {
 
   return (
     <div className="min-h-screen flex flex-col bg-background relative">
-      <TextureOverlay />
       {!isSanctuary && <Navbar />}
       {isSanctuary && <SanctuaryNav />}
       <main className="flex-1">
         <AnimatePresence mode="wait">
           <motion.div
             key={location.pathname}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.35, ease: 'easeInOut' }}
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -4 }}
+            transition={{ duration: 0.45, ease: [0.25, 0.1, 0.25, 1] }}
           >
             <Outlet />
           </motion.div>

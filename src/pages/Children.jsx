@@ -90,7 +90,7 @@ export default function Children() {
                 })}
               </div>
             ) : (
-              <p className="text-sm text-muted-foreground/60 text-center py-4">
+              <p className="text-sm text-muted-foreground text-center py-4">
                 {t(lang, 'resources_coming_soon')}
               </p>
             )}

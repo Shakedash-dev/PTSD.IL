@@ -43,7 +43,7 @@ export default function Sources() {
               )}
 
               {source.description_he && (
-                <p className="text-xs text-muted-foreground/80 leading-relaxed mb-3">
+                <p className="text-xs text-muted-foreground leading-relaxed mb-3">
                   {source.description_he}
                 </p>
               )}

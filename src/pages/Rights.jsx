@@ -16,16 +16,13 @@ const CATEGORIES = [
 
 function FAQAccordion({ q, a, steps, links, side = 'left', lang }) {
   const [open, setOpen] = useState(false);
-  const isRight = side === 'right';
   return (
     <div className={`border transition-natural overflow-hidden ${
-      isRight
+      side === 'right'
         ? 'rounded-tl-2xl rounded-bl-2xl rounded-br-2xl rounded-tr-sm'
         : 'rounded-tr-2xl rounded-br-2xl rounded-bl-2xl rounded-tl-sm'
     } ${
-      isRight
-        ? open ? 'bg-primary/20 border-primary/50' : 'bg-primary/12 border-primary/30 hover:bg-primary/18'
-        : open ? 'bg-muted border-muted-foreground/25' : 'bg-muted/50 border-muted-foreground/15 hover:bg-muted'
+      open ? 'bg-primary/15 border-primary/40' : 'bg-card border-border hover:bg-primary/8'
     }`}>
       <button
         className="w-full text-start px-5 py-4 flex items-center justify-between gap-3 transition-natural"
@@ -51,7 +48,7 @@ function FAQAccordion({ q, a, steps, links, side = 'left', lang }) {
                   href={l.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-primary/10 text-primary rounded-full text-sm hover:bg-primary/20 transition-natural"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-primary/10 text-foreground rounded-full text-sm hover:bg-primary/20 transition-natural"
                 >
                   {l.label}
                   <ExternalLink className="w-3 h-3" />
@@ -113,9 +110,9 @@ export default function Rights() {
 
         {/* Chatbot placeholder */}
         <div className="p-6 rounded-super border border-dashed border-primary/30 bg-primary/3 text-center">
-          <MessageCircle className="w-8 h-8 text-primary/40 mx-auto mb-3" />
+          <MessageCircle className="w-8 h-8 text-primary mx-auto mb-3" />
           <p className="font-medium text-muted-foreground">{t(lang, 'chatbot_soon')}</p>
-          <p className="text-sm text-muted-foreground/70 mt-1">
+          <p className="text-sm text-muted-foreground mt-1">
             {t(lang, 'chatbot_description')}
           </p>
         </div>
