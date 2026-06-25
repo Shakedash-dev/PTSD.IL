@@ -4,6 +4,7 @@ import { t } from '@/lib/i18n';
 import { usePTSDInfoFaqs } from '@/api/hooks';
 import PageHeader from '@/components/PageHeader';
 import { useImages } from '@/lib/ImageSetContext';
+import ValidatableContent from '@/components/ValidatableContent';
 
 // Design B: docs-style sticky table-of-contents.
 // Desktop: question list pinned in a left rail; clicking a title shows the full answer
@@ -64,7 +65,7 @@ export default function PTSDInfo2() {
           {/* Main content - full answer always visible */}
           <article className="bg-card border border-border rounded-super shadow-card p-8 sm:p-10 min-h-[20rem]">
             {active ? (
-              <>
+              <ValidatableContent contentId={`ptsd-info.faq.${activeIndex}`} label={active.q}>
                 <h2 className="font-heading font-semibold text-2xl sm:text-3xl text-foreground mb-5 leading-tight">
                   {active.q}
                 </h2>
@@ -72,7 +73,7 @@ export default function PTSDInfo2() {
                   className="text-card-foreground leading-relaxed prose prose-sm sm:prose-base max-w-none"
                   dangerouslySetInnerHTML={{ __html: active.a }}
                 />
-              </>
+              </ValidatableContent>
             ) : (
               !isLoading && (
                 <p className="text-muted-foreground text-center">

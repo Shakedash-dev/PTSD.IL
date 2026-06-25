@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import SectionBlock from '@/components/SectionBlock';
 import { Users, MapPin, ExternalLink, X } from 'lucide-react';
 import { useImages } from '@/lib/ImageSetContext';
+import ValidatableContent from '@/components/ValidatableContent';
 
 const AUDIENCE_OPTIONS = [
   { key: 'all', labelKey: 'all_audiences' },
@@ -83,14 +84,16 @@ export default function Community() {
 
       {/* Why community matters - intro paragraph */}
       <SectionBlock variant="canvas" maxWidth="default" padding="pt-12 pb-8">
-        <div className="space-y-4">
-          <p className="font-body text-lg text-foreground leading-relaxed">
-            {t(lang, 'community_why_p1')}
-          </p>
-          <p className="font-body text-muted-foreground leading-relaxed">
-            {t(lang, 'community_why_p2')}
-          </p>
-        </div>
+        <ValidatableContent contentId="community.intro" label="פסקת מבוא - קהילה">
+          <div className="space-y-4">
+            <p className="font-body text-lg text-foreground leading-relaxed">
+              {t(lang, 'community_why_p1')}
+            </p>
+            <p className="font-body text-muted-foreground leading-relaxed">
+              {t(lang, 'community_why_p2')}
+            </p>
+          </div>
+        </ValidatableContent>
       </SectionBlock>
 
       {/* Filter bar */}
@@ -142,8 +145,8 @@ export default function Community() {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
             {filtered.map((c, i) => (
+              <ValidatableContent key={c.id || i} contentId={`community.card.${c.id || i}`} label={c.name}>
               <a
-                key={c.id || i}
                 href={c.contact_url}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -198,6 +201,7 @@ export default function Community() {
                   </span>
                 </div>
               </a>
+              </ValidatableContent>
             ))}
           </div>
         )}

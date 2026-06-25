@@ -5,6 +5,7 @@ import { useRightsFaqs } from '@/api/hooks';
 import PageHeader from '@/components/PageHeader';
 import { Shield, Heart, Users, Car, HelpCircle, ChevronDown, ExternalLink, MessageCircle, Scale } from 'lucide-react';
 import { useImages } from '@/lib/ImageSetContext';
+import ValidatableContent from '@/components/ValidatableContent';
 
 const CATEGORIES = [
   { key: 'security_forces', labelKey: 'rights_security', icon: Shield },
@@ -18,23 +19,25 @@ const CATEGORIES = [
 function FAQAccordion({ q, a, steps, links, side = 'left', lang }) {
   const [open, setOpen] = useState(false);
   return (
-    <div className={`border transition-natural overflow-hidden ${
+    <div className={`border-2 transition-natural overflow-hidden ${
       side === 'right'
         ? 'rounded-tl-2xl rounded-bl-2xl rounded-br-2xl rounded-tr-sm'
         : 'rounded-tr-2xl rounded-br-2xl rounded-bl-2xl rounded-tl-sm'
     } ${
-      open ? 'bg-primary/15 border-primary/40' : 'bg-card border-border hover:bg-primary/8'
+      open ? 'bg-card border-primary shadow-card-hover' : 'bg-card border-border hover:border-primary/40'
     }`}>
       <button
-        className="w-full text-start px-5 py-4 flex items-center justify-between gap-3 transition-natural"
+        className={`w-full text-start px-5 py-4 flex items-center justify-between gap-3 transition-natural ${
+          open ? 'bg-primary/15' : ''
+        }`}
         onClick={() => setOpen(o => !o)}
       >
         <span className="font-heading font-semibold text-foreground leading-snug">{q}</span>
         <ChevronDown className={`w-5 h-5 text-primary flex-shrink-0 transition-transform duration-300 ${open ? 'rotate-180' : ''}`} />
       </button>
       {open && (
-        <div className="px-5 pb-5 space-y-3">
-          <div className="text-muted-foreground leading-relaxed prose prose-sm max-w-none" dangerouslySetInnerHTML={{ __html: a }} />
+        <div className="px-5 pt-4 pb-5 space-y-3 border-t border-primary/30">
+          <div className="text-foreground leading-relaxed prose prose-sm max-w-none" dangerouslySetInnerHTML={{ __html: a }} />
           {steps && (
             <div className="p-4 bg-primary/5 rounded-lg">
               <p className="text-xs font-bold text-primary uppercase tracking-wide mb-2">{t(lang, 'step_by_step')}</p>
@@ -112,9 +115,9 @@ export default function Rights() {
           {currentFaqs.map((faq, i) => {
             const side = i % 2 === 0 ? 'left' : 'right';
             return (
-              <div key={i} className={`w-[85%] ${side === 'left' ? 'mr-auto' : 'ml-auto'}`}>
+              <ValidatableContent key={i} contentId={`rights.faq.${activeCategory}.${i}`} label={faq.q} className={`w-[85%] ${side === 'left' ? 'mr-auto' : 'ml-auto'}`}>
                 <FAQAccordion {...faq} side={side} lang={lang} />
-              </div>
+              </ValidatableContent>
             );
           })}
         </div>

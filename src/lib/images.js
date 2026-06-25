@@ -74,7 +74,7 @@ const SET1_IDS = {
   rights_hero:              '1562654501-a0ccc0fc3fb1',     // from set2
   children_hero:            '1633379209339-31874f478240',  // from set2
   ptsdinfo_hero:            '1573507811472-909cd17e834d',
-  firstcircle_hero:         '1763539817785-cc351352b3f7',
+  firstcircle_hero:         '1534330207526-8e81f10ec6fc',  // from set2 (preferred banner)
   secondcircle_hero:        '1604881991720-f91add269bed',
   secondcircletools_hero:   '1604881991575-dfb1003d8811',  // from set3
   questionnaire_hero:       '1456324504439-367cee3b3c32',  // from set2 home_path3 (journaling/check-in)

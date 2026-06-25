@@ -3,8 +3,9 @@ import { useLang } from '@/lib/LanguageContext';
 import { t } from '@/lib/i18n';
 import { useChildrenContent } from '@/api/hooks';
 import PageHeader from '@/components/PageHeader';
-import { Baby, BookOpen, Video, Download, Star } from 'lucide-react';
+import { Baby, BookOpen, Video, Download, Star, ChevronDown, ExternalLink } from 'lucide-react';
 import { useImages } from '@/lib/ImageSetContext';
+import ValidatableContent from '@/components/ValidatableContent';
 
 const AGE_TABS = [
   { key: '0-4', labelKey: 'age_until4' },
@@ -27,10 +28,16 @@ export default function Children() {
   const { lang } = useLang();
   const IMAGES = useImages();
   const [activeAge, setActiveAge] = useState('0-4');
+  const [openResource, setOpenResource] = useState(null);
   const { data: allContent = {}, isLoading, error } = useChildrenContent();
   const activeContent = allContent[activeAge] || {};
   const guidelines = activeContent.guidelines || '';
   const resources = activeContent.resources || [];
+
+  const handleAgeChange = (age) => {
+    setActiveAge(age);
+    setOpenResource(null);
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -52,7 +59,7 @@ export default function Children() {
           {AGE_TABS.map(tab => (
             <button
               key={tab.key}
-              onClick={() => setActiveAge(tab.key)}
+              onClick={() => handleAgeChange(tab.key)}
               className={`px-4 py-2.5 rounded-full border text-sm font-medium transition-natural ${
                 activeAge === tab.key
                   ? 'bg-primary text-primary-foreground border-primary'
@@ -64,16 +71,23 @@ export default function Children() {
           ))}
         </div>
 
-        {/* Content */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {/* Content - stacked: guidelines on top, library below at full width */}
+        <div className="space-y-6">
           {/* Guidelines */}
-          <div className="md:col-span-2 bg-card rounded-super border border-border p-6 shadow-card">
+          <ValidatableContent contentId={`children.guidelines.${activeAge}`} label={`הנחיות גיל ${activeAge}`}>
+          <div className="bg-card rounded-super border border-border p-6 shadow-card">
             <h3 className="font-heading font-bold text-foreground mb-4">{t(lang, 'children_guidelines')}</h3>
             <div
-              className="text-muted-foreground leading-relaxed prose prose-sm max-w-none"
+              className="text-foreground/80 leading-relaxed
+                [&_p]:my-3 [&_p]:leading-relaxed
+                [&_ul]:my-3 [&_ol]:my-3 [&_ul]:ps-5 [&_ol]:ps-5
+                [&_ul]:list-disc [&_ol]:list-decimal
+                [&_li]:my-1.5 [&_li]:leading-relaxed
+                [&_strong]:text-foreground"
               dangerouslySetInnerHTML={{ __html: guidelines }}
             />
           </div>
+          </ValidatableContent>
 
           {/* Resources */}
           <div className="bg-card rounded-super border border-border p-6 shadow-card">
@@ -84,18 +98,84 @@ export default function Children() {
               <div className="space-y-3">
                 {resources.map((r, i) => {
                   const Icon = RESOURCE_ICONS[r.type] || BookOpen;
-                  return (
-                    <div key={i} className="flex items-start gap-3 p-3 bg-muted/40 rounded-lg">
+                  const hasContent = Boolean(r.content_he);
+                  const hasUrl = Boolean(r.url);
+                  const isOpen = openResource === i;
+
+                  // External-link resources render as an anchor that opens in a
+                  // new tab. Inline-content resources render as an expandable
+                  // button. Plain (no url, no content) resources are read-only.
+                  const cardClass = `w-full text-start flex items-start gap-3 p-3 ${
+                    hasUrl || hasContent ? 'hover:bg-primary/10 cursor-pointer' : 'cursor-default'
+                  }`;
+
+                  const inner = (
+                    <>
                       <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
                         <Icon className="w-4 h-4 text-primary" />
                       </div>
-                      <div>
+                      <div className="flex-1 min-w-0">
                         <p className="text-sm font-medium text-foreground">{r.title_he}</p>
                         {r.description_he && (
                           <p className="text-xs text-muted-foreground mt-0.5">{r.description_he}</p>
                         )}
                       </div>
-                    </div>
+                      {hasUrl ? (
+                        <ExternalLink className="w-4 h-4 text-primary flex-shrink-0 mt-1" />
+                      ) : hasContent ? (
+                        <ChevronDown
+                          className={`w-4 h-4 text-primary flex-shrink-0 mt-1 transition-transform duration-300 ${
+                            isOpen ? 'rotate-180' : ''
+                          }`}
+                        />
+                      ) : null}
+                    </>
+                  );
+
+                  return (
+                    <ValidatableContent key={i} contentId={`children.resource.${activeAge}.${i}`} label={r.title_he}>
+                      <div
+                        className={`rounded-lg overflow-hidden transition-natural ${
+                          isOpen ? 'bg-primary/10 border border-primary/30' : 'bg-muted/40 border border-transparent'
+                        }`}
+                      >
+                        {hasUrl ? (
+                          <a
+                            href={r.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className={cardClass}
+                          >
+                            {inner}
+                          </a>
+                        ) : (
+                          <button
+                            type="button"
+                            onClick={() => hasContent && setOpenResource(isOpen ? null : i)}
+                            disabled={!hasContent}
+                            className={cardClass}
+                            aria-expanded={isOpen}
+                          >
+                            {inner}
+                          </button>
+                        )}
+                        {hasContent && isOpen && (
+                          <div
+                            className="px-4 pb-4 pt-1 text-sm text-foreground/90 leading-relaxed
+                              [&_p]:my-2.5 [&_p]:leading-relaxed
+                              [&_ul]:my-2.5 [&_ol]:my-2.5 [&_ul]:ps-5 [&_ol]:ps-5
+                              [&_ul]:list-disc [&_ol]:list-decimal
+                              [&_li]:my-1.5
+                              [&_strong]:text-foreground
+                              [&_blockquote]:border-s-2 [&_blockquote]:border-primary/40
+                              [&_blockquote]:ps-3 [&_blockquote]:italic
+                              [&_blockquote]:text-foreground/80 [&_blockquote]:my-3
+                              [&_em]:text-muted-foreground"
+                            dangerouslySetInnerHTML={{ __html: r.content_he }}
+                          />
+                        )}
+                      </div>
+                    </ValidatableContent>
                   );
                 })}
               </div>

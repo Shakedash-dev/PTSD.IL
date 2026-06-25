@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useLang } from '@/lib/LanguageContext';
 import { t } from '@/lib/i18n';
@@ -6,6 +6,7 @@ import { useTreatmentSteps } from '@/api/hooks';
 import { Wrench, Building2, Brain, Leaf, Pill, ExternalLink, ChevronDown } from 'lucide-react';
 import ArchFrame from '@/components/ArchFrame';
 import { useTreatmentImages } from '@/lib/ImageSetContext';
+import ValidatableContent from '@/components/ValidatableContent';
 
 const STEP_ICON_MAP = { Wrench, Building2, Brain, Leaf, Pill };
 
@@ -70,10 +71,10 @@ function StepView({ step, index, total, lang, stepImages }) {
   return (
     <section
       id={`step-${index + 1}`}
-      className="snap-start min-h-screen w-full relative flex items-center"
+      className="w-full relative"
       data-step={index + 1}
     >
-      <div className="max-w-6xl w-full mx-auto px-5 sm:px-8 lg:px-12 py-24 sm:py-32">
+      <div className="max-w-6xl w-full mx-auto px-5 sm:px-8 lg:px-12 py-16 sm:py-24">
         <div className={`flex ${onRight ? 'justify-end' : 'justify-start'}`}>
           <div className="w-full max-w-md lg:max-w-lg">
             {/* Per-step image. Falls back to gradient placeholder if undefined. */}
@@ -86,6 +87,7 @@ function StepView({ step, index, total, lang, stepImages }) {
               className="mb-6 shadow-card"
             />
 
+            <ValidatableContent contentId={`treatment.step.${index}`} label={step.title_he}>
             <div className="bg-card/95 backdrop-blur-sm border border-border rounded-super shadow-card-hover p-6 sm:p-8">
               {/* Step number + icon row */}
               <div className="flex items-center gap-3 mb-4">
@@ -143,6 +145,7 @@ function StepView({ step, index, total, lang, stepImages }) {
                 </div>
               )}
             </div>
+            </ValidatableContent>
           </div>
         </div>
       </div>
@@ -183,28 +186,7 @@ export default function Treatment() {
   const { lang } = useLang();
   const stepImages = useTreatmentImages();
   const { data: steps = [], isLoading, error } = useTreatmentSteps();
-  const mapRef = useRef(null);
   const [hovered, setHovered] = useState(false);
-
-  // Apply page-level scroll-snap only while Treatment is mounted. Cleaned up on unmount
-  // so other pages don't inherit snap behavior. scroll-padding-top accounts for fixed navbar.
-  // Using `mandatory` (not `proximity`) so desktop wheel scrolls land cleanly on each step.
-  useEffect(() => {
-    const html = document.documentElement;
-    const body = document.body;
-    const prevSnap = html.style.scrollSnapType;
-    const prevPad = html.style.scrollPaddingTop;
-    const prevBodySnap = body.style.scrollSnapType;
-    html.style.scrollSnapType = 'y mandatory';
-    html.style.scrollPaddingTop = '4rem';
-    // Some browsers/themes make body the actual scroller — set on both to be safe.
-    body.style.scrollSnapType = 'y mandatory';
-    return () => {
-      html.style.scrollSnapType = prevSnap;
-      html.style.scrollPaddingTop = prevPad;
-      body.style.scrollSnapType = prevBodySnap;
-    };
-  }, []);
 
   const stepHeightSvg = 1000; // SVG units per step
   const totalSvgHeight = (steps.length || 1) * stepHeightSvg;
@@ -212,8 +194,9 @@ export default function Treatment() {
 
   return (
     <div className="bg-background">
-      {/* ── Hero (also a snap point) ── */}
-      <section className="snap-start min-h-screen w-full bg-sanctuary text-sanctuary-foreground flex flex-col items-center justify-center px-5 py-24 relative">
+      {/* ── Hero ── */}
+      <section className="min-h-[calc(100vh-4rem)] w-full bg-sanctuary text-sanctuary-foreground flex flex-col items-center justify-center px-5 py-24 relative">
+        <ValidatableContent contentId="treatment.hero" label="כותרת דף טיפולים">
         <div className="max-w-3xl mx-auto text-center">
           <span className="font-heading font-bold text-sm tracking-[0.2em] opacity-70 mb-6 block">
             {t(lang, 'treatment')}
@@ -225,6 +208,7 @@ export default function Treatment() {
             {t(lang, 'treatment_subtitle')}
           </p>
         </div>
+        </ValidatableContent>
 
         {/* Clickable scroll indicator → first step */}
         <a
@@ -236,7 +220,7 @@ export default function Treatment() {
         </a>
       </section>
 
-      {/* ── Map: snap-scroll steps with swirl trail ── */}
+      {/* ── Map: steps with swirl trail ── */}
       {isLoading && (
         <p className="text-center text-muted-foreground py-12">{t(lang, 'loading')}</p>
       )}
@@ -246,7 +230,6 @@ export default function Treatment() {
 
       {steps.length > 0 && (
         <div
-          ref={mapRef}
           className="relative"
           onMouseEnter={() => setHovered(true)}
           onMouseLeave={() => setHovered(false)}

@@ -23,6 +23,9 @@ const buttonVariants = cva(
         pill: "bg-primary text-primary-foreground rounded-full font-semibold shadow-atmospheric-md hover:bg-primary/90 hover:shadow-atmospheric-lg active:scale-[0.98] transition-all duration-300",
         "pill-outline": "border-2 border-foreground/15 bg-transparent text-foreground rounded-full font-semibold hover:bg-foreground/5 hover:border-foreground/30 active:scale-[0.98] transition-all duration-300",
         "pill-light": "bg-card text-foreground rounded-full font-semibold shadow-atmospheric hover:bg-muted hover:shadow-atmospheric-md active:scale-[0.98] transition-all duration-300",
+        // Soft sage pill — light pastel green on dark backgrounds. Hover deepens
+        // to the brand primary green for a tactile, "comes alive" feel.
+        "pill-green": "bg-muted text-foreground rounded-full font-semibold shadow-atmospheric-md hover:bg-primary hover:text-primary-foreground hover:shadow-atmospheric-lg active:scale-[0.98] transition-all duration-300",
       },
       size: {
         default: "h-9 px-4 py-2",

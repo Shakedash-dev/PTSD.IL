@@ -8,6 +8,8 @@ import ScrollToTop from './components/ScrollToTop';
 import { LanguageProvider } from '@/lib/LanguageContext';
 import { ThemeProvider } from '@/lib/ThemeContext';
 import { ImageSetProvider } from '@/lib/ImageSetContext';
+import { ValidationProvider } from '@/contexts/ValidationContext';
+import { UserTypeProvider } from '@/contexts/UserTypeContext';
 import Layout from '@/components/Layout';
 
 import Home from '@/pages/Home';
@@ -37,7 +39,9 @@ function App() {
       <LanguageProvider>
         <ThemeProvider>
           <ImageSetProvider>
+          <ValidationProvider>
             <Router basename={BASE_PATH}>
+            <UserTypeProvider>
             <ScrollToTop />
             <Routes>
               <Route element={<Layout />}>
@@ -62,7 +66,9 @@ function App() {
               </Route>
               <Route path="*" element={<PageNotFound />} />
             </Routes>
+            </UserTypeProvider>
           </Router>
+          </ValidationProvider>
           </ImageSetProvider>
         </ThemeProvider>
         <Toaster />

@@ -7,6 +7,7 @@ import SectionBlock from '@/components/SectionBlock';
 import ArchFrame from '@/components/ArchFrame';
 import { Button } from '@/components/ui/button';
 import { useImages } from '@/lib/ImageSetContext';
+import ValidatableContent from '@/components/ValidatableContent';
 
 const quickNavItems = [
   { key: 'ptsd_info', path: '/ptsd-info', icon: Brain },
@@ -73,13 +74,22 @@ export default function Home() {
           <span className="font-heading font-bold text-sm tracking-[0.2em] opacity-70 mb-6">
             PTSD<span className="opacity-100 text-primary">.IL</span>
           </span>
-          <h1 className="font-heading font-light text-5xl sm:text-7xl lg:text-8xl leading-[0.95] tracking-tight mb-8 max-w-4xl">
-            {t(lang, 'hero_tagline')}
-          </h1>
-          <p className="font-body text-lg sm:text-xl opacity-85 max-w-xl leading-relaxed mb-10">
-            {t(lang, 'hero_subtitle')}
-          </p>
-          <Button asChild variant="pill" size="pill-lg">
+          <ValidatableContent contentId="home.hero.tagline" label="כותרת ראשית - הום">
+            <h1 className="mb-8 max-w-4xl">
+              <span className="block font-heading font-light text-2xl sm:text-3xl lg:text-4xl tracking-tight opacity-80 mb-3">
+                {t(lang, 'hero_eyebrow')}
+              </span>
+              <span className="block font-heading font-bold text-6xl sm:text-8xl lg:text-9xl leading-[0.95] tracking-tight">
+                {t(lang, 'hero_headline')}
+              </span>
+            </h1>
+          </ValidatableContent>
+          <ValidatableContent contentId="home.hero.subtitle" label="כותרת משנה - הום">
+            <p className="font-body text-lg sm:text-xl opacity-85 max-w-xl leading-relaxed mb-10">
+              {t(lang, 'hero_subtitle')}
+            </p>
+          </ValidatableContent>
+          <Button asChild variant="pill-green" size="pill-lg">
             <a href="#paths" className="gap-3">
               {t(lang, 'quick_nav_title')}
               <ArrowIcon className="w-4 h-4" />
@@ -119,12 +129,16 @@ export default function Home() {
                   className="mb-6 transition-transform duration-500 group-hover:-translate-y-1 shadow-card group-hover:shadow-card-hover"
                 />
                 <div className="px-2">
-                  <h2 className="font-heading font-semibold text-2xl sm:text-3xl text-foreground mb-3 leading-tight">
-                    {t(lang, panel.titleKey)}
-                  </h2>
-                  <p className="font-body text-card-foreground leading-relaxed mb-4">
-                    {t(lang, panel.subtitleKey)}
-                  </p>
+                  <ValidatableContent contentId={`home.path.${idx}.title`} label={`כרטיס נתיב ${idx + 1} - כותרת`}>
+                    <h2 className="font-heading font-semibold text-2xl sm:text-3xl text-foreground mb-3 leading-tight">
+                      {t(lang, panel.titleKey)}
+                    </h2>
+                  </ValidatableContent>
+                  <ValidatableContent contentId={`home.path.${idx}.subtitle`} label={`כרטיס נתיב ${idx + 1} - תת-כותרת`}>
+                    <p className="font-body text-card-foreground leading-relaxed mb-4">
+                      {t(lang, panel.subtitleKey)}
+                    </p>
+                  </ValidatableContent>
                   <span className="inline-flex items-center gap-2 font-heading font-semibold text-primary group-hover:gap-3 transition-all duration-300">
                     {t(lang, 'enter_path')}
                     <ArrowIcon className="w-4 h-4" />
@@ -139,9 +153,11 @@ export default function Home() {
       {/* ── About PTSD strip ── */}
       <SectionBlock variant="muted" maxWidth="default" padding="py-20 sm:py-24">
         <div className="text-center">
-          <p className="font-body text-xl sm:text-2xl leading-relaxed text-foreground font-light">
-            {t(lang, 'about_ptsd_short')}
-          </p>
+          <ValidatableContent contentId="home.about.text" label="תיאור קצר על PTSD">
+            <p className="font-body text-xl sm:text-2xl leading-relaxed text-foreground font-light">
+              {t(lang, 'about_ptsd_short')}
+            </p>
+          </ValidatableContent>
           <div className="mt-8">
             <Button asChild variant="pill-outline" size="pill">
               <Link to="/ptsd-info" className="gap-2">
@@ -156,15 +172,17 @@ export default function Home() {
       {/* ── Calming CTA ── */}
       <SectionBlock variant="canvas" maxWidth="default" padding="pt-20 pb-16">
         <div className="bg-card rounded-super border border-border p-8 sm:p-12 text-center shadow-card">
-          <p className="font-body text-sm uppercase tracking-[0.18em] text-muted-foreground mb-3 font-semibold">
-            {lang === 'he' ? 'במצוקה עכשיו?' : lang === 'ar' ? 'في ضائقة الآن؟' : 'In distress now?'}
-          </p>
-          <h3 className="font-heading font-light text-3xl sm:text-4xl text-foreground mb-4 leading-tight">
-            {t(lang, 'calming_title')}
-          </h3>
-          <p className="font-body text-card-foreground mb-8 max-w-md mx-auto leading-relaxed">
-            {t(lang, 'calming_subtitle')}
-          </p>
+          <ValidatableContent contentId="home.calming.prompt" label="קריאה לפעולה - הרגעה">
+            <p className="font-body text-sm uppercase tracking-[0.18em] text-muted-foreground mb-3 font-semibold">
+              {lang === 'he' ? 'במצוקה עכשיו?' : lang === 'ar' ? 'في ضائقة الآن؟' : 'In distress now?'}
+            </p>
+            <h3 className="font-heading font-light text-3xl sm:text-4xl text-foreground mb-4 leading-tight">
+              {t(lang, 'calming_title')}
+            </h3>
+            <p className="font-body text-card-foreground mb-8 max-w-md mx-auto leading-relaxed">
+              {t(lang, 'calming_subtitle')}
+            </p>
+          </ValidatableContent>
           <Button asChild variant="pill" size="pill-lg">
             <Link to="/calming" className="gap-2">
               {t(lang, 'go_to_calming')}

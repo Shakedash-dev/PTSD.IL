@@ -6,32 +6,35 @@ import { useSelfHelpTools } from '@/api/hooks';
 import PageHeader from '@/components/PageHeader';
 import { Wind, Moon, PenLine, Smartphone, Zap, ChevronDown, ArrowLeft, ArrowRight, Compass, Wrench } from 'lucide-react';
 import { useImages } from '@/lib/ImageSetContext';
+import ValidatableContent from '@/components/ValidatableContent';
 
 const TOOL_ICON_MAP = { Wind, Moon, PenLine, Smartphone, Zap, Compass, Wrench };
 
-function ToolCard({ tool }) {
+function ToolCard({ tool, contentId }) {
   const [open, setOpen] = useState(false);
   const Icon = TOOL_ICON_MAP[tool.icon];
 
   return (
-    <div className={`bg-card rounded-2xl border transition-natural overflow-hidden ${open ? 'border-primary/40' : 'border-border hover:bg-muted'}`}>
-      <button
-        className="w-full text-start px-6 py-5 flex items-center gap-4 transition-natural"
-        onClick={() => setOpen(o => !o)}
-      >
-        <div className="w-11 h-11 rounded-full bg-muted flex items-center justify-center flex-shrink-0">
-          {Icon && <Icon className="w-5 h-5 text-primary" />}
-        </div>
-        <span className="flex-1 font-heading font-semibold text-foreground">{tool.title_he}</span>
-        <ChevronDown className={`w-5 h-5 text-primary flex-shrink-0 transition-transform duration-300 ${open ? 'rotate-180' : ''}`} />
-      </button>
-      {open && (
-        <div
-          className="px-6 pb-6 text-muted-foreground leading-relaxed prose prose-sm max-w-none"
-          dangerouslySetInnerHTML={{ __html: tool.content_he }}
-        />
-      )}
-    </div>
+    <ValidatableContent contentId={contentId} label={tool.title_he}>
+      <div className={`bg-card rounded-2xl border transition-natural overflow-hidden ${open ? 'border-primary/40' : 'border-border hover:bg-muted'}`}>
+        <button
+          className="w-full text-start px-6 py-5 flex items-center gap-4 transition-natural"
+          onClick={() => setOpen(o => !o)}
+        >
+          <div className="w-11 h-11 rounded-full bg-muted flex items-center justify-center flex-shrink-0">
+            {Icon && <Icon className="w-5 h-5 text-primary" />}
+          </div>
+          <span className="flex-1 font-heading font-semibold text-foreground">{tool.title_he}</span>
+          <ChevronDown className={`w-5 h-5 text-primary flex-shrink-0 transition-transform duration-300 ${open ? 'rotate-180' : ''}`} />
+        </button>
+        {open && (
+          <div
+            className="px-6 pb-6 text-muted-foreground leading-relaxed prose prose-sm max-w-none"
+            dangerouslySetInnerHTML={{ __html: tool.content_he }}
+          />
+        )}
+      </div>
+    </ValidatableContent>
   );
 }
 
@@ -74,7 +77,7 @@ export default function SelfHelp() {
         {error && <p className="text-center text-muted-foreground">{t(lang, 'content_error')}</p>}
         <div className="space-y-3">
           {tools.map((tool, i) => (
-            <ToolCard key={i} tool={tool} />
+            <ToolCard key={i} tool={tool} contentId={`self-help.tool.${i}`} />
           ))}
         </div>
       </div>

@@ -5,6 +5,7 @@ import { t } from '@/lib/i18n';
 import PageHeader from '@/components/PageHeader';
 import { Brain, Wrench, FileText, Heart, Users, Baby, ArrowLeft, ArrowRight, User } from 'lucide-react';
 import { useImages } from '@/lib/ImageSetContext';
+import ValidatableContent from '@/components/ValidatableContent';
 
 const sections = [
   { key: 'ptsd_info', path: '/ptsd-info', icon: Brain, description_he: 'הבנת מה זה PTSD, הסימפטומים, ממה זה נובע ואיך לזהות אותו' },
@@ -49,9 +50,11 @@ export default function FirstCircle() {
                   <h3 className="font-heading font-semibold text-lg text-foreground mb-1">
                     {t(lang, section.key)}
                   </h3>
-                  <p className="text-card-foreground leading-relaxed">
-                    {section.description_he}
-                  </p>
+                  <ValidatableContent contentId={`first-circle.section.${section.key}.desc`} label={t(lang, section.key)}>
+                    <p className="text-card-foreground leading-relaxed">
+                      {section.description_he}
+                    </p>
+                  </ValidatableContent>
                 </div>
                 <ArrowIcon className="w-5 h-5 text-primary transition-colors duration-300 group-hover:text-accent flex-shrink-0" />
               </Link>
@@ -61,7 +64,9 @@ export default function FirstCircle() {
 
         {/* Calming shortcut */}
         <div className="mt-10 p-7 rounded-xl border border-border bg-card text-center">
+          <ValidatableContent contentId="first-circle.calming.prompt" label="טקסט לחץ - קישור לתרגילי הרגעה">
           <p className="text-card-foreground mb-4">נמצא/ת כרגע בקושי?</p>
+          </ValidatableContent>
           <Link
             to="/calming"
             className="inline-flex items-center gap-2 px-6 py-3 bg-primary hover:bg-accent text-primary-foreground rounded-xl font-medium transition-colors duration-300"

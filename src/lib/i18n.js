@@ -26,15 +26,35 @@ export const translations = {
     sources: 'מקורות',
     admin: 'ניהול',
 
+    // Navigation - short labels used by Navbar when showing the three user-type
+    // entry points on /first-circle, /second-circle, /questionnaire.
+    nav_path1: 'מתמודד עם',
+    nav_path2: 'קרוב של',
+    nav_path3: 'אני לא בטוח',
+
+    // Navigation - sub-section labels used when the user is browsing inside a path.
+    // Most pages share labels across paths; second-circle gets a shorter tools label.
+    nav_self_help: 'כלים לעזרה עצמית',
+    nav_ptsd_info: 'על PTSD',
+    nav_treatment: 'טיפול',
+    nav_rights: 'זכויות',
+    nav_community: 'קהילה',
+    nav_children: 'תכנים לילדים',
+    nav_second_circle_tools: 'כלים להתמודדות',
+
     // Hero
-    hero_tagline: 'פוסט טראומה - את/ה לא לבד',
+    // Split into two parts so the layout can size them differently: PTSD is a
+    // small eyebrow, "you are not alone" is the large bold headline.
+    hero_eyebrow: 'פוסט-טראומה',
+    hero_headline: 'את/ה לא לבד',
+    hero_tagline: 'פוסט טראומה\nאת/ה לא לבד',
     hero_subtitle: 'מידע, כלים ותמיכה - הכל במקום אחד, בשפה ברורה.',
-    path1_title: 'אני מתמודד/ת עם פוסט-טראומה',
-    path1_subtitle: 'מידע, כלים וזכויות - הכל במקום אחד',
-    path2_title: 'אני קרוב/ה של מתמודד/ת עם פוסט-טראומה',
-    path2_subtitle: 'איך לתמוך, להבין, ולשמור גם על עצמך',
-    path3_title: 'אני לא בטוח/ה, רוצה לבדוק',
-    path3_subtitle: 'שאלון קצר ואנונימי לבדיקה עצמית',
+    path1_title: 'מתמודד/ת עם',
+    path1_subtitle: 'כל מה שצריך כדי להבין את המצב, להתחיל בטיפול ולדעת מה הזכויות שלך - בקצב שלך, בלי לאבד את עצמך.',
+    path2_title: 'קרוב/ה של',
+    path2_subtitle: 'לבן/בת זוג, להורה, לחבר של מי שמתמודד - איך לתמוך, להבין, ולשמור גם על עצמך בדרך.',
+    path3_title: 'אני לא בטוח/ה',
+    path3_subtitle: 'שאלון אנונימי קצר (כ-3 דקות) שיעזור להבין אם התסמינים שלך מצדיקים בדיקה נוספת.',
     enter_path: 'להמשיך',
 
     // About PTSD
@@ -216,14 +236,16 @@ export const translations = {
     questionnaire: 'Self-Assessment',
     sources: 'Sources',
     admin: 'Admin',
-    hero_tagline: "Post-Trauma - You're Not Alone",
+    hero_eyebrow: 'Post-Trauma',
+    hero_headline: "You're Not Alone",
+    hero_tagline: "Post-Trauma\nYou're Not Alone",
     hero_subtitle: 'Your path to understanding, healing, and rights starts here',
-    path1_title: "I'm coping with PTSD",
-    path1_subtitle: 'Information, tools and rights - all in one place',
-    path2_title: "I support someone who is",
-    path2_subtitle: 'How to support, understand, and take care of yourself too',
-    path3_title: "I'm not sure, I want to check",
-    path3_subtitle: 'A short, anonymous self-assessment',
+    path1_title: 'Coping with PTSD',
+    path1_subtitle: 'Everything you need to understand what you are going through, start treatment, and know your rights - at your own pace.',
+    path2_title: 'Supporting someone',
+    path2_subtitle: 'For partners, parents and loved ones - how to support, understand, and look after yourself along the way.',
+    path3_title: "I'm not sure",
+    path3_subtitle: 'A short anonymous questionnaire (~3 minutes) that helps you decide whether your symptoms are worth checking further.',
     enter_path: 'Continue',
     about_ptsd_short: 'PTSD is a mental health response to a traumatic event that the brain and body continue to process long after the danger has passed.',
     read_more: 'Read more',
@@ -372,14 +394,16 @@ export const translations = {
     questionnaire: 'التقييم الذاتي',
     sources: 'المصادر',
     admin: 'إدارة',
-    hero_tagline: 'صدمة ما بعد الصدمة - لست وحدك',
+    hero_eyebrow: 'اضطراب ما بعد الصدمة',
+    hero_headline: 'لست وحدك',
+    hero_tagline: 'صدمة ما بعد الصدمة\nلست وحدك',
     hero_subtitle: 'طريقك نحو الفهم والشفاء وانتزاع حقوقك يبدأ هنا',
-    path1_title: 'أنا أعاني من اضطراب ما بعد الصدمة',
-    path1_subtitle: 'معلومات وأدوات وحقوق - كل شيء في مكان واحد',
-    path2_title: 'أنا أرافق شخصاً عزيزاً يعاني',
-    path2_subtitle: 'كيف تدعم وتفهم وتعتني بنفسك أيضاً',
-    path3_title: 'لست متأكداً، أريد أن أتحقق',
-    path3_subtitle: 'استبيان قصير ومجهول للفحص الذاتي',
+    path1_title: 'أعاني من PTSD',
+    path1_subtitle: 'كل ما تحتاجه لفهم وضعك، بدء العلاج، ومعرفة حقوقك - بإيقاعك الخاص ودون أن تفقد نفسك.',
+    path2_title: 'أرافق شخصاً',
+    path2_subtitle: 'لمن يرافق شريكاً أو والداً أو شخصاً عزيزاً - كيف تدعم وتفهم وتعتني بنفسك في الوقت ذاته.',
+    path3_title: 'لست متأكداً',
+    path3_subtitle: 'استبيان قصير ومجهول (نحو 3 دقائق) يساعدك على فهم ما إذا كانت أعراضك تستدعي فحصاً إضافياً.',
     enter_path: 'متابعة',
     about_ptsd_short: 'اضطراب ما بعد الصدمة هو استجابة نفسية لحدث صادم يستمر الدماغ والجسد في معالجته طويلاً بعد مرور الخطر.',
     read_more: 'اقرأ المزيد',
@@ -485,7 +509,7 @@ export const translations = {
 
   ru: {
     home: 'Главная',
-    hero_tagline: 'Посттравма - Ты не одинок',
+    hero_tagline: 'Посттравма\nТы не одинок',
     hero_subtitle: 'Путь к пониманию, исцелению и реализации прав начинается здесь',
     path1_title: 'Я переживаю посттравматический стресс',
     path1_subtitle: 'Информация, инструменты и права - всё в одном месте',
@@ -535,7 +559,7 @@ export const translations = {
 
   fr: {
     home: 'Accueil',
-    hero_tagline: 'Post-traumatisme - Vous n\'êtes pas seul(e)',
+    hero_tagline: 'Post-traumatisme\nVous n\'êtes pas seul(e)',
     hero_subtitle: 'Le chemin vers la compréhension, la guérison et vos droits commence ici',
     path1_title: 'Je vis avec un traumatisme',
     path1_subtitle: 'Informations, outils et droits - tout en un seul endroit',

@@ -1,172 +1,484 @@
 export const SECOND_CIRCLE_TOOLS = {
   he: [
     {
-      q: 'מה לעשות בזמן התקף / פלאשבק?',
-      a: `<p><strong>שיטת "היהלום":</strong></p>
+      q: 'מה לעשות בזמן התקף או פלאשבק?',
+      a: `<p class="faq-intro">קודם כל - נשמו עמוק. לראות מישהו/י קרוב/ה במצב כזה זה מטלטל גם אתכם, וזה לגמרי בסדר. אתם לא צריכים "להציל" - אתם צריכים פשוט להיות שם, נוכחים ובטוחים.</p>
+
+      <h4>שיטת "היהלום" - ארבעה דברים שמרגיעים</h4>
       <ol>
-        <li><strong>נוכחות:</strong> הזכירו בשקט - "אתה כאן, אתה בטוח, זה עובר"</li>
-        <li><strong>מרחב:</strong> אל תחסמו את היציאה - תנו מרחב פיזי</li>
-        <li><strong>שקט:</strong> הורידו גירויים - אורות, רעשים</li>
-        <li><strong>נגיעה:</strong> שאלו לפני - "אוכל לגעת בידך?"</li>
+        <li><strong>נוכחות:</strong> דברו בקול שקט ובטוח - "אני כאן. את/ה בטוח/ה. זה יעבור."</li>
+        <li><strong>מרחב:</strong> אל תחסמו את היציאה. תנו אוויר פיזי, אל תיצמדו.</li>
+        <li><strong>שקט:</strong> הנמיכו אורות, סגרו רעשי רקע, הפחיתו גירויים.</li>
+        <li><strong>נגיעה:</strong> שאלו לפני - "אוכל לגעת בידך?" - וכבדו את התשובה.</li>
       </ol>
-      <p><strong>מה לא לעשות:</strong></p>
+
+      <h4>מה עדיף שלא לעשות</h4>
       <ul>
-        <li>אל תתוכחו על "המציאות"</li>
-        <li>אל תנסו להפריד בכוח ממה שהוא/היא חוזר/ת אליו</li>
-        <li>אל תחשפו בפומבי</li>
-      </ul>`,
-    },
-    {
-      q: 'איך לתקשר ביומיום?',
-      a: `<p><strong>עשה:</strong></p>
-      <ul>
-        <li>דבר/י מ"אני" - "אני מרגיש/ה מודאג/ת" ולא "אתה תמיד..."</li>
-        <li>שאל/י לפני שאתה/את מציע/ה עזרה</li>
-        <li>הכר/י ואשר/י את הרגשות - "נשמע שזה ממש קשה"</li>
-        <li>שמור/י על הבטחות קטנות</li>
+        <li>אל תתווכחו עם "המציאות" שהוא/היא חווה - היא אמיתית לחלוטין מבחינתם.</li>
+        <li>אל תנערו או תאחזו בכוח כדי להוציא אותם מזה.</li>
+        <li>אל תחשפו את הסיטואציה לאחרים שלא צריך - שמרו על הכבוד.</li>
       </ul>
-      <p><strong>אל תעשה:</strong></p>
-      <ul>
-        <li>אל תגיד/י "עזוב, כבר עבר" - עבורו/ה זה לא עבר</li>
-        <li>אל תאיים/אי בנטישה בזמן משבר</li>
-        <li>אל תנסה/י "לתקן" - לפעמים רק להיות שם זה מספיק</li>
-      </ul>`,
+
+      <p class="faq-close">אחרי שזה עובר - אל תדרשו הסבר. תנו זמן. לפעמים שתיקה משותפת היא הדבר היקר ביותר.</p>`,
     },
     {
-      q: 'איך לזהות סימני מצוקה?',
-      a: `<ul>
-        <li>נסיגה חברתית מוגברת, פחות מגע יזום</li>
-        <li>שינויים קיצוניים בשינה (יותר מדי / פחות מדי)</li>
-        <li>פרצי זעם לא פרופורציונליים</li>
-        <li>דיבור על חוסר תקווה או אמירות כמו "היה עדיף אם לא הייתי"</li>
-        <li>שימוש מוגבר באלכוהול / סמים</li>
+      q: 'איך לתקשר ביומיום כשהכל מרגיש על קצה הסכין?',
+      a: `<p class="faq-intro">תקשורת עם אדם שחי עם פוסט-טראומה היא לפעמים כמו ללכת בשדה מוקשים שאתם לא רואים. זה מתיש, וזה גם ניתן ללמידה. הנה כמה עקרונות שעוזרים.</p>
+
+      <h4>מה כדאי לעשות</h4>
+      <ul>
+        <li>דברו מ"אני" - "אני מרגיש/ה דאגה" עדיף על "את/ה תמיד..."</li>
+        <li>שאלו לפני שאתם מציעים עזרה: "מה יעזור לך עכשיו?"</li>
+        <li>אשרו את הרגש לפני שמציעים פתרון - "נשמע שזה ממש קשה."</li>
+        <li>שמרו על הבטחות קטנות - הן בונות אמון בזמן שגדולות מאיימות.</li>
       </ul>
-      <p><strong>אם אתם מזהים סימני מצוקה קשה - פנו מיד לאיש מקצוע או לערן 1201.</strong></p>`,
+
+      <h4>מה עדיף להימנע ממנו</h4>
+      <ul>
+        <li>אל תגידו "עזוב, כבר עבר" - אצלם זה עוד לא עבר.</li>
+        <li>אל תאיימו בעזיבה כשיש משבר - גם אם אתם תשושים.</li>
+        <li>אל תנסו "לתקן" - לפעמים פשוט להיות שם זה כל מה שצריך.</li>
+        <li>אל תשוו לאחרים - "תראה איך X מתמודד" שורף את הקשר.</li>
+      </ul>
+
+      <p class="faq-close">לא חייבים להגיד את הדבר הנכון. אפילו "אני לא יודע/ת מה להגיד, אבל אני כאן" - זה יותר ממספיק.</p>`,
     },
     {
-      q: 'מדריך למניעת שחיקה - שמרו גם על עצמכם',
-      a: `<p>לא ניתן לשפוך ממיכל ריק. שמירה על עצמך היא לא אנוכיות - היא תנאי יסוד לתמיכה ממושכת.</p>
+      q: 'איך לזהות סימני מצוקה - ומתי לדאוג ברצינות?',
+      a: `<p class="faq-intro">אנשים שחיים עם פוסט-טראומה לא תמיד אומרים שקשה להם. לפעמים הסימנים שקטים. הכרת הסימנים האלה היא לא פרנויה - היא דאגה אמיתית.</p>
+
+      <h4>סימנים יומיומיים לשים אליהם לב</h4>
       <ul>
-        <li><strong>קבעו גבולות ברורים</strong> - גם אהבה גדולה צריכה גבולות</li>
-        <li><strong>שמרו על זמן לעצמכם</strong> - פעילות, חברים, תחביבים</li>
-        <li><strong>פנו לתמיכה</strong> - מטפל/ת, קבוצת תמיכה לבני/בנות זוג</li>
-        <li><strong>הכירו בסימני שחיקה</strong> - עצבנות יתר, ריחוק רגשי, תשישות</li>
-        <li><strong>זה לא כישלון</strong> לבקש עזרה</li>
-      </ul>`,
+        <li>נסיגה חברתית - פחות יציאות, פחות תקשורת יזומה.</li>
+        <li>שינויים קיצוניים בשינה - יותר מדי, או פחות מדי.</li>
+        <li>פרצי זעם או בכי שלא בפרופורציה לטריגר.</li>
+        <li>איבוד עניין בדברים שפעם אהבו.</li>
+        <li>עלייה בשימוש באלכוהול, סמים, או הימורים.</li>
+      </ul>
+
+      <h4>סימנים שדורשים פעולה מיידית</h4>
+      <ul>
+        <li>דיבור על חוסר תקווה - "אין לי סיבה", "היה עדיף בלעדיי".</li>
+        <li>נתינת חפצים יקרים או "סגירת חשבונות".</li>
+        <li>שקט פתאומי ורגוע אחרי תקופה קשה - לפעמים זה דגל אדום.</li>
+      </ul>
+
+      <div class="faq-call"><strong>אם זיהיתם סימנים מהקטגוריה השנייה - אל תחכו.</strong> התקשרו לערן <strong>1201</strong> (24/7), או למוקד סה"ר. אם יש סכנה מיידית - מד"א 101 או מיון פסיכיאטרי.</div>`,
+    },
+    {
+      q: 'איך לדעת אם אני בעצמי מתחיל/ה להישחק או "להזדהם" מהטראומה?',
+      a: `<p class="faq-intro">זה נקרא טראומה משנית או שחיקת חמלה, וזה לא חולשה - זה תוצאה אנושית של אהבה עמוקה ונשיאה במשא ממושך. אתם לא לבד בזה, ויש על זה שמות כי זה נפוץ.</p>
+
+      <h4>סימנים שכדאי להקשיב להם</h4>
+      <ul>
+        <li>אתם חולמים את החלומות הקשים <em>שלהם</em>, או נמנעים ממקומות ש<em>הם</em> נמנעים מהם.</li>
+        <li>קוצר רוח שלא מאפיין אתכם, עצבנות מתפרצת על קטנות.</li>
+        <li>קושי להירדם, או התעוררויות עם תחושת דריכות.</li>
+        <li>תחושה שאתם "על האוטומט" - מתפקדים אבל לא באמת נוכחים.</li>
+        <li>איבוד עניין בדברים שפעם אהבתם, וניתוק רגשי מאנשים אחרים.</li>
+      </ul>
+
+      <h4>מה כן לעשות עם זה</h4>
+      <ul>
+        <li>דברו עם מישהו - מטפל/ת, חבר/ה קרוב/ה, או קבוצת תמיכה לבני משפחה.</li>
+        <li>הקפידו על דבר אחד קטן ביום שהוא רק שלכם - הליכה, ספר, מקלחת ארוכה.</li>
+        <li>הציבו גבול אחד שאתם מצליחים לשמור - לא הכל בבת אחת.</li>
+        <li>זכרו: לטפל בעצמכם זה לא בגידה. זה תנאי להיות שם לטווח ארוך.</li>
+      </ul>
+
+      <p class="faq-close">אם אתם קוראים את זה ומזהים את עצמכם - זה כבר צעד ראשון. עכשיו תנו לעצמכם רשות לעצור.</p>`,
+    },
+    {
+      q: 'איך להציע פנייה לטיפול בלי שזה ירגיש כמו לחץ או הטפה?',
+      a: `<p class="faq-intro">אחת המתסכלות שבסיטואציות: אתם רואים את הכאב, אתם יודעים שטיפול יכול לעזור, והם מסרבים או נמנעים. תזכרו - ההחלטה צריכה להגיע מהם, אבל איך שאתם מדברים על זה כן עושה הבדל.</p>
+
+      <h4>גישות שעוזרות</h4>
+      <ul>
+        <li><strong>תנרמלו:</strong> "אנשים שעברו דברים קשים כמו שלך הולכים לטיפול - זה לא סימן לחולשה."</li>
+        <li><strong>היו ספציפיים, לא כלליים:</strong> "ראיתי שם של מטפל/ת שמתמחה בזה, רוצה שאשלח לך?" עדיף על "אולי תפנה למישהו".</li>
+        <li><strong>הציעו ליווי מעשי:</strong> "אני יכול/ה לבוא איתך לפגישה ראשונה, או לחכות בחוץ."</li>
+        <li><strong>הציעו אופציות, לא אולטימטום:</strong> טיפול פסיכולוגי, קבוצת תמיכה, נט"ל, קו פתוח של ערן.</li>
+      </ul>
+
+      <h4>מה עדיף לא לעשות</h4>
+      <ul>
+        <li>אל תחזרו על זה כל יום - זה הופך לרעש שמתעלמים ממנו.</li>
+        <li>אל תאמרו "אתה צריך עזרה" - זה נשמע כמו אבחנה, לא כמו דאגה.</li>
+        <li>אל תאיימו ("או שתפנה או ש...") - זה יצור התנגדות, לא שינוי.</li>
+      </ul>
+
+      <p class="faq-close">אם הם לא מוכנים עכשיו - שתלו את הזרע, ותחזרו לזה אחרי שבועיים-שלושה. שינוי אמיתי לוקח זמן.</p>`,
+    },
+    {
+      q: 'מה לעשות אחרי ויכוח קשה - איך חוזרים זה לזה?',
+      a: `<p class="faq-intro">אחרי ויכוח עם מישהו שחי עם פוסט-טראומה - שניכם פגועים, גם אם הוויכוח התחיל ממשהו "קטן". זה לא אומר שהקשר שבור. זה אומר שצריך לתקן בעדינות.</p>
+
+      <h4>בשעות הראשונות אחרי</h4>
+      <ul>
+        <li>תנו מרחב - לכם ולהם. גם 30 דקות של שתיקה זה בסדר.</li>
+        <li>אל תנתחו מי "צודק" עכשיו - זה רק יבעיר מחדש.</li>
+        <li>אם אתם מרגישים שאתם רותחים - צאו להליכה, שתו מים, נשמו.</li>
+      </ul>
+
+      <h4>כשמוכנים לדבר שוב</h4>
+      <ul>
+        <li>פתחו עם מה שאתם מרגישים, לא עם מה שהוא/היא עשה/תה - "הרגשתי מבולבל/ת ופגוע/ה."</li>
+        <li>הקשיבו לפני שאתם מסבירים - אפילו אם זה לא מרגיש הוגן.</li>
+        <li>שאלו: "מה היה הטריגר באמת? מה זה הזכיר לך?" - לפעמים הוויכוח הוא רק הקצה החיצוני של משהו עמוק יותר.</li>
+        <li>אמרו את הדבר הכי חשוב במפורש: "אני אוהב/ת אותך. אני לא הולך/ת לשום מקום."</li>
+      </ul>
+
+      <p class="faq-close">לא חייבים לפתור הכל בשיחה אחת. לפעמים תיקון הוא כמה שיחות קטנות לאורך כמה ימים, ולא דרמה אחת גדולה.</p>`,
+    },
+    {
+      q: 'מדריך למניעת שחיקה - איך שומרים על עצמכם לטווח הארוך',
+      a: `<p class="faq-intro">אי אפשר למזוג ממיכל ריק. אם אתם לא תשמרו על עצמכם - לא תוכלו לתמוך באף אחד אחר. זה לא אנוכיות. זה תנאי בסיסי.</p>
+
+      <h4>הבסיס היומיומי</h4>
+      <ul>
+        <li><strong>גבולות ברורים:</strong> גם אהבה גדולה צריכה גבולות. "אני לא יכול/ה לדבר על זה עכשיו, נחזור לזה מחר" - זה לגיטימי.</li>
+        <li><strong>זמן שהוא רק שלכם:</strong> חברים, ספורט, תחביב, שקט. גם 20 דקות ביום עושות הבדל.</li>
+        <li><strong>שינה ואוכל:</strong> בסיסי, אבל ראשון להישחק. שמרו על השגרה.</li>
+      </ul>
+
+      <h4>תמיכה רחבה יותר</h4>
+      <ul>
+        <li><strong>מטפל/ת משלכם</strong> - לא של בן/בת הזוג. מקום שבו אתם המטופלים.</li>
+        <li><strong>קבוצת תמיכה לבני משפחה</strong> - לדבר עם אנשים שמכירים את זה מבפנים.</li>
+        <li><strong>אדם קרוב אחד</strong> שיודע מה קורה ויכול להחזיק אתכם.</li>
+      </ul>
+
+      <h4>סימני אזהרה לשחיקה</h4>
+      <ul>
+        <li>עצבנות יתר על קטנות.</li>
+        <li>ניתוק רגשי - אדישות גם כשמשהו חשוב קורה.</li>
+        <li>תשישות שלא עוברת עם מנוחה.</li>
+        <li>פנטזיות על "לברוח" - לעבודה, לטיול, לחיים אחרים.</li>
+      </ul>
+
+      <p class="faq-close">לבקש עזרה זה לא כישלון. זה אומר שאתם רציניים לגבי הקשר ולגבי עצמכם.</p>`,
     },
   ],
 
   ar: [
     {
-      q: 'ماذا تفعل خلال النوبة / الذكريات المفاجئة؟',
-      a: `<p><strong>طريقة "الماس":</strong></p>
+      q: 'ماذا تفعل خلال نوبة أو ذكريات مفاجئة؟',
+      a: `<p class="faq-intro">أولاً - تنفّس. رؤية شخص قريب في هذه الحالة أمر مزلزل لك أيضاً، وهذا طبيعي تماماً. لست مضطراً أن "تنقذه" - فقط أن تكون موجوداً، حاضراً وآمناً.</p>
+
+      <h4>طريقة "الماس" - أربعة أمور تُهدّئ</h4>
       <ol>
-        <li><strong>الحضور:</strong> ذكّره بهدوء - "أنت هنا، أنت بأمان، سيمر هذا"</li>
-        <li><strong>المساحة:</strong> لا تسدّ مخرج الغرفة - أعطه مساحة جسدية</li>
-        <li><strong>الهدوء:</strong> قلّل المثيرات - الأضواء والأصوات</li>
-        <li><strong>اللمس:</strong> اسأل قبل أن تلمس - "هل يمكنني الإمساك بيدك؟"</li>
+        <li><strong>الحضور:</strong> تحدّث بصوت هادئ وواثق - "أنا هنا. أنت بأمان. سيمرّ هذا."</li>
+        <li><strong>المساحة:</strong> لا تسدّ المخرج. أعطه فضاءً جسدياً، لا تتشبّث.</li>
+        <li><strong>الهدوء:</strong> اخفض الإضاءة، أوقف الضوضاء، قلّل المثيرات.</li>
+        <li><strong>اللمس:</strong> اسأل قبل أن تلمس - "هل يمكنني الإمساك بيدك؟" - واحترم الجواب.</li>
       </ol>
-      <p><strong>ما لا يجب فعله:</strong></p>
+
+      <h4>ما يُفضّل عدم فعله</h4>
       <ul>
-        <li>لا تجادله في "الواقع"</li>
-        <li>لا تحاول بالقوة إبعاده عما يعود إليه</li>
-        <li>لا تعرضه للعامة</li>
-      </ul>`,
-    },
-    {
-      q: 'كيف تتواصل في الحياة اليومية؟',
-      a: `<p><strong>افعل:</strong></p>
-      <ul>
-        <li>تحدث من منظور "أنا" - "أنا أشعر بالقلق" وليس "أنت دائماً..."</li>
-        <li>اسأل قبل أن تعرض المساعدة</li>
-        <li>اعترف بمشاعره وأكّدها - "يبدو أن هذا صعب جداً"</li>
-        <li>حافظ على الوعود الصغيرة</li>
+        <li>لا تجادل "الواقع" الذي يعيشه - بالنسبة له حقيقي تماماً.</li>
+        <li>لا تهزّه أو تمسكه بالقوة لإخراجه من الحالة.</li>
+        <li>لا تكشف الموقف لمن لا داعي - احفظ كرامته.</li>
       </ul>
-      <p><strong>لا تفعل:</strong></p>
-      <ul>
-        <li>لا تقل "تجاهل الأمر، لقد مضى" - بالنسبة له لم يمضِ</li>
-        <li>لا تهدد بالترك في أوقات الأزمات</li>
-        <li>لا تحاول "إصلاحه" - أحياناً مجرد الوجود هناك يكفي</li>
-      </ul>`,
+
+      <p class="faq-close">بعد أن يمرّ - لا تطلب تفسيراً. أعطه وقتاً. أحياناً الصمت المشترك أثمن ما تملك.</p>`,
     },
     {
-      q: 'كيف تتعرف على علامات الضيق؟',
-      a: `<ul>
-        <li>انسحاب اجتماعي متزايد، تواصل أقل من تلقاء نفسه</li>
-        <li>تغيّرات حادة في النوم (كثير جداً / قليل جداً)</li>
-        <li>نوبات غضب غير متناسبة مع الموقف</li>
-        <li>الحديث عن اليأس أو عبارات مثل "كان الأفضل لو لم أكن موجوداً"</li>
-        <li>تزايد استهلاك الكحول أو المخدرات</li>
+      q: 'كيف تتواصل في الحياة اليومية حين يبدو كل شيء على حافة السكين؟',
+      a: `<p class="faq-intro">التواصل مع شخص يعيش مع اضطراب ما بعد الصدمة يشبه أحياناً السير في حقل ألغام لا تراه. هذا مُنهك، وهو أيضاً مهارة قابلة للتعلم. إليك مبادئ تساعد.</p>
+
+      <h4>ما يُستحسن فعله</h4>
+      <ul>
+        <li>تحدّث من منظور "أنا" - "أشعر بالقلق" أفضل من "أنت دائماً..."</li>
+        <li>اسأل قبل أن تعرض المساعدة: "ما الذي سيُريحك الآن؟"</li>
+        <li>صادق على المشاعر قبل تقديم الحلول - "يبدو أن هذا صعب جداً."</li>
+        <li>حافظ على الوعود الصغيرة - فهي تبني الثقة حين تخيف الكبيرة.</li>
       </ul>
-      <p><strong>إذا لاحظت علامات ضيق شديد - تواصل فوراً مع متخصص أو مع خط مساعدة إيران 1201.</strong></p>`,
+
+      <h4>ما يُفضّل تجنّبه</h4>
+      <ul>
+        <li>لا تقل "تجاهل، لقد مضى" - بالنسبة له لم يمضِ بعد.</li>
+        <li>لا تهدّد بالترك خلال الأزمة - حتى لو كنت منهكاً.</li>
+        <li>لا تحاول "إصلاحه" - أحياناً مجرد الوجود كافٍ.</li>
+        <li>لا تقارنه بالآخرين - "انظر كيف يتعامل فلان" يحرق العلاقة.</li>
+      </ul>
+
+      <p class="faq-close">لست مضطراً لقول الكلام الصحيح. حتى "لا أعرف ماذا أقول، لكنني هنا" - أكثر من كافٍ.</p>`,
     },
     {
-      q: 'دليل لمنع الإرهاق - اعتنِ بنفسك أيضاً',
-      a: `<p>لا يمكنك الصبّ من وعاء فارغ. الاعتناء بنفسك ليس أنانية - إنه شرط أساسي للدعم المستدام.</p>
+      q: 'كيف تتعرف على علامات الضيق - ومتى تقلق جدياً؟',
+      a: `<p class="faq-intro">من يعيش مع اضطراب ما بعد الصدمة لا يقول دائماً إنه يعاني. أحياناً العلامات صامتة. معرفتها ليست بارانويا - بل اهتمام حقيقي.</p>
+
+      <h4>علامات يومية تستحق الانتباه</h4>
       <ul>
-        <li><strong>ضع حدوداً واضحة</strong> - حتى الحب الكبير يحتاج حدوداً</li>
-        <li><strong>احتفظ بوقت لنفسك</strong> - نشاط بدني، أصدقاء، هوايات</li>
-        <li><strong>اطلب الدعم</strong> - معالج، مجموعة دعم للشركاء</li>
-        <li><strong>تعرّف على علامات الإرهاق</strong> - تهيّج مفرط، تباعد عاطفي، إنهاك</li>
-        <li><strong>طلب المساعدة ليس فشلاً</strong></li>
-      </ul>`,
+        <li>انسحاب اجتماعي - خروج أقل، تواصل مبادر أقل.</li>
+        <li>تغيّرات حادة في النوم - كثير جداً أو قليل جداً.</li>
+        <li>نوبات غضب أو بكاء غير متناسبة مع المُحفّز.</li>
+        <li>فقدان الاهتمام بأشياء كان يحبها.</li>
+        <li>زيادة في تعاطي الكحول أو المخدرات أو القمار.</li>
+      </ul>
+
+      <h4>علامات تستدعي تحرّكاً فورياً</h4>
+      <ul>
+        <li>كلام عن اليأس - "لا سبب لي"، "الأفضل لو لم أكن هنا".</li>
+        <li>إعطاء أغراض ثمينة أو "إنهاء حسابات".</li>
+        <li>هدوء مفاجئ ومطمئن بعد فترة صعبة - أحياناً علامة حمراء.</li>
+      </ul>
+
+      <div class="faq-call"><strong>إذا رصدت علامات من الفئة الثانية - لا تنتظر.</strong> اتصل بإيران <strong>1201</strong> (24/7)، أو بمركز سهار. إن كان هناك خطر فوري - نجمة داود الحمراء 101 أو طوارئ نفسية.</div>`,
+    },
+    {
+      q: 'كيف أعرف إن كنت أنا نفسي بدأت أُنهَك أو "أتأثر" من صدمته؟',
+      a: `<p class="faq-intro">يُسمّى هذا الصدمة الثانوية أو إنهاك الرحمة، وليس ضعفاً - بل نتيجة إنسانية للحب العميق وحمل ثقل طويل. لست وحدك في ذلك، وله أسماء لأنه شائع.</p>
+
+      <h4>علامات تستحق الإصغاء إليها</h4>
+      <ul>
+        <li>تحلم أحلامه الصعبة <em>هو</em>، أو تتجنّب أماكن يتجنّبها <em>هو</em>.</li>
+        <li>قِصَر صبر لا يشبهك، انفعال على أمور صغيرة.</li>
+        <li>صعوبة في النوم، أو استيقاظ بشعور تيقّظ.</li>
+        <li>إحساس بأنك "على الأوتوماتيك" - تؤدّي مهامك بلا حضور حقيقي.</li>
+        <li>فقدان اهتمام بأشياء كنت تحبها، وانفصال عاطفي عن الآخرين.</li>
+      </ul>
+
+      <h4>ماذا تفعل حيال ذلك</h4>
+      <ul>
+        <li>تحدّث مع أحد - معالج/ة، صديق/ة مقرّب/ة، أو مجموعة دعم لأفراد العائلة.</li>
+        <li>التزم بأمر صغير يومي خاص بك فقط - مشي، كتاب، حمّام طويل.</li>
+        <li>ضع حدّاً واحداً تستطيع الحفاظ عليه - لا كل شيء دفعة واحدة.</li>
+        <li>تذكّر: العناية بنفسك ليست خيانة. هي شرط لتبقى موجوداً على المدى الطويل.</li>
+      </ul>
+
+      <p class="faq-close">إن قرأت هذا وعرفت نفسك - هذه خطوة أولى. الآن أعطِ نفسك إذناً بالتوقّف.</p>`,
+    },
+    {
+      q: 'كيف أقترح اللجوء للعلاج دون أن يبدو ضغطاً أو وعظاً؟',
+      a: `<p class="faq-intro">من أكثر المواقف إحباطاً: ترى الألم، تعرف أن العلاج يمكن أن يساعد، وهو يرفض أو يتهرّب. تذكّر - القرار يجب أن يأتي منه، لكن كيف تتحدّث عن ذلك يُحدث فرقاً.</p>
+
+      <h4>أساليب تساعد</h4>
+      <ul>
+        <li><strong>طبّع الفكرة:</strong> "الناس الذين مرّوا بأشياء صعبة مثلك يذهبون للعلاج - ليس علامة ضعف."</li>
+        <li><strong>كن محدّداً، لا عمومياً:</strong> "وجدت اسم معالج/ة متخصص/ة في هذا، أرسله لك؟" أفضل من "ربما تذهب لأحد".</li>
+        <li><strong>اعرض مرافقة عملية:</strong> "أستطيع أن أرافقك للجلسة الأولى، أو أنتظر في الخارج."</li>
+        <li><strong>اعرض خيارات، لا إنذاراً:</strong> علاج نفسي، مجموعة دعم، خط مفتوح.</li>
+      </ul>
+
+      <h4>ما يُفضّل تجنّبه</h4>
+      <ul>
+        <li>لا تكرّر هذا كل يوم - يصبح ضجيجاً يُتجاهل.</li>
+        <li>لا تقل "أنت بحاجة لمساعدة" - يبدو كتشخيص، لا اهتمام.</li>
+        <li>لا تهدّد ("إما أن تذهب أو...") - يولّد مقاومة، لا تغييراً.</li>
+      </ul>
+
+      <p class="faq-close">إن لم يكن جاهزاً الآن - ازرع البذرة، ثم عُد إليها بعد أسبوعين أو ثلاثة. التغيير الحقيقي يأخذ وقتاً.</p>`,
+    },
+    {
+      q: 'ماذا أفعل بعد شجار صعب - كيف نعود لبعضنا؟',
+      a: `<p class="faq-intro">بعد شجار مع شخص يعيش مع اضطراب ما بعد الصدمة - كلاكما مجروح، حتى لو بدأ من أمر "صغير". هذا لا يعني أن العلاقة منهارة. يعني أن الترميم يحتاج لطفاً.</p>
+
+      <h4>في الساعات الأولى بعد الشجار</h4>
+      <ul>
+        <li>أعطِ مساحة - لكَ وله. حتى 30 دقيقة صمت لا بأس بها.</li>
+        <li>لا تحلّل من "المحقّ" الآن - سيُشعل النار مجدّداً.</li>
+        <li>إن شعرت أنك تغلي - اخرج للمشي، اشرب ماءً، تنفّس.</li>
+      </ul>
+
+      <h4>حين تستعدّان للحديث ثانيةً</h4>
+      <ul>
+        <li>افتح بما تشعر به، لا بما فعله - "شعرت بالارتباك والجرح."</li>
+        <li>أصغِ قبل أن تشرح - حتى لو لم يبدُ عادلاً.</li>
+        <li>اسأل: "ما كان المُحفّز حقاً؟ بماذا ذكّرك ذلك؟" - أحياناً الشجار قمّة جبل جليد.</li>
+        <li>قل الأهم صراحةً: "أحبك. لن أذهب لأي مكان."</li>
+      </ul>
+
+      <p class="faq-close">لستما مضطرَّين لحلّ كل شيء في محادثة واحدة. أحياناً الترميم محادثات صغيرة على مدى أيام، لا دراما واحدة كبيرة.</p>`,
+    },
+    {
+      q: 'دليل لمنع الإرهاق - كيف تحافظ على نفسك على المدى البعيد',
+      a: `<p class="faq-intro">لا يمكنك أن تسكب من إناء فارغ. إن لم تعتنِ بنفسك - لن تستطيع دعم أحد. ليست أنانية. هو شرط أساسي.</p>
+
+      <h4>الأساس اليومي</h4>
+      <ul>
+        <li><strong>حدود واضحة:</strong> حتى الحب الكبير يحتاج حدوداً. "لا أستطيع التحدّث عن هذا الآن، نعود إليه غداً" - مشروع.</li>
+        <li><strong>وقت خاص بك فقط:</strong> أصدقاء، رياضة، هواية، صمت. حتى 20 دقيقة يومياً تُحدث فرقاً.</li>
+        <li><strong>نوم وأكل:</strong> أساسي، لكنه أول ما يُهمَل عند الإرهاق. حافظ على الروتين.</li>
+      </ul>
+
+      <h4>دعم أوسع</h4>
+      <ul>
+        <li><strong>معالج خاص بك</strong> - لا بشريكك. مكان تكون فيه أنت المعالَج.</li>
+        <li><strong>مجموعة دعم لأفراد العائلة</strong> - للتحدّث مع من يعرف هذا من الداخل.</li>
+        <li><strong>شخص قريب واحد</strong> يعرف ما يحدث ويستطيع احتواءك.</li>
+      </ul>
+
+      <h4>علامات تحذير من الإرهاق</h4>
+      <ul>
+        <li>تهيّج مفرط على أمور صغيرة.</li>
+        <li>انفصال عاطفي - لامبالاة حتى عند حدث مهم.</li>
+        <li>إرهاق لا يزول مع الراحة.</li>
+        <li>أحلام يقظة عن "الهروب" - للعمل، لرحلة، لحياة أخرى.</li>
+      </ul>
+
+      <p class="faq-close">طلب المساعدة ليس فشلاً. يعني أنك جادّ بشأن العلاقة وبشأن نفسك.</p>`,
     },
   ],
 
   en: [
     {
-      q: 'What to do during a flashback / panic episode?',
-      a: `<p><strong>The "Diamond" method:</strong></p>
+      q: 'What to do during a flashback or panic episode?',
+      a: `<p class="faq-intro">First - take a breath. Seeing someone you love in that state shakes you too, and that's completely OK. You don't need to "save" them - you just need to be there, present and safe.</p>
+
+      <h4>The "Diamond" method - four things that calm</h4>
       <ol>
-        <li><strong>Presence:</strong> Remind them quietly - "You're here, you're safe, this will pass"</li>
-        <li><strong>Space:</strong> Don't block the exit - give physical space</li>
-        <li><strong>Quiet:</strong> Reduce stimulation - lights, noise</li>
-        <li><strong>Touch:</strong> Ask first - "Can I hold your hand?"</li>
+        <li><strong>Presence:</strong> Speak in a quiet, confident voice - "I'm here. You're safe. This will pass."</li>
+        <li><strong>Space:</strong> Don't block the exit. Give physical room, don't cling.</li>
+        <li><strong>Quiet:</strong> Dim the lights, lower the noise, reduce stimulation.</li>
+        <li><strong>Touch:</strong> Ask first - "Can I hold your hand?" - and respect the answer.</li>
       </ol>
-      <p><strong>What not to do:</strong></p>
+
+      <h4>What to avoid</h4>
       <ul>
-        <li>Don't argue about "reality"</li>
-        <li>Don't forcibly pull them away from what they're reliving</li>
-        <li>Don't expose them publicly</li>
-      </ul>`,
-    },
-    {
-      q: 'How to communicate day to day?',
-      a: `<p><strong>Do:</strong></p>
-      <ul>
-        <li>Speak from "I" - "I feel worried" not "you always..."</li>
-        <li>Ask before offering help</li>
-        <li>Acknowledge and validate feelings - "That sounds really hard"</li>
-        <li>Keep small promises</li>
+        <li>Don't argue with the "reality" they're experiencing - it's fully real to them.</li>
+        <li>Don't shake or grab them to pull them out of it.</li>
+        <li>Don't expose the situation to others who don't need to see it.</li>
       </ul>
-      <p><strong>Don't:</strong></p>
-      <ul>
-        <li>Don't say "let it go, it's over" - for them it's not over</li>
-        <li>Don't threaten to leave during a crisis</li>
-        <li>Don't try to "fix" them - sometimes just being there is enough</li>
-      </ul>`,
+
+      <p class="faq-close">After it passes - don't demand an explanation. Give time. Sometimes shared silence is the most precious thing.</p>`,
     },
     {
-      q: 'How to recognize signs of distress?',
-      a: `<ul>
-        <li>Increased social withdrawal, less self-initiated contact</li>
-        <li>Extreme sleep changes (too much / too little)</li>
-        <li>Disproportionate outbursts of rage</li>
-        <li>Talk of hopelessness or phrases like "It would be better if I weren't here"</li>
-        <li>Increased alcohol / drug use</li>
+      q: 'How to communicate day to day, when everything feels like walking on eggshells?',
+      a: `<p class="faq-intro">Communicating with someone living with PTSD can feel like walking through a minefield you can't see. It's exhausting, and it's also a skill you can learn. Here are some principles that help.</p>
+
+      <h4>What to do</h4>
+      <ul>
+        <li>Speak from "I" - "I'm feeling worried" beats "you always..."</li>
+        <li>Ask before offering help: "What would help you right now?"</li>
+        <li>Validate the feeling before offering a solution - "That sounds really hard."</li>
+        <li>Keep small promises - they build trust when big ones feel threatening.</li>
       </ul>
-      <p><strong>If you see signs of severe distress - contact a professional immediately or call ERAN: 1201.</strong></p>`,
+
+      <h4>What to avoid</h4>
+      <ul>
+        <li>Don't say "let it go, it's over" - for them, it isn't.</li>
+        <li>Don't threaten to leave during a crisis - even when you're depleted.</li>
+        <li>Don't try to "fix" them - sometimes just being there is enough.</li>
+        <li>Don't compare to others - "look how X handles it" burns the relationship.</li>
+      </ul>
+
+      <p class="faq-close">You don't have to say the right thing. Even "I don't know what to say, but I'm here" - is more than enough.</p>`,
     },
     {
-      q: 'Burnout prevention guide - take care of yourself too',
-      a: `<p>You cannot pour from an empty vessel. Taking care of yourself is not selfish - it is a basic requirement for sustained support.</p>
+      q: 'How to recognize signs of distress - and when to seriously worry?',
+      a: `<p class="faq-intro">People living with PTSD don't always say when it's hard. Sometimes the signs are quiet. Knowing them isn't paranoia - it's real care.</p>
+
+      <h4>Everyday signs to notice</h4>
       <ul>
-        <li><strong>Set clear boundaries</strong> - even great love needs limits</li>
-        <li><strong>Keep time for yourself</strong> - activity, friends, hobbies</li>
-        <li><strong>Seek support</strong> - a therapist, a support group for partners</li>
-        <li><strong>Recognize burnout signs</strong> - excessive irritability, emotional distancing, exhaustion</li>
-        <li><strong>Asking for help is not failure</strong></li>
-      </ul>`,
+        <li>Social withdrawal - going out less, initiating contact less.</li>
+        <li>Extreme sleep changes - too much, or too little.</li>
+        <li>Outbursts of anger or tears disproportionate to the trigger.</li>
+        <li>Loss of interest in things they used to love.</li>
+        <li>Increased use of alcohol, drugs, or gambling.</li>
+      </ul>
+
+      <h4>Signs that need action now</h4>
+      <ul>
+        <li>Talk of hopelessness - "I have no reason," "It would be better without me."</li>
+        <li>Giving away valuable items or "wrapping things up."</li>
+        <li>A sudden calm after a hard period - sometimes a red flag.</li>
+      </ul>
+
+      <div class="faq-call"><strong>If you see signs from the second category - don't wait.</strong> Call ERAN <strong>1201</strong> (24/7), or SAHAR online. If there's immediate danger - MDA 101 or a psychiatric ER.</div>`,
+    },
+    {
+      q: 'How do I know if I myself am starting to burn out or absorb their trauma?',
+      a: `<p class="faq-intro">It's called secondary trauma or compassion fatigue, and it's not weakness - it's a human result of deep love and carrying weight for a long time. You're not alone in this; it has names because it's common.</p>
+
+      <h4>Signs worth listening to</h4>
+      <ul>
+        <li>You dream <em>their</em> hard dreams, or avoid places <em>they</em> avoid.</li>
+        <li>Impatience that isn't like you, snapping at small things.</li>
+        <li>Trouble falling asleep, or waking up feeling on alert.</li>
+        <li>A sense of being "on autopilot" - functioning but not really present.</li>
+        <li>Losing interest in things you used to love, emotionally disconnecting from others.</li>
+      </ul>
+
+      <h4>What to do about it</h4>
+      <ul>
+        <li>Talk to someone - a therapist, a close friend, or a family support group.</li>
+        <li>Hold one small daily thing that's just yours - a walk, a book, a long shower.</li>
+        <li>Set one boundary you can keep - not everything at once.</li>
+        <li>Remember: taking care of yourself isn't betrayal. It's how you stay there for the long haul.</li>
+      </ul>
+
+      <p class="faq-close">If you're reading this and recognizing yourself - that's already a first step. Now give yourself permission to pause.</p>`,
+    },
+    {
+      q: 'How to suggest seeking therapy without it feeling like pressure or a lecture?',
+      a: `<p class="faq-intro">One of the most frustrating situations: you see the pain, you know therapy could help, and they refuse or avoid. Remember - the decision has to come from them, but how you talk about it does make a difference.</p>
+
+      <h4>Approaches that help</h4>
+      <ul>
+        <li><strong>Normalize:</strong> "People who've been through hard things like you do go to therapy - it's not a sign of weakness."</li>
+        <li><strong>Be specific, not general:</strong> "I found a therapist who specializes in this - want me to send their info?" beats "maybe see someone."</li>
+        <li><strong>Offer practical accompaniment:</strong> "I can come with you to the first session, or wait outside."</li>
+        <li><strong>Offer options, not ultimatums:</strong> psychotherapy, support group, hotline.</li>
+      </ul>
+
+      <h4>What to avoid</h4>
+      <ul>
+        <li>Don't repeat it every day - it becomes noise to ignore.</li>
+        <li>Don't say "you need help" - it sounds like a diagnosis, not care.</li>
+        <li>Don't threaten ("either you go, or...") - it creates resistance, not change.</li>
+      </ul>
+
+      <p class="faq-close">If they're not ready now - plant the seed, then come back to it in two or three weeks. Real change takes time.</p>`,
+    },
+    {
+      q: 'What to do after a hard fight - how do you find your way back to each other?',
+      a: `<p class="faq-intro">After a fight with someone living with PTSD, both of you are hurt - even if the fight started over something "small." It doesn't mean the relationship is broken. It means repair has to be gentle.</p>
+
+      <h4>In the first hours after</h4>
+      <ul>
+        <li>Give space - to both of you. Even 30 minutes of silence is fine.</li>
+        <li>Don't analyze who was "right" now - it will reignite the fire.</li>
+        <li>If you're boiling - go for a walk, drink water, breathe.</li>
+      </ul>
+
+      <h4>When you're ready to talk again</h4>
+      <ul>
+        <li>Open with what you feel, not what they did - "I felt confused and hurt."</li>
+        <li>Listen before you explain - even if it doesn't feel fair.</li>
+        <li>Ask: "What was the real trigger? What did it remind you of?" - sometimes the fight is just the visible tip of something deeper.</li>
+        <li>Say the most important thing out loud: "I love you. I'm not going anywhere."</li>
+      </ul>
+
+      <p class="faq-close">You don't have to fix everything in one conversation. Sometimes repair is several small conversations over a few days, not one big drama.</p>`,
+    },
+    {
+      q: 'Burnout prevention - how to take care of yourself for the long run',
+      a: `<p class="faq-intro">You cannot pour from an empty vessel. If you don't take care of yourself - you won't be able to support anyone. This isn't selfishness. It's a basic requirement.</p>
+
+      <h4>The daily basics</h4>
+      <ul>
+        <li><strong>Clear boundaries:</strong> Even great love needs limits. "I can't talk about this right now - let's come back to it tomorrow" is legitimate.</li>
+        <li><strong>Time that's just yours:</strong> friends, exercise, a hobby, silence. Even 20 minutes a day makes a difference.</li>
+        <li><strong>Sleep and food:</strong> basic, but the first thing to slip when burning out. Protect the routine.</li>
+      </ul>
+
+      <h4>Broader support</h4>
+      <ul>
+        <li><strong>Your own therapist</strong> - not your partner's. A place where you're the patient.</li>
+        <li><strong>A family support group</strong> - to talk with people who know this from the inside.</li>
+        <li><strong>One close person</strong> who knows what's going on and can hold you.</li>
+      </ul>
+
+      <h4>Warning signs of burnout</h4>
+      <ul>
+        <li>Excessive irritability at small things.</li>
+        <li>Emotional disconnection - feeling flat even when something important happens.</li>
+        <li>Exhaustion that doesn't lift with rest.</li>
+        <li>Fantasies of "escaping" - to work, to a trip, to a different life.</li>
+      </ul>
+
+      <p class="faq-close">Asking for help isn't failure. It means you're serious about the relationship and about yourself.</p>`,
     },
   ],
 };
