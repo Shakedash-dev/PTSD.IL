@@ -27,13 +27,19 @@ export default function ArchFrame({
   aspect = 'portrait',
   className = '',
   placeholderClass = 'bg-gradient-to-br from-primary/30 via-muted to-card',
+  objectFit = 'cover',
 }) {
   return (
     <div
       className={`overflow-hidden ${SHAPE_CLASSES[shape]} ${ASPECT_CLASSES[aspect]} ${className}`}
     >
       {src ? (
-        <img src={src} alt={alt} className="w-full h-full object-cover" loading="lazy" />
+        <img
+          src={src}
+          alt={alt}
+          className={`w-full h-full ${objectFit === 'contain' ? 'object-contain' : 'object-cover'}`}
+          loading="lazy"
+        />
       ) : (
         <div className={`w-full h-full ${placeholderClass}`} aria-hidden="true" />
       )}

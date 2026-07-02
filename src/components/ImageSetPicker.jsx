@@ -6,6 +6,8 @@ const LABELS = {
   set1: 'סט 1',
   set2: 'סט 2',
   set3: 'סט 3',
+  set4: 'סט 4',
+  set5: 'סט 5',
 };
 
 // Mirrors ThemePicker visually: small icon button in the navbar, popover dropdown

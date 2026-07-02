@@ -4,7 +4,6 @@ import { useLang } from '@/lib/LanguageContext';
 import { t } from '@/lib/i18n';
 import { ArrowLeft, ArrowRight, ChevronDown, Brain, Heart, FileText, Users, Shield, Baby } from 'lucide-react';
 import SectionBlock from '@/components/SectionBlock';
-import ArchFrame from '@/components/ArchFrame';
 import { Button } from '@/components/ui/button';
 import { useImages } from '@/lib/ImageSetContext';
 import ValidatableContent from '@/components/ValidatableContent';
@@ -118,17 +117,18 @@ export default function Home() {
               to={panel.path}
               className="group block"
             >
-              <div className="flex flex-col h-full">
-                {/* Photo slot — ArchFrame placeholder until real images arrive */}
-                <ArchFrame
-                  src={panel.image}
-                  alt={t(lang, panel.titleKey)}
-                  shape={panel.shape}
-                  aspect="portrait"
-                  placeholderClass={panel.placeholder}
-                  className="mb-6 transition-transform duration-500 group-hover:-translate-y-1 shadow-card group-hover:shadow-card-hover"
-                />
-                <div className="px-2">
+              <div className="flex flex-col rounded-t-[50%] rounded-b-3xl border-2 border-border bg-card overflow-hidden shadow-card group-hover:shadow-card-hover group-hover:-translate-y-1 transition-all duration-500">
+                <div className={`aspect-[3/4] w-full ${!panel.image ? panel.placeholder : ''}`}>
+                  {panel.image && (
+                    <img
+                      src={panel.image}
+                      alt={t(lang, panel.titleKey)}
+                      className={`w-full h-full ${panel.image.includes('illustrations') ? 'object-contain' : 'object-cover'}`}
+                      loading="lazy"
+                    />
+                  )}
+                </div>
+                <div className="px-6 pt-5 pb-7">
                   <ValidatableContent contentId={`home.path.${idx}.title`} label={`כרטיס נתיב ${idx + 1} - כותרת`}>
                     <h2 className="font-heading font-semibold text-2xl sm:text-3xl text-foreground mb-3 leading-tight">
                       {t(lang, panel.titleKey)}
