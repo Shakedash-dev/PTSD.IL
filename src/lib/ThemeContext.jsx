@@ -83,7 +83,7 @@ function applyPalette(palette) {
 }
 
 export function ThemeProvider({ children }) {
-  const [paletteId, setPaletteId] = useState('forest-canopy');
+  const [paletteId, setPaletteId] = useState('lavender');
 
   const palette = PALETTES.find(p => p.id === paletteId) || PALETTES[0];
 

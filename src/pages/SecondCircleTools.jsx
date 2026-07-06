@@ -7,7 +7,7 @@ import { ChevronDown } from 'lucide-react';
 import { useImages } from '@/lib/ImageSetContext';
 import ValidatableContent from '@/components/ValidatableContent';
 
-function FAQItem({ q, a, side = 'left', contentId }) {
+function FAQItem({ q, intro, sections, closing, callout, side = 'left', contentId }) {
   const [open, setOpen] = useState(false);
   return (
     <ValidatableContent contentId={contentId} label={q}>
@@ -28,26 +28,32 @@ function FAQItem({ q, a, side = 'left', contentId }) {
         <ChevronDown className={`w-5 h-5 text-primary flex-shrink-0 transition-transform duration-300 ${open ? 'rotate-180' : ''}`} />
       </button>
       {open && (
-        <div
-          className="px-6 pt-5 pb-6 text-foreground leading-relaxed border-t border-primary/30
-            [&_p]:my-3 [&_p]:leading-relaxed
-            [&_ul]:my-3 [&_ol]:my-3 [&_ul]:ps-5 [&_ol]:ps-5
-            [&_ul]:list-disc [&_ol]:list-decimal
-            [&_li]:my-2 [&_li]:leading-relaxed
-            [&_h4]:font-heading [&_h4]:font-semibold [&_h4]:text-foreground
-            [&_h4]:text-base [&_h4]:mt-6 [&_h4]:mb-2 [&_h4]:first:mt-1
-            [&_strong]:text-foreground
-            [&_.faq-intro]:text-foreground [&_.faq-intro]:italic
-            [&_.faq-intro]:bg-primary/5 [&_.faq-intro]:border-s-2
-            [&_.faq-intro]:border-primary/30 [&_.faq-intro]:ps-3
-            [&_.faq-intro]:py-2 [&_.faq-intro]:rounded
-            [&_.faq-close]:text-sm [&_.faq-close]:text-foreground/80
-            [&_.faq-close]:italic [&_.faq-close]:mt-5
-            [&_.faq-call]:bg-amber-50 [&_.faq-call]:border [&_.faq-call]:border-amber-200
-            [&_.faq-call]:rounded-lg [&_.faq-call]:p-3 [&_.faq-call]:mt-4
-            [&_.faq-call]:text-foreground"
-          dangerouslySetInnerHTML={{ __html: a }}
-        />
+        <div className="px-6 pt-5 pb-6 text-foreground leading-relaxed border-t border-primary/30">
+          {intro && (
+            <div
+              className="rich-content text-foreground italic bg-primary/5 border-s-2 border-primary/30 ps-3 py-2 rounded"
+              dangerouslySetInnerHTML={{ __html: intro }}
+            />
+          )}
+          {sections?.map((s, i) => (
+            <div key={i} className={i === 0 ? 'mt-4' : 'mt-6'}>
+              <h4 className="font-heading font-semibold text-foreground text-base mb-2">{s.heading}</h4>
+              <div className="rich-content" dangerouslySetInnerHTML={{ __html: s.body }} />
+            </div>
+          ))}
+          {closing && (
+            <div
+              className="rich-content text-sm text-foreground/80 italic mt-5"
+              dangerouslySetInnerHTML={{ __html: closing }}
+            />
+          )}
+          {callout && (
+            <div
+              className="rich-content bg-amber-50 border border-amber-200 rounded-lg p-3 mt-4 text-foreground"
+              dangerouslySetInnerHTML={{ __html: callout }}
+            />
+          )}
+        </div>
       )}
     </div>
     </ValidatableContent>

@@ -113,7 +113,7 @@ function StepView({ step, index, total, lang, stepImages }) {
                   {t(lang, 'how_to_start')}
                 </p>
                 <div
-                  className="text-sm text-foreground leading-relaxed prose prose-sm max-w-none"
+                  className="text-sm text-foreground leading-relaxed rich-content"
                   dangerouslySetInnerHTML={{ __html: step.how_to_start_he }}
                 />
               </div>

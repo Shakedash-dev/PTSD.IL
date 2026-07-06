@@ -70,7 +70,7 @@ export default function PTSDInfo2() {
                   {active.q}
                 </h2>
                 <div
-                  className="text-card-foreground leading-relaxed prose prose-sm sm:prose-base max-w-none"
+                  className="text-card-foreground leading-relaxed rich-content"
                   dangerouslySetInnerHTML={{ __html: active.a }}
                 />
               </ValidatableContent>

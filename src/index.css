@@ -242,3 +242,82 @@
 ::-webkit-scrollbar-thumb:hover {
   background: hsl(var(--primary) / 0.6);
 }
+
+/* ── Rich-text admin content (Quill HTML output rendered via dangerouslySetInnerHTML) ──
+   Tailwind's preflight strips default list/link/paragraph/heading styling, so admin-authored
+   HTML (bold, underline, lists, links, headings, blockquotes) needs it restored here once,
+   rather than repeating the same overrides at every render site. */
+.rich-content p {
+  margin: 0.6em 0;
+  line-height: 1.6;
+}
+
+.rich-content p:first-child {
+  margin-top: 0;
+}
+
+.rich-content p:last-child {
+  margin-bottom: 0;
+}
+
+.rich-content ul,
+.rich-content ol {
+  margin: 0.6em 0;
+  padding-inline-start: 1.4em;
+}
+
+.rich-content ul {
+  list-style: disc;
+}
+
+.rich-content ol {
+  list-style: decimal;
+}
+
+.rich-content li {
+  margin: 0.3em 0;
+  line-height: 1.6;
+}
+
+.rich-content a {
+  color: hsl(var(--primary));
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.rich-content strong {
+  font-weight: 700;
+  color: inherit;
+}
+
+.rich-content blockquote {
+  margin: 0.6em 0;
+  padding-inline-start: 0.75em;
+  border-inline-start: 2px solid hsl(var(--primary) / 0.4);
+  font-style: italic;
+  color: hsl(var(--foreground) / 0.8);
+}
+
+.rich-content h2,
+.rich-content h3 {
+  font-family: var(--font-heading);
+  color: hsl(var(--foreground));
+}
+
+.rich-content h2 {
+  font-size: 1.15em;
+  font-weight: 700;
+  margin: 0.7em 0 0.35em;
+}
+
+.rich-content h3 {
+  font-size: 1.05em;
+  font-weight: 600;
+  margin: 0.6em 0 0.3em;
+}
+
+.rich-content h2:first-child,
+.rich-content h3:first-child {
+  margin-top: 0;
+}

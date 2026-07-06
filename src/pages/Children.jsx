@@ -78,12 +78,7 @@ export default function Children() {
           <div className="bg-card rounded-super border border-border p-6 shadow-card">
             <h3 className="font-heading font-bold text-foreground mb-4">{t(lang, 'children_guidelines')}</h3>
             <div
-              className="text-foreground/80 leading-relaxed
-                [&_p]:my-3 [&_p]:leading-relaxed
-                [&_ul]:my-3 [&_ol]:my-3 [&_ul]:ps-5 [&_ol]:ps-5
-                [&_ul]:list-disc [&_ol]:list-decimal
-                [&_li]:my-1.5 [&_li]:leading-relaxed
-                [&_strong]:text-foreground"
+              className="rich-content text-foreground/80"
               dangerouslySetInnerHTML={{ __html: guidelines }}
             />
           </div>
@@ -160,19 +155,19 @@ export default function Children() {
                           </button>
                         )}
                         {hasContent && isOpen && (
-                          <div
-                            className="px-4 pb-4 pt-1 text-sm text-foreground/90 leading-relaxed
-                              [&_p]:my-2.5 [&_p]:leading-relaxed
-                              [&_ul]:my-2.5 [&_ol]:my-2.5 [&_ul]:ps-5 [&_ol]:ps-5
-                              [&_ul]:list-disc [&_ol]:list-decimal
-                              [&_li]:my-1.5
-                              [&_strong]:text-foreground
-                              [&_blockquote]:border-s-2 [&_blockquote]:border-primary/40
-                              [&_blockquote]:ps-3 [&_blockquote]:italic
-                              [&_blockquote]:text-foreground/80 [&_blockquote]:my-3
-                              [&_em]:text-muted-foreground"
-                            dangerouslySetInnerHTML={{ __html: r.content_he }}
-                          />
+                          <div className="px-4 pb-4 pt-1 text-sm text-foreground/90">
+                            <div className="rich-content" dangerouslySetInnerHTML={{ __html: r.content_he }} />
+                            {r.cta_label && r.cta_url && (
+                              <a
+                                href={r.cta_url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center gap-2 px-4 py-2 mt-4 bg-primary text-primary-foreground rounded-full text-sm font-semibold hover:bg-accent transition-colors no-underline"
+                              >
+                                {r.cta_label}
+                              </a>
+                            )}
+                          </div>
                         )}
                       </div>
                     </ValidatableContent>

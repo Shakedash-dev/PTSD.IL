@@ -37,11 +37,11 @@ function FAQAccordion({ q, a, steps, links, side = 'left', lang }) {
       </button>
       {open && (
         <div className="px-5 pt-4 pb-5 space-y-3 border-t border-primary/30">
-          <div className="text-foreground leading-relaxed prose prose-sm max-w-none" dangerouslySetInnerHTML={{ __html: a }} />
+          <div className="text-foreground leading-relaxed rich-content" dangerouslySetInnerHTML={{ __html: a }} />
           {steps && (
             <div className="p-4 bg-primary/5 rounded-lg">
               <p className="text-xs font-bold text-primary uppercase tracking-wide mb-2">{t(lang, 'step_by_step')}</p>
-              <div className="text-sm text-foreground prose prose-sm max-w-none" dangerouslySetInnerHTML={{ __html: steps }} />
+              <div className="text-sm text-foreground rich-content" dangerouslySetInnerHTML={{ __html: steps }} />
             </div>
           )}
           {links?.length > 0 && (

@@ -115,9 +115,9 @@ export default function Home() {
             <Link
               key={panel.path}
               to={panel.path}
-              className="group block"
+              className="group block h-full"
             >
-              <div className="flex flex-col rounded-t-[50%] rounded-b-3xl border-2 border-border bg-card overflow-hidden shadow-card group-hover:shadow-card-hover group-hover:-translate-y-1 transition-all duration-500">
+              <div className="flex flex-col h-full rounded-t-[50%] rounded-b-3xl border-2 border-border bg-card overflow-hidden shadow-card group-hover:shadow-card-hover group-hover:-translate-y-1 transition-all duration-500">
                 <div className={`aspect-[3/4] w-full ${!panel.image ? panel.placeholder : ''}`}>
                   {panel.image && (
                     <img
@@ -128,7 +128,7 @@ export default function Home() {
                     />
                   )}
                 </div>
-                <div className="px-6 pt-5 pb-7">
+                <div className="flex-1 px-6 pt-5 pb-7">
                   <ValidatableContent contentId={`home.path.${idx}.title`} label={`כרטיס נתיב ${idx + 1} - כותרת`}>
                     <h2 className="font-heading font-semibold text-2xl sm:text-3xl text-foreground mb-3 leading-tight">
                       {t(lang, panel.titleKey)}
@@ -166,29 +166,6 @@ export default function Home() {
               </Link>
             </Button>
           </div>
-        </div>
-      </SectionBlock>
-
-      {/* ── Calming CTA ── */}
-      <SectionBlock variant="canvas" maxWidth="default" padding="pt-20 pb-16">
-        <div className="bg-card rounded-super border border-border p-8 sm:p-12 text-center shadow-card">
-          <ValidatableContent contentId="home.calming.prompt" label="קריאה לפעולה - הרגעה">
-            <p className="font-body text-sm uppercase tracking-[0.18em] text-muted-foreground mb-3 font-semibold">
-              {lang === 'he' ? 'במצוקה עכשיו?' : lang === 'ar' ? 'في ضائقة الآن؟' : 'In distress now?'}
-            </p>
-            <h3 className="font-heading font-light text-3xl sm:text-4xl text-foreground mb-4 leading-tight">
-              {t(lang, 'calming_title')}
-            </h3>
-            <p className="font-body text-card-foreground mb-8 max-w-md mx-auto leading-relaxed">
-              {t(lang, 'calming_subtitle')}
-            </p>
-          </ValidatableContent>
-          <Button asChild variant="pill" size="pill-lg">
-            <Link to="/calming" className="gap-2">
-              {t(lang, 'go_to_calming')}
-              <ArrowIcon className="w-4 h-4" />
-            </Link>
-          </Button>
         </div>
       </SectionBlock>
 

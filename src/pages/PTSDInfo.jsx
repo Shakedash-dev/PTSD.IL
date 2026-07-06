@@ -37,7 +37,7 @@ function FAQCard({ question, answer, contentId }) {
         </button>
         {open && (
           <div
-            className="px-6 pb-6 pt-5 text-foreground leading-relaxed prose prose-sm max-w-none border-t border-primary/30"
+            className="px-6 pb-6 pt-5 text-foreground leading-relaxed rich-content border-t border-primary/30"
             dangerouslySetInnerHTML={{ __html: answer }}
           />
         )}

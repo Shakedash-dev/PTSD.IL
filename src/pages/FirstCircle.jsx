@@ -62,19 +62,6 @@ export default function FirstCircle() {
           })}
         </div>
 
-        {/* Calming shortcut */}
-        <div className="mt-10 p-7 rounded-xl border border-border bg-card text-center">
-          <ValidatableContent contentId="first-circle.calming.prompt" label="טקסט לחץ - קישור לתרגילי הרגעה">
-          <p className="text-card-foreground mb-4">נמצא/ת כרגע בקושי?</p>
-          </ValidatableContent>
-          <Link
-            to="/calming"
-            className="inline-flex items-center gap-2 px-6 py-3 bg-primary hover:bg-accent text-primary-foreground rounded-xl font-medium transition-colors duration-300"
-          >
-            לתרגילי הרגעה מיידיים
-            <ArrowIcon className="w-4 h-4" />
-          </Link>
-        </div>
       </div>
     </div>
   );

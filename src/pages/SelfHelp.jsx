@@ -29,7 +29,7 @@ function ToolCard({ tool, contentId }) {
         </button>
         {open && (
           <div
-            className="px-6 pb-6 text-muted-foreground leading-relaxed prose prose-sm max-w-none"
+            className="px-6 pb-6 text-muted-foreground leading-relaxed rich-content"
             dangerouslySetInnerHTML={{ __html: tool.content_he }}
           />
         )}

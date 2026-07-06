@@ -14,6 +14,7 @@ import { STATIC_CONTENT } from './static/children.js';
 import { RIGHTS_FAQS } from './static/rights_faqs.js';
 import { PTSD_INFO_FAQS } from './static/ptsd_info_faqs.js';
 import { SECOND_CIRCLE_TOOLS } from './static/second_circle_tools.js';
+import { QUESTIONNAIRE } from './static/questionnaire.js';
 
 export const db = {
   sources: STATIC_SOURCES,
@@ -24,4 +25,5 @@ export const db = {
   rights_faqs: RIGHTS_FAQS,
   ptsd_info_faqs: PTSD_INFO_FAQS,
   second_circle_tools: SECOND_CIRCLE_TOOLS,
+  questionnaire: QUESTIONNAIRE,
 };
