@@ -29,6 +29,11 @@ export default function Sources() {
       />
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 py-16">
+        <div className="bg-primary/5 border border-primary/20 rounded-super p-5 mb-8">
+          <p className="text-foreground leading-relaxed">
+            כל התוכן שמוצג באתר אושר ע"י מטיב - המרכז לפסיכוטראומה
+          </p>
+        </div>
         {isLoading && <p className="text-center text-muted-foreground">{t(lang, 'loading')}</p>}
         {error && <p className="text-center text-muted-foreground">{t(lang, 'content_error')}</p>}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
