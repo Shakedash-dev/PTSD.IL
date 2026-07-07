@@ -7,15 +7,11 @@ import { ChevronDown } from 'lucide-react';
 import { IMAGES } from '@/lib/images';
 import ValidatableContent from '@/components/ValidatableContent';
 
-function FAQItem({ q, intro, sections, closing, callout, side = 'left', contentId }) {
+function FAQItem({ q, intro, sections, closing, callout, contentId }) {
   const [open, setOpen] = useState(false);
   return (
     <ValidatableContent contentId={contentId} label={q}>
-    <div className={`border-2 transition-natural overflow-hidden ${
-      side === 'right'
-        ? 'rounded-tl-2xl rounded-bl-2xl rounded-br-2xl rounded-tr-sm'
-        : 'rounded-tr-2xl rounded-br-2xl rounded-bl-2xl rounded-tl-sm'
-    } ${
+    <div className={`border-2 rounded-2xl transition-natural overflow-hidden ${
       open ? 'bg-card border-primary shadow-card-hover' : 'bg-card border-border hover:border-primary/40'
     }`}>
       <button
@@ -87,14 +83,9 @@ export default function SecondCircleTools() {
         </ValidatableContent>
 
         <div className="max-w-xl mx-auto flex flex-col gap-3">
-          {tools.map((faq, i) => {
-            const side = i % 2 === 0 ? 'left' : 'right';
-            return (
-              <div key={i} className={`w-[85%] ${side === 'left' ? 'mr-auto' : 'ml-auto'}`}>
-                <FAQItem {...faq} side={side} contentId={`second-circle-tools.faq.${i}`} />
-              </div>
-            );
-          })}
+          {tools.map((faq, i) => (
+            <FAQItem key={i} {...faq} contentId={`second-circle-tools.faq.${i}`} />
+          ))}
         </div>
       </div>
     </div>

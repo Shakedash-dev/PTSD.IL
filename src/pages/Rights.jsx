@@ -16,14 +16,10 @@ const CATEGORIES = [
 ];
 
 
-function FAQAccordion({ q, a, steps, links, side = 'left', lang }) {
+function FAQAccordion({ q, a, steps, links, lang }) {
   const [open, setOpen] = useState(false);
   return (
-    <div className={`border-2 transition-natural overflow-hidden ${
-      side === 'right'
-        ? 'rounded-tl-2xl rounded-bl-2xl rounded-br-2xl rounded-tr-sm'
-        : 'rounded-tr-2xl rounded-br-2xl rounded-bl-2xl rounded-tl-sm'
-    } ${
+    <div className={`border-2 rounded-2xl transition-natural overflow-hidden ${
       open ? 'bg-card border-primary shadow-card-hover' : 'bg-card border-border hover:border-primary/40'
     }`}>
       <button
@@ -111,14 +107,11 @@ export default function Rights() {
 
         {/* FAQ */}
         <div className="max-w-xl mx-auto flex flex-col gap-3 mb-10">
-          {currentFaqs.map((faq, i) => {
-            const side = i % 2 === 0 ? 'left' : 'right';
-            return (
-              <ValidatableContent key={i} contentId={`rights.faq.${activeCategory}.${i}`} label={faq.q} className={`w-[85%] ${side === 'left' ? 'mr-auto' : 'ml-auto'}`}>
-                <FAQAccordion {...faq} side={side} lang={lang} />
-              </ValidatableContent>
-            );
-          })}
+          {currentFaqs.map((faq, i) => (
+            <ValidatableContent key={i} contentId={`rights.faq.${activeCategory}.${i}`} label={faq.q}>
+              <FAQAccordion {...faq} lang={lang} />
+            </ValidatableContent>
+          ))}
         </div>
 
         {/* Chatbot placeholder */}
