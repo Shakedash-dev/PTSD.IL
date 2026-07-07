@@ -7,10 +7,6 @@ import { ChevronDown } from 'lucide-react';
 import { IMAGES } from '@/lib/images';
 import ValidatableContent from '@/components/ValidatableContent';
 
-// Design A: 2-column accordion grid.
-// Each card stays compact (just the question) until clicked, expanding the answer inline.
-// On desktop the grid keeps two questions visible per row so the user can scan many
-// questions at once without long vertical scrolling. On mobile it collapses to one column.
 function FAQCard({ question, answer, contentId }) {
   const [open, setOpen] = useState(false);
 
@@ -71,7 +67,7 @@ export default function PTSDInfo() {
           </p>
         </ValidatableContent>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <div className="max-w-xl mx-auto flex flex-col gap-3">
           {faqs.map((faq, i) => (
             <FAQCard key={i} question={faq.q} answer={faq.a} contentId={`ptsd-info.faq.${i}`} />
           ))}
