@@ -6,35 +6,38 @@
 
 @layer base {
   :root {
-    /* ── Theme 1: Forest Canopy (default) ─────────────────────────────────────
-       Page: pale sage #EEF4ED  ·  Cards: warm parchment #F6F2E7
-       Primary: muted moss #4A7A58  ·  Accent: clay #A86E48
-       Text: forest charcoal #1E2E22
+    /* ── Theme 2: Lavender (default) ───────────────────────────────────────────
+       Page: soft lavender #F5F0FA  ·  Cards: near-white #FDF8FF
+       Primary: muted purple #8050B8  ·  Accent: rose #C4708A
+       Text: deep plum #28183A
+       These must match PALETTES.lavender in ThemeContext.jsx — it's the
+       ThemeProvider's initial state, and these are the first-paint values
+       before that effect runs. Mismatched values cause a color flash on load.
     ── */
-    --background: 147 46% 91%;        /* #DCF2E6 fresh light green canvas */
-    --foreground: 135 21% 15%;        /* #1E2E22 deep forest charcoal */
-    --card: 151 49% 96%;              /* #F0FAF5 near-white green card */
-    --card-foreground: 133 19% 29%;   /* #3C5842 mid-dark forest text */
-    --popover: 151 49% 96%;
-    --popover-foreground: 133 19% 29%;
-    --primary: 140 45% 33%;           /* #2E7A48 forest green — passes WCAG AA 4.5:1 on light bg */
-    --primary-foreground: 115 22% 94%;
-    --secondary: 24 40% 47%;          /* #A86E48 muted clay — badge/secondary accent */
-    --secondary-foreground: 43 44% 94%;
-    --muted: 148 35% 81%;             /* #BEE0CE clearly green muted */
-    --muted-foreground: 133 19% 29%;
-    --accent: 143 51% 25%;            /* #206040 darker forest hover */
-    --accent-foreground: 115 22% 94%;
+    --background: 270 50% 96%;        /* #F5F0FA soft lavender canvas */
+    --foreground: 268 41% 16%;        /* #28183A deep plum */
+    --card: 283 100% 99%;             /* #FDF8FF near-white lavender card */
+    --card-foreground: 268 25% 38%;   /* #5E4878 mid plum text */
+    --popover: 283 100% 99%;
+    --popover-foreground: 268 25% 38%;
+    --primary: 268 42% 52%;           /* #8050B8 muted purple */
+    --primary-foreground: 270 50% 96%;
+    --secondary: 341 42% 60%;         /* #C4708A rose accent */
+    --secondary-foreground: 270 50% 96%;
+    --muted: 263 33% 92%;             /* #EAE5F2 clearly lavender muted */
+    --muted-foreground: 268 25% 38%;
+    --accent: 265 43% 44%;            /* #6840A0 darker purple hover */
+    --accent-foreground: 270 50% 96%;
     --destructive: 0 55% 48%;
     --destructive-foreground: 0 0% 98%;
-    --border: 144 31% 66%;            /* #8EC4A4 medium green border */
-    --input: 144 31% 66%;
-    --ring: 140 45% 33%;
+    --border: 270 34% 82%;            /* #D0C0E0 medium lavender border */
+    --input: 270 34% 82%;
+    --ring: 268 42% 52%;
     --radius: 1rem;
 
     /* Custom tokens */
-    --sanctuary: 135 21% 15%;
-    --sanctuary-foreground: 43 44% 94%;
+    --sanctuary: 268 41% 16%;
+    --sanctuary-foreground: 270 50% 96%;
     --sage: 120 17% 60%;
     --sage-deep: 138 24% 38%;
     --oatmeal: 43 44% 94%;

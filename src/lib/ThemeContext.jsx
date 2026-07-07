@@ -66,6 +66,8 @@ function applyPalette(palette) {
   root.style.setProperty('--foreground', hexToHsl(palette.text));
   root.style.setProperty('--card', hexToHsl(palette.card));
   root.style.setProperty('--card-foreground', hexToHsl(palette.secondary));
+  root.style.setProperty('--popover', hexToHsl(palette.card));
+  root.style.setProperty('--popover-foreground', hexToHsl(palette.secondary));
   root.style.setProperty('--primary', hexToHsl(palette.primary));
   root.style.setProperty('--primary-foreground', hexToHsl(palette.background));
   root.style.setProperty('--secondary', hexToHsl(palette.highlight || palette.primaryHover));
