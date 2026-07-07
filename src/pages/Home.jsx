@@ -5,7 +5,7 @@ import { t } from '@/lib/i18n';
 import { ArrowLeft, ArrowRight, ChevronDown, Brain, Heart, FileText, Users, Shield, Baby } from 'lucide-react';
 import SectionBlock from '@/components/SectionBlock';
 import { Button } from '@/components/ui/button';
-import { useImages } from '@/lib/ImageSetContext';
+import { IMAGES } from '@/lib/images';
 import ValidatableContent from '@/components/ValidatableContent';
 
 const quickNavItems = [
@@ -19,7 +19,6 @@ const quickNavItems = [
 
 // Per-path placeholder accents so the three big path cards feel distinct even
 // before photography arrives. Each pairs a gradient and an arch shape.
-// imageKey is resolved against the active image set at render time.
 const PATHS_META = [
   {
     path: '/first-circle',
@@ -49,7 +48,6 @@ const PATHS_META = [
 
 export default function Home() {
   const { lang } = useLang();
-  const IMAGES = useImages();
   const paths = PATHS_META.map(p => ({ ...p, image: IMAGES[p.imageKey] }));
   const isRTL = document.documentElement.getAttribute('dir') === 'rtl';
   const ArrowIcon = isRTL ? ArrowLeft : ArrowRight;

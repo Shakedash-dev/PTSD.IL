@@ -5,7 +5,7 @@ import { t } from '@/lib/i18n';
 import { useTreatmentSteps } from '@/api/hooks';
 import { Wrench, Building2, Brain, Leaf, Pill, ExternalLink, ChevronDown } from 'lucide-react';
 import ArchFrame from '@/components/ArchFrame';
-import { useTreatmentImages } from '@/lib/ImageSetContext';
+import { TREATMENT_STEP_IMAGES } from '@/lib/images';
 import ValidatableContent from '@/components/ValidatableContent';
 
 const STEP_ICON_MAP = { Wrench, Building2, Brain, Leaf, Pill };
@@ -184,7 +184,7 @@ function TrailMarkers({ stepCount }) {
 
 export default function Treatment() {
   const { lang } = useLang();
-  const stepImages = useTreatmentImages();
+  const stepImages = TREATMENT_STEP_IMAGES;
   const { data: steps = [], isLoading, error } = useTreatmentSteps();
   const [hovered, setHovered] = useState(false);
 

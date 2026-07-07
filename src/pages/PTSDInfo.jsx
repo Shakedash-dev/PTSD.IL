@@ -4,7 +4,7 @@ import { t } from '@/lib/i18n';
 import { usePTSDInfoFaqs } from '@/api/hooks';
 import PageHeader from '@/components/PageHeader';
 import { ChevronDown } from 'lucide-react';
-import { useImages } from '@/lib/ImageSetContext';
+import { IMAGES } from '@/lib/images';
 import ValidatableContent from '@/components/ValidatableContent';
 
 // Design A: 2-column accordion grid.
@@ -48,7 +48,6 @@ function FAQCard({ question, answer, contentId }) {
 
 export default function PTSDInfo() {
   const { lang } = useLang();
-  const IMAGES = useImages();
   const { data: faqs = [], isLoading, error } = usePTSDInfoFaqs({ lang });
 
   return (

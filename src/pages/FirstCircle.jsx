@@ -4,7 +4,7 @@ import { useLang } from '@/lib/LanguageContext';
 import { t } from '@/lib/i18n';
 import PageHeader from '@/components/PageHeader';
 import { Brain, Wrench, FileText, Heart, Users, Baby, ArrowLeft, ArrowRight, User } from 'lucide-react';
-import { useImages } from '@/lib/ImageSetContext';
+import { IMAGES } from '@/lib/images';
 import ValidatableContent from '@/components/ValidatableContent';
 
 const sections = [
@@ -18,7 +18,6 @@ const sections = [
 
 export default function FirstCircle() {
   const { lang } = useLang();
-  const IMAGES = useImages();
   const isRTL = document.documentElement.getAttribute('dir') === 'rtl';
   const ArrowIcon = isRTL ? ArrowLeft : ArrowRight;
 

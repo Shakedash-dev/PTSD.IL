@@ -4,7 +4,7 @@ import { t } from '@/lib/i18n';
 import { useChildrenContent } from '@/api/hooks';
 import PageHeader from '@/components/PageHeader';
 import { Baby, BookOpen, Video, Download, Star, ChevronDown, ExternalLink } from 'lucide-react';
-import { useImages } from '@/lib/ImageSetContext';
+import { IMAGES } from '@/lib/images';
 import ValidatableContent from '@/components/ValidatableContent';
 
 const AGE_TABS = [
@@ -26,7 +26,6 @@ const RESOURCE_ICONS = {
 
 export default function Children() {
   const { lang } = useLang();
-  const IMAGES = useImages();
   const [activeAge, setActiveAge] = useState('0-4');
   const [openResource, setOpenResource] = useState(null);
   const { data: allContent = {}, isLoading, error } = useChildrenContent();

@@ -7,7 +7,6 @@ import PageNotFound from './lib/PageNotFound';
 import ScrollToTop from './components/ScrollToTop';
 import { LanguageProvider } from '@/lib/LanguageContext';
 import { ThemeProvider } from '@/lib/ThemeContext';
-import { ImageSetProvider } from '@/lib/ImageSetContext';
 import { ValidationProvider } from '@/contexts/ValidationContext';
 import { UserTypeProvider } from '@/contexts/UserTypeContext';
 import Layout from '@/components/Layout';
@@ -38,7 +37,6 @@ function App() {
     <QueryClientProvider client={queryClientInstance}>
       <LanguageProvider>
         <ThemeProvider>
-          <ImageSetProvider>
           <ValidationProvider>
             <Router basename={BASE_PATH}>
             <UserTypeProvider>
@@ -69,7 +67,6 @@ function App() {
             </UserTypeProvider>
           </Router>
           </ValidationProvider>
-          </ImageSetProvider>
         </ThemeProvider>
         <Toaster />
       </LanguageProvider>

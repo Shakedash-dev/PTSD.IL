@@ -5,7 +5,7 @@ import { t } from '@/lib/i18n';
 import { useSelfHelpTools } from '@/api/hooks';
 import PageHeader from '@/components/PageHeader';
 import { Wind, Moon, PenLine, Smartphone, Zap, ChevronDown, ArrowLeft, ArrowRight, Compass, Wrench } from 'lucide-react';
-import { useImages } from '@/lib/ImageSetContext';
+import { IMAGES } from '@/lib/images';
 import ValidatableContent from '@/components/ValidatableContent';
 
 const TOOL_ICON_MAP = { Wind, Moon, PenLine, Smartphone, Zap, Compass, Wrench };
@@ -40,7 +40,6 @@ function ToolCard({ tool, contentId }) {
 
 export default function SelfHelp() {
   const { lang } = useLang();
-  const IMAGES = useImages();
   const isRTL = document.documentElement.getAttribute('dir') === 'rtl';
   const ArrowIcon = isRTL ? ArrowLeft : ArrowRight;
   const { data: tools = [], isLoading, error } = useSelfHelpTools();

@@ -4,7 +4,7 @@ import { t } from '@/lib/i18n';
 import { useRightsFaqs } from '@/api/hooks';
 import PageHeader from '@/components/PageHeader';
 import { Shield, Heart, Users, Car, HelpCircle, ChevronDown, ExternalLink, MessageCircle, Scale } from 'lucide-react';
-import { useImages } from '@/lib/ImageSetContext';
+import { IMAGES } from '@/lib/images';
 import ValidatableContent from '@/components/ValidatableContent';
 
 const CATEGORIES = [
@@ -68,7 +68,6 @@ function FAQAccordion({ q, a, steps, links, side = 'left', lang }) {
 
 export default function Rights() {
   const { lang } = useLang();
-  const IMAGES = useImages();
   const [activeCategory, setActiveCategory] = useState('security_forces');
 
   const { data: currentFaqs = [], isLoading, error } = useRightsFaqs({ lang, category: activeCategory });

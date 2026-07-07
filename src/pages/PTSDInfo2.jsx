@@ -3,7 +3,7 @@ import { useLang } from '@/lib/LanguageContext';
 import { t } from '@/lib/i18n';
 import { usePTSDInfoFaqs } from '@/api/hooks';
 import PageHeader from '@/components/PageHeader';
-import { useImages } from '@/lib/ImageSetContext';
+import { IMAGES } from '@/lib/images';
 import ValidatableContent from '@/components/ValidatableContent';
 
 // Design B: docs-style sticky table-of-contents.
@@ -12,7 +12,6 @@ import ValidatableContent from '@/components/ValidatableContent';
 // Mobile: stacks - TOC on top, answer below, click a title to jump.
 export default function PTSDInfo2() {
   const { lang } = useLang();
-  const IMAGES = useImages();
   const { data: faqs = [], isLoading, error } = usePTSDInfoFaqs({ lang });
   const [activeIndex, setActiveIndex] = useState(0);
 

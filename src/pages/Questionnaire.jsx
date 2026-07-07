@@ -4,7 +4,7 @@ import { useLang } from '@/lib/LanguageContext';
 import { t } from '@/lib/i18n';
 import { ArrowLeft, ArrowRight, CheckCircle, AlertCircle, RefreshCw } from 'lucide-react';
 import PageHeader from '@/components/PageHeader';
-import { useImages } from '@/lib/ImageSetContext';
+import { IMAGES } from '@/lib/images';
 import { db } from '@/data/db';
 
 // Content (questions, scale, cutoff) lives in src/data/static/questionnaire.js and is
@@ -66,7 +66,6 @@ function QuestionCard({ idx, question, scale, useRawScale, answers, onAnswer, la
 
 export default function Questionnaire() {
   const { lang } = useLang();
-  const IMAGES = useImages();
   const isRTL = document.documentElement.getAttribute('dir') === 'rtl';
   const ArrowIcon = isRTL ? ArrowLeft : ArrowRight;
   const isHebrew = lang !== 'en';

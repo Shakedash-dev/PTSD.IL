@@ -4,10 +4,9 @@ import { useLang } from '@/lib/LanguageContext';
 import { t } from '@/lib/i18n';
 import SectionBlock from '@/components/SectionBlock';
 import ArchFrame from '@/components/ArchFrame';
-import { useImages } from '@/lib/ImageSetContext';
+import { IMAGES } from '@/lib/images';
 
 // breathing = sky, grounding = earth, muscle = hands.
-// imageKey is resolved against the active image set at render time.
 // All three tiles use the same shape so the row reads as one cohesive set.
 const EXERCISES_META = [
   {
@@ -34,7 +33,6 @@ const TILE_SHAPE = 'arch';
 
 export default function Calming() {
   const { lang } = useLang();
-  const IMAGES = useImages();
   const exercises = EXERCISES_META.map(e => ({ ...e, image: IMAGES[e.imageKey] }));
 
   return (

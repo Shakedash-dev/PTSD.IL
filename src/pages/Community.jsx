@@ -8,7 +8,7 @@ import ArchFrame from '@/components/ArchFrame';
 import { Button } from '@/components/ui/button';
 import SectionBlock from '@/components/SectionBlock';
 import { Users, MapPin, ExternalLink, X } from 'lucide-react';
-import { useImages } from '@/lib/ImageSetContext';
+import { IMAGES } from '@/lib/images';
 import ValidatableContent from '@/components/ValidatableContent';
 
 const AUDIENCE_OPTIONS = [
@@ -43,7 +43,6 @@ const CARD_PLACEHOLDERS = [
 
 export default function Community() {
   const { lang } = useLang();
-  const IMAGES = useImages();
   const [audienceFilter, setAudienceFilter] = useState('all');
   const [locationFilter, setLocationFilter] = useState('all');
   const { data: communities = [], isLoading, error } = useCommunities();

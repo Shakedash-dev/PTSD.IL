@@ -4,7 +4,7 @@ import { t } from '@/lib/i18n';
 import { useSecondCircleTools } from '@/api/hooks';
 import PageHeader from '@/components/PageHeader';
 import { ChevronDown } from 'lucide-react';
-import { useImages } from '@/lib/ImageSetContext';
+import { IMAGES } from '@/lib/images';
 import ValidatableContent from '@/components/ValidatableContent';
 
 function FAQItem({ q, intro, sections, closing, callout, side = 'left', contentId }) {
@@ -62,7 +62,6 @@ function FAQItem({ q, intro, sections, closing, callout, side = 'left', contentI
 
 export default function SecondCircleTools() {
   const { lang } = useLang();
-  const IMAGES = useImages();
   const { data: tools = [], isLoading, error } = useSecondCircleTools({ lang });
 
   return (
