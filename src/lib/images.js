@@ -79,6 +79,27 @@ export const IMAGES = {
   home_path3: illus('wondering'),
 };
 
+// FirstCircle and SecondCircle each render one illustration per section, keyed
+// by the section's `key` so pages can do ILLUSTRATIONS[section.key]. `rights`
+// is shared between both pages (same illustration, same destination page).
+export const FIRST_CIRCLE_ILLUSTRATIONS = {
+  ptsd_info: illus('ptsd-info'),
+  self_help: illus('self-help'),
+  rights: illus('rights'),
+  treatment: illus('treatment-first-circle'),
+  community: illus('communities'),
+  children_content: illus('child'),
+};
+
+export const SECOND_CIRCLE_ILLUSTRATIONS = {
+  ptsd_info: illus('ptsd-info-second-circle'),
+  second_circle: illus('second-circle-tools'),
+  rights: illus('rights'),
+  treatment: illus('treatment-second-circle'),
+  children_content: illus('child-second-circle'),
+  community: illus('communities-second-circle'),
+};
+
 // Treatment steps as an indexed array, for the snap-scroll map.
 export const TREATMENT_STEP_IMAGES = [
   IMAGES.treatment_step1,

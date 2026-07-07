@@ -116,7 +116,7 @@ export default function Home() {
               className="group block h-full"
             >
               <div className="flex flex-col h-full rounded-t-[50%] rounded-b-3xl border-2 border-border bg-card overflow-hidden shadow-card group-hover:shadow-card-hover group-hover:-translate-y-1 transition-all duration-500">
-                <div className={`aspect-[3/4] w-full ${!panel.image ? panel.placeholder : ''}`}>
+                <div className={`aspect-[3/4] w-full ${!panel.image ? panel.placeholder : panel.image.includes('illustrations') ? 'bg-muted' : ''}`}>
                   {panel.image && (
                     <img
                       src={panel.image}
