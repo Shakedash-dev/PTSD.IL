@@ -102,11 +102,11 @@ export const SECOND_CIRCLE_ILLUSTRATIONS = {
 
 // Treatment steps as an indexed array, for the snap-scroll map.
 export const TREATMENT_STEP_IMAGES = [
-  IMAGES.treatment_step1,
-  IMAGES.treatment_step2,
-  IMAGES.treatment_step3,
-  IMAGES.treatment_step4,
-  IMAGES.treatment_step5,
+  illus('treatment-step1'),
+  illus('treatment-step2'),
+  illus('treatment-step3'),
+  illus('treatment-step4'),
+  illus('treatment-step5'),
 ];
 
 // Re-exported for downstream tooling that wants to know which Unsplash photo

@@ -84,7 +84,7 @@ function StepView({ step, index, total, lang, stepImages }) {
               shape={index % 3 === 0 ? 'arch' : index % 3 === 1 ? 'capsule' : 'card'}
               aspect="landscape"
               placeholderClass={STEP_TINTS[index % STEP_TINTS.length]}
-              className="mb-6 shadow-card"
+              className="mb-6 bg-muted shadow-card"
             />
 
             <ValidatableContent contentId={`treatment.step.${index}`} label={step.title_he}>
