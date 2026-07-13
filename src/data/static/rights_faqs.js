@@ -26,7 +26,7 @@ export const RIGHTS_FAQS = {
         links: [
           { label: 'טופס דיגיטלי - בקשה להכרה בנכות', url: 'https://shikum.mod.gov.il/recognition/request/apply' },
           { label: 'בידיים טובות - סיוע בהגשת הבקשה', url: 'https://shikum.mod.gov.il/ContactUs/goodhands' },
-          { label: 'הקליניקה להכרה בנכות צבאית - המכללה האקדמית אונו', url: 'https://www.ono.ac.il/clinical-law/clinic-for-the-recognition-of-military-disability/' },
+          { label: 'הקליניקה להכרה בנכות צבאית - המכללה האקדמית אונו', url: 'https://www.ono.ac.il/clinical-law/clinic-for-the-recognition-of-military-disability/#4' },
         ],
       },
       {
@@ -141,7 +141,7 @@ export const RIGHTS_FAQS = {
         links: [
           { label: 'النموذج الرقمي - طلب الاعتراف بالعجز', url: 'https://shikum.mod.gov.il/recognition/request/apply' },
           { label: '"أيادٍ طيبة" - المساعدة في تقديم الطلب', url: 'https://shikum.mod.gov.il/ContactUs/goodhands' },
-          { label: 'عيادة الاعتراف بالعجز العسكري - كلية أونو الأكاديمية', url: 'https://www.ono.ac.il/clinical-law/clinic-for-the-recognition-of-military-disability/' },
+          { label: 'عيادة الاعتراف بالعجز العسكري - كلية أونو الأكاديمية', url: 'https://www.ono.ac.il/clinical-law/clinic-for-the-recognition-of-military-disability/#4' },
         ],
       },
       {
@@ -256,7 +256,7 @@ export const RIGHTS_FAQS = {
         links: [
           { label: 'Digital form - disability recognition request', url: 'https://shikum.mod.gov.il/recognition/request/apply' },
           { label: 'Good Hands - assistance with submitting the request', url: 'https://shikum.mod.gov.il/ContactUs/goodhands' },
-          { label: 'Clinic for the Recognition of Military Disability - Ono Academic College', url: 'https://www.ono.ac.il/clinical-law/clinic-for-the-recognition-of-military-disability/' },
+          { label: 'Clinic for the Recognition of Military Disability - Ono Academic College', url: 'https://www.ono.ac.il/clinical-law/clinic-for-the-recognition-of-military-disability/#4' },
         ],
       },
       {
