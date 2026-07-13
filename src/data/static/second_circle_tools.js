@@ -4,7 +4,7 @@ export const SECOND_CIRCLE_TOOLS = {
       q: "מה לעשות בזמן התקף או פלאשבק?",
       intro: `קודם כל - נשמו עמוק. לראות מישהו/י קרוב/ה במצב כזה זה מטלטל גם אתכם, וזה לגמרי בסדר. אתם לא צריכים "להציל" - אתם צריכים פשוט להיות שם, נוכחים ובטוחים.`,
       sections: [
-        { heading: "שיטת \"היהלום\" - ארבעה דברים שמרגיעים", body: `<ol><li><strong>נוכחות:</strong> דברו בקול שקט ובטוח - "אני כאן. את/ה בטוח/ה. זה יעבור."</li><li><strong>מרחב:</strong> אל תחסמו את היציאה. תנו אוויר פיזי, אל תיצמדו.</li><li><strong>שקט:</strong> הנמיכו אורות, סגרו רעשי רקע, הפחיתו גירויים.</li><li><strong>נגיעה:</strong> שאלו לפני - "אוכל לגעת בידך?" - וכבדו את התשובה.</li></ol>` },
+        { heading: "ארבעה דברים שיכולים לעזור", body: `<ol><li><strong>נוכחות:</strong> דברו בקול שקט ובטוח - "אני כאן. את/ה בטוח/ה. זה יעבור."</li><li><strong>מרחב:</strong> אל תחסמו את היציאה. תנו אוויר פיזי, אל תיצמדו.</li><li><strong>שקט:</strong> הנמיכו אורות, סגרו רעשי רקע, הפחיתו גירויים.</li><li><strong>נגיעה:</strong> שאלו לפני - "אוכל לגעת בידך?" - וכבדו את התשובה.</li></ol>` },
         { heading: "מה עדיף שלא לעשות", body: `<ul><li>אל תתווכחו עם "המציאות" שהוא/היא חווה - היא אמיתית לחלוטין מבחינתם.</li><li>אל תנערו או תאחזו בכוח כדי להוציא אותם מזה.</li><li>אל תחשפו את הסיטואציה לאחרים שלא צריך - שמרו על הכבוד.</li></ul>` },
       ],
       closing: `אחרי שזה עובר - אל תדרשו הסבר. תנו זמן. לפעמים שתיקה משותפת היא הדבר היקר ביותר.`,
@@ -70,7 +70,7 @@ export const SECOND_CIRCLE_TOOLS = {
       q: "ماذا تفعل خلال نوبة أو ذكريات مفاجئة؟",
       intro: `أولاً - تنفّس. رؤية شخص قريب في هذه الحالة أمر مزلزل لك أيضاً، وهذا طبيعي تماماً. لست مضطراً أن "تنقذه" - فقط أن تكون موجوداً، حاضراً وآمناً.`,
       sections: [
-        { heading: "طريقة \"الماس\" - أربعة أمور تُهدّئ", body: `<ol><li><strong>الحضور:</strong> تحدّث بصوت هادئ وواثق - "أنا هنا. أنت بأمان. سيمرّ هذا."</li><li><strong>المساحة:</strong> لا تسدّ المخرج. أعطه فضاءً جسدياً، لا تتشبّث.</li><li><strong>الهدوء:</strong> اخفض الإضاءة، أوقف الضوضاء، قلّل المثيرات.</li><li><strong>اللمس:</strong> اسأل قبل أن تلمس - "هل يمكنني الإمساك بيدك؟" - واحترم الجواب.</li></ol>` },
+        { heading: "أربعة أمور يمكن أن تساعد", body: `<ol><li><strong>الحضور:</strong> تحدّث بصوت هادئ وواثق - "أنا هنا. أنت بأمان. سيمرّ هذا."</li><li><strong>المساحة:</strong> لا تسدّ المخرج. أعطه فضاءً جسدياً، لا تتشبّث.</li><li><strong>الهدوء:</strong> اخفض الإضاءة، أوقف الضوضاء، قلّل المثيرات.</li><li><strong>اللمس:</strong> اسأل قبل أن تلمس - "هل يمكنني الإمساك بيدك؟" - واحترم الجواب.</li></ol>` },
         { heading: "ما يُفضّل عدم فعله", body: `<ul><li>لا تجادل "الواقع" الذي يعيشه - بالنسبة له حقيقي تماماً.</li><li>لا تهزّه أو تمسكه بالقوة لإخراجه من الحالة.</li><li>لا تكشف الموقف لمن لا داعي - احفظ كرامته.</li></ul>` },
       ],
       closing: `بعد أن يمرّ - لا تطلب تفسيراً. أعطه وقتاً. أحياناً الصمت المشترك أثمن ما تملك.`,
@@ -136,7 +136,7 @@ export const SECOND_CIRCLE_TOOLS = {
       q: "What to do during a flashback or panic episode?",
       intro: `First - take a breath. Seeing someone you love in that state shakes you too, and that's completely OK. You don't need to "save" them - you just need to be there, present and safe.`,
       sections: [
-        { heading: "The \"Diamond\" method - four things that calm", body: `<ol><li><strong>Presence:</strong> Speak in a quiet, confident voice - "I'm here. You're safe. This will pass."</li><li><strong>Space:</strong> Don't block the exit. Give physical room, don't cling.</li><li><strong>Quiet:</strong> Dim the lights, lower the noise, reduce stimulation.</li><li><strong>Touch:</strong> Ask first - "Can I hold your hand?" - and respect the answer.</li></ol>` },
+        { heading: "Four things that can help", body: `<ol><li><strong>Presence:</strong> Speak in a quiet, confident voice - "I'm here. You're safe. This will pass."</li><li><strong>Space:</strong> Don't block the exit. Give physical room, don't cling.</li><li><strong>Quiet:</strong> Dim the lights, lower the noise, reduce stimulation.</li><li><strong>Touch:</strong> Ask first - "Can I hold your hand?" - and respect the answer.</li></ol>` },
         { heading: "What to avoid", body: `<ul><li>Don't argue with the "reality" they're experiencing - it's fully real to them.</li><li>Don't shake or grab them to pull them out of it.</li><li>Don't expose the situation to others who don't need to see it.</li></ul>` },
       ],
       closing: `After it passes - don't demand an explanation. Give time. Sometimes shared silence is the most precious thing.`,
