@@ -37,11 +37,15 @@ export function fetchChildrenContent() {
 // Rights FAQs are bucketed by lang then category in the source data.
 // Returns the items for a given (lang, category), with general-category
 // items appended (matches the behavior in lib/pageContent.js#getRightsFaqs).
+// Items flagged `general_only` (e.g. the National Insurance general-disability
+// claim FAQ) only ever show on the "general" tab itself - appending them to
+// security_forces/hostilities/accidents_work/sexual_harassment would point
+// someone with a dedicated recognition track at the wrong process.
 export function fetchRightsFaqs({ lang = 'he', category }) {
   const langData = db.rights_faqs[lang] || db.rights_faqs.he;
   const specific = langData[category] || db.rights_faqs.he[category] || [];
   if (category === 'general') return resolveLater(specific);
-  const general = langData.general || db.rights_faqs.he.general || [];
+  const general = (langData.general || db.rights_faqs.he.general || []).filter(item => !item.general_only);
   return resolveLater([...specific, ...general]);
 }
 

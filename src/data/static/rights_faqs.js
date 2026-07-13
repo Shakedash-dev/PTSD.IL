@@ -91,6 +91,7 @@ export const RIGHTS_FAQS = {
           { label: 'ביטוח לאומי - נכות נפשית ונכות כללית', url: 'https://www.btl.gov.il/ZcuyotAsdience/MitmoddiNefesh/Pages/NecotNafsitNecotKlalit.aspx' },
           { label: 'טופס 7801 - תביעה לנכות כללית', url: 'https://www.btl.gov.il/%D7%98%D7%A4%D7%A1%D7%99%D7%9D%20%D7%95%D7%90%D7%99%D7%A9%D7%95%D7%A8%D7%99%D7%9D/tfasimMkuvanim/Pages/nechutKlalit.aspx' },
         ],
+        general_only: true,
       },
       {
         q: 'מגיע לי שיקום מקצועי מביטוח לאומי בגלל נכות נפשית?',
@@ -205,6 +206,7 @@ export const RIGHTS_FAQS = {
           { label: 'التأمين الوطني - العجز النفسي والعجز العام', url: 'https://www.btl.gov.il/ZcuyotAsdience/MitmoddiNefesh/Pages/NecotNafsitNecotKlalit.aspx' },
           { label: 'نموذج 7801 - مطالبة عجز عام', url: 'https://www.btl.gov.il/%D7%98%D7%A4%D7%A1%D7%99%D7%9D%20%D7%95%D7%90%D7%99%D7%A9%D7%95%D7%A8%D7%99%D7%9D/tfasimMkuvanim/Pages/nechutKlalit.aspx' },
         ],
+        general_only: true,
       },
       {
         q: 'هل يحق لي التأهيل المهني من التأمين الوطني بسبب العجز النفسي؟',
@@ -319,6 +321,7 @@ export const RIGHTS_FAQS = {
           { label: 'National Insurance - psychiatric disability and general disability', url: 'https://www.btl.gov.il/ZcuyotAsdience/MitmoddiNefesh/Pages/NecotNafsitNecotKlalit.aspx' },
           { label: 'Form 7801 - general disability claim', url: 'https://www.btl.gov.il/%D7%98%D7%A4%D7%A1%D7%99%D7%9D%20%D7%95%D7%90%D7%99%D7%A9%D7%95%D7%A8%D7%99%D7%9D/tfasimMkuvanim/Pages/nechutKlalit.aspx' },
         ],
+        general_only: true,
       },
       {
         q: 'Am I entitled to vocational rehabilitation from National Insurance due to psychiatric disability?',
