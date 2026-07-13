@@ -209,16 +209,14 @@ export default function Questionnaire() {
           <div className={`rounded-super p-8 sm:p-10 text-center shadow-atmospheric-lg border ${
             isHigh ? 'bg-card border-primary/30' : 'bg-card border-teal/30'
           }`}>
-            <div className={`w-24 h-24 rounded-full mx-auto mb-6 flex items-center justify-center text-3xl font-black ${
+            <div className={`w-24 h-24 rounded-full mx-auto mb-6 flex items-center justify-center ${
               isHigh ? 'bg-primary/10 text-primary' : 'bg-teal/10 text-teal'
             }`}>
-              {result}
+              {isHigh
+                ? <AlertCircle className="w-10 h-10" />
+                : <CheckCircle className="w-10 h-10" />
+              }
             </div>
-
-            {isHigh
-              ? <AlertCircle className="w-8 h-8 text-primary mx-auto mb-4" />
-              : <CheckCircle className="w-8 h-8 text-teal mx-auto mb-4" />
-            }
 
             <h2 className="text-2xl font-heading font-bold text-foreground mb-4">
               {t(lang, isHigh ? 'result_high_title' : 'result_low_title')}
@@ -227,18 +225,19 @@ export default function Questionnaire() {
               {t(lang, isHigh ? 'result_high_text' : 'result_low_text')}
             </p>
 
-            {/* Spectrum bar */}
+            {/* Spectrum bar - always green at the "mild" end and red at the "significant"
+                end regardless of reading direction; no raw numbers, since the score itself
+                isn't the point. */}
             <div className="mb-8">
-              <div className="h-3 rounded-full overflow-hidden bg-gradient-to-r from-teal via-yellow-400 to-clay">
+              <div className={`h-3 rounded-full overflow-hidden ${isRTL ? 'bg-gradient-to-l' : 'bg-gradient-to-r'} from-teal via-yellow-400 to-clay`}>
                 <div
                   className="h-full w-1.5 bg-foreground rounded-full transition-all duration-1000 relative"
                   style={{ marginInlineStart: `${(result / QUESTIONNAIRE.max_score) * 100}%` }}
                 />
               </div>
               <div className="flex justify-between text-xs text-muted-foreground mt-1">
-                <span>0</span>
-                <span>{QUESTIONNAIRE.cutoff_score}</span>
-                <span>{QUESTIONNAIRE.max_score}</span>
+                <span>{t(lang, 'scale_mild')}</span>
+                <span>{t(lang, 'scale_significant')}</span>
               </div>
             </div>
 

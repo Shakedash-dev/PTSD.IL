@@ -4,7 +4,7 @@ import { useLang } from '@/lib/LanguageContext';
 import { t } from '@/lib/i18n';
 import { useSelfHelpTools } from '@/api/hooks';
 import PageHeader from '@/components/PageHeader';
-import { Wind, Moon, PenLine, Smartphone, Zap, ChevronDown, ArrowLeft, ArrowRight, Compass, Wrench } from 'lucide-react';
+import { Wind, Moon, PenLine, Smartphone, Zap, ChevronDown, ArrowLeft, ArrowRight, Compass, Wrench, Apple, PlayCircle } from 'lucide-react';
 import { IMAGES } from '@/lib/images';
 import ValidatableContent from '@/components/ValidatableContent';
 
@@ -28,10 +28,38 @@ function ToolCard({ tool, contentId }) {
           <ChevronDown className={`w-5 h-5 text-primary flex-shrink-0 transition-transform duration-300 ${open ? 'rotate-180' : ''}`} />
         </button>
         {open && (
-          <div
-            className="px-6 pb-6 text-muted-foreground leading-relaxed rich-content"
-            dangerouslySetInnerHTML={{ __html: tool.content_he }}
-          />
+          <div className="px-6 pb-6">
+            <div
+              className="text-muted-foreground leading-relaxed rich-content"
+              dangerouslySetInnerHTML={{ __html: tool.content_he }}
+            />
+            {(tool.ios_url || tool.android_url) && (
+              <div className="flex gap-2 mt-4">
+                {tool.ios_url && (
+                  <a
+                    href={tool.ios_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-foreground text-background rounded-full text-xs font-medium hover:opacity-90 transition-colors duration-300"
+                  >
+                    <Apple className="w-3.5 h-3.5" />
+                    App Store
+                  </a>
+                )}
+                {tool.android_url && (
+                  <a
+                    href={tool.android_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-foreground text-background rounded-full text-xs font-medium hover:opacity-90 transition-colors duration-300"
+                  >
+                    <PlayCircle className="w-3.5 h-3.5" />
+                    Google Play
+                  </a>
+                )}
+              </div>
+            )}
+          </div>
         )}
       </div>
     </ValidatableContent>
