@@ -10,6 +10,67 @@ import ValidatableContent from '@/components/ValidatableContent';
 
 const STEP_ICON_MAP = { Wrench, Building2, Brain, Leaf, Pill };
 
+// One collapsible method within a step's method list (steps 3 & 4, which offer
+// several treatment options). Closed by default so a step with many options
+// doesn't dump all their "how to start" text on screen at once.
+function MethodAccordion({ method }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className={`rounded-2xl border transition-natural overflow-hidden ${
+      open ? 'bg-card border-primary/40' : 'bg-muted/40 border-transparent hover:bg-muted'
+    }`}>
+      <button
+        type="button"
+        className="w-full text-start px-4 py-3 flex items-center justify-between gap-3"
+        onClick={() => setOpen(o => !o)}
+        aria-expanded={open}
+      >
+        <span className="font-heading font-semibold text-sm text-foreground">{method.title_he}</span>
+        <ChevronDown className={`w-4 h-4 text-primary flex-shrink-0 transition-transform duration-300 ${open ? 'rotate-180' : ''}`} />
+      </button>
+      {open && (
+        <div className="px-4 pb-4 space-y-3">
+          <p className="text-sm text-muted-foreground leading-relaxed">{method.description_he}</p>
+          {method.how_to_start_he && (
+            <div className="bg-primary/5 rounded-lg p-3">
+              <div
+                className="text-sm text-foreground leading-relaxed rich-content"
+                dangerouslySetInnerHTML={{ __html: method.how_to_start_he }}
+              />
+            </div>
+          )}
+          {method.links?.length > 0 && (
+            <div className="flex flex-wrap gap-2">
+              {method.links.map((link, i) =>
+                link.url.startsWith('/') ? (
+                  <Link
+                    key={i}
+                    to={link.url}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-primary/10 text-foreground rounded-full text-xs font-medium hover:bg-primary/20 transition-colors duration-300"
+                  >
+                    {link.label}
+                  </Link>
+                ) : (
+                  <a
+                    key={i}
+                    href={link.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-primary/10 text-foreground rounded-full text-xs font-medium hover:bg-primary/20 transition-colors duration-300"
+                  >
+                    {link.label}
+                    <ExternalLink className="w-3 h-3" />
+                  </a>
+                )
+              )}
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
 // Per-step waypoint X coordinate in SVG viewBox space (0..1000).
 // Alternates side: step 1 right, 2 left, 3 right... giving the trail a swirl/zig-zag
 // rather than a straight vertical line. This is the "map feel" the brief asked for.
@@ -108,15 +169,23 @@ function StepView({ step, index, total, lang, stepImages }) {
                 {step.description_he}
               </p>
 
-              <div className="bg-muted/60 rounded-2xl p-4 mb-5">
-                <p className="text-xs font-bold text-primary uppercase tracking-[0.15em] mb-2">
-                  {t(lang, 'how_to_start')}
-                </p>
-                <div
-                  className="text-sm text-foreground leading-relaxed rich-content"
-                  dangerouslySetInnerHTML={{ __html: step.how_to_start_he }}
-                />
-              </div>
+              {step.methods?.length > 0 ? (
+                <div className="space-y-2 mb-5">
+                  {step.methods.map((method, i) => (
+                    <MethodAccordion key={i} method={method} />
+                  ))}
+                </div>
+              ) : (
+                <div className="bg-muted/60 rounded-2xl p-4 mb-5">
+                  <p className="text-xs font-bold text-primary uppercase tracking-[0.15em] mb-2">
+                    {t(lang, 'how_to_start')}
+                  </p>
+                  <div
+                    className="text-sm text-foreground leading-relaxed rich-content"
+                    dangerouslySetInnerHTML={{ __html: step.how_to_start_he }}
+                  />
+                </div>
+              )}
 
               {step.links?.length > 0 && (
                 <div className="flex flex-wrap gap-2">

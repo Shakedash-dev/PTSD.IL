@@ -1,3 +1,5 @@
+import { BASE_PATH } from '@/base-path';
+
 export const PTSD_INFO_FAQS = {
   he: [
     {
@@ -22,15 +24,15 @@ export const PTSD_INFO_FAQS = {
     },
     {
       q: 'איך אזהה שאני מתמודד עם PTSD?',
-      a: `<p>אם מנגנוני ההישרדות ממשיכים לפעול מחוץ להקשרם - כלומר, הגוף מגיב כאילו יש סכנה כשאין - זה יכול להיות סימן ל-PTSD.</p><p>דוגמאות: בהלה קיצונית מרעש, הימנעות ממקומות מסוימים, קשיי שינה, פלאשבקים, תחושת ניתוק מהמציאות.</p><p>השאלון שלנו יכול לתת אינדיקציה ראשונית - אבל אבחנה מדויקת מחייבת איש מקצוע.</p>`,
+      a: `<p>אם מנגנוני ההישרדות ממשיכים לפעול מחוץ להקשרם - כלומר, הגוף מגיב כאילו יש סכנה כשאין - זה יכול להיות סימן ל-PTSD.</p><p>דוגמאות: בהלה קיצונית מרעש, הימנעות ממקומות מסוימים, קשיי שינה, פלאשבקים, תחושת ניתוק מהמציאות.</p><p><a href="${BASE_PATH}/questionnaire" class="inline-flex items-center gap-1.5 px-4 py-2 bg-primary/10 text-foreground rounded-full text-sm font-medium hover:bg-primary/20 transition-colors duration-300">מעבר לשאלון הסקירה שלנו</a></p><p>השאלון שלנו יכול לתת אינדיקציה ראשונית - אבל אבחנה מדויקת מחייבת איש מקצוע.</p>`,
     },
     {
       q: 'האם כל אדם שחווה טראומה משמעותית יפתח PTSD?',
       a: `<p>לא. רוב האנשים שחווים טראומה לא יפתחו PTSD. זה לא עניין של "חוזק" או "חולשה" - אלא מכלול גורמים ביולוגיים, פסיכולוגיים וחברתיים.</p><p>עם זאת, גם מי שלא מאובחן עם PTSD עלול לחוות תסמינים משמעותיים שמצדיקים סיוע מקצועי.</p>`,
     },
     {
-      q: 'מה אפשר לעשות כשיש לי התקף פאניקה?',
-      a: `<p>התקף פאניקה מפחיד מאוד - אבל הוא חולף תוך דקות ואינו מסוכן. כמה דברים שעוזרים:</p><ul><li><strong>האטו את הנשימה:</strong> שאפו 4 שניות, עצרו 2, נשפו לאט 6 שניות. זה מכבה את תגובת החירום של הגוף.</li><li><strong>קרקוע:</strong> שימו לב ל-5 דברים שאתם רואים, 4 שאתם נוגעים בהם - זה מחזיר אתכם להווה.</li><li><strong>הזכירו לעצמכם:</strong> "זה יחלוף. אני בטוח/ה. זה לא התקף לב."</li><li><strong>שבו או שכבו</strong> אם אפשר - הורידו את עצמכם מהמצב.</li></ul><p>יש לנו <a href="/calming" class="text-primary font-medium">דף הרגעה אינטראקטיבי עם תרגילים מודרכים →</a></p>`,
+      q: 'מה אפשר לעשות כשיש לי התקף חרדה?',
+      a: `<p><a href="${BASE_PATH}/calming" class="inline-flex items-center gap-1.5 px-4 py-2 bg-primary/10 text-foreground rounded-full text-sm font-medium hover:bg-primary/20 transition-colors duration-300 mb-3">דף הרגעה אינטראקטיבי עם תרגילים מודרכים</a></p><p>התקף חרדה מפחיד מאוד - אבל הוא חולף תוך דקות ואינו מסוכן. כמה דברים שעוזרים:</p><ul><li><strong>האטו את הנשימה:</strong> שאפו 4 שניות, עצרו 2, נשפו לאט 6 שניות. זה מכבה את תגובת החירום של הגוף.</li><li><strong>קרקוע:</strong> שימו לב ל-5 דברים שאתם רואים, 4 שאתם נוגעים בהם - זה מחזיר אתכם להווה.</li><li><strong>הזכירו לעצמכם:</strong> "זה יחלוף. אני בטוח/ה. זה לא התקף לב."</li><li><strong>שבו או שכבו</strong> אם אפשר - הורידו את עצמכם מהמצב.</li></ul>`,
     },
   ],
 
@@ -57,7 +59,7 @@ export const PTSD_INFO_FAQS = {
     },
     {
       q: 'كيف أعرف أنني أعاني من اضطراب ما بعد الصدمة؟',
-      a: `<p>إذا استمرت آليات البقاء في العمل خارج سياقها - أي يتفاعل الجسد كأن ثمة خطراً وهو غير موجود - فقد يكون ذلك مؤشراً على اضطراب ما بعد الصدمة.</p><p>أمثلة: فزع شديد من صوت مفاجئ، وتجنّب أماكن معينة، واضطراب النوم، وذكريات مفاجئة، والشعور بالانفصال عن الواقع.</p><p>يمكن لاستبياننا أن يعطي مؤشراً أولياً - لكن التشخيص الدقيق يستلزم متخصصاً.</p>`,
+      a: `<p>إذا استمرت آليات البقاء في العمل خارج سياقها - أي يتفاعل الجسد كأن ثمة خطراً وهو غير موجود - فقد يكون ذلك مؤشراً على اضطراب ما بعد الصدمة.</p><p>أمثلة: فزع شديد من صوت مفاجئ، وتجنّب أماكن معينة، واضطراب النوم، وذكريات مفاجئة، والشعور بالانفصال عن الواقع.</p><p><a href="${BASE_PATH}/questionnaire" class="inline-flex items-center gap-1.5 px-4 py-2 bg-primary/10 text-foreground rounded-full text-sm font-medium hover:bg-primary/20 transition-colors duration-300">الانتقال إلى استبيان الفحص لدينا</a></p><p>يمكن لاستبياننا أن يعطي مؤشراً أولياً - لكن التشخيص الدقيق يستلزم متخصصاً.</p>`,
     },
     {
       q: 'هل يُصاب كل من يمر بصدمة كبيرة باضطراب ما بعد الصدمة؟',
@@ -65,7 +67,7 @@ export const PTSD_INFO_FAQS = {
     },
     {
       q: 'ماذا أفعل عندما أتعرض لنوبة هلع؟',
-      a: `<p>نوبة الهلع مخيفة جداً - لكنها تمر في غضون دقائق وليست خطيرة. إليك ما يساعد:</p><ul><li><strong>أبطئ تنفسك:</strong> استنشق 4 ثوانٍ، أمسك 2، أخرج الهواء ببطء 6 ثوانٍ. هذا يوقف استجابة الطوارئ في الجسم.</li><li><strong>التأريض:</strong> انتبه إلى 5 أشياء تراها، 4 أشياء تلمسها - هذا يعيدك إلى اللحظة الحالية.</li><li><strong>ذكّر نفسك:</strong> "سيمر هذا. أنا بأمان. هذه ليست نوبة قلبية."</li><li><strong>اجلس أو استلقِ</strong> إن أمكن.</li></ul><p>لدينا <a href="/calming" class="text-primary font-medium">صفحة تهدئة تفاعلية مع تمارين موجّهة →</a></p>`,
+      a: `<p><a href="${BASE_PATH}/calming" class="inline-flex items-center gap-1.5 px-4 py-2 bg-primary/10 text-foreground rounded-full text-sm font-medium hover:bg-primary/20 transition-colors duration-300 mb-3">صفحة تهدئة تفاعلية مع تمارين موجّهة</a></p><p>نوبة الهلع مخيفة جداً - لكنها تمر في غضون دقائق وليست خطيرة. إليك ما يساعد:</p><ul><li><strong>أبطئ تنفسك:</strong> استنشق 4 ثوانٍ، أمسك 2، أخرج الهواء ببطء 6 ثوانٍ. هذا يوقف استجابة الطوارئ في الجسم.</li><li><strong>التأريض:</strong> انتبه إلى 5 أشياء تراها، 4 أشياء تلمسها - هذا يعيدك إلى اللحظة الحالية.</li><li><strong>ذكّر نفسك:</strong> "سيمر هذا. أنا بأمان. هذه ليست نوبة قلبية."</li><li><strong>اجلس أو استلقِ</strong> إن أمكن.</li></ul>`,
     },
   ],
 
@@ -92,7 +94,7 @@ export const PTSD_INFO_FAQS = {
     },
     {
       q: 'How do I recognize that I am dealing with PTSD?',
-      a: `<p>If survival mechanisms continue outside their context - meaning the body reacts as if there is danger when there isn't - that can be a sign of PTSD.</p><p>Examples: extreme startle from noise, avoiding certain places, sleep problems, flashbacks, feeling detached from reality.</p><p>Our questionnaire can give an initial indication - but an accurate diagnosis requires a professional.</p>`,
+      a: `<p>If survival mechanisms continue outside their context - meaning the body reacts as if there is danger when there isn't - that can be a sign of PTSD.</p><p>Examples: extreme startle from noise, avoiding certain places, sleep problems, flashbacks, feeling detached from reality.</p><p><a href="${BASE_PATH}/questionnaire" class="inline-flex items-center gap-1.5 px-4 py-2 bg-primary/10 text-foreground rounded-full text-sm font-medium hover:bg-primary/20 transition-colors duration-300">Go to our screening questionnaire</a></p><p>Our questionnaire can give an initial indication - but an accurate diagnosis requires a professional.</p>`,
     },
     {
       q: 'Does everyone who experiences a major trauma develop PTSD?',
@@ -100,7 +102,7 @@ export const PTSD_INFO_FAQS = {
     },
     {
       q: 'What can I do when I have a panic attack?',
-      a: `<p>A panic attack is terrifying - but it passes within minutes and is not dangerous. Here is what helps:</p><ul><li><strong>Slow your breathing:</strong> Inhale for 4 seconds, hold for 2, exhale slowly for 6 seconds. This shuts down the body's emergency response.</li><li><strong>Grounding:</strong> Notice 5 things you can see, 4 you can touch - this brings you back to the present moment.</li><li><strong>Remind yourself:</strong> "This will pass. I am safe. This is not a heart attack."</li><li><strong>Sit or lie down</strong> if possible.</li></ul><p>We have an <a href="/calming" class="text-primary font-medium">interactive calming page with guided exercises →</a></p>`,
+      a: `<p><a href="${BASE_PATH}/calming" class="inline-flex items-center gap-1.5 px-4 py-2 bg-primary/10 text-foreground rounded-full text-sm font-medium hover:bg-primary/20 transition-colors duration-300 mb-3">Interactive calming page with guided exercises</a></p><p>A panic attack is terrifying - but it passes within minutes and is not dangerous. Here is what helps:</p><ul><li><strong>Slow your breathing:</strong> Inhale for 4 seconds, hold for 2, exhale slowly for 6 seconds. This shuts down the body's emergency response.</li><li><strong>Grounding:</strong> Notice 5 things you can see, 4 you can touch - this brings you back to the present moment.</li><li><strong>Remind yourself:</strong> "This will pass. I am safe. This is not a heart attack."</li><li><strong>Sit or lie down</strong> if possible.</li></ul>`,
     },
   ],
 };

@@ -16,7 +16,6 @@ const AUDIENCE_OPTIONS = [
   { key: 'security_forces', labelKey: 'audience_security_forces' },
   { key: 'hostilities', labelKey: 'audience_hostilities' },
   { key: 'sexual_harassment', labelKey: 'audience_sexual_harassment' },
-  { key: 'accidents', labelKey: 'audience_accidents' },
   { key: 'spouses', labelKey: 'audience_spouses' },
   { key: 'general', labelKey: 'audience_general' },
 ];
@@ -113,9 +112,6 @@ export default function Community() {
 
           {activeFilters.length > 0 && (
             <div className="flex items-center gap-2 ms-auto">
-              <span className="text-xs text-muted-foreground">
-                {filtered.length} / {communities.length}
-              </span>
               {activeFilters.map((f, i) => (
                 <button
                   key={i}
