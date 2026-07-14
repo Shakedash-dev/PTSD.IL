@@ -31,3 +31,6 @@ dist-ssr
 .vite
 
 data_from_meitiv.txt
+more_data.txt
+
+.claude/
