@@ -33,15 +33,21 @@ This document is the source of truth for how the site will move from frontend-on
 
 | Entity | Replaces |
 |---|---|
-| `FAQItem` | `RIGHTS_FAQS` in `pageContent.js`, future PTSD info Q&A |
-| `CommunityGroup` | `STATIC_COMMUNITIES` in `Community.jsx` |
-| `TreatmentStep` | Hardcoded treatment steps in `Treatment.jsx` |
-| `SelfHelpTool` | `STATIC_TOOLS` in `SelfHelp.jsx` |
-| `SourceReference` | `SOURCES` in `Sources.jsx` |
-| `ChildAgeContent` | Hardcoded children content in `Children.jsx` |
-| `PageBlock` | All `*_welcome`, `*_intro`, `*_subtitle`, hero copy currently in `i18n.js` |
-| `SiteSettings` | Future misc config (feature flags, banner messages, etc.) |
-| `MediaAsset` | Uploaded images/PDFs/audio |
+| `FAQItem` | `RIGHTS_FAQS` in `src/data/static/rights_faqs.js` (rights tab content) |
+| `PTSDInfoFAQ` | `PTSD_INFO_FAQS` in `src/data/static/ptsd_info_faqs.js` (`/ptsd-info`, `/ptsd-info-2`) - see note below |
+| `SecondCircleTool` | `SECOND_CIRCLE_TOOLS` in `src/data/static/second_circle_tools.js` (`/second-circle-tools`) - new entity, not in the original plan |
+| `CommunityGroup` | `STATIC_COMMUNITIES` in `src/data/static/communities.js` |
+| `TreatmentStep` | `STATIC_STEPS` in `src/data/static/treatment_steps.js` |
+| `SelfHelpTool` | `STATIC_TOOLS` in `src/data/static/self_help_tools.js` |
+| `SourceReference` | `STATIC_SOURCES` in `src/data/static/sources.js` |
+| `ChildAgeContent` | `STATIC_CONTENT` in `src/data/static/children.js` - shape is richer than originally speced, see 3.4 |
+| `PageBlock` | All `*_welcome`, `*_intro`, `*_subtitle`, hero copy currently in `i18n.js` - **not started**, still 100% in code |
+| `SiteSettings` | Future misc config (feature flags, banner messages, etc.) - **not started** |
+| `MediaAsset` | Uploaded images/PDFs/audio - **not started** |
+
+> **PTSDInfoFAQ note:** when this doc was first written, PTSD info Q&A was hypothetical ("future"). It now exists as real content, but was built as a fully separate structure (own top-level data key, own `fetchPTSDInfoFaqs`/`usePTSDInfoFaqs`) instead of `FAQItem` with `category='ptsd_info'` as originally planned. The shape is a strict subset of `FAQItem` (just `q`/`a`, no `subcategory`/`steps`/`links`), so it fits cleanly under the existing `faq_items` table. **Recommendation:** unify it under `FAQItem` before backend work starts and collapse the two frontend fetch functions into one - avoids a table and an endpoint that don't earn their keep. Listed separately above only to flag that it currently exists as separate frontend code.
+
+> **SecondCircleTool note:** this is genuinely new, not a renamed/expanded existing entity. Shape is `{ q, intro, sections: [{ heading, body }], closing, callout? }` - nested sections, not a flat title/content pair. Doesn't fit any existing table; schema is in 3.4.
 
 ---
 
@@ -102,58 +108,107 @@ Every write to an entity inserts a new snapshot. Rollback = copy snapshot back i
 Only non-translatable fields live in the entity table. Translatable text lives in `translations`.
 
 ```sql
--- FAQItem
+-- FAQItem (also covers PTSDInfoFAQ under category='ptsd_info' - see 2)
 CREATE TABLE faq_items (
   -- system fields
-  category     text NOT NULL,  -- 'rights' | 'ptsd_info' | ...
-  subcategory  text            -- e.g. 'security_forces' for rights
+  category      text NOT NULL,  -- 'rights' | 'ptsd_info' | ...
+  subcategory   text,           -- e.g. 'security_forces' for rights; NULL for ptsd_info
+  general_only  boolean NOT NULL DEFAULT false
+                                 -- rights only: item belongs to category='general' AND must
+                                 -- NOT be appended to other subcategory tabs. Currently a
+                                 -- frontend filter in src/api/source.js#fetchRightsFaqs -
+                                 -- move the append/filter logic server-side so the frontend
+                                 -- just requests a category and gets the right set back.
 );
--- translatable fields: question, answer, optional steps, optional links
+-- translatable fields: question, answer, optional steps (markdown list), optional links
+-- links shape (JSON-encoded per language in translations.value, since url is shared but
+-- label text is not): [{ label: string, url: string }]
+
+-- SecondCircleTool (new - see 2)
+CREATE TABLE second_circle_tools (
+  -- system fields only; no non-translatable structured fields today
+);
+-- translatable fields: question, intro (markdown), sections (jsonb array of
+-- { heading, body } - body is markdown), closing, optional callout
+-- `sections` is stored as one JSON-encoded translations.value per language, same pattern
+-- as FAQItem.links - it's a structured field, not a single string.
 
 -- CommunityGroup
 CREATE TABLE community_groups (
   -- system fields
   target_audience  text[] NOT NULL,
-  location         text NOT NULL,   -- 'north' | 'center' | ...
+  location         text NOT NULL,   -- 'north' | 'center' | ... | 'online'
   meeting_type     text NOT NULL,   -- 'frontal' | 'digital' | 'hybrid'
   contact_url      text NOT NULL,
   organization     text             -- not translated; org names stay native
 );
 -- translatable fields: name, description
+-- NOTE: current static content (src/data/static/communities.js) only has Hebrew -
+-- name/description are not yet translated to ar/ru/en/fr. Per principle 1 ("no partial
+-- publishing"), these can't go live until translated - see Phase 2.
 
 -- TreatmentStep
 CREATE TABLE treatment_steps (
   -- system fields
-  category     text NOT NULL,  -- 'self_start' | 'professional' | ...
-  icon         text NOT NULL   -- lucide icon name
+  step_number  int NOT NULL,
+  category     text,           -- currently unused in static content, reserved
+  icon         text NOT NULL,  -- lucide icon key, resolved client-side via an icon map
+  color        text NOT NULL   -- hex value, e.g. '#3A7B71' - see styling note below
 );
--- translatable fields: title, description, steps (markdown list)
+-- translatable fields: title, description, how_to_start (markdown), optional links
+-- links shape: [{ label: string, url: string }] (same pattern as FAQItem.links)
+-- STYLING NOTE: `color` is presentation data living in content today (also true for
+-- SelfHelpTool.color/iconBg below). Violates principle 2 ("frontend never owns content" -
+-- the inverse holds too: content shouldn't own styling). Recommend resolving color from a
+-- `category`-keyed lookup map in code before migration, same pattern already used for
+-- `icon` (STEP_ICON_MAP in Treatment.jsx), and dropping color from the DB row.
 
 -- SelfHelpTool
 CREATE TABLE self_help_tools (
   -- system fields
   category     text NOT NULL,
-  icon         text NOT NULL,
+  icon         text NOT NULL,   -- lucide icon key
+  color        text,            -- Tailwind class string, e.g. 'bg-secondary/10 text-secondary'
+  icon_bg      text,            -- Tailwind class string, e.g. 'bg-secondary/15'
   cta_route    text             -- e.g. '/calming/breathing'
 );
 -- translatable fields: title, content (markdown)
+-- STYLING NOTE: color/icon_bg are raw Tailwind utility classes stored per-row today
+-- (src/data/static/self_help_tools.js). Same issue as TreatmentStep.color above - move to
+-- a category-keyed map in code, don't carry Tailwind classes into the DB.
 
 -- SourceReference
 CREATE TABLE source_references (
   -- system fields
+  title        text NOT NULL,   -- NOT translated - citation titles stay in original language
+  category     text NOT NULL,   -- 'research' | 'legal' | 'clinical' | ...
   url          text,
   year         int,
   authors      text             -- not translated
 );
--- translatable fields: title, description
+-- translatable fields: description
+-- CORRECTION: earlier draft of this doc listed `title` as translatable. Actual content
+-- (src/data/static/sources.js) keeps title in its original citation language across all
+-- locales - that's the correct call for academic references, doc was wrong, not the content.
 
 -- ChildAgeContent
-CREATE TABLE child_age_contents (
+-- Actual shape (src/data/static/children.js) is richer than a flat title/description/body
+-- row: each age range has ONE guidelines blob plus MANY resources. Splitting into two
+-- tables to match:
+CREATE TABLE child_age_guidance (
   -- system fields
-  age_range    text NOT NULL,  -- '4-6' | '7-10' | '10-13' | '14-16'
-  content_type text NOT NULL   -- 'book' | 'activity' | 'video' | 'story'
+  age_range    text NOT NULL UNIQUE  -- '0-4' | '4-6' | '7-10' | '10-13' | '14-16'
 );
--- translatable fields: title, description, body
+-- translatable fields: guidelines (markdown)
+
+CREATE TABLE child_resources (
+  -- system fields
+  age_range    text NOT NULL,   -- FK-ish to child_age_guidance.age_range
+  type         text NOT NULL,   -- 'book' | 'activity' | 'video' | 'story'
+  cta_url      text             -- optional, e.g. deep link to a calming exercise
+);
+-- translatable fields: title, description, optional content (markdown, only when the
+-- resource card is expandable), optional cta_label
 
 -- PageBlock
 CREATE TABLE page_blocks (
@@ -200,14 +255,19 @@ All responses JSON. UTF-8. Errors follow RFC 7807 (`application/problem+json`).
 
 ```
 GET  /api/v1/faq-items?category=rights&subcategory=security_forces
+GET  /api/v1/faq-items?category=ptsd_info
+GET  /api/v1/second-circle-tools
 GET  /api/v1/communities?audience=security_forces&location=center
 GET  /api/v1/treatment-steps
 GET  /api/v1/self-help-tools
 GET  /api/v1/sources
-GET  /api/v1/children?age_range=4-6
+GET  /api/v1/children/guidance?age_range=4-6
+GET  /api/v1/children/resources?age_range=4-6
 GET  /api/v1/page-blocks?page=home
 GET  /api/v1/site-settings/:key
 ```
+
+The `/faq-items` category param does double duty as the PTSDInfoFAQ replacement per the unification note in section 2 - `category=ptsd_info` returns the old `/ptsd-info` and `/ptsd-info-2` content, `subcategory` is absent for that category. `/children` was split into two endpoints to match the guidance-vs-resources split in the ChildAgeContent schema (3.4).
 
 **Response shape (example for `/faq-items`):**
 
@@ -218,18 +278,21 @@ GET  /api/v1/site-settings/:key
       "id": "0193...",
       "category": "rights",
       "subcategory": "security_forces",
+      "general_only": false,
       "sort_order": 0,
       "translations": {
-        "he": { "question": "...", "answer": "..." },
-        "ar": { "question": "...", "answer": "..." },
-        "ru": { "question": "...", "answer": "..." },
-        "en": { "question": "...", "answer": "..." },
-        "fr": { "question": "...", "answer": "..." }
+        "he": { "question": "...", "answer": "...", "steps": null, "links": [] },
+        "ar": { "question": "...", "answer": "...", "steps": null, "links": [] },
+        "ru": { "question": "...", "answer": "...", "steps": null, "links": [] },
+        "en": { "question": "...", "answer": "...", "steps": null, "links": [] },
+        "fr": { "question": "...", "answer": "...", "steps": null, "links": [] }
       }
     }
   ]
 }
 ```
+
+`links` here is `[{ label, url }]` per language - `label` is translated, `url` is repeated identically across languages (same pattern applies to TreatmentStep and SecondCircleTool per their schemas in 3.4).
 
 Frontend picks the active language client-side. The full multi-language payload is shipped so language switches don't trigger refetches.
 
@@ -297,11 +360,27 @@ Otherwise return 409 with a structured error pointing at the missing fields.
 
 ## 5. Content format
 
-### 5.1 Markdown only
+### 5.1 Markdown only - **not what the current content actually is, needs a decision**
 
-All translatable rich text fields are markdown. Rendered client-side via a sanitizer (e.g., `markdown-it` + `DOMPurify`). No raw HTML in the DB.
+The original plan: all translatable rich text fields are markdown, rendered client-side via a sanitizer (`markdown-it` + `DOMPurify`), no raw HTML in the DB.
 
-**Allowed:** headings, bold/italic, lists, links, inline code, blockquotes, simple tables.
+**This is no longer true of the real content.** `src/data/static/self_help_tools.js`, `ptsd_info_faqs.js`, and `rights_faqs.js` all contain raw HTML strings with hardcoded Tailwind utility classes, e.g.:
+
+```html
+<a href="${BASE_PATH}/calming" class="inline-flex items-center gap-1.5 px-4 py-2 bg-primary/10 text-foreground rounded-full text-sm font-medium hover:bg-primary/20 transition-colors duration-300">
+  דף הרגעה אינטראקטיבי עם תרגילים מודרכים
+</a>
+```
+
+Plain markdown cannot express this - `[text](url)` has no way to attach a Tailwind class. This is a real fork, not a typo, and needs an explicit decision before the backend is built:
+
+**Option A - convert content to markdown + a CTA shortcode (recommended).** Rewrite these inline styled links as a small custom syntax the frontend parses into the existing button component, e.g. `::cta[דף הרגעה אינטראקטיבי](/calming)`. Keeps principle 2 intact (content has no styling opinions, the frontend decides how a CTA looks) and keeps the DB clean markdown as originally speced. Costs one editorial pass over the ~10 existing occurrences (`grep -l 'class="' src/data/static/*.js` to find them) before migration.
+
+**Option B - allow a small sanitized HTML allowlist instead of markdown.** DOMPurify with `ALLOWED_TAGS`/`ALLOWED_ATTR` scoped to exactly the classes already in use. Zero content rewrite, but every future editor now needs to hand-write HTML with the right Tailwind classes memorized - directly conflicts with principle 4 ("editor is a non-technical PTSD professional"), and the sanitizer allowlist has to be kept in sync with the design system by hand.
+
+Go with A unless there's a reason the migration effort is a blocker - B is a standing maintenance cost that fights the doc's own principles every time someone touches this.
+
+**Allowed (once resolved to markdown):** headings, bold/italic, lists, links, inline code, blockquotes, simple tables, plus the CTA shortcode above.
 
 **Not allowed:** script tags, iframes, inline event handlers, raw HTML pass-through.
 
@@ -343,12 +422,14 @@ Images embedded in markdown use the asset URL returned by `POST /api/v1/admin/me
 src/api/
   client.js              # base fetch wrapper, error normalization, auth header
   hooks/
-    useFaqItems.js       # React Query hook
+    useFaqItems.js       # React Query hook - also covers category='ptsd_info', see 2
+    useSecondCircleTools.js
     useCommunities.js
     useTreatmentSteps.js
     useSelfHelpTools.js
     useSources.js
-    useChildContent.js
+    useChildGuidance.js
+    useChildResources.js
     usePageBlocks.js
     useSiteSetting.js
   admin/
@@ -458,18 +539,22 @@ The backend developer implements this spec on whatever stack they pick. Verified
 - Rollback restores the snapshot correctly.
 
 ### Phase 2 - seed script
-One-off Node script that walks the current static content (`STATIC_TOOLS`, `STATIC_COMMUNITIES`, `RIGHTS_FAQS`, etc.) and POSTs to the admin API. Idempotent - safe to re-run. Run once with the initial approved content.
+One-off Node script that walks the current static content (`STATIC_TOOLS`, `STATIC_COMMUNITIES`, `RIGHTS_FAQS`, `PTSD_INFO_FAQS`, `SECOND_CIRCLE_TOOLS`, etc.) and POSTs to the admin API. Idempotent - safe to re-run. Run once with the initial approved content.
+
+**Blocker to resolve before this phase, not during it:** most current static content (communities, treatment steps, self-help tools, children content, second-circle tools) is Hebrew-only. Principle 1 forbids partial publishing, so none of it can go live via the seed script until translated to ar/ru/en/fr. Either get translation done before seeding, or seed as unpublished drafts and translate before flipping `published_at`.
 
 ### Phase 3 - wire up React Query hooks
 Replace one entity at a time:
 
 1. SelfHelpTools (smallest, lowest risk)
 2. SourceReference
-3. CommunityGroup
-4. ChildAgeContent
-5. TreatmentStep
-6. FAQItem (rights)
-7. PageBlock (touches most pages)
+3. PTSDInfoFAQ (if unified into FAQItem per section 2, this is really step 8 below)
+4. SecondCircleTool
+5. CommunityGroup
+6. ChildAgeContent (guidance + resources)
+7. TreatmentStep
+8. FAQItem (rights)
+9. PageBlock (touches most pages)
 
 Each migration is a single PR. Static fallback removed only after the API path is verified in production.
 
@@ -492,6 +577,8 @@ These are decisions the implementer needs to make - this doc takes no stance:
 4. **Hosting**: out of scope for this doc but should be in EU/IL region (GDPR + latency).
 5. **Backup**: I don't think we need backup.
 6. **CDN**: I think Cloudflare will present a cloudflare capcha - if so, we don't really need it and we want te remove as much friction from the users.
+7. **Content format (new, was implicit before)**: markdown-only vs. sanitized-HTML-allowlist for rich text - see 5.1. Content already has raw styled HTML in it; this needs to be resolved with an actual content pass, not just a doc edit.
+8. **PTSDInfoFAQ unification (new)**: fold into `FAQItem` (`category='ptsd_info'`) or keep as its own table/endpoint - see 2. Recommendation is to unify.
 
 ---
 
