@@ -29,34 +29,44 @@ function ToolCard({ tool, contentId }) {
         </button>
         {open && (
           <div className="px-6 pb-6">
-            <div
-              className="text-muted-foreground leading-relaxed rich-content"
-              dangerouslySetInnerHTML={{ __html: tool.content_he }}
-            />
-            {(tool.ios_url || tool.android_url) && (
-              <div className="flex gap-2 mt-4">
-                {tool.ios_url && (
-                  <a
-                    href={tool.ios_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-foreground text-background rounded-full text-xs font-medium hover:opacity-90 transition-colors duration-300"
-                  >
-                    <Apple className="w-3.5 h-3.5" />
-                    App Store
-                  </a>
-                )}
-                {tool.android_url && (
-                  <a
-                    href={tool.android_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-foreground text-background rounded-full text-xs font-medium hover:opacity-90 transition-colors duration-300"
-                  >
-                    <PlayCircle className="w-3.5 h-3.5" />
-                    Google Play
-                  </a>
-                )}
+            {tool.content_he && (
+              <div
+                className="text-muted-foreground leading-relaxed rich-content"
+                dangerouslySetInnerHTML={{ __html: tool.content_he }}
+              />
+            )}
+            {tool.apps?.length > 0 && (
+              <div className="space-y-4">
+                {tool.apps.map((app, i) => (
+                  <div key={i} className={i > 0 ? 'pt-4 border-t border-border' : ''}>
+                    <p className="font-heading font-semibold text-foreground text-sm mb-1">{app.title_he}</p>
+                    <p className="text-muted-foreground text-sm leading-relaxed mb-2">{app.description_he}</p>
+                    <div className="flex gap-2">
+                      {app.ios_url && (
+                        <a
+                          href={app.ios_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-foreground text-background rounded-full text-xs font-medium hover:opacity-90 transition-colors duration-300"
+                        >
+                          <Apple className="w-3.5 h-3.5" />
+                          App Store
+                        </a>
+                      )}
+                      {app.android_url && (
+                        <a
+                          href={app.android_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-foreground text-background rounded-full text-xs font-medium hover:opacity-90 transition-colors duration-300"
+                        >
+                          <PlayCircle className="w-3.5 h-3.5" />
+                          Google Play
+                        </a>
+                      )}
+                    </div>
+                  </div>
+                ))}
               </div>
             )}
           </div>
