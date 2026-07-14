@@ -473,8 +473,9 @@ Replace one entity at a time:
 
 Each migration is a single PR. Static fallback removed only after the API path is verified in production.
 
-### Phase 4 - build admin UI
-After content is live in DB. Build entity by entity, same order as phase 3 - editor can manage what's already live.
+### Phase 4 - admin UI
+Need to connect the existing admin UI to the DB.
+Currently admin UI is just a UI - it isn't connected to the data in terms of write operations.
 
 ### Phase 5 - delete static content
 Remove `pageContent.js`, `STATIC_*` arrays, and the page-block keys from `i18n.js`. Keep only UI labels and the questionnaire questions in code.
@@ -489,8 +490,8 @@ These are decisions the implementer needs to make - this doc takes no stance:
 2. **Image storage**: S3-compatible (R2, B2, MinIO) is standard. Decide based on hosting.
 3. **Translation provider**: DeepL + Google Translate fallback for Arabic is the recommendation. Confirm pricing and quotas.
 4. **Hosting**: out of scope for this doc but should be in EU/IL region (GDPR + latency).
-5. **Backup**: daily snapshot, 30-day retention, off-region copy. Standard.
-6. **CDN**: Cloudflare is free and good. Use it.
+5. **Backup**: I don't think we need backup.
+6. **CDN**: I think Cloudflare will present a cloudflare capcha - if so, we don't really need it and we want te remove as much friction from the users.
 
 ---
 
