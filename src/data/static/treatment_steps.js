@@ -30,6 +30,7 @@ export const STATIC_STEPS = [
     how_to_start_he: '',
     links: [
       { label: 'אינדקס הפסיכולוגים - הסתדרות הפסיכולוגים בישראל', url: 'https://psychologists.org.il/' },
+      { label: 'מטיב - המרכז לפסיכוטראומה', url: 'https://docs.google.com/forms/d/e/1FAIpQLSfz5ougCVnY1LFHJhyrBFrlICf2gQivumOzstI3YHor8_y0yg/viewform' },
     ],
     methods: [
       {
