@@ -31,7 +31,15 @@ export default function Sources() {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 py-16">
         <div className="bg-primary/5 border border-primary/20 rounded-super p-5 mb-8">
           <p className="text-foreground leading-relaxed">
-            כל התוכן שמוצג באתר אושר ע"י מטיב - המרכז לפסיכוטראומה
+            כל התוכן שמוצג באתר אושר ע"י{' '}
+            <a
+              href="https://metiv.org/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary hover:underline font-medium"
+            >
+              מטיב - המרכז לפסיכוטראומה
+            </a>
           </p>
         </div>
         {isLoading && <p className="text-center text-muted-foreground">{t(lang, 'loading')}</p>}

@@ -65,7 +65,17 @@ export default function Footer() {
         </div>
 
         <div className="border-t border-border pt-6 flex flex-wrap items-center justify-between gap-3 text-xs text-muted-foreground">
-          <p>האתר נכתב בשיתוף עם מטיב - המרכז לפסיכוטראומה</p>
+          <p>
+            האתר נכתב בשיתוף עם{' '}
+            <a
+              href="https://metiv.org/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-primary transition-natural underline"
+            >
+              מטיב - המרכז לפסיכוטראומה
+            </a>
+          </p>
           <Link to="/sources" className="hover:text-primary transition-natural">
             {t(lang, 'sources')}
           </Link>
