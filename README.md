@@ -150,3 +150,36 @@ Only one file changes: `src/api/source.js`. Each `fetch*()` function in it gets 
 - [ ] Make every piece of content dynamic - move all content to a database so the site parses data from it, enabling updates without code changes
 - [ ] Change the background texture - pick the best one along with the best matching color palette
 - [ ] Create a full design system/theme from the site that will serve as the foundation for the mobile application development
+
+## Known limitations (to fix)
+
+The backend API gateway has shipped and the site now reads/writes live data (the
+"When the real backend ships" note above is largely historical — `src/api/source.js`
+now fetches from the API instead of static `db`). Content is stored as pure data:
+each article's `content` is a JSON string with **Markdown** leaves; the UI renders
+the styling. The admin panel (`/admin`) is behind login and does real CRUD. These
+items are known-incomplete and should be revisited:
+
+- [ ] **Auth is temporary password login, not SSO.** Move admin auth to Google SSO
+      (`POST /api/auth/google` on the BE + a sign-in button) — the current flow slots
+      out cleanly. Note: authentication and role checks are enforced **server-side via
+      JWT** on every `/api/admin/*` call; the client-side `/admin` route guard is UX
+      only (show/hide), not a security boundary.
+- [ ] **New admin items don't link translations.** Creating a new FAQ in one language
+      makes a single-language item (fresh `groupId`). Editing/deleting existing
+      translated items works. Add translation-linked creation (create he + ar + en
+      sharing one `groupId`).
+- [ ] **Community target-audiences may not persist on save.** The API docs don't
+      document how to set `targetAudiences` on `POST/PUT /api/admin/communities`; the
+      admin wires it by analogy but it's unverified. Confirm the field name / BE support.
+- [ ] **Treatment `methods` and self-help `apps` aren't editable in the admin UI.**
+      They're carried through as passthrough data (edits don't strip them) but there
+      are no form controls to edit them yet. Add UI.
+- [ ] **Questionnaire admin panel is read-only.** The PCL-5 questionnaire has no API
+      endpoint, so it still reads the static file and can't be edited. Add a BE
+      endpoint + migrate it, then wire the panel.
+- [ ] **No `ru`/`fr` content in the DB.** Those languages fall back to Hebrew. Add
+      translations (or hide the language options until content exists).
+- [ ] **Deployment note:** the "Deployment (GitHub Pages)" section above is stale —
+      the site is now a Render static site served from the domain root (`BASE_PATH`
+      is `''`), with `VITE_API_URL` set in the Render dashboard.
