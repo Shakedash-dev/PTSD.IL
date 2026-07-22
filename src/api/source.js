@@ -48,7 +48,9 @@ export async function fetchSources() {
     authors: item.authors,
     year: item.year,
     url: item.url,
-    description_he: item.content ?? item.description ?? '',
+    // Sources.jsx renders description_he as PLAIN text, so use the API's plain
+    // `description` field, not the HTML `content` blob (which would show raw tags).
+    description_he: item.description ?? '',
     category: subCategorySlug(item.categories),
   }));
 }
@@ -141,8 +143,14 @@ export async function fetchTreatmentSteps() {
       step_number: item.sortOrder,
       icon: TREATMENT_STEP_ICON_BY_NUMBER[item.sortOrder],
       title_he: item.title,
-      description_he: item.content ?? '',
-      how_to_start_he: '',
+      // Treatment.jsx renders description_he as PLAIN text (subtitle) and
+      // how_to_start_he as HTML (the "איך מתחילים" box). The API merged the old
+      // description + how_to_start into one HTML `content` blob, so route it to
+      // the HTML slot to keep it formatted; the plain subtitle uses the API's
+      // plain `description` (usually null → empty). The old methods[] accordions
+      // can't be rebuilt from flat data.
+      description_he: item.description ?? '',
+      how_to_start_he: item.content ?? '',
       links: item.links ?? [],
     }));
 }
