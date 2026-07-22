@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { Settings, Users, FileText, BookOpen, HelpCircle, Wrench, Heart, Baby, Shield, ClipboardList, Pencil, Trash2, Plus, Check, X } from 'lucide-react';
+import { Settings, Users, FileText, BookOpen, HelpCircle, Wrench, Heart, Baby, Shield, ClipboardList, Pencil, Trash2, Plus, Check, X, LogOut } from 'lucide-react';
 import { db } from '@/data/db';
 import RichTextEditor from '@/components/RichTextEditor';
+import { logout } from '@/lib/auth';
 
 // Ghost commit - no backend wired yet. This is the single place a real API call
 // (POST/PATCH/DELETE) would go once one exists; every panel below already calls
@@ -1206,11 +1207,20 @@ export default function Admin() {
     <div className="min-h-screen bg-background pt-16">
       <div className="border-b border-border bg-card">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8">
-          <div className="flex items-center gap-3 mb-1">
-            <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-              <Settings className="w-5 h-5 text-primary" />
+          <div className="flex items-center justify-between gap-3 mb-1">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                <Settings className="w-5 h-5 text-primary" />
+              </div>
+              <h1 className="text-2xl font-heading font-bold text-foreground">ממשק ניהול תוכן</h1>
             </div>
-            <h1 className="text-2xl font-heading font-bold text-foreground">ממשק ניהול תוכן</h1>
+            <button
+              type="button"
+              onClick={logout}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-muted text-foreground text-sm font-semibold hover:bg-border transition-natural"
+            >
+              <LogOut className="w-3.5 h-3.5" /> התנתקות
+            </button>
           </div>
           <p className="text-muted-foreground text-sm">עריכה, הוספה ומחיקה של תוכן · שינויים אינם נשמרים עדיין לשרת (אין חיבור ל-backend)</p>
         </div>
