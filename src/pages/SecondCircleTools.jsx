@@ -6,6 +6,7 @@ import PageHeader from '@/components/PageHeader';
 import { ChevronDown } from 'lucide-react';
 import { IMAGES } from '@/lib/images';
 import ValidatableContent from '@/components/ValidatableContent';
+import Markdown from '@/components/Markdown';
 
 function FAQItem({ q, intro, sections, closing, callout, contentId }) {
   const [open, setOpen] = useState(false);
@@ -26,28 +27,25 @@ function FAQItem({ q, intro, sections, closing, callout, contentId }) {
       {open && (
         <div className="px-6 pt-5 pb-6 text-foreground leading-relaxed border-t border-primary/30">
           {intro && (
-            <div
-              className="rich-content text-foreground italic bg-primary/5 border-s-2 border-primary/30 ps-3 py-2 rounded"
-              dangerouslySetInnerHTML={{ __html: intro }}
-            />
+            <Markdown className="rich-content text-foreground italic bg-primary/5 border-s-2 border-primary/30 ps-3 py-2 rounded">
+              {intro}
+            </Markdown>
           )}
           {sections?.map((s, i) => (
             <div key={i} className={i === 0 ? 'mt-4' : 'mt-6'}>
               <h4 className="font-heading font-semibold text-foreground text-base mb-2">{s.heading}</h4>
-              <div className="rich-content" dangerouslySetInnerHTML={{ __html: s.body }} />
+              <Markdown className="rich-content">{s.body}</Markdown>
             </div>
           ))}
           {closing && (
-            <div
-              className="rich-content text-sm text-foreground/80 italic mt-5"
-              dangerouslySetInnerHTML={{ __html: closing }}
-            />
+            <Markdown className="rich-content text-sm text-foreground/80 italic mt-5">
+              {closing}
+            </Markdown>
           )}
           {callout && (
-            <div
-              className="rich-content bg-amber-50 border border-amber-200 rounded-lg p-3 mt-4 text-foreground"
-              dangerouslySetInnerHTML={{ __html: callout }}
-            />
+            <Markdown className="rich-content bg-amber-50 border border-amber-200 rounded-lg p-3 mt-4 text-foreground">
+              {callout}
+            </Markdown>
           )}
         </div>
       )}

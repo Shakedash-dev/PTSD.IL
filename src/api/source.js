@@ -3,13 +3,13 @@
 // response back into the exact shape the pages/hooks have always consumed -
 // pages and hooks.js are untouched.
 //
-// The API flattens what used to be structured static content into a single
-// HTML `content` blob per article. Each adapter below maps that blob into the
-// page's primary display field and leaves now-gone structured extras (e.g.
-// second-circle's intro/sections/closing/callout split, rights' separate
-// `steps` block, treatment's per-method breakdown) empty. See
-// docs/superpowers/specs/2026-07-22-api-integration-design.md for the full
-// per-entity mapping and the accepted degradations.
+// Post re-migration, each article's `content` is a JSON STRING holding the
+// item's structured editing-screen fields, with every rich-text leaf as
+// Markdown (rendered client-side by <Markdown>, see src/components/Markdown.jsx).
+// Every adapter below JSON.parses `content` and rebuilds the page's shape from
+// the structured fields, instead of relying on a single flattened HTML blob.
+// See docs/superpowers/specs/2026-07-22-db-remigration-spec.md and
+// 2026-07-22-fe-markdown-rewrite-spec.md for the full per-entity mapping.
 
 const API = import.meta.env.VITE_API_URL; // e.g. https://ptsd-il-api.onrender.com/api
 
@@ -17,6 +17,17 @@ async function api(path) {
   const res = await fetch(`${API}${path}`);
   if (!res.ok) throw new Error(`${res.status} ${await res.text()}`);
   return res.json();
+}
+
+// `content` is a JSON string (structured fields, Markdown leaves) or null for
+// items that don't carry any (shouldn't normally happen, but be defensive).
+function parseContent(item) {
+  if (!item.content) return {};
+  try {
+    return JSON.parse(item.content);
+  } catch {
+    return {};
+  }
 }
 
 // The API's audience/target-audience slugs use hyphens (e.g.
@@ -43,16 +54,19 @@ async function fetchWithHebrewFallback(path, lang) {
 
 export async function fetchSources() {
   const items = await api('/articles?type=source&langId=he');
-  return items.map(item => ({
-    title: item.title,
-    authors: item.authors,
-    year: item.year,
-    url: item.url,
-    // Sources.jsx renders description_he as PLAIN text, so use the API's plain
-    // `description` field, not the HTML `content` blob (which would show raw tags).
-    description_he: item.description ?? '',
-    category: subCategorySlug(item.categories),
-  }));
+  return items.map(item => {
+    const c = parseContent(item);
+    return {
+      title: item.title,
+      authors: c.authors,
+      year: c.year,
+      // Native column - required by the API for type=source.
+      url: item.url,
+      // Plain text (not Markdown) - Sources.jsx renders it as-is.
+      description_he: c.description ?? '',
+      category: subCategorySlug(item.categories),
+    };
+  });
 }
 
 export async function fetchCommunities() {
@@ -80,47 +94,31 @@ const SELF_HELP_ICON_BY_CATEGORY = {
 };
 
 export async function fetchSelfHelpTools() {
-  const [tools, apps] = await Promise.all([
-    api('/articles?type=tool&langId=he'),
-    api('/articles?type=app&langId=he'),
-  ]);
-
-  const appsByParentId = apps.reduce((acc, a) => {
-    (acc[a.parentId] ??= []).push(a);
-    return acc;
-  }, {});
+  const tools = await api('/articles?type=tool&langId=he');
 
   return tools
     .slice()
     .sort((a, b) => a.sortOrder - b.sortOrder)
     .map(item => {
+      const c = parseContent(item);
       const category = subCategorySlug(item.categories);
       const icon =
         category === 'complementary' && item.title.includes('יוגה')
           ? 'Moon'
           : SELF_HELP_ICON_BY_CATEGORY[category] ?? 'Wind';
 
-      const tool = {
+      return {
         category,
         icon,
         title_he: item.title,
-        content_he: item.content ?? '',
+        content_he: c.body ?? '',
+        apps: (c.apps ?? []).map(a => ({
+          title_he: a.title,
+          description_he: a.description ?? '',
+          ios_url: a.ios_url ?? '',
+          android_url: a.android_url ?? '',
+        })),
       };
-
-      const childApps = appsByParentId[item.id];
-      if (childApps?.length) {
-        tool.apps = childApps
-          .slice()
-          .sort((a, b) => a.sortOrder - b.sortOrder)
-          .map(a => ({
-            title_he: a.title,
-            description_he: a.description ?? '',
-            ios_url: a.url ?? '',
-            android_url: a.links?.find(l => /google ?play/i.test(l.label))?.url ?? '',
-          }));
-      }
-
-      return tool;
     });
 }
 
@@ -139,43 +137,49 @@ export async function fetchTreatmentSteps() {
   return items
     .slice()
     .sort((a, b) => a.sortOrder - b.sortOrder)
-    .map(item => ({
-      step_number: item.sortOrder,
-      icon: TREATMENT_STEP_ICON_BY_NUMBER[item.sortOrder],
-      title_he: item.title,
-      // Treatment.jsx renders description_he as PLAIN text (subtitle) and
-      // how_to_start_he as HTML (the "איך מתחילים" box). The API merged the old
-      // description + how_to_start into one HTML `content` blob, so route it to
-      // the HTML slot to keep it formatted; the plain subtitle uses the API's
-      // plain `description` (usually null → empty). The old methods[] accordions
-      // can't be rebuilt from flat data.
-      description_he: item.description ?? '',
-      how_to_start_he: item.content ?? '',
-      links: item.links ?? [],
-    }));
+    .map(item => {
+      const c = parseContent(item);
+      return {
+        step_number: item.sortOrder,
+        icon: TREATMENT_STEP_ICON_BY_NUMBER[item.sortOrder],
+        title_he: item.title,
+        // Plain text (subtitle).
+        description_he: c.description ?? '',
+        // Markdown (the "איך מתחילים" box) - only used when there are no methods.
+        how_to_start_he: c.how_to_start ?? '',
+        methods: (c.methods ?? []).map(m => ({
+          title_he: m.title,
+          description_he: m.description ?? '',
+          how_to_start_he: m.how_to_start ?? '',
+          links: m.links ?? [],
+        })),
+        links: c.links ?? [],
+      };
+    });
 }
 
 export async function fetchChildrenContent() {
   const items = await api('/articles?categorySlug=children&langId=he');
-  const RESOURCE_TYPES = new Set(['book', 'activity', 'story', 'video', 'app']);
+  const RESOURCE_TYPES = new Set(['book', 'activity', 'story', 'video']);
 
   const result = {};
   for (const item of items) {
     const ageGroupSlug = item.ageGroups?.[0]?.slug;
     if (!ageGroupSlug) continue;
     result[ageGroupSlug] ??= { guidelines: '', resources: [] };
+    const c = parseContent(item);
 
     if (item.type === 'article') {
-      // The per-age-group container article - its content is the guidelines HTML.
-      result[ageGroupSlug].guidelines = item.content ?? '';
+      // The per-age-group container article - its content is the guidelines (md).
+      result[ageGroupSlug].guidelines = c.body ?? '';
     } else if (RESOURCE_TYPES.has(item.type)) {
       result[ageGroupSlug].resources.push({
         type: item.type,
         title_he: item.title,
-        description_he: item.description ?? '',
-        content_he: item.content ?? '',
-        cta_label: '',
-        cta_url: item.url ?? '',
+        description_he: c.description ?? '',
+        content_he: c.body ?? '',
+        cta_label: c.cta?.label ?? '',
+        cta_url: c.cta?.url ?? '',
         _sortOrder: item.sortOrder,
       });
     }
@@ -190,34 +194,32 @@ export async function fetchChildrenContent() {
 
 // Rights FAQs are bucketed by lang then category via the `audiences[]` field
 // (normalized hyphen->underscore). General-category items are appended to
-// every other category, matching the pre-API behavior in source.js.
-//
-// NOTE: the static data had a `general_only` flag on one "general" FAQ to keep
-// it from being appended to other tabs (it pointed at the wrong process for
-// e.g. security-forces claimants). The API carries no equivalent flag, so
-// that item is now appended everywhere "general" is appended. Minor,
-// accepted behavior change - see report.
+// every other category, matching the pre-migration static-data behavior -
+// EXCEPT items flagged `general_only` in content (kept for the "general" tab
+// itself, but not appended anywhere else - e.g. the general disability-claim
+// FAQ that would otherwise mislead security-forces claimants).
 export async function fetchRightsFaqs({ lang = 'he', category }) {
   const items = await fetchWithHebrewFallback('/articles?type=faq&categorySlug=rights', lang);
+  const parsed = items.map(item => ({ item, c: parseContent(item) }));
 
-  const toFaq = item => ({
+  const toFaq = ({ item, c }) => ({
     q: item.title,
-    a: item.content ?? '',
-    steps: '',
-    links: item.links ?? [],
+    a: c.answer ?? '',
+    steps: c.steps ?? '',
+    links: c.links ?? [],
   });
-  const audienceOf = item => toUnderscore(item.audiences[0]?.slug ?? 'general');
+  const audienceOf = ({ item }) => toUnderscore(item.audiences[0]?.slug ?? 'general');
 
-  const specific = items
-    .filter(item => audienceOf(item) === category)
-    .sort((a, b) => a.sortOrder - b.sortOrder)
+  const specific = parsed
+    .filter(entry => audienceOf(entry) === category)
+    .sort((a, b) => a.item.sortOrder - b.item.sortOrder)
     .map(toFaq);
 
   if (category === 'general') return specific;
 
-  const general = items
-    .filter(item => audienceOf(item) === 'general')
-    .sort((a, b) => a.sortOrder - b.sortOrder)
+  const general = parsed
+    .filter(entry => audienceOf(entry) === 'general' && !entry.c.general_only)
+    .sort((a, b) => a.item.sortOrder - b.item.sortOrder)
     .map(toFaq);
 
   return [...specific, ...general];
@@ -228,7 +230,10 @@ export async function fetchPTSDInfoFaqs({ lang = 'he' }) {
   return items
     .slice()
     .sort((a, b) => a.sortOrder - b.sortOrder)
-    .map(item => ({ q: item.title, a: item.content ?? '' }));
+    .map(item => {
+      const c = parseContent(item);
+      return { q: item.title, a: c.answer ?? '' };
+    });
 }
 
 export async function fetchSecondCircleTools({ lang = 'he' }) {
@@ -236,11 +241,14 @@ export async function fetchSecondCircleTools({ lang = 'he' }) {
   return items
     .slice()
     .sort((a, b) => a.sortOrder - b.sortOrder)
-    .map(item => ({
-      q: item.title,
-      intro: item.content ?? '',
-      sections: [],
-      closing: '',
-      callout: '',
-    }));
+    .map(item => {
+      const c = parseContent(item);
+      return {
+        q: item.title,
+        intro: c.intro ?? '',
+        sections: (c.sections ?? []).map(s => ({ heading: s.heading, body: s.body ?? '' })),
+        closing: c.closing ?? '',
+        callout: c.callout ?? '',
+      };
+    });
 }

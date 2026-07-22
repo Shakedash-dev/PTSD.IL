@@ -5,6 +5,7 @@ import { usePTSDInfoFaqs } from '@/api/hooks';
 import PageHeader from '@/components/PageHeader';
 import { IMAGES } from '@/lib/images';
 import ValidatableContent from '@/components/ValidatableContent';
+import Markdown from '@/components/Markdown';
 
 // Design B: docs-style sticky table-of-contents.
 // Desktop: question list pinned in a left rail; clicking a title shows the full answer
@@ -68,10 +69,9 @@ export default function PTSDInfo2() {
                 <h2 className="font-heading font-semibold text-2xl sm:text-3xl text-foreground mb-5 leading-tight">
                   {active.q}
                 </h2>
-                <div
-                  className="text-card-foreground leading-relaxed rich-content"
-                  dangerouslySetInnerHTML={{ __html: active.a }}
-                />
+                <Markdown className="text-card-foreground leading-relaxed rich-content">
+                  {active.a}
+                </Markdown>
               </ValidatableContent>
             ) : (
               !isLoading && (

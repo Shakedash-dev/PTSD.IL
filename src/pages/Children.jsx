@@ -6,6 +6,7 @@ import PageHeader from '@/components/PageHeader';
 import { Baby, BookOpen, Video, Download, Star, ChevronDown, ExternalLink } from 'lucide-react';
 import { IMAGES } from '@/lib/images';
 import ValidatableContent from '@/components/ValidatableContent';
+import Markdown from '@/components/Markdown';
 
 const AGE_TABS = [
   { key: '0-4', labelKey: 'age_until4' },
@@ -76,10 +77,7 @@ export default function Children() {
           <ValidatableContent contentId={`children.guidelines.${activeAge}`} label={`הנחיות גיל ${activeAge}`}>
           <div className="bg-card rounded-super border border-border p-6 shadow-card">
             <h3 className="font-heading font-bold text-foreground mb-4">{t(lang, 'children_guidelines')}</h3>
-            <div
-              className="rich-content text-foreground/80"
-              dangerouslySetInnerHTML={{ __html: guidelines }}
-            />
+            <Markdown className="rich-content text-foreground/80">{guidelines}</Markdown>
           </div>
           </ValidatableContent>
 
@@ -155,7 +153,7 @@ export default function Children() {
                         )}
                         {hasContent && isOpen && (
                           <div className="px-4 pb-4 pt-1 text-sm text-foreground/90">
-                            <div className="rich-content" dangerouslySetInnerHTML={{ __html: r.content_he }} />
+                            <Markdown className="rich-content">{r.content_he}</Markdown>
                             {r.cta_label && r.cta_url && (
                               <a
                                 href={r.cta_url}

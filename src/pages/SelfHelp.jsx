@@ -7,6 +7,7 @@ import PageHeader from '@/components/PageHeader';
 import { Wind, Moon, PenLine, Smartphone, Zap, ChevronDown, ArrowLeft, ArrowRight, Compass, Wrench, Apple, PlayCircle } from 'lucide-react';
 import { IMAGES } from '@/lib/images';
 import ValidatableContent from '@/components/ValidatableContent';
+import Markdown from '@/components/Markdown';
 
 const TOOL_ICON_MAP = { Wind, Moon, PenLine, Smartphone, Zap, Compass, Wrench };
 
@@ -30,10 +31,9 @@ function ToolCard({ tool, contentId }) {
         {open && (
           <div className="px-6 pb-6">
             {tool.content_he && (
-              <div
-                className="text-muted-foreground leading-relaxed rich-content"
-                dangerouslySetInnerHTML={{ __html: tool.content_he }}
-              />
+              <Markdown className="text-muted-foreground leading-relaxed rich-content">
+                {tool.content_he}
+              </Markdown>
             )}
             {tool.apps?.length > 0 && (
               <div className="space-y-4">

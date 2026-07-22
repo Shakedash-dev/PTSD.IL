@@ -7,6 +7,7 @@ import { Wrench, Building2, Brain, Leaf, Pill, ExternalLink, ChevronDown } from 
 import ArchFrame from '@/components/ArchFrame';
 import { TREATMENT_STEP_IMAGES } from '@/lib/images';
 import ValidatableContent from '@/components/ValidatableContent';
+import Markdown from '@/components/Markdown';
 
 const STEP_ICON_MAP = { Wrench, Building2, Brain, Leaf, Pill };
 
@@ -33,10 +34,9 @@ function MethodAccordion({ method }) {
           <p className="text-sm text-muted-foreground leading-relaxed">{method.description_he}</p>
           {method.how_to_start_he && (
             <div className="bg-primary/5 rounded-lg p-3">
-              <div
-                className="text-sm text-foreground leading-relaxed rich-content"
-                dangerouslySetInnerHTML={{ __html: method.how_to_start_he }}
-              />
+              <Markdown className="text-sm text-foreground leading-relaxed rich-content">
+                {method.how_to_start_he}
+              </Markdown>
             </div>
           )}
           {method.links?.length > 0 && (
@@ -180,10 +180,9 @@ function StepView({ step, index, total, lang, stepImages }) {
                   <p className="text-xs font-bold text-primary uppercase tracking-[0.15em] mb-2">
                     {t(lang, 'how_to_start')}
                   </p>
-                  <div
-                    className="text-sm text-foreground leading-relaxed rich-content"
-                    dangerouslySetInnerHTML={{ __html: step.how_to_start_he }}
-                  />
+                  <Markdown className="text-sm text-foreground leading-relaxed rich-content">
+                    {step.how_to_start_he}
+                  </Markdown>
                 </div>
               )}
 

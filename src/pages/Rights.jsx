@@ -6,6 +6,7 @@ import PageHeader from '@/components/PageHeader';
 import { Shield, Heart, Users, Car, HelpCircle, ChevronDown, ExternalLink, MessageCircle, Scale } from 'lucide-react';
 import { IMAGES } from '@/lib/images';
 import ValidatableContent from '@/components/ValidatableContent';
+import Markdown from '@/components/Markdown';
 
 const CATEGORIES = [
   { key: 'security_forces', labelKey: 'rights_security', icon: Shield },
@@ -33,11 +34,11 @@ function FAQAccordion({ q, a, steps, links, lang }) {
       </button>
       {open && (
         <div className="px-5 pt-4 pb-5 space-y-3 border-t border-primary/30">
-          <div className="text-foreground leading-relaxed rich-content" dangerouslySetInnerHTML={{ __html: a }} />
+          <Markdown className="text-foreground leading-relaxed rich-content">{a}</Markdown>
           {steps && (
             <div className="p-4 bg-primary/5 rounded-lg">
               <p className="text-xs font-bold text-primary uppercase tracking-wide mb-2">{t(lang, 'step_by_step')}</p>
-              <div className="text-sm text-foreground rich-content" dangerouslySetInnerHTML={{ __html: steps }} />
+              <Markdown className="text-sm text-foreground rich-content">{steps}</Markdown>
             </div>
           )}
           {links?.length > 0 && (

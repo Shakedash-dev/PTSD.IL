@@ -6,6 +6,7 @@ import PageHeader from '@/components/PageHeader';
 import { ChevronDown } from 'lucide-react';
 import { IMAGES } from '@/lib/images';
 import ValidatableContent from '@/components/ValidatableContent';
+import Markdown from '@/components/Markdown';
 
 function FAQCard({ question, answer, contentId }) {
   const [open, setOpen] = useState(false);
@@ -32,10 +33,9 @@ function FAQCard({ question, answer, contentId }) {
           />
         </button>
         {open && (
-          <div
-            className="px-6 pb-6 pt-5 text-foreground leading-relaxed rich-content border-t border-primary/30"
-            dangerouslySetInnerHTML={{ __html: answer }}
-          />
+          <Markdown className="px-6 pb-6 pt-5 text-foreground leading-relaxed rich-content border-t border-primary/30">
+            {answer}
+          </Markdown>
         )}
       </div>
     </ValidatableContent>
