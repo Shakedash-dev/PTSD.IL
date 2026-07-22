@@ -1,14 +1,51 @@
-import React, { useState } from 'react';
-import { Settings, Users, FileText, BookOpen, HelpCircle, Wrench, Heart, Baby, Shield, ClipboardList, Pencil, Trash2, Plus, Check, X, LogOut } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Settings, Users, FileText, BookOpen, HelpCircle, Wrench, Heart, Baby, Shield, ClipboardList, Pencil, Trash2, Plus, Check, X, LogOut, Info } from 'lucide-react';
+import { toast } from 'sonner';
 import { db } from '@/data/db';
 import RichTextEditor from '@/components/RichTextEditor';
 import { logout } from '@/lib/auth';
+import { t } from '@/lib/i18n';
+import { ForbiddenError, UnauthorizedError } from '@/api/adminClient';
+import {
+  loadPtsdFaq, savePtsdFaq, removePtsdFaq,
+  loadRightsFaq, saveRightsFaq, removeRightsFaq,
+  loadSecondCircle, saveSecondCircle, removeSecondCircle,
+  loadSelfHelp, saveSelfHelp, removeSelfHelp,
+  loadTreatment, saveTreatment, removeTreatment,
+  loadSource, saveSource, removeSource,
+  loadCommunity, saveCommunity, removeCommunity,
+  loadChildrenGuidelines, saveChildrenGuidelines,
+  loadChildrenResource, saveChildrenResource, removeChildrenResource,
+} from '@/api/adminSource';
 
-// Ghost commit - no backend wired yet. This is the single place a real API call
-// (POST/PATCH/DELETE) would go once one exists; every panel below already calls
-// through here, so wiring a backend later means editing this one function.
-function ghostCommit(action, entity, payload) {
-  console.log(`[Admin] ${action} → ${entity}`, payload);
+// Runs a create/update/delete call against adminSource, converting the admin
+// client's typed errors (src/api/adminClient.js) into a toast instead of
+// letting the panel crash. Returns true on success, false on a handled
+// failure (ForbiddenError or any other error) so callers can decide whether
+// to close the edit form / refresh the list. UnauthorizedError is re-thrown -
+// adminApi() has already dropped the session and fired AUTH_CHANGE_EVENT, so
+// the /admin route guard (src/App.jsx's AdminGate) swaps to the login screen
+// on its own; there's nothing else to do here besides not pretending the
+// write succeeded.
+async function runWrite(action) {
+  try {
+    await action();
+    return true;
+  } catch (err) {
+    if (err instanceof ForbiddenError) {
+      toast.error('אין לך הרשאה לבצע פעולה זו');
+      return false;
+    }
+    if (err instanceof UnauthorizedError) {
+      throw err;
+    }
+    toast.error(err?.message || 'אירעה שגיאה. נסו שוב.');
+    return false;
+  }
+}
+
+function LoadingRow() {
+  return <p className="text-sm text-muted-foreground py-6 text-center">טוען...</p>;
 }
 
 // ─── Hebrew label maps for values that are stored in English internally (filter
@@ -57,6 +94,15 @@ const SOURCE_CATEGORY_LABELS = {
   international: 'בינלאומי',
   official: 'רשמי',
 };
+
+// Rights categories are audience buckets - order/keys mirror the panel's
+// category tabs. adminSource's loadRightsFaq/saveRightsFaq accept either
+// underscore or hyphen (they normalize internally), so these keys are passed
+// straight through as `audienceSlug`.
+const RIGHTS_CATEGORIES = Object.keys(RIGHTS_CATEGORY_LABELS);
+
+// Children content age-group slugs (must match the API's /age-groups taxonomy).
+const AGE_GROUPS = ['0-4', '4-6', '7-10', '10-13', '14-16', '16+'];
 
 function labelFor(map, key) {
   return map[key] || key;
@@ -273,11 +319,16 @@ function FieldInput({ field, value, onChange }) {
   }
 }
 
-// Generic view/edit card used by every content list below. `onDelete` omitted
-// means the card can't be deleted (not used currently, but supported).
+// Generic view/edit card used by every content list below. `onSave` may be
+// async and return `false` to indicate a handled failure (e.g. a write that
+// was rejected) - in that case the card stays in edit mode with the user's
+// draft intact instead of silently closing as if the save had gone through.
+// `onDelete` omitted means the card can't be deleted (not used currently, but
+// supported).
 function EditableCard({ item, fields, onSave, onCancel, onDelete, renderView, startInEdit = false }) {
   const [editing, setEditing] = useState(startInEdit);
   const [draft, setDraft] = useState(item);
+  const [saving, setSaving] = useState(false);
 
   if (!editing) {
     return (
@@ -291,6 +342,13 @@ function EditableCard({ item, fields, onSave, onCancel, onDelete, renderView, st
     );
   }
 
+  async function handleSave() {
+    setSaving(true);
+    const result = await onSave(draft);
+    setSaving(false);
+    if (result !== false) setEditing(false);
+  }
+
   return (
     <div className="p-4 rounded-xl border border-primary/40 bg-background space-y-3">
       {fields.map(f => (
@@ -302,15 +360,17 @@ function EditableCard({ item, fields, onSave, onCancel, onDelete, renderView, st
       <div className="flex gap-2 pt-1">
         <button
           type="button"
-          onClick={() => { onSave(draft); setEditing(false); }}
-          className="flex items-center gap-1.5 px-3 py-1.5 bg-primary text-white rounded-lg text-xs font-semibold hover:bg-primary/90"
+          disabled={saving}
+          onClick={handleSave}
+          className="flex items-center gap-1.5 px-3 py-1.5 bg-primary text-white rounded-lg text-xs font-semibold hover:bg-primary/90 disabled:opacity-60"
         >
-          <Check className="w-3.5 h-3.5" /> שמירה
+          <Check className="w-3.5 h-3.5" /> {saving ? 'שומר...' : 'שמירה'}
         </button>
         <button
           type="button"
+          disabled={saving}
           onClick={() => { setDraft(item); setEditing(false); onCancel && onCancel(); }}
-          className="flex items-center gap-1.5 px-3 py-1.5 bg-muted text-foreground rounded-lg text-xs font-semibold hover:bg-border"
+          className="flex items-center gap-1.5 px-3 py-1.5 bg-muted text-foreground rounded-lg text-xs font-semibold hover:bg-border disabled:opacity-60"
         >
           <X className="w-3.5 h-3.5" /> ביטול
         </button>
@@ -322,13 +382,23 @@ function EditableCard({ item, fields, onSave, onCancel, onDelete, renderView, st
 function PTSDFaqsPanel() {
   const langs = ['he', 'ar', 'en'];
   const [lang, setLang] = useState('he');
-  const [faqsByLang, setFaqsByLang] = useState(() => ({ ...db.ptsd_info_faqs }));
-  const faqs = faqsByLang[lang] || [];
+  const [faqs, setFaqs] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [creating, setCreating] = useState(false);
 
-  function setFaqs(next) {
-    setFaqsByLang(prev => ({ ...prev, [lang]: next }));
+  async function reload(targetLang = lang) {
+    setLoading(true);
+    try {
+      setFaqs(await loadPtsdFaq({ lang: targetLang }));
+    } catch (err) {
+      toast.error(err?.message || 'שגיאה בטעינת השאלות');
+      setFaqs([]);
+    } finally {
+      setLoading(false);
+    }
   }
+
+  useEffect(() => { reload(lang); }, [lang]);
 
   const fields = [
     { key: 'q', label: 'שאלה', type: 'text' },
@@ -355,39 +425,47 @@ function PTSDFaqsPanel() {
         ))}
       </div>
       <Section title="שאלות ותשובות על PTSD" count={faqs.length} />
-      <div className="space-y-3">
-        {faqs.map((faq, i) => (
-          <EditableCard
-            key={i}
-            item={faq}
-            fields={fields}
-            renderView={renderView}
-            onSave={draft => {
-              setFaqs(faqs.map((f, idx) => (idx === i ? draft : f)));
-              ghostCommit('update', `ptsd_info_faqs.${lang}`, draft);
-            }}
-            onDelete={() => {
-              if (!window.confirm('למחוק שאלה זו?')) return;
-              setFaqs(faqs.filter((_, idx) => idx !== i));
-              ghostCommit('delete', `ptsd_info_faqs.${lang}`, faq);
-            }}
-          />
-        ))}
-        {creating && (
-          <EditableCard
-            item={{ q: '', a: '' }}
-            fields={fields}
-            startInEdit
-            renderView={renderView}
-            onSave={draft => {
-              setFaqs([...faqs, draft]);
-              ghostCommit('create', `ptsd_info_faqs.${lang}`, draft);
-              setCreating(false);
-            }}
-            onCancel={() => setCreating(false)}
-          />
-        )}
-      </div>
+      {loading ? (
+        <LoadingRow />
+      ) : (
+        <div className="space-y-3">
+          {faqs.map(faq => (
+            <EditableCard
+              key={faq.id}
+              item={faq}
+              fields={fields}
+              renderView={renderView}
+              onSave={async draft => {
+                const ok = await runWrite(() => savePtsdFaq(draft, { lang }));
+                if (ok) await reload(lang);
+                return ok;
+              }}
+              onDelete={async () => {
+                if (!window.confirm('למחוק שאלה זו?')) return;
+                const ok = await runWrite(() => removePtsdFaq(faq.id));
+                if (ok) await reload(lang);
+              }}
+            />
+          ))}
+          {creating && (
+            <EditableCard
+              item={{ q: '', a: '' }}
+              fields={fields}
+              startInEdit
+              renderView={renderView}
+              onSave={async draft => {
+                const ok = await runWrite(() => savePtsdFaq(draft, { lang }));
+                if (ok) {
+                  setCreating(false);
+                  await reload(lang);
+                }
+                return ok;
+              }}
+              onCancel={() => setCreating(false)}
+            />
+          )}
+        </div>
+      )}
       <div className="mt-3">
         <AddNewButton label="הוספת שאלה חדשה" onClick={() => setCreating(true)} />
       </div>
@@ -396,8 +474,23 @@ function PTSDFaqsPanel() {
 }
 
 function SelfHelpPanel() {
-  const [tools, setTools] = useState(() => [...db.self_help_tools]);
+  const [tools, setTools] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [creating, setCreating] = useState(false);
+
+  async function reload() {
+    setLoading(true);
+    try {
+      setTools(await loadSelfHelp());
+    } catch (err) {
+      toast.error(err?.message || 'שגיאה בטעינת הכלים');
+      setTools([]);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  useEffect(() => { reload(); }, []);
 
   const fields = [
     { key: 'category', label: 'קטגוריה', type: 'select', options: toOptions(SELF_HELP_CATEGORY_LABELS) },
@@ -420,39 +513,47 @@ function SelfHelpPanel() {
   return (
     <div>
       <Section title="כלים לעזרה עצמית" count={tools.length} />
-      <div className="space-y-3">
-        {tools.map((tool, i) => (
-          <EditableCard
-            key={i}
-            item={tool}
-            fields={fields}
-            renderView={renderView}
-            onSave={draft => {
-              setTools(tools.map((t, idx) => (idx === i ? draft : t)));
-              ghostCommit('update', 'self_help_tools', draft);
-            }}
-            onDelete={() => {
-              if (!window.confirm('למחוק כלי זה?')) return;
-              setTools(tools.filter((_, idx) => idx !== i));
-              ghostCommit('delete', 'self_help_tools', tool);
-            }}
-          />
-        ))}
-        {creating && (
-          <EditableCard
-            item={{ category: 'sleep', title_he: '', content_he: '' }}
-            fields={fields}
-            startInEdit
-            renderView={renderView}
-            onSave={draft => {
-              setTools([...tools, draft]);
-              ghostCommit('create', 'self_help_tools', draft);
-              setCreating(false);
-            }}
-            onCancel={() => setCreating(false)}
-          />
-        )}
-      </div>
+      {loading ? (
+        <LoadingRow />
+      ) : (
+        <div className="space-y-3">
+          {tools.map(tool => (
+            <EditableCard
+              key={tool.id}
+              item={tool}
+              fields={fields}
+              renderView={renderView}
+              onSave={async draft => {
+                const ok = await runWrite(() => saveSelfHelp(draft));
+                if (ok) await reload();
+                return ok;
+              }}
+              onDelete={async () => {
+                if (!window.confirm('למחוק כלי זה?')) return;
+                const ok = await runWrite(() => removeSelfHelp(tool.id));
+                if (ok) await reload();
+              }}
+            />
+          ))}
+          {creating && (
+            <EditableCard
+              item={{ category: 'sleep', title_he: '', content_he: '' }}
+              fields={fields}
+              startInEdit
+              renderView={renderView}
+              onSave={async draft => {
+                const ok = await runWrite(() => saveSelfHelp(draft));
+                if (ok) {
+                  setCreating(false);
+                  await reload();
+                }
+                return ok;
+              }}
+              onCancel={() => setCreating(false)}
+            />
+          )}
+        </div>
+      )}
       <div className="mt-3">
         <AddNewButton label="הוספת כלי חדש" onClick={() => setCreating(true)} />
       </div>
@@ -461,8 +562,23 @@ function SelfHelpPanel() {
 }
 
 function TreatmentPanel() {
-  const [steps, setSteps] = useState(() => [...db.treatment_steps]);
+  const [steps, setSteps] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [creating, setCreating] = useState(false);
+
+  async function reload() {
+    setLoading(true);
+    try {
+      setSteps(await loadTreatment());
+    } catch (err) {
+      toast.error(err?.message || 'שגיאה בטעינת שלבי הטיפול');
+      setSteps([]);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  useEffect(() => { reload(); }, []);
 
   const fields = [
     { key: 'step_number', label: 'מספר שלב', type: 'number' },
@@ -499,39 +615,47 @@ function TreatmentPanel() {
   return (
     <div>
       <Section title="שלבי טיפול" count={steps.length} />
-      <div className="space-y-3">
-        {steps.map((step, i) => (
-          <EditableCard
-            key={i}
-            item={step}
-            fields={fields}
-            renderView={renderView}
-            onSave={draft => {
-              setSteps(steps.map((s, idx) => (idx === i ? draft : s)));
-              ghostCommit('update', 'treatment_steps', draft);
-            }}
-            onDelete={() => {
-              if (!window.confirm('למחוק שלב זה?')) return;
-              setSteps(steps.filter((_, idx) => idx !== i));
-              ghostCommit('delete', 'treatment_steps', step);
-            }}
-          />
-        ))}
-        {creating && (
-          <EditableCard
-            item={{ step_number: steps.length + 1, title_he: '', description_he: '', how_to_start_he: '', links: [] }}
-            fields={fields}
-            startInEdit
-            renderView={renderView}
-            onSave={draft => {
-              setSteps([...steps, draft]);
-              ghostCommit('create', 'treatment_steps', draft);
-              setCreating(false);
-            }}
-            onCancel={() => setCreating(false)}
-          />
-        )}
-      </div>
+      {loading ? (
+        <LoadingRow />
+      ) : (
+        <div className="space-y-3">
+          {steps.map(step => (
+            <EditableCard
+              key={step.id}
+              item={step}
+              fields={fields}
+              renderView={renderView}
+              onSave={async draft => {
+                const ok = await runWrite(() => saveTreatment(draft));
+                if (ok) await reload();
+                return ok;
+              }}
+              onDelete={async () => {
+                if (!window.confirm('למחוק שלב זה?')) return;
+                const ok = await runWrite(() => removeTreatment(step.id));
+                if (ok) await reload();
+              }}
+            />
+          ))}
+          {creating && (
+            <EditableCard
+              item={{ step_number: steps.length + 1, title_he: '', description_he: '', how_to_start_he: '', links: [] }}
+              fields={fields}
+              startInEdit
+              renderView={renderView}
+              onSave={async draft => {
+                const ok = await runWrite(() => saveTreatment(draft));
+                if (ok) {
+                  setCreating(false);
+                  await reload();
+                }
+                return ok;
+              }}
+              onCancel={() => setCreating(false)}
+            />
+          )}
+        </div>
+      )}
       <div className="mt-3">
         <AddNewButton label="הוספת שלב חדש" onClick={() => setCreating(true)} />
       </div>
@@ -540,8 +664,23 @@ function TreatmentPanel() {
 }
 
 function CommunitiesPanel() {
-  const [communities, setCommunities] = useState(() => [...db.communities]);
+  const [communities, setCommunities] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [creating, setCreating] = useState(false);
+
+  async function reload() {
+    setLoading(true);
+    try {
+      setCommunities(await loadCommunity());
+    } catch (err) {
+      toast.error(err?.message || 'שגיאה בטעינת הקהילות');
+      setCommunities([]);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  useEffect(() => { reload(); }, []);
 
   const fields = [
     { key: 'name', label: 'שם הקהילה', type: 'text' },
@@ -580,39 +719,47 @@ function CommunitiesPanel() {
   return (
     <div>
       <Section title="קהילות תמיכה" count={communities.length} />
-      <div className="space-y-3">
-        {communities.map((c, i) => (
-          <EditableCard
-            key={i}
-            item={c}
-            fields={fields}
-            renderView={renderView}
-            onSave={draft => {
-              setCommunities(communities.map((it, idx) => (idx === i ? draft : it)));
-              ghostCommit('update', 'communities', draft);
-            }}
-            onDelete={() => {
-              if (!window.confirm('למחוק קהילה זו?')) return;
-              setCommunities(communities.filter((_, idx) => idx !== i));
-              ghostCommit('delete', 'communities', c);
-            }}
-          />
-        ))}
-        {creating && (
-          <EditableCard
-            item={{ name: '', organization: '', description_he: '', target_audience: [], location: 'center', meeting_type: 'frontal', contact_url: '' }}
-            fields={fields}
-            startInEdit
-            renderView={renderView}
-            onSave={draft => {
-              setCommunities([...communities, draft]);
-              ghostCommit('create', 'communities', draft);
-              setCreating(false);
-            }}
-            onCancel={() => setCreating(false)}
-          />
-        )}
-      </div>
+      {loading ? (
+        <LoadingRow />
+      ) : (
+        <div className="space-y-3">
+          {communities.map(c => (
+            <EditableCard
+              key={c.id}
+              item={c}
+              fields={fields}
+              renderView={renderView}
+              onSave={async draft => {
+                const ok = await runWrite(() => saveCommunity(draft));
+                if (ok) await reload();
+                return ok;
+              }}
+              onDelete={async () => {
+                if (!window.confirm('למחוק קהילה זו?')) return;
+                const ok = await runWrite(() => removeCommunity(c.id));
+                if (ok) await reload();
+              }}
+            />
+          ))}
+          {creating && (
+            <EditableCard
+              item={{ name: '', organization: '', description_he: '', target_audience: [], location: 'center', meeting_type: 'frontal', contact_url: '' }}
+              fields={fields}
+              startInEdit
+              renderView={renderView}
+              onSave={async draft => {
+                const ok = await runWrite(() => saveCommunity(draft));
+                if (ok) {
+                  setCreating(false);
+                  await reload();
+                }
+                return ok;
+              }}
+              onCancel={() => setCreating(false)}
+            />
+          )}
+        </div>
+      )}
       <div className="mt-3">
         <AddNewButton label="הוספת קהילה חדשה" onClick={() => setCreating(true)} />
       </div>
@@ -621,15 +768,24 @@ function CommunitiesPanel() {
 }
 
 function RightsPanel() {
-  const [langData, setLangData] = useState(() => ({ ...db.rights_faqs.he }));
-  const categories = Object.keys(langData);
-  const [cat, setCat] = useState(categories[0] || '');
-  const items = langData[cat] || [];
+  const [cat, setCat] = useState(RIGHTS_CATEGORIES[0]);
+  const [items, setItems] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [creating, setCreating] = useState(false);
 
-  function setItems(next) {
-    setLangData(prev => ({ ...prev, [cat]: next }));
+  async function reload(targetCat = cat) {
+    setLoading(true);
+    try {
+      setItems(await loadRightsFaq({ lang: 'he', audienceSlug: targetCat }));
+    } catch (err) {
+      toast.error(err?.message || 'שגיאה בטעינת הזכויות');
+      setItems([]);
+    } finally {
+      setLoading(false);
+    }
   }
+
+  useEffect(() => { reload(cat); }, [cat]);
 
   const fields = [
     { key: 'q', label: 'שאלה', type: 'text' },
@@ -660,7 +816,7 @@ function RightsPanel() {
   return (
     <div>
       <div className="flex gap-2 mb-5 flex-wrap">
-        {categories.map(c => (
+        {RIGHTS_CATEGORIES.map(c => (
           <button key={c} onClick={() => { setCat(c); setCreating(false); }}
             className={`px-3 py-1 rounded-full text-sm font-medium transition-natural ${cat === c ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground hover:bg-border'}`}>
             {labelFor(RIGHTS_CATEGORY_LABELS, c)}
@@ -668,39 +824,47 @@ function RightsPanel() {
         ))}
       </div>
       <Section title={`זכויות - ${labelFor(RIGHTS_CATEGORY_LABELS, cat)}`} count={items.length} />
-      <div className="space-y-3">
-        {items.map((item, i) => (
-          <EditableCard
-            key={i}
-            item={item}
-            fields={fields}
-            renderView={renderView}
-            onSave={draft => {
-              setItems(items.map((it, idx) => (idx === i ? draft : it)));
-              ghostCommit('update', `rights_faqs.he.${cat}`, draft);
-            }}
-            onDelete={() => {
-              if (!window.confirm('למחוק פריט זה?')) return;
-              setItems(items.filter((_, idx) => idx !== i));
-              ghostCommit('delete', `rights_faqs.he.${cat}`, item);
-            }}
-          />
-        ))}
-        {creating && (
-          <EditableCard
-            item={{ q: '', a: '', steps: '', links: [] }}
-            fields={fields}
-            startInEdit
-            renderView={renderView}
-            onSave={draft => {
-              setItems([...items, draft]);
-              ghostCommit('create', `rights_faqs.he.${cat}`, draft);
-              setCreating(false);
-            }}
-            onCancel={() => setCreating(false)}
-          />
-        )}
-      </div>
+      {loading ? (
+        <LoadingRow />
+      ) : (
+        <div className="space-y-3">
+          {items.map(item => (
+            <EditableCard
+              key={item.id}
+              item={item}
+              fields={fields}
+              renderView={renderView}
+              onSave={async draft => {
+                const ok = await runWrite(() => saveRightsFaq(draft, { lang: 'he', audienceSlug: cat }));
+                if (ok) await reload(cat);
+                return ok;
+              }}
+              onDelete={async () => {
+                if (!window.confirm('למחוק פריט זה?')) return;
+                const ok = await runWrite(() => removeRightsFaq(item.id));
+                if (ok) await reload(cat);
+              }}
+            />
+          ))}
+          {creating && (
+            <EditableCard
+              item={{ q: '', a: '', steps: '', links: [] }}
+              fields={fields}
+              startInEdit
+              renderView={renderView}
+              onSave={async draft => {
+                const ok = await runWrite(() => saveRightsFaq(draft, { lang: 'he', audienceSlug: cat }));
+                if (ok) {
+                  setCreating(false);
+                  await reload(cat);
+                }
+                return ok;
+              }}
+              onCancel={() => setCreating(false)}
+            />
+          )}
+        </div>
+      )}
       <div className="mt-3">
         <AddNewButton label="הוספת שאלה חדשה" onClick={() => setCreating(true)} />
       </div>
@@ -709,7 +873,8 @@ function RightsPanel() {
 }
 
 function SourcesPanel() {
-  const [sources, setSources] = useState(() => [...db.sources]);
+  const [sources, setSources] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [creating, setCreating] = useState(false);
   const categoryColors = {
     research: 'bg-blue-100 text-blue-700',
@@ -718,6 +883,20 @@ function SourcesPanel() {
     international: 'bg-orange-100 text-orange-700',
     official: 'bg-slate-100 text-slate-700',
   };
+
+  async function reload() {
+    setLoading(true);
+    try {
+      setSources(await loadSource());
+    } catch (err) {
+      toast.error(err?.message || 'שגיאה בטעינת המקורות');
+      setSources([]);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  useEffect(() => { reload(); }, []);
 
   const fields = [
     { key: 'title', label: 'כותרת', type: 'text' },
@@ -751,39 +930,47 @@ function SourcesPanel() {
   return (
     <div>
       <Section title="מקורות ומידע" count={sources.length} />
-      <div className="space-y-3">
-        {sources.map((s, i) => (
-          <EditableCard
-            key={i}
-            item={s}
-            fields={fields}
-            renderView={renderView}
-            onSave={draft => {
-              setSources(sources.map((it, idx) => (idx === i ? draft : it)));
-              ghostCommit('update', 'sources', draft);
-            }}
-            onDelete={() => {
-              if (!window.confirm('למחוק מקור זה?')) return;
-              setSources(sources.filter((_, idx) => idx !== i));
-              ghostCommit('delete', 'sources', s);
-            }}
-          />
-        ))}
-        {creating && (
-          <EditableCard
-            item={{ title: '', authors: '', year: '', url: '', description_he: '', category: 'research' }}
-            fields={fields}
-            startInEdit
-            renderView={renderView}
-            onSave={draft => {
-              setSources([...sources, draft]);
-              ghostCommit('create', 'sources', draft);
-              setCreating(false);
-            }}
-            onCancel={() => setCreating(false)}
-          />
-        )}
-      </div>
+      {loading ? (
+        <LoadingRow />
+      ) : (
+        <div className="space-y-3">
+          {sources.map(s => (
+            <EditableCard
+              key={s.id}
+              item={s}
+              fields={fields}
+              renderView={renderView}
+              onSave={async draft => {
+                const ok = await runWrite(() => saveSource(draft));
+                if (ok) await reload();
+                return ok;
+              }}
+              onDelete={async () => {
+                if (!window.confirm('למחוק מקור זה?')) return;
+                const ok = await runWrite(() => removeSource(s.id));
+                if (ok) await reload();
+              }}
+            />
+          ))}
+          {creating && (
+            <EditableCard
+              item={{ title: '', authors: '', year: '', url: '', description_he: '', category: 'research' }}
+              fields={fields}
+              startInEdit
+              renderView={renderView}
+              onSave={async draft => {
+                const ok = await runWrite(() => saveSource(draft));
+                if (ok) {
+                  setCreating(false);
+                  await reload();
+                }
+                return ok;
+              }}
+              onCancel={() => setCreating(false)}
+            />
+          )}
+        </div>
+      )}
       <div className="mt-3">
         <AddNewButton label="הוספת מקור חדש" onClick={() => setCreating(true)} />
       </div>
@@ -792,15 +979,25 @@ function SourcesPanel() {
 }
 
 function SecondCirclePanel() {
-  const langs = Object.keys(db.second_circle_tools);
-  const [lang, setLang] = useState(langs[0] || 'he');
-  const [toolsByLang, setToolsByLang] = useState(() => ({ ...db.second_circle_tools }));
-  const tools = toolsByLang[lang] || [];
+  const langs = ['he', 'ar', 'en'];
+  const [lang, setLang] = useState('he');
+  const [tools, setTools] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [creating, setCreating] = useState(false);
 
-  function setTools(next) {
-    setToolsByLang(prev => ({ ...prev, [lang]: next }));
+  async function reload(targetLang = lang) {
+    setLoading(true);
+    try {
+      setTools(await loadSecondCircle({ lang: targetLang }));
+    } catch (err) {
+      toast.error(err?.message || 'שגיאה בטעינת התכנים');
+      setTools([]);
+    } finally {
+      setLoading(false);
+    }
   }
+
+  useEffect(() => { reload(lang); }, [lang]);
 
   const fields = [
     { key: 'q', label: 'שאלה', type: 'text' },
@@ -833,39 +1030,47 @@ function SecondCirclePanel() {
         ))}
       </div>
       <Section title="כלים למעגל השני" count={tools.length} />
-      <div className="space-y-3">
-        {tools.map((tool, i) => (
-          <EditableCard
-            key={i}
-            item={tool}
-            fields={fields}
-            renderView={renderView}
-            onSave={draft => {
-              setTools(tools.map((t, idx) => (idx === i ? draft : t)));
-              ghostCommit('update', `second_circle_tools.${lang}`, draft);
-            }}
-            onDelete={() => {
-              if (!window.confirm('למחוק פריט זה?')) return;
-              setTools(tools.filter((_, idx) => idx !== i));
-              ghostCommit('delete', `second_circle_tools.${lang}`, tool);
-            }}
-          />
-        ))}
-        {creating && (
-          <EditableCard
-            item={{ q: '', intro: '', sections: [], closing: '', callout: '' }}
-            fields={fields}
-            startInEdit
-            renderView={renderView}
-            onSave={draft => {
-              setTools([...tools, draft]);
-              ghostCommit('create', `second_circle_tools.${lang}`, draft);
-              setCreating(false);
-            }}
-            onCancel={() => setCreating(false)}
-          />
-        )}
-      </div>
+      {loading ? (
+        <LoadingRow />
+      ) : (
+        <div className="space-y-3">
+          {tools.map(tool => (
+            <EditableCard
+              key={tool.id}
+              item={tool}
+              fields={fields}
+              renderView={renderView}
+              onSave={async draft => {
+                const ok = await runWrite(() => saveSecondCircle(draft, { lang }));
+                if (ok) await reload(lang);
+                return ok;
+              }}
+              onDelete={async () => {
+                if (!window.confirm('למחוק פריט זה?')) return;
+                const ok = await runWrite(() => removeSecondCircle(tool.id));
+                if (ok) await reload(lang);
+              }}
+            />
+          ))}
+          {creating && (
+            <EditableCard
+              item={{ q: '', intro: '', sections: [], closing: '', callout: '' }}
+              fields={fields}
+              startInEdit
+              renderView={renderView}
+              onSave={async draft => {
+                const ok = await runWrite(() => saveSecondCircle(draft, { lang }));
+                if (ok) {
+                  setCreating(false);
+                  await reload(lang);
+                }
+                return ok;
+              }}
+              onCancel={() => setCreating(false)}
+            />
+          )}
+        </div>
+      )}
       <div className="mt-3">
         <AddNewButton label="הוספת פריט חדש" onClick={() => setCreating(true)} />
       </div>
@@ -874,18 +1079,35 @@ function SecondCirclePanel() {
 }
 
 function ChildrenPanel() {
-  const [content, setContent] = useState(() => JSON.parse(JSON.stringify(db.children_content)));
-  const ageGroups = Object.keys(content);
-  const [ageGroup, setAgeGroup] = useState(ageGroups[0] || '');
-  const group = content[ageGroup] || {};
-  const resources = group.resources || [];
+  const [ageGroup, setAgeGroup] = useState(AGE_GROUPS[0]);
+  const [guidelinesItem, setGuidelinesItem] = useState(null);
+  const [resources, setResources] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [creating, setCreating] = useState(false);
   const [editingGuidelines, setEditingGuidelines] = useState(false);
-  const [guidelinesDraft, setGuidelinesDraft] = useState(group.guidelines || '');
+  const [guidelinesDraft, setGuidelinesDraft] = useState('');
 
-  function updateGroup(next) {
-    setContent(prev => ({ ...prev, [ageGroup]: { ...prev[ageGroup], ...next } }));
+  async function reload(targetAgeGroup = ageGroup) {
+    setLoading(true);
+    try {
+      const [guidelines, res] = await Promise.all([
+        loadChildrenGuidelines({ ageGroupSlug: targetAgeGroup }),
+        loadChildrenResource({ ageGroupSlug: targetAgeGroup }),
+      ]);
+      setGuidelinesItem(guidelines);
+      setGuidelinesDraft(guidelines?.guidelines || '');
+      setResources(res);
+    } catch (err) {
+      toast.error(err?.message || 'שגיאה בטעינת התכנים לילדים');
+      setGuidelinesItem(null);
+      setGuidelinesDraft('');
+      setResources([]);
+    } finally {
+      setLoading(false);
+    }
   }
+
+  useEffect(() => { reload(ageGroup); }, [ageGroup]);
 
   const fields = [
     { key: 'type', label: 'סוג', type: 'select', options: toOptions(RESOURCE_TYPE_LABELS) },
@@ -908,234 +1130,155 @@ function ChildrenPanel() {
     );
   }
 
+  async function handleSaveGuidelines() {
+    const draft = { ...(guidelinesItem || {}), guidelines: guidelinesDraft };
+    const ok = await runWrite(() => saveChildrenGuidelines(draft, { ageGroupSlug: ageGroup }));
+    if (ok) {
+      setEditingGuidelines(false);
+      await reload(ageGroup);
+    }
+  }
+
   return (
     <div>
       <div className="flex gap-2 mb-5 flex-wrap">
-        {ageGroups.map(ag => (
+        {AGE_GROUPS.map(ag => (
           <button key={ag} onClick={() => { setAgeGroup(ag); setEditingGuidelines(false); setCreating(false); }}
             className={`px-3 py-1 rounded-full text-sm font-medium transition-natural ${ageGroup === ag ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground hover:bg-border'}`}>
             {ag}
           </button>
         ))}
       </div>
-      <Section title={`תכנים לגיל ${ageGroup}`} count={resources.length + (group.guidelines ? 1 : 0)} />
+      <Section title={`תכנים לגיל ${ageGroup}`} count={resources.length + (guidelinesItem?.guidelines ? 1 : 0)} />
 
-      <div className="relative group p-4 rounded-xl border border-primary/30 bg-primary/5 mb-3">
-        <p className="text-xs font-semibold text-primary mb-2">הנחיות</p>
-        {editingGuidelines ? (
-          <div className="space-y-2">
-            <RichTextEditor value={guidelinesDraft} onChange={setGuidelinesDraft} />
-            <div className="flex gap-2">
-              <button
-                type="button"
-                onClick={() => {
-                  updateGroup({ guidelines: guidelinesDraft });
-                  ghostCommit('update', 'children_content.guidelines', { ageGroup, guidelines: guidelinesDraft });
-                  setEditingGuidelines(false);
+      {loading ? (
+        <LoadingRow />
+      ) : (
+        <>
+          <div className="relative group p-4 rounded-xl border border-primary/30 bg-primary/5 mb-3">
+            <p className="text-xs font-semibold text-primary mb-2">הנחיות</p>
+            {editingGuidelines ? (
+              <div className="space-y-2">
+                <RichTextEditor value={guidelinesDraft} onChange={setGuidelinesDraft} />
+                <div className="flex gap-2">
+                  <button
+                    type="button"
+                    onClick={handleSaveGuidelines}
+                    className="flex items-center gap-1.5 px-3 py-1.5 bg-primary text-white rounded-lg text-xs font-semibold hover:bg-primary/90"
+                  >
+                    <Check className="w-3.5 h-3.5" /> שמירה
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => { setGuidelinesDraft(guidelinesItem?.guidelines || ''); setEditingGuidelines(false); }}
+                    className="flex items-center gap-1.5 px-3 py-1.5 bg-muted text-foreground rounded-lg text-xs font-semibold hover:bg-border"
+                  >
+                    <X className="w-3.5 h-3.5" /> ביטול
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <>
+                <div className="text-sm text-foreground pe-10" dangerouslySetInnerHTML={{ __html: guidelinesItem?.guidelines || '' }} />
+                <div className="absolute top-3 end-3 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <IconBtn icon={Pencil} title="עריכת הנחיות" onClick={() => { setGuidelinesDraft(guidelinesItem?.guidelines || ''); setEditingGuidelines(true); }} />
+                </div>
+              </>
+            )}
+          </div>
+
+          <div className="space-y-3">
+            {resources.map(r => (
+              <EditableCard
+                key={r.id}
+                item={r}
+                fields={fields}
+                renderView={renderView}
+                onSave={async draft => {
+                  const ok = await runWrite(() => saveChildrenResource(draft, { ageGroupSlug: ageGroup }));
+                  if (ok) await reload(ageGroup);
+                  return ok;
                 }}
-                className="flex items-center gap-1.5 px-3 py-1.5 bg-primary text-white rounded-lg text-xs font-semibold hover:bg-primary/90"
-              >
-                <Check className="w-3.5 h-3.5" /> שמירה
-              </button>
-              <button
-                type="button"
-                onClick={() => { setGuidelinesDraft(group.guidelines || ''); setEditingGuidelines(false); }}
-                className="flex items-center gap-1.5 px-3 py-1.5 bg-muted text-foreground rounded-lg text-xs font-semibold hover:bg-border"
-              >
-                <X className="w-3.5 h-3.5" /> ביטול
-              </button>
-            </div>
+                onDelete={async () => {
+                  if (!window.confirm('למחוק פריט זה?')) return;
+                  const ok = await runWrite(() => removeChildrenResource(r.id));
+                  if (ok) await reload(ageGroup);
+                }}
+              />
+            ))}
+            {creating && (
+              <EditableCard
+                item={{ type: 'book', title_he: '', description_he: '', content_he: '', cta_label: '', cta_url: '' }}
+                fields={fields}
+                startInEdit
+                renderView={renderView}
+                onSave={async draft => {
+                  const ok = await runWrite(() => saveChildrenResource(draft, { ageGroupSlug: ageGroup }));
+                  if (ok) {
+                    setCreating(false);
+                    await reload(ageGroup);
+                  }
+                  return ok;
+                }}
+                onCancel={() => setCreating(false)}
+              />
+            )}
           </div>
-        ) : (
-          <>
-            <div className="text-sm text-foreground pe-10" dangerouslySetInnerHTML={{ __html: group.guidelines || '' }} />
-            <div className="absolute top-3 end-3 opacity-0 group-hover:opacity-100 transition-opacity">
-              <IconBtn icon={Pencil} title="עריכת הנחיות" onClick={() => { setGuidelinesDraft(group.guidelines || ''); setEditingGuidelines(true); }} />
-            </div>
-          </>
-        )}
-      </div>
-
-      <div className="space-y-3">
-        {resources.map((r, i) => (
-          <EditableCard
-            key={i}
-            item={r}
-            fields={fields}
-            renderView={renderView}
-            onSave={draft => {
-              updateGroup({ resources: resources.map((it, idx) => (idx === i ? draft : it)) });
-              ghostCommit('update', `children_content.${ageGroup}`, draft);
-            }}
-            onDelete={() => {
-              if (!window.confirm('למחוק פריט זה?')) return;
-              updateGroup({ resources: resources.filter((_, idx) => idx !== i) });
-              ghostCommit('delete', `children_content.${ageGroup}`, r);
-            }}
-          />
-        ))}
-        {creating && (
-          <EditableCard
-            item={{ type: 'book', title_he: '', description_he: '', content_he: '', cta_label: '', cta_url: '' }}
-            fields={fields}
-            startInEdit
-            renderView={renderView}
-            onSave={draft => {
-              updateGroup({ resources: [...resources, draft] });
-              ghostCommit('create', `children_content.${ageGroup}`, draft);
-              setCreating(false);
-            }}
-            onCancel={() => setCreating(false)}
-          />
-        )}
-      </div>
-      <div className="mt-3">
-        <AddNewButton label="הוספת תוכן חדש" onClick={() => setCreating(true)} />
-      </div>
+          <div className="mt-3">
+            <AddNewButton label="הוספת תוכן חדש" onClick={() => setCreating(true)} />
+          </div>
+        </>
+      )}
     </div>
   );
 }
 
-function QuestionnaireSection({ section, onChange, onDelete }) {
-  function updateField(key, val) {
-    onChange({ ...section, [key]: val });
-  }
-  function updateQuestion(i, val) {
-    onChange({ ...section, questions: section.questions.map((q, idx) => (idx === i ? val : q)) });
-  }
-  function removeQuestion(i) {
-    onChange({ ...section, questions: section.questions.filter((_, idx) => idx !== i) });
-    ghostCommit('delete', 'questionnaire.he.question', { section: section.title, index: i });
-  }
-  function addQuestion() {
-    onChange({ ...section, questions: [...section.questions, ''] });
-  }
-
-  return (
-    <div className="p-4 rounded-xl border border-border bg-background">
-      <div className="flex items-center gap-2 mb-3">
-        <input
-          value={section.icon}
-          onChange={e => updateField('icon', e.target.value)}
-          onBlur={() => ghostCommit('update', 'questionnaire.he.section', section)}
-          className="w-12 px-2 py-1.5 rounded-lg border border-border bg-background text-sm text-center"
-        />
-        <input
-          value={section.title}
-          onChange={e => updateField('title', e.target.value)}
-          onBlur={() => ghostCommit('update', 'questionnaire.he.section', section)}
-          className="flex-1 px-3 py-1.5 rounded-lg border border-border bg-background text-sm font-semibold"
-        />
-        <IconBtn icon={Trash2} title="מחיקת קטגוריה" tone="danger" onClick={onDelete} />
-      </div>
-      <div className="space-y-2">
-        {section.questions.map((question, i) => (
-          <div key={i} className="flex gap-2 items-start">
-            <textarea
-              value={question}
-              onChange={e => updateQuestion(i, e.target.value)}
-              onBlur={() => ghostCommit('update', 'questionnaire.he.section', section)}
-              rows={1}
-              className="flex-1 px-3 py-2 rounded-lg border border-border bg-background text-sm"
-            />
-            <IconBtn icon={Trash2} title="מחיקת שאלה" tone="danger" onClick={() => removeQuestion(i)} />
-          </div>
-        ))}
-      </div>
-      <button type="button" onClick={addQuestion} className="mt-2 flex items-center gap-1.5 text-xs text-primary hover:underline">
-        <Plus className="w-3 h-3" /> הוספת שאלה
-      </button>
-    </div>
-  );
-}
-
+// No API endpoint exists for the PCL-5 questionnaire (see src/api/adminSource.js -
+// it has no loadQuestionnaire/saveQuestionnaire). This panel is therefore
+// read-only: it still renders the static content so admins can see what's
+// live, but every edit/add/delete control has been removed.
 function QuestionnairePanel() {
-  const [q, setQ] = useState(() => JSON.parse(JSON.stringify(db.questionnaire)));
-  const [settingsDraft, setSettingsDraft] = useState({
-    cutoff_score: q.cutoff_score,
-    max_score: q.max_score,
-    total_questions: q.total_questions,
-  });
-
-  function saveSettings() {
-    setQ(prev => ({ ...prev, ...settingsDraft }));
-    ghostCommit('update', 'questionnaire.settings', settingsDraft);
-  }
-
-  function updateSection(idx, next) {
-    setQ(prev => ({ ...prev, he: { ...prev.he, sections: prev.he.sections.map((s, i) => (i === idx ? next : s)) } }));
-  }
-  function removeSection(idx) {
-    if (!window.confirm('למחוק קטגוריה זו על כל שאלותיה?')) return;
-    setQ(prev => {
-      const removed = prev.he.sections[idx];
-      ghostCommit('delete', 'questionnaire.he.section', removed);
-      return { ...prev, he: { ...prev.he, sections: prev.he.sections.filter((_, i) => i !== idx) } };
-    });
-  }
-  function addSection() {
-    const blank = { icon: '🆕', title: 'קטגוריה חדשה', questions: [] };
-    setQ(prev => ({ ...prev, he: { ...prev.he, sections: [...prev.he.sections, blank] } }));
-    ghostCommit('create', 'questionnaire.he.section', blank);
-  }
-
-  function updateScale(idx, val) {
-    setQ(prev => ({ ...prev, he: { ...prev.he, scale: prev.he.scale.map((s, i) => (i === idx ? val : s)) } }));
-  }
-
-  function updateEnQuestion(idx, val) {
-    setQ(prev => ({ ...prev, en: { ...prev.en, questions: prev.en.questions.map((s, i) => (i === idx ? val : s)) } }));
-  }
-  function removeEnQuestion(idx) {
-    setQ(prev => {
-      ghostCommit('delete', 'questionnaire.en.question', prev.en.questions[idx]);
-      return { ...prev, en: { ...prev.en, questions: prev.en.questions.filter((_, i) => i !== idx) } };
-    });
-  }
-  function addEnQuestion() {
-    setQ(prev => ({ ...prev, en: { ...prev.en, questions: [...prev.en.questions, ''] } }));
-  }
+  const q = db.questionnaire;
 
   return (
     <div>
       <Section title="שאלון PCL-5 להערכה עצמית" count={q.total_questions} />
+
+      <div className="flex items-start gap-2 p-4 rounded-xl border border-amber-300/60 bg-amber-50 text-amber-900 mb-5">
+        <Info className="w-4 h-4 mt-0.5 flex-shrink-0" />
+        <p className="text-sm">{t('he', 'admin_questionnaire_readonly')}</p>
+      </div>
 
       <div className="p-4 rounded-xl border border-border bg-background mb-5 grid grid-cols-1 sm:grid-cols-3 gap-3">
         <div>
           <label className="text-xs font-semibold text-muted-foreground block mb-1">מספר שאלות</label>
           <input
             type="number"
-            value={settingsDraft.total_questions}
-            onChange={e => setSettingsDraft(d => ({ ...d, total_questions: Number(e.target.value) }))}
-            className="w-full px-3 py-2 rounded-lg border border-border bg-background text-sm"
+            value={q.total_questions}
+            disabled
+            readOnly
+            className="w-full px-3 py-2 rounded-lg border border-border bg-muted text-sm text-muted-foreground"
           />
         </div>
         <div>
           <label className="text-xs font-semibold text-muted-foreground block mb-1">ציון מקסימלי</label>
           <input
             type="number"
-            value={settingsDraft.max_score}
-            onChange={e => setSettingsDraft(d => ({ ...d, max_score: Number(e.target.value) }))}
-            className="w-full px-3 py-2 rounded-lg border border-border bg-background text-sm"
+            value={q.max_score}
+            disabled
+            readOnly
+            className="w-full px-3 py-2 rounded-lg border border-border bg-muted text-sm text-muted-foreground"
           />
         </div>
         <div>
           <label className="text-xs font-semibold text-muted-foreground block mb-1">סף קליני (מעליו PTSD סביר)</label>
           <input
             type="number"
-            value={settingsDraft.cutoff_score}
-            onChange={e => setSettingsDraft(d => ({ ...d, cutoff_score: Number(e.target.value) }))}
-            className="w-full px-3 py-2 rounded-lg border border-border bg-background text-sm"
+            value={q.cutoff_score}
+            disabled
+            readOnly
+            className="w-full px-3 py-2 rounded-lg border border-border bg-muted text-sm text-muted-foreground"
           />
-        </div>
-        <div className="sm:col-span-3">
-          <button
-            type="button"
-            onClick={saveSettings}
-            className="flex items-center gap-1.5 px-3 py-1.5 bg-primary text-white rounded-lg text-xs font-semibold hover:bg-primary/90"
-          >
-            <Check className="w-3.5 h-3.5" /> שמירת הגדרות
-          </button>
         </div>
       </div>
 
@@ -1143,13 +1286,9 @@ function QuestionnairePanel() {
         <p className="text-xs font-semibold text-muted-foreground mb-2">סולם תשובות (עברית)</p>
         <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
           {q.he.scale.map((label, i) => (
-            <input
-              key={i}
-              value={label}
-              onChange={e => updateScale(i, e.target.value)}
-              onBlur={() => ghostCommit('update', 'questionnaire.he.scale', q.he.scale)}
-              className="px-2 py-1.5 rounded-lg border border-border bg-background text-xs text-center"
-            />
+            <div key={i} className="px-2 py-1.5 rounded-lg border border-border bg-muted text-xs text-center text-muted-foreground">
+              {label}
+            </div>
           ))}
         </div>
       </div>
@@ -1157,33 +1296,29 @@ function QuestionnairePanel() {
       <p className="text-xs font-semibold text-muted-foreground mb-2">שאלות (עברית, מקובצות לפי נושא)</p>
       <div className="space-y-4 mb-3">
         {q.he.sections.map((section, sIdx) => (
-          <QuestionnaireSection
-            key={sIdx}
-            section={section}
-            onChange={next => updateSection(sIdx, next)}
-            onDelete={() => removeSection(sIdx)}
-          />
+          <div key={sIdx} className="p-4 rounded-xl border border-border bg-background">
+            <div className="flex items-center gap-2 mb-3">
+              <span className="w-12 px-2 py-1.5 rounded-lg border border-border bg-muted text-sm text-center">{section.icon}</span>
+              <p className="flex-1 px-3 py-1.5 rounded-lg border border-border bg-muted text-sm font-semibold text-foreground">{section.title}</p>
+            </div>
+            <div className="space-y-2">
+              {section.questions.map((question, i) => (
+                <p key={i} className="px-3 py-2 rounded-lg border border-border bg-muted text-sm text-foreground">{question}</p>
+              ))}
+            </div>
+          </div>
         ))}
       </div>
-      <AddNewButton label="הוספת קטגוריית שאלות" onClick={addSection} />
 
       <p className="text-xs font-semibold text-muted-foreground mt-8 mb-2">שאלות (אנגלית, רשימה שטוחה)</p>
       <div className="space-y-2 mb-3">
         {q.en.questions.map((question, i) => (
           <div key={i} className="flex gap-2 items-start">
             <span className="text-xs text-muted-foreground/60 mt-2.5 w-5 flex-shrink-0">{i + 1}.</span>
-            <textarea
-              value={question}
-              onChange={e => updateEnQuestion(i, e.target.value)}
-              onBlur={() => ghostCommit('update', 'questionnaire.en.question', question)}
-              rows={1}
-              className="flex-1 px-3 py-2 rounded-lg border border-border bg-background text-sm"
-            />
-            <IconBtn icon={Trash2} title="מחיקה" tone="danger" onClick={() => removeEnQuestion(i)} />
+            <p className="flex-1 px-3 py-2 rounded-lg border border-border bg-muted text-sm text-foreground">{question}</p>
           </div>
         ))}
       </div>
-      <AddNewButton label="הוספת שאלה באנגלית" onClick={addEnQuestion} />
     </div>
   );
 }
@@ -1222,7 +1357,7 @@ export default function Admin() {
               <LogOut className="w-3.5 h-3.5" /> התנתקות
             </button>
           </div>
-          <p className="text-muted-foreground text-sm">עריכה, הוספה ומחיקה של תוכן · שינויים אינם נשמרים עדיין לשרת (אין חיבור ל-backend)</p>
+          <p className="text-muted-foreground text-sm">עריכה, הוספה ומחיקה של תוכן · השינויים נשמרים ישירות מול השרת (למעט שאלון ה-PCL-5, שעריכתו אינה זמינה עדיין)</p>
         </div>
       </div>
 
