@@ -1,1 +1,1 @@
-export const BASE_PATH = '/PTSD.IL';
+export const BASE_PATH = '';
