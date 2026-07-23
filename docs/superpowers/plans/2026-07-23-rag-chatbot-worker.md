@@ -6,7 +6,7 @@
 
 **Architecture:** A single Cloudflare Worker (Hono router) with two routes. `POST /chat` (public, rate-limited) runs crisis-check → embed → Vectorize retrieval → Gemini Flash streaming, returning SSE frames. `POST /reindex` (admin-JWT gated) pulls items from the NestJS API, chunks, embeds with Workers AI `bge-m3`, and upserts into Vectorize. Nothing container-based; everything is edge/serverless and always warm.
 
-**Tech Stack:** Cloudflare Workers (TypeScript), Hono (router), Wrangler (deploy), Vitest + `@cloudflare/vitest-pool-workers` (tests), Cloudflare Vectorize, Workers AI (`@cf/baai/bge-m3`), Google Gemini Flash (`streamGenerateContent` SSE).
+**Tech Stack:** Cloudflare Workers (TypeScript), Hono (router), Wrangler (deploy), plain Vitest in Node env (tests - the Hono app is exercised via `app.request(path, init, mockEnv)`; the Workers `workerd` runtime is not booted in tests because this sandbox cannot resolve the `ai`/`vectorize` wrapped bindings locally), Cloudflare Vectorize, Workers AI (`@cf/baai/bge-m3`), Google Gemini Flash (`streamGenerateContent` SSE).
 
 ## Global Constraints
 
@@ -52,7 +52,6 @@
     "hono": "^4.6.0"
   },
   "devDependencies": {
-    "@cloudflare/vitest-pool-workers": "^0.5.0",
     "@cloudflare/workers-types": "^4.20260101.0",
     "typescript": "^5.6.0",
     "vitest": "^2.1.0",
@@ -84,7 +83,7 @@
 ```toml
 name = "ptsd-chatbot-worker"
 main = "src/index.ts"
-compatibility_date = "2026-07-01"
+compatibility_date = "2024-12-30"
 compatibility_flags = ["nodejs_compat"]
 
 [vars]
@@ -107,30 +106,25 @@ id = "REPLACE_WITH_KV_ID"
 
 - [ ] **Step 4: Create `worker/vitest.config.ts`**
 
-```typescript
-import { defineWorkersConfig } from "@cloudflare/vitest-pool-workers/config";
+Plain Vitest (Node env) - **not** `@cloudflare/vitest-pool-workers`. The local `workerd` in this sandbox cannot resolve the `ai`/`vectorize` wrapped bindings, so we do not boot it in tests. The Worker's logic is pure functions with mocked bindings, and the Hono app is exercised via `app.request(path, init, mockEnv)`; Node 24 provides `fetch`/`ReadableStream`/`TextDecoderStream`. `wrangler.toml` keeps the real bindings for deploy only.
 
-export default defineWorkersConfig({
-  test: {
-    poolOptions: {
-      workers: { wrangler: { configPath: "./wrangler.toml" } },
-    },
-  },
+```typescript
+import { defineConfig } from "vitest/config";
+
+export default defineConfig({
+  test: { environment: "node", globals: true },
 });
 ```
 
 - [ ] **Step 5: Write the failing test `worker/test/health.test.ts`**
 
 ```typescript
-import { env, createExecutionContext, waitOnExecutionContext } from "cloudflare:test";
 import { describe, it, expect } from "vitest";
 import app from "../src/index";
 
 describe("health", () => {
   it("GET /health returns ok", async () => {
-    const ctx = createExecutionContext();
-    const res = await app.fetch(new Request("https://x/health"), env, ctx);
-    await waitOnExecutionContext(ctx);
+    const res = await app.request("/health");
     expect(res.status).toBe(200);
     expect(await res.json()).toEqual({ ok: true });
   });
@@ -1305,22 +1299,23 @@ app.post("/reindex", async (c) => {
 - [ ] **Step 5: Add an auth integration test `worker/test/reindex-auth.test.ts`**
 
 ```typescript
-import { env, createExecutionContext, waitOnExecutionContext } from "cloudflare:test";
 import { describe, it, expect } from "vitest";
 import app from "../src/index";
 
 describe("/reindex auth", () => {
   it("401 without Authorization", async () => {
-    const ctx = createExecutionContext();
-    const res = await app.fetch(
-      new Request("https://x/reindex", { method: "POST", body: JSON.stringify({ scope: "all" }) }),
-      env, ctx,
+    const env = { ADMIN_VERIFY_URL: "https://api/admin/whoami", SITE_ORIGIN: "https://x" } as any;
+    const res = await app.request(
+      "/reindex",
+      { method: "POST", body: JSON.stringify({ scope: "all" }), headers: { "content-type": "application/json" } },
+      env,
     );
-    await waitOnExecutionContext(ctx);
     expect(res.status).toBe(401);
   });
 });
 ```
+
+> `verifyAdmin` returns `false` for a missing `Bearer` header without any network call, so this test needs no fetch mock.
 
 - [ ] **Step 6: Run to verify both pass**
 
