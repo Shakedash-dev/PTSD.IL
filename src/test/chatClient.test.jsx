@@ -10,6 +10,16 @@ function sse(frames) {
   }), { status: 200 });
 }
 
+function sseChunks(chunks) {
+  const enc = new TextEncoder();
+  return new Response(
+    new ReadableStream({
+      start(c) { for (const ch of chunks) c.enqueue(enc.encode(ch)); c.close(); },
+    }),
+    { status: 200 },
+  );
+}
+
 describe("streamChat", () => {
   it("dispatches token, sources, done", async () => {
     vi.spyOn(globalThis, "fetch").mockResolvedValue(sse([
@@ -97,5 +107,35 @@ describe("streamChat", () => {
       `event: done\ndata: {}\n\n`,
     ]));
     await expect(streamChat({ base: "https://w", messages: [], lang: "en", sessionId: "s" })).resolves.toBeUndefined();
+  });
+
+  it("dispatches two frames arriving in a single chunk", async () => {
+    const two =
+      `event: token\ndata: ${JSON.stringify({ text: "A" })}\n\n` +
+      `event: token\ndata: ${JSON.stringify({ text: "B" })}\n\n`;
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(sseChunks([two]));
+    const tokens = [];
+    await streamChat({ base: "https://w", messages: [], lang: "en", sessionId: "s" }, { onToken: (t) => tokens.push(t) });
+    expect(tokens).toEqual(["A", "B"]);
+  });
+
+  it("reassembles a frame split across two chunks", async () => {
+    const frame = `event: token\ndata: ${JSON.stringify({ text: "Hello" })}\n\n`;
+    const mid = Math.floor(frame.length / 2);
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(sseChunks([frame.slice(0, mid), frame.slice(mid)]));
+    const tokens = [];
+    await streamChat({ base: "https://w", messages: [], lang: "en", sessionId: "s" }, { onToken: (t) => tokens.push(t) });
+    expect(tokens.join("")).toBe("Hello");
+  });
+
+  it("survives a malformed data frame and keeps processing later frames", async () => {
+    const chunks = [
+      `event: token\ndata: {not json\n\n`,
+      `event: token\ndata: ${JSON.stringify({ text: "ok" })}\n\n`,
+    ];
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(sseChunks(chunks));
+    const tokens = [];
+    await streamChat({ base: "https://w", messages: [], lang: "en", sessionId: "s" }, { onToken: (t) => tokens.push(t) });
+    expect(tokens).toContain("ok"); // loop survived the bad frame and delivered the next
   });
 });
