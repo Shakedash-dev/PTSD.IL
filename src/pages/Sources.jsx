@@ -15,7 +15,7 @@ const CATEGORY_COLORS = {
 
 export default function Sources() {
   const { lang } = useLang();
-  const { data: sources = [], isLoading, error } = useSources();
+  const { data: sources = [], isLoading, error } = useSources({ lang });
 
   return (
     <div className="min-h-screen bg-background">

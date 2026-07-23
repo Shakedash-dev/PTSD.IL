@@ -52,8 +52,8 @@ async function fetchWithHebrewFallback(path, lang) {
   return items;
 }
 
-export async function fetchSources() {
-  const items = await api('/articles?type=source&langId=he');
+export async function fetchSources({ lang = 'he' } = {}) {
+  const items = await fetchWithHebrewFallback('/articles?type=source', lang);
   return items.map(item => {
     const c = parseContent(item);
     return {
@@ -93,8 +93,8 @@ const SELF_HELP_ICON_BY_CATEGORY = {
   complementary: 'Wind',
 };
 
-export async function fetchSelfHelpTools() {
-  const tools = await api('/articles?type=tool&langId=he');
+export async function fetchSelfHelpTools({ lang = 'he' } = {}) {
+  const tools = await fetchWithHebrewFallback('/articles?type=tool', lang);
 
   return tools
     .slice()
@@ -132,8 +132,8 @@ const TREATMENT_STEP_ICON_BY_NUMBER = {
   5: 'Pill',
 };
 
-export async function fetchTreatmentSteps() {
-  const items = await api('/articles?type=treatment_step&langId=he');
+export async function fetchTreatmentSteps({ lang = 'he' } = {}) {
+  const items = await fetchWithHebrewFallback('/articles?type=treatment_step', lang);
   return items
     .slice()
     .sort((a, b) => a.sortOrder - b.sortOrder)
@@ -158,8 +158,8 @@ export async function fetchTreatmentSteps() {
     });
 }
 
-export async function fetchChildrenContent() {
-  const items = await api('/articles?categorySlug=children&langId=he');
+export async function fetchChildrenContent({ lang = 'he' } = {}) {
+  const items = await fetchWithHebrewFallback('/articles?categorySlug=children', lang);
   const RESOURCE_TYPES = new Set(['book', 'activity', 'story', 'video']);
 
   const result = {};

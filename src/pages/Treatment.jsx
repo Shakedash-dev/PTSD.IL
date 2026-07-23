@@ -253,7 +253,7 @@ function TrailMarkers({ stepCount }) {
 export default function Treatment() {
   const { lang } = useLang();
   const stepImages = TREATMENT_STEP_IMAGES;
-  const { data: steps = [], isLoading, error } = useTreatmentSteps();
+  const { data: steps = [], isLoading, error } = useTreatmentSteps({ lang });
   const [hovered, setHovered] = useState(false);
 
   const stepHeightSvg = 1000; // SVG units per step

@@ -29,7 +29,7 @@ export default function Children() {
   const { lang } = useLang();
   const [activeAge, setActiveAge] = useState('0-4');
   const [openResource, setOpenResource] = useState(null);
-  const { data: allContent = {}, isLoading, error } = useChildrenContent();
+  const { data: allContent = {}, isLoading, error } = useChildrenContent({ lang });
   const activeContent = allContent[activeAge] || {};
   const guidelines = activeContent.guidelines || '';
   const resources = activeContent.resources || [];

@@ -80,7 +80,7 @@ export default function SelfHelp() {
   const { lang } = useLang();
   const isRTL = document.documentElement.getAttribute('dir') === 'rtl';
   const ArrowIcon = isRTL ? ArrowLeft : ArrowRight;
-  const { data: tools = [], isLoading, error } = useSelfHelpTools();
+  const { data: tools = [], isLoading, error } = useSelfHelpTools({ lang });
 
   return (
     <div className="min-h-screen bg-background">

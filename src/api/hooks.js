@@ -15,10 +15,10 @@ import {
   fetchSecondCircleTools,
 } from './source';
 
-export function useSources() {
+export function useSources({ lang }) {
   return useQuery({
-    queryKey: ['sources'],
-    queryFn: fetchSources,
+    queryKey: ['sources', lang],
+    queryFn: () => fetchSources({ lang }),
   });
 }
 
@@ -29,24 +29,24 @@ export function useCommunities() {
   });
 }
 
-export function useSelfHelpTools() {
+export function useSelfHelpTools({ lang }) {
   return useQuery({
-    queryKey: ['self_help_tools'],
-    queryFn: fetchSelfHelpTools,
+    queryKey: ['self_help_tools', lang],
+    queryFn: () => fetchSelfHelpTools({ lang }),
   });
 }
 
-export function useTreatmentSteps() {
+export function useTreatmentSteps({ lang }) {
   return useQuery({
-    queryKey: ['treatment_steps'],
-    queryFn: fetchTreatmentSteps,
+    queryKey: ['treatment_steps', lang],
+    queryFn: () => fetchTreatmentSteps({ lang }),
   });
 }
 
-export function useChildrenContent() {
+export function useChildrenContent({ lang }) {
   return useQuery({
-    queryKey: ['children_content'],
-    queryFn: fetchChildrenContent,
+    queryKey: ['children_content', lang],
+    queryFn: () => fetchChildrenContent({ lang }),
   });
 }
 
