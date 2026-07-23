@@ -2,25 +2,60 @@ import React, { useState } from 'react';
 import { useLang } from '@/lib/LanguageContext';
 import { t } from '@/lib/i18n';
 
-const STEPS_HE = [
-  { num: 5, instruction: 'מצאו 5 דברים שאתם רואים סביבכם', tip: 'הכיסא, הדלת, החלון' },
-  { num: 4, instruction: 'מצאו 4 דברים שאתם יכולים לגעת בהם', tip: 'המשטח שעליו אתם יושבים, הבגד' },
-  { num: 3, instruction: 'הקשיבו ל-3 קולות שאתם שומעים', tip: 'נשימה, תנועת אוויר, קולות מבחוץ' },
-  { num: 2, instruction: 'שימו לב ל-2 ריחות שאתם מריחים', tip: 'אפילו ריח עדין של האוויר' },
-  { num: 1, instruction: 'שימו לב לטעם אחד שאתם טועמים', tip: 'הטעם שנמצא כרגע בפה' },
-];
+// he/en are the clinician-authored source scripts.
+// ar/ru/fr are machine-assisted translations pending clinician review.
+const STEPS = {
+  he: [
+    { num: 5, instruction: 'מצאו 5 דברים שאתם רואים סביבכם', tip: 'הכיסא, הדלת, החלון' },
+    { num: 4, instruction: 'מצאו 4 דברים שאתם יכולים לגעת בהם', tip: 'המשטח שעליו אתם יושבים, הבגד' },
+    { num: 3, instruction: 'הקשיבו ל-3 קולות שאתם שומעים', tip: 'נשימה, תנועת אוויר, קולות מבחוץ' },
+    { num: 2, instruction: 'שימו לב ל-2 ריחות שאתם מריחים', tip: 'אפילו ריח עדין של האוויר' },
+    { num: 1, instruction: 'שימו לב לטעם אחד שאתם טועמים', tip: 'הטעם שנמצא כרגע בפה' },
+  ],
+  en: [
+    { num: 5, instruction: 'Find 5 things you can see around you', tip: 'The chair, the door, the window' },
+    { num: 4, instruction: 'Find 4 things you can touch', tip: "The surface you're sitting on, your clothing" },
+    { num: 3, instruction: 'Listen for 3 sounds you can hear', tip: 'Breathing, air movement, sounds from outside' },
+    { num: 2, instruction: 'Notice 2 things you can smell', tip: 'Even the faint smell of the air' },
+    { num: 1, instruction: 'Notice 1 thing you can taste', tip: 'The taste currently in your mouth' },
+  ],
+  ar: [
+    { num: 5, instruction: 'ابحث عن 5 أشياء تراها حولك', tip: 'الكرسي، الباب، النافذة' },
+    { num: 4, instruction: 'ابحث عن 4 أشياء يمكنك لمسها', tip: 'السطح الذي تجلس عليه، ملابسك' },
+    { num: 3, instruction: 'أنصت إلى 3 أصوات تسمعها', tip: 'التنفّس، حركة الهواء، أصوات من الخارج' },
+    { num: 2, instruction: 'انتبه إلى رائحتين تشمّهما', tip: 'حتى الرائحة الخفيفة للهواء' },
+    { num: 1, instruction: 'انتبه إلى طعم واحد تتذوّقه', tip: 'الطعم الموجود في فمك الآن' },
+  ],
+  ru: [
+    { num: 5, instruction: 'Найдите 5 вещей, которые вы видите вокруг', tip: 'Стул, дверь, окно' },
+    { num: 4, instruction: 'Найдите 4 вещи, которых вы можете коснуться', tip: 'Поверхность, на которой вы сидите, ваша одежда' },
+    { num: 3, instruction: 'Прислушайтесь к 3 звукам, которые вы слышите', tip: 'Дыхание, движение воздуха, звуки снаружи' },
+    { num: 2, instruction: 'Обратите внимание на 2 запаха', tip: 'Даже едва уловимый запах воздуха' },
+    { num: 1, instruction: 'Обратите внимание на 1 вкус', tip: 'Вкус, который сейчас у вас во рту' },
+  ],
+  fr: [
+    { num: 5, instruction: 'Trouvez 5 choses que vous voyez autour de vous', tip: 'La chaise, la porte, la fenêtre' },
+    { num: 4, instruction: 'Trouvez 4 choses que vous pouvez toucher', tip: 'La surface sur laquelle vous êtes assis, vos vêtements' },
+    { num: 3, instruction: 'Écoutez 3 sons que vous entendez', tip: 'La respiration, le mouvement de l\'air, les bruits du dehors' },
+    { num: 2, instruction: 'Remarquez 2 odeurs que vous sentez', tip: 'Même l\'odeur légère de l\'air' },
+    { num: 1, instruction: 'Remarquez 1 goût que vous percevez', tip: 'Le goût présent dans votre bouche en ce moment' },
+  ],
+};
 
-const STEPS_EN = [
-  { num: 5, instruction: 'Find 5 things you can see around you', tip: 'The chair, the door, the window' },
-  { num: 4, instruction: 'Find 4 things you can touch', tip: "The surface you're sitting on, your clothing" },
-  { num: 3, instruction: 'Listen for 3 sounds you can hear', tip: 'Breathing, air movement, sounds from outside' },
-  { num: 2, instruction: 'Notice 2 things you can smell', tip: 'Even the faint smell of the air' },
-  { num: 1, instruction: 'Notice 1 thing you can taste', tip: 'The taste currently in your mouth' },
-];
+// UI chrome for the grounding flow (buttons + crisis-line label).
+// he/en source; ar/ru/fr machine-assisted, pending clinician review.
+const UI = {
+  he: { next: 'הבא', complete: 'סיום', again: 'להתחיל מחדש', eran: 'ער״ן: 1201' },
+  en: { next: 'Next', complete: 'Complete', again: 'Start again', eran: 'Eran: 1201' },
+  ar: { next: 'التالي', complete: 'إنهاء', again: 'ابدأ من جديد', eran: 'إيران: 1201' },
+  ru: { next: 'Далее', complete: 'Завершить', again: 'Начать заново', eran: 'ЭРАН: 1201' },
+  fr: { next: 'Suivant', complete: 'Terminer', again: 'Recommencer', eran: 'ERAN : 1201' },
+};
 
 export default function CalmingGrounding() {
   const { lang } = useLang();
-  const steps = lang === 'en' ? STEPS_EN : STEPS_HE;
+  const steps = STEPS[lang] || STEPS.he;
+  const ui = UI[lang] || UI.he;
 
   const [stepIdx, setStepIdx] = useState(0);
   const [done, setDone] = useState(false);
@@ -46,10 +81,10 @@ export default function CalmingGrounding() {
           onClick={() => { setStepIdx(0); setDone(false); }}
           className="px-7 py-3 bg-primary text-primary-foreground rounded-xl font-medium hover:bg-accent transition-colors duration-300"
         >
-          {lang === 'en' ? 'Start again' : 'להתחיל מחדש'}
+          {ui.again}
         </button>
         <div className="mt-10">
-          <a href="tel:1201" className="text-sm text-muted-foreground hover:text-foreground transition-colors duration-300">ער״ן: 1201</a>
+          <a href="tel:1201" className="text-sm text-muted-foreground hover:text-foreground transition-colors duration-300">{ui.eran}</a>
         </div>
       </div>
     );
@@ -83,14 +118,12 @@ export default function CalmingGrounding() {
             onClick={advance}
             className="px-8 py-3.5 bg-primary text-primary-foreground rounded-xl font-medium text-lg hover:bg-accent transition-colors duration-300 w-full max-w-xs"
           >
-            {stepIdx < steps.length - 1
-              ? (lang === 'en' ? 'Next' : 'הבא')
-              : (lang === 'en' ? 'Complete' : 'סיום')}
+            {stepIdx < steps.length - 1 ? ui.next : ui.complete}
           </button>
         </div>
 
         <div className="mt-12 text-center">
-          <a href="tel:1201" className="text-sm text-muted-foreground hover:text-foreground transition-colors duration-300">ער״ן: 1201</a>
+          <a href="tel:1201" className="text-sm text-muted-foreground hover:text-foreground transition-colors duration-300">{ui.eran}</a>
         </div>
       </div>
     </div>

@@ -7,6 +7,8 @@ const SQUEEZE_SECS = 6;
 const RELEASE_SECS = 10;
 const TICK_MS = 100;
 
+// he/en are the clinician-authored source scripts.
+// ar/ru/fr are machine-assisted translations pending clinician review.
 const GROUPS = {
   he: [
     {
@@ -72,6 +74,102 @@ const GROUPS = {
       release: 'Release — feel the floor under your feet',
     },
   ],
+  ar: [
+    {
+      name: 'اليدان',
+      squeeze: 'اقبض قبضتيك بأقصى ما تستطيع',
+      release: 'أفلِت ببطء - لاحظ الفرق',
+    },
+    {
+      name: 'الكتفان',
+      squeeze: 'ارفع كتفيك نحو أذنيك واثبت',
+      release: 'أرخِ - اشعر بالثقل ينزل',
+    },
+    {
+      name: 'الوجه',
+      squeeze: 'اقبض كل عضلات وجهك: العينين، الفك، الجبين',
+      release: 'أرخِ - افتح فمك قليلًا، والوجه مرتخٍ',
+    },
+    {
+      name: 'البطن',
+      squeeze: 'شُدّ عضلات بطنك بقوة',
+      release: 'أرخِ - خذ نفسًا عميقًا وواسعًا',
+    },
+    {
+      name: 'الفخذان',
+      squeeze: 'اضغط فخذيك بقوة أحدهما نحو الآخر',
+      release: 'أرخِ - اشعر بالمقعد تحتك',
+    },
+    {
+      name: 'القدمان',
+      squeeze: 'اثنِ أصابع قدميك إلى الداخل بقوة',
+      release: 'أرخِ - اشعر بالأرض تحت قدميك',
+    },
+  ],
+  ru: [
+    {
+      name: 'Кисти рук',
+      squeeze: 'Сожмите оба кулака как можно крепче',
+      release: 'Медленно отпустите - заметьте разницу',
+    },
+    {
+      name: 'Плечи',
+      squeeze: 'Поднимите плечи к ушам и задержите',
+      release: 'Отпустите - почувствуйте, как уходит тяжесть',
+    },
+    {
+      name: 'Лицо',
+      squeeze: 'Напрягите все мышцы лица: глаза, челюсть, лоб',
+      release: 'Отпустите - слегка приоткройте рот, лицо расслаблено',
+    },
+    {
+      name: 'Живот',
+      squeeze: 'Крепко напрягите мышцы живота',
+      release: 'Отпустите - сделайте глубокий, медленный вдох',
+    },
+    {
+      name: 'Бёдра',
+      squeeze: 'Крепко сожмите бёдра вместе',
+      release: 'Отпустите - почувствуйте опору под собой',
+    },
+    {
+      name: 'Стопы',
+      squeeze: 'Сильно поджмите пальцы ног',
+      release: 'Отпустите - почувствуйте пол под ногами',
+    },
+  ],
+  fr: [
+    {
+      name: 'Les mains',
+      squeeze: 'Serrez les deux poings aussi fort que possible',
+      release: 'Relâchez lentement - remarquez la différence',
+    },
+    {
+      name: 'Les épaules',
+      squeeze: 'Montez les épaules vers les oreilles et maintenez',
+      release: 'Relâchez - sentez le poids qui descend',
+    },
+    {
+      name: 'Le visage',
+      squeeze: 'Contractez tous les muscles du visage : yeux, mâchoire, front',
+      release: 'Relâchez - entrouvrez la bouche, le visage détendu',
+    },
+    {
+      name: 'Le ventre',
+      squeeze: 'Contractez fermement les muscles du ventre',
+      release: 'Relâchez - prenez une respiration ample et lente',
+    },
+    {
+      name: 'Les cuisses',
+      squeeze: 'Pressez fermement les cuisses l\'une contre l\'autre',
+      release: 'Relâchez - sentez le siège sous vous',
+    },
+    {
+      name: 'Les pieds',
+      squeeze: 'Recroquevillez fortement les orteils',
+      release: 'Relâchez - sentez le sol sous vos pieds',
+    },
+  ],
 };
 
 const STRINGS = {
@@ -96,6 +194,39 @@ const STRINGS = {
     squeeze_label: 'Tense',
     release_label: 'Release',
     eran: 'Eran: 1201',
+  },
+  ar: {
+    title: 'شدّ العضلات وإرخاؤها',
+    intro: 'تمرين الاسترخاء العضلي التدريجي يخفّف التوتر الجسدي عبر شدّ 6 مجموعات عضلية وإرخائها. نحو دقيقتين.',
+    start: 'ابدأ',
+    again: 'مرة أخرى',
+    done_title: 'أحسنت.',
+    done_text: 'خذ لحظة لتلاحظ كيف يشعر جسدك الآن.',
+    squeeze_label: 'شدّ',
+    release_label: 'إرخاء',
+    eran: 'إيران: 1201',
+  },
+  ru: {
+    title: 'Напряжение и расслабление мышц',
+    intro: 'Прогрессивная мышечная релаксация снижает телесное напряжение через напряжение и расслабление 6 групп мышц. Около 2 минут.',
+    start: 'Начать',
+    again: 'Ещё раз',
+    done_title: 'Молодец.',
+    done_text: 'Уделите минуту, чтобы заметить, как ваше тело чувствует себя сейчас.',
+    squeeze_label: 'Напряжение',
+    release_label: 'Расслабление',
+    eran: 'ЭРАН: 1201',
+  },
+  fr: {
+    title: 'Contraction et relâchement musculaire',
+    intro: 'La relaxation musculaire progressive réduit la tension physique en contractant et en relâchant 6 groupes de muscles. Environ 2 minutes.',
+    start: 'Commencer',
+    again: 'Recommencer',
+    done_title: 'Bravo.',
+    done_text: 'Prenez un instant pour remarquer comment votre corps se sent maintenant.',
+    squeeze_label: 'Contraction',
+    release_label: 'Relâchement',
+    eran: 'ERAN : 1201',
   },
 };
 

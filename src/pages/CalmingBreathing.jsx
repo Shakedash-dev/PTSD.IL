@@ -7,6 +7,8 @@ const PHASES = [
   { key: 'exhale', seconds: 8 },
 ];
 
+// he/en are the clinician-authored source scripts.
+// ar/ru/fr are machine-assisted translations pending clinician review.
 const STRINGS = {
   he: {
     setup_title: 'לפני שמתחילים',
@@ -41,6 +43,57 @@ const STRINGS = {
     next_label: 'Next',
     cycle_label: 'Cycle',
     eran_link: 'Eran helpline: 1201',
+  },
+  ar: {
+    setup_title: 'قبل أن نبدأ',
+    setup_steps: [
+      'اجلس أو استلقِ بشكل مريح.',
+      'ضع يدًا على بطنك، واليد الأخرى على صدرك.',
+      'دع بطنك يرتفع مع الشهيق - لا صدرك.',
+      'أبقِ كتفيك وحلقك مرتخيين.',
+    ],
+    start: 'ابدأ',
+    stop: 'توقّف',
+    inhale: 'شهيق',
+    hold: 'احبس النفس',
+    exhale: 'زفير',
+    next_label: 'التالي',
+    cycle_label: 'دورة',
+    eran_link: 'إيران: 1201',
+  },
+  ru: {
+    setup_title: 'Прежде чем начать',
+    setup_steps: [
+      'Сядьте или лягте удобно.',
+      'Одну руку положите на живот, другую на грудь.',
+      'Пусть на вдохе поднимается живот, а не грудь.',
+      'Плечи и горло расслаблены.',
+    ],
+    start: 'Начать',
+    stop: 'Остановить',
+    inhale: 'Вдох',
+    hold: 'Задержка',
+    exhale: 'Выдох',
+    next_label: 'Далее',
+    cycle_label: 'Цикл',
+    eran_link: 'ЭРАН: 1201',
+  },
+  fr: {
+    setup_title: 'Avant de commencer',
+    setup_steps: [
+      'Asseyez-vous ou allongez-vous confortablement.',
+      'Une main sur le ventre, l\'autre sur la poitrine.',
+      'Laissez le ventre se soulever à l\'inspiration, pas la poitrine.',
+      'Gardez les épaules et la gorge détendues.',
+    ],
+    start: 'Commencer',
+    stop: 'Arrêter',
+    inhale: 'Inspiration',
+    hold: 'Retenez',
+    exhale: 'Expiration',
+    next_label: 'Suivant',
+    cycle_label: 'Cycle',
+    eran_link: 'ERAN : 1201',
   },
 };
 
