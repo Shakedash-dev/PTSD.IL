@@ -8,6 +8,7 @@ import { BASE_PATH } from '@/base-path';
 import PageNotFound from './lib/PageNotFound';
 import ScrollToTop from './components/ScrollToTop';
 import { LanguageProvider, useLang } from '@/lib/LanguageContext';
+import { ChatProvider } from '@/lib/ChatContext';
 import { t } from '@/lib/i18n';
 import { ThemeProvider } from '@/lib/ThemeContext';
 import { ValidationProvider } from '@/contexts/ValidationContext';
@@ -85,40 +86,42 @@ function App() {
   return (
     <QueryClientProvider client={queryClientInstance}>
       <LanguageProvider>
-        <ThemeProvider>
-          <ValidationProvider>
-            <Router basename={BASE_PATH}>
-            <UserTypeProvider>
-            <ScrollToTop />
-            <Routes>
-              <Route element={<Layout />}>
-                <Route path="/" element={<Home />} />
-                <Route path="/first-circle" element={<FirstCircle />} />
-                <Route path="/second-circle" element={<SecondCircle />} />
-                <Route path="/second-circle-tools" element={<SecondCircleTools />} />
-                <Route path="/questionnaire" element={<Questionnaire />} />
-                <Route path="/ptsd-info" element={<PTSDInfo />} />
-                <Route path="/ptsd-info-2" element={<PTSDInfo2 />} />
-                <Route path="/self-help" element={<SelfHelp />} />
-                <Route path="/treatment" element={<Treatment />} />
-                <Route path="/rights" element={<Rights />} />
-                <Route path="/community" element={<Community />} />
-                <Route path="/children" element={<Children />} />
-                <Route path="/calming" element={<Calming />} />
-                <Route path="/calming/breathing" element={<CalmingBreathing />} />
-                <Route path="/calming/grounding" element={<CalmingGrounding />} />
-                <Route path="/calming/muscle" element={<CalmingMuscle />} />
-                <Route path="/sources" element={<Sources />} />
-                <Route path="/admin" element={<AdminGate />} />
-              </Route>
-              <Route path="*" element={<PageNotFound />} />
-            </Routes>
-            </UserTypeProvider>
-          </Router>
-          </ValidationProvider>
-        </ThemeProvider>
-        <Toaster />
-        <SonnerToaster />
+        <ChatProvider>
+          <ThemeProvider>
+            <ValidationProvider>
+              <Router basename={BASE_PATH}>
+              <UserTypeProvider>
+              <ScrollToTop />
+              <Routes>
+                <Route element={<Layout />}>
+                  <Route path="/" element={<Home />} />
+                  <Route path="/first-circle" element={<FirstCircle />} />
+                  <Route path="/second-circle" element={<SecondCircle />} />
+                  <Route path="/second-circle-tools" element={<SecondCircleTools />} />
+                  <Route path="/questionnaire" element={<Questionnaire />} />
+                  <Route path="/ptsd-info" element={<PTSDInfo />} />
+                  <Route path="/ptsd-info-2" element={<PTSDInfo2 />} />
+                  <Route path="/self-help" element={<SelfHelp />} />
+                  <Route path="/treatment" element={<Treatment />} />
+                  <Route path="/rights" element={<Rights />} />
+                  <Route path="/community" element={<Community />} />
+                  <Route path="/children" element={<Children />} />
+                  <Route path="/calming" element={<Calming />} />
+                  <Route path="/calming/breathing" element={<CalmingBreathing />} />
+                  <Route path="/calming/grounding" element={<CalmingGrounding />} />
+                  <Route path="/calming/muscle" element={<CalmingMuscle />} />
+                  <Route path="/sources" element={<Sources />} />
+                  <Route path="/admin" element={<AdminGate />} />
+                </Route>
+                <Route path="*" element={<PageNotFound />} />
+              </Routes>
+              </UserTypeProvider>
+            </Router>
+            </ValidationProvider>
+          </ThemeProvider>
+          <Toaster />
+          <SonnerToaster />
+        </ChatProvider>
       </LanguageProvider>
     </QueryClientProvider>
   );

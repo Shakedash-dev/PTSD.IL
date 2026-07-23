@@ -242,6 +242,16 @@ export const translations = {
     page_not_found_title: 'הדף לא נמצא',
     page_not_found_text: 'הדף שחיפשת לא נמצא. ייתכן שהכתובת השתנתה או שהדף הוסר.',
     page_not_found_cta: 'חזרה לדף הבית',
+
+    // Chat widget
+    chat_title: 'שיחה',
+    chat_close: 'סגירה',
+    chat_send: 'שליחה',
+    chat_placeholder: 'כתבו כאן...',
+    hero_chat_placeholder: 'שאלו אותי כל דבר...',
+    chat_disclaimer: 'המידע כללי ואינו ייעוץ רפואי.',
+    chat_view_in_site: 'למקור באתר',
+    chat_starters: ['מהן הזכויות שלי?', 'מה זה פלאשבק?', 'איך אפשר להירגע עכשיו?'],
   },
 
   en: {
@@ -430,6 +440,16 @@ export const translations = {
     page_not_found_title: 'Page Not Found',
     page_not_found_text: 'The page you were looking for could not be found. It may have moved or been removed.',
     page_not_found_cta: 'Go Home',
+
+    // Chat widget
+    chat_title: 'Chat',
+    chat_close: 'Close',
+    chat_send: 'Send',
+    chat_placeholder: 'Type here...',
+    hero_chat_placeholder: 'Ask me anything...',
+    chat_disclaimer: 'This information is general and not medical advice.',
+    chat_view_in_site: 'View source on site',
+    chat_starters: ['What are my rights?', 'What is a flashback?', 'How can I calm down right now?'],
   },
 
   ar: {
@@ -618,6 +638,16 @@ export const translations = {
     page_not_found_title: 'الصفحة غير موجودة',
     page_not_found_text: 'الصفحة التي تبحث عنها غير موجودة. ربما تغيّر عنوانها أو تمت إزالتها.',
     page_not_found_cta: 'العودة إلى الصفحة الرئيسية',
+
+    // Chat widget
+    chat_title: 'محادثة',
+    chat_close: 'إغلاق',
+    chat_send: 'إرسال',
+    chat_placeholder: 'اكتب هنا...',
+    hero_chat_placeholder: 'اسألني أي شيء...',
+    chat_disclaimer: 'هذه المعلومات عامة وليست استشارة طبية.',
+    chat_view_in_site: 'عرض المصدر في الموقع',
+    chat_starters: ['ما هي حقوقي؟', 'ما هو الفلاش باك؟', 'كيف يمكنني أن أهدأ الآن؟'],
   },
 
   ru: {
@@ -806,6 +836,16 @@ export const translations = {
     page_not_found_title: 'Страница не найдена',
     page_not_found_text: 'Страница, которую вы искали, не найдена. Возможно, она была перемещена или удалена.',
     page_not_found_cta: 'На главную',
+
+    // Chat widget
+    chat_title: 'Чат',
+    chat_close: 'Закрыть',
+    chat_send: 'Отправить',
+    chat_placeholder: 'Напишите здесь...',
+    hero_chat_placeholder: 'Спросите меня о чём угодно...',
+    chat_disclaimer: 'Эта информация носит общий характер и не является медицинской консультацией.',
+    chat_view_in_site: 'Посмотреть источник на сайте',
+    chat_starters: ['Какие у меня права?', 'Что такое флешбэк?', 'Как успокоиться прямо сейчас?'],
   },
 
   fr: {
@@ -994,6 +1034,16 @@ export const translations = {
     page_not_found_title: 'Page introuvable',
     page_not_found_text: "La page que vous cherchiez est introuvable. Elle a peut-être été déplacée ou supprimée.",
     page_not_found_cta: "Retour à l'accueil",
+
+    // Chat widget
+    chat_title: 'Discussion',
+    chat_close: 'Fermer',
+    chat_send: 'Envoyer',
+    chat_placeholder: 'Écrivez ici...',
+    hero_chat_placeholder: 'Posez-moi n\'importe quelle question...',
+    chat_disclaimer: "Ces informations sont générales et ne constituent pas un avis médical.",
+    chat_view_in_site: 'Voir la source sur le site',
+    chat_starters: ['Quels sont mes droits ?', "Qu'est-ce qu'un flashback ?", 'Comment me calmer maintenant ?'],
   },
 };
 
