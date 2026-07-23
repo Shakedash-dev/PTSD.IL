@@ -4,10 +4,10 @@ compatibility_date = "2024-12-30"
 compatibility_flags = ["nodejs_compat"]
 
 [vars]
-SITE_ORIGIN = "https://ptsd.il"
+SITE_ORIGIN = "https://ptsd-il-44y7.onrender.com"
 API_BASE = "https://ptsd-il-api.onrender.com/api"
 GEMINI_MODEL = "gemini-flash-latest"
-ADMIN_VERIFY_URL = "https://ptsd-il-api.onrender.com/api/admin/whoami"
+ADMIN_VERIFY_URL = "https://ptsd-il-api.onrender.com/api/admin/articles"
 
 [ai]
 binding = "AI"
@@ -18,4 +18,4 @@ index_name = "ptsd-chatbot"
 
 [[kv_namespaces]]
 binding = "RL"
-id = "REPLACE_WITH_KV_ID"
+id = "6167ce06f6fa4f859f9e314313ef59ae"
