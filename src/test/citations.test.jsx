@@ -2,7 +2,7 @@ import { describe, it, expect } from "vitest";
 import { sectionRoute } from "@/lib/citations";
 
 describe("citations", () => {
-  it("maps types to section routes", () => {
+  it("maps non-faq types to section routes", () => {
     expect(sectionRoute("source")).toBe("/sources");
     expect(sectionRoute("treatment_step")).toBe("/treatment");
     expect(sectionRoute("tool")).toBe("/self-help");
@@ -11,7 +11,12 @@ describe("citations", () => {
     expect(sectionRoute("story")).toBe("/children");
     expect(sectionRoute("video")).toBe("/children");
     expect(sectionRoute("article")).toBe("/children");
-    expect(sectionRoute("faq")).toBe("/rights");
-    expect(sectionRoute("unknown")).toBe("/");
+  });
+
+  it("routes faq by categorySlug", () => {
+    expect(sectionRoute("faq", "ptsd-info")).toBe("/ptsd-info");
+    expect(sectionRoute("faq", "second-circle")).toBe("/second-circle-tools");
+    expect(sectionRoute("faq", "rights")).toBe("/rights");
+    expect(sectionRoute("faq", undefined)).toBe("/rights");
   });
 });

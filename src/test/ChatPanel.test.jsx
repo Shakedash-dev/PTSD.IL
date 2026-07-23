@@ -151,6 +151,38 @@ describe("ChatPanel", () => {
     expect(screen.getByText("Other Source")).toBeInTheDocument();
   });
 
+  it("dedupes reference chips by route+title, even when itemIds differ (same destination, same label)", () => {
+    setChat({
+      messages: [{
+        role: "assistant",
+        content: "A fact.[[1]][[2]]",
+        sources: [
+          { n: 1, itemId: "guideline-a", groupId: "ga", type: "faq", categorySlug: "rights", langId: "en", title: "הנחיות", text: "Chunk one." },
+          { n: 2, itemId: "guideline-b", groupId: "gb", type: "faq", categorySlug: "rights", langId: "en", title: "הנחיות", text: "Chunk two." },
+        ],
+      }],
+      crisisLang: null,
+    });
+    render(<MemoryRouter><ChatPanel /></MemoryRouter>);
+    expect(screen.getAllByText("הנחיות")).toHaveLength(1);
+  });
+
+  it("links a cited faq source with categorySlug ptsd-info to /ptsd-info", () => {
+    setChat({
+      messages: [{
+        role: "assistant",
+        content: "A fact.[[1]]",
+        sources: [
+          { n: 1, itemId: "x", groupId: "gx", type: "faq", categorySlug: "ptsd-info", langId: "en", title: "About PTSD", text: "Cited passage." },
+        ],
+      }],
+      crisisLang: null,
+    });
+    render(<MemoryRouter><ChatPanel /></MemoryRouter>);
+    const chip = screen.getByText("About PTSD").closest("a");
+    expect(chip).toHaveAttribute("href", "/ptsd-info");
+  });
+
   it("shows no chips when no sources were cited", () => {
     setChat({
       messages: [{

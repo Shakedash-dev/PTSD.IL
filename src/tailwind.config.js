@@ -133,6 +133,10 @@ module.exports = {
         'pulse-gentle': {
           '0%, 100%': { opacity: '1' },
           '50%': { opacity: '0.6' },
+        },
+        'bounce-dot': {
+          '0%, 60%, 100%': { transform: 'translateY(0)' },
+          '30%': { transform: 'translateY(-4px)' },
         }
       },
       animation: {
@@ -141,6 +145,7 @@ module.exports = {
         'breathe': 'breathe 8s ease-in-out infinite', // 8s = 4s inhale + 4s exhale, matches CalmingBreathing.jsx instruction timing
         'fade-in': 'fade-in 0.5s ease-out forwards',
         'pulse-gentle': 'pulse-gentle 2s ease-in-out infinite',
+        'bounce-dot': 'bounce-dot 1.2s ease-in-out infinite', // staggered per-dot via inline animation-delay
       },
       spacing: {
         '18': '4.5rem',
