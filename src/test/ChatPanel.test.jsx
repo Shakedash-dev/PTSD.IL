@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import ChatPanel from "@/components/chat/ChatPanel";
@@ -12,11 +12,21 @@ vi.mock("@/lib/i18n", () => ({
   },
 }));
 
-const chatValue = {
+vi.mock("@/lib/ChatContext", () => ({ useChat: vi.fn() }));
+import { useChat } from "@/lib/ChatContext";
+
+const defaultChat = {
   open: true, setOpen: () => {}, messages: [], sources: [], crisisLang: "en",
   sending: false, send: vi.fn(), clear: vi.fn(),
 };
-vi.mock("@/lib/ChatContext", () => ({ useChat: () => chatValue }));
+
+function setChat(overrides = {}) {
+  useChat.mockReturnValue({ ...defaultChat, ...overrides });
+}
+
+beforeEach(() => {
+  setChat();
+});
 
 describe("ChatPanel", () => {
   it("shows crisis banner (ERAN 1201), starters, and disclaimer when open", () => {
@@ -28,18 +38,29 @@ describe("ChatPanel", () => {
   });
 
   it("renders nothing when closed", () => {
-    chatValue.open = false;
+    setChat({ open: false });
     const { container } = render(<MemoryRouter><ChatPanel /></MemoryRouter>);
     expect(container).toBeEmptyDOMElement();
-    chatValue.open = true;
   });
 
   it("calls send with the draft on submit", () => {
-    chatValue.send.mockClear();
+    const send = vi.fn();
+    setChat({ send });
     render(<MemoryRouter><ChatPanel /></MemoryRouter>);
     const input = screen.getByPlaceholderText("chat_placeholder");
     fireEvent.change(input, { target: { value: "hello" } });
     fireEvent.click(screen.getByLabelText("chat_send"));
-    expect(chatValue.send).toHaveBeenCalledWith("hello");
+    expect(send).toHaveBeenCalledWith("hello");
+  });
+
+  it("clicking a citation opens the SourceDrawer with the matching source", () => {
+    setChat({
+      messages: [{ role: "assistant", content: "A fact.[[1]]" }],
+      sources: [{ n: 1, itemId: "x", title: "The Source", type: "source" }],
+      crisisLang: null,
+    });
+    render(<MemoryRouter><ChatPanel /></MemoryRouter>);
+    fireEvent.click(screen.getByText("1"));
+    expect(screen.getByText("The Source")).toBeInTheDocument();
   });
 });
