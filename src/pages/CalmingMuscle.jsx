@@ -46,32 +46,32 @@ const GROUPS = {
     {
       name: 'Hands',
       squeeze: 'Clench both fists as tight as you can',
-      release: 'Slowly release — feel the difference',
+      release: 'Slowly release - feel the difference',
     },
     {
       name: 'Shoulders',
       squeeze: 'Raise your shoulders up to your ears and hold',
-      release: 'Release — feel the weight drop away',
+      release: 'Release - feel the weight drop away',
     },
     {
       name: 'Face',
       squeeze: 'Scrunch all face muscles: eyes, jaw, forehead',
-      release: 'Let go — open your mouth slightly, face soft',
+      release: 'Let go - open your mouth slightly, face soft',
     },
     {
       name: 'Abdomen',
       squeeze: 'Tighten your stomach muscles firmly',
-      release: 'Release — take a full, slow breath',
+      release: 'Release - take a full, slow breath',
     },
     {
       name: 'Thighs',
       squeeze: 'Press your thighs firmly together',
-      release: 'Release — feel the seat beneath you',
+      release: 'Release - feel the seat beneath you',
     },
     {
       name: 'Feet',
       squeeze: 'Curl your toes in tightly',
-      release: 'Release — feel the floor under your feet',
+      release: 'Release - feel the floor under your feet',
     },
   ],
   ar: [

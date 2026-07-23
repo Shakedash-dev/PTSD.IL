@@ -32,7 +32,7 @@ const STRINGS = {
     setup_steps: [
       'Sit or lie down comfortably.',
       'One hand on your belly, one on your chest.',
-      'Let the belly rise on the inhale — not the chest.',
+      'Let the belly rise on the inhale - not the chest.',
       'Keep shoulders and throat relaxed.',
     ],
     start: 'Start',
