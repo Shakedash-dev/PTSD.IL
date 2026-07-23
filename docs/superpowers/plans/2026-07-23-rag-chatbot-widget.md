@@ -589,7 +589,7 @@ export default function ChatPanel() {
 
       {crisisLang && (
         <div className="bg-destructive/10 text-sm p-3 border-b border-border">
-          {t(crisisLang, "eran_link")} - <span className="font-bold">{t(crisisLang, "eran_phone")}</span>
+          <span>{t(crisisLang, "eran_link")}</span> - <span className="font-bold">{t(crisisLang, "eran_phone")}</span>
         </div>
       )}
 
