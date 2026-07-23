@@ -1,0 +1,21 @@
+name = "ptsd-chatbot-worker"
+main = "src/index.ts"
+compatibility_date = "2024-12-30"
+compatibility_flags = ["nodejs_compat"]
+
+[vars]
+SITE_ORIGIN = "https://ptsd.il"
+API_BASE = "https://ptsd-il-api.onrender.com/api"
+GEMINI_MODEL = "gemini-flash-latest"
+ADMIN_VERIFY_URL = "https://ptsd-il-api.onrender.com/api/admin/whoami"
+
+[ai]
+binding = "AI"
+
+[[vectorize]]
+binding = "VECTORIZE"
+index_name = "ptsd-chatbot"
+
+[[kv_namespaces]]
+binding = "RL"
+id = "REPLACE_WITH_KV_ID"
