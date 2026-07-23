@@ -33,11 +33,20 @@ app.post("/reindex", async (c) => {
   if (!(await verifyAdmin(c.env, c.req.header("Authorization") ?? null))) {
     return c.json({ error: "unauthorized" }, 401);
   }
-  const body = await c.req.json<{ scope: "all" } | { scope: "item"; itemId: string }>();
-  const result = body.scope === "item"
-    ? await reindexById(c.env, body.itemId)
-    : await reindexAll(c.env);
-  return c.json({ ok: true, ...result });
+  let body: { scope: "all" } | { scope: "item"; itemId: string };
+  try {
+    body = await c.req.json();
+  } catch {
+    return c.json({ error: "invalid_json" }, 400);
+  }
+  try {
+    const result = body.scope === "item"
+      ? await reindexById(c.env, body.itemId)
+      : await reindexAll(c.env);
+    return c.json({ ok: true, ...result });
+  } catch (e) {
+    return c.json({ error: "reindex_failed", message: (e as Error).message }, 500);
+  }
 });
 
 app.post("/chat", async (c) => {
