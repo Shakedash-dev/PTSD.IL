@@ -7,6 +7,8 @@ vi.mock("@/lib/chatClient", () => ({
   streamChat: vi.fn(async (_req, h) => { h.onToken("hel"); h.onToken("lo"); h.onSources([{ n: 1, itemId: "1", type: "faq", title: "T" }]); h.onDone(); }),
 }));
 
+const { streamChat } = await import("@/lib/chatClient");
+
 afterEach(() => vi.restoreAllMocks());
 
 function Probe() {
@@ -48,5 +50,22 @@ describe("ChatProvider", () => {
     expect(screen.getByTestId("msgs").textContent).not.toBe("");
     await act(async () => { screen.getByText("clear").click(); });
     expect(screen.getByTestId("msgs").textContent).toBe("");
+  });
+
+  it("useChat throws when used outside ChatProvider", () => {
+    const Bare = () => { useChat(); return null; };
+    expect(() => render(<Bare />)).toThrow(/useChat must be used within/i);
+  });
+
+  it("ignores a second send while one is already in flight", async () => {
+    let resolveStream;
+    streamChat.mockImplementation(() => new Promise((r) => { resolveStream = r; }));
+    render(<ChatProvider><Probe /></ChatProvider>);
+    await act(async () => {
+      screen.getByText("go").click();
+      screen.getByText("go").click(); // second click, same tick
+    });
+    expect(streamChat).toHaveBeenCalledTimes(1); // ref guard blocked the second
+    await act(async () => { resolveStream(); });
   });
 });
