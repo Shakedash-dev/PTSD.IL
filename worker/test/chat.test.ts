@@ -44,4 +44,27 @@ describe("handleChat", () => {
     expect(body).not.toContain("event: sources");
     expect(body).toContain("event: done");
   });
+
+  it("emits an error frame and closes the stream when retrieval throws", async () => {
+    const env = baseEnv();
+    env.VECTORIZE.query = async () => { throw new Error("vectorize down"); };
+    const res = await handleChat(env, { messages: [{ role: "user", content: "hi" }], lang: "en", sessionId: "s" });
+    const body = await readSSE(res); // completes only if the stream is closed (no hang)
+    expect(body).toContain("event: error");
+    expect(body).toContain("vectorize down");
+  });
+
+  it("emits frames in order: crisis < token < sources < done", async () => {
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(geminiSSE("hang in there [[1]]"));
+    const res = await handleChat(baseEnv(), { messages: [{ role: "user", content: "I want to kill myself" }], lang: "en", sessionId: "s" });
+    const body = await readSSE(res);
+    const iCrisis = body.indexOf("event: crisis");
+    const iToken = body.indexOf("event: token");
+    const iSources = body.indexOf("event: sources");
+    const iDone = body.indexOf("event: done");
+    expect(iCrisis).toBeGreaterThanOrEqual(0);
+    expect(iCrisis).toBeLessThan(iToken);
+    expect(iToken).toBeLessThan(iSources);
+    expect(iSources).toBeLessThan(iDone);
+  });
 });
