@@ -1,20 +1,23 @@
 import React, { useState } from "react";
-import { X, Send } from "lucide-react";
+import { Link } from "react-router-dom";
+import { X, Send, ExternalLink } from "lucide-react";
 import { useLang } from "@/lib/LanguageContext";
 import { t } from "@/lib/i18n";
 import { useChat } from "@/lib/ChatContext";
 import Markdown from "@/components/Markdown";
-import SourceDrawer from "./SourceDrawer";
+import { sectionRoute } from "@/lib/citations";
 
 export default function ChatPanel() {
   const { lang } = useLang();
   const { open, setOpen, messages, crisisLang, sending, send } = useChat();
   const [draft, setDraft] = useState("");
-  const [activeSource, setActiveSource] = useState(null);
   if (!open) return null;
 
   const submit = (e) => { e.preventDefault(); send(draft); setDraft(""); };
   const starters = t(lang, "chat_starters") || [];
+
+  const lastMessage = messages[messages.length - 1];
+  const isThinking = sending && lastMessage?.role === "assistant" && !lastMessage.content;
 
   return (
     <div
@@ -48,28 +51,49 @@ export default function ChatPanel() {
             ))}
           </div>
         )}
-        {messages.map((m, i) => (
-          <div key={i} className={m.role === "user" ? "text-end" : "text-start"}>
-            <span className={`inline-block px-3 py-2 rounded-2xl text-sm ${m.role === "user" ? "bg-primary text-primary-foreground" : "bg-muted"}`}>
-              {m.role === "assistant" ? <Markdown className="rich-content text-sm">{m.content}</Markdown> : m.content}
-            </span>
-            {m.role === "assistant" && m.sources?.length > 0 && (() => {
-              const seen = new Set();
-              const unique = m.sources.filter((s) => !seen.has(s.itemId) && seen.add(s.itemId));
-              return (
-                <div className="flex flex-wrap gap-2 mt-2 pt-2 border-t border-border/50">
-                  {unique.map((s) => (
-                    <button key={s.itemId} onClick={() => setActiveSource(s)}
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-primary/10 text-foreground rounded-full text-xs font-medium hover:bg-primary/20 transition-natural">
-                      {s.title}
-                    </button>
-                  ))}
-                </div>
-              );
-            })()}
-          </div>
-        ))}
-        <SourceDrawer source={activeSource} onClose={() => setActiveSource(null)} />
+        {messages.map((m, i) => {
+          if (m.role === "assistant" && !m.content && i === messages.length - 1 && isThinking) {
+            return (
+              <div key={i} className="text-start">
+                <span className="inline-block px-3 py-2 rounded-2xl text-sm bg-muted text-muted-foreground">
+                  {t(lang, "chat_thinking")}
+                </span>
+              </div>
+            );
+          }
+
+          const cited = m.role === "assistant"
+            ? new Set([...m.content.matchAll(/\[\[(\d+)\]\]/g)].map((x) => Number(x[1])))
+            : null;
+          const cleanText = m.role === "assistant"
+            ? m.content.replace(/\[\[\d+\]\]/g, "").replace(/[ \t]+([.,!?])/g, "$1")
+            : m.content;
+
+          return (
+            <div key={i} className={m.role === "user" ? "text-end" : "text-start"}>
+              <span className={`inline-block px-3 py-2 rounded-2xl text-sm ${m.role === "user" ? "bg-primary text-primary-foreground" : "bg-muted"}`}>
+                {m.role === "assistant" ? <Markdown className="rich-content text-sm">{cleanText}</Markdown> : m.content}
+              </span>
+              {m.role === "assistant" && (() => {
+                const seen = new Set();
+                const refs = (m.sources || [])
+                  .filter((s) => cited.has(s.n))
+                  .filter((s) => !seen.has(s.itemId) && seen.add(s.itemId));
+                if (refs.length === 0) return null;
+                return (
+                  <div className="flex flex-wrap gap-2 mt-2 pt-2 border-t border-border/50">
+                    {refs.map((s) => (
+                      <Link key={s.itemId} to={sectionRoute(s.type)}
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-primary/10 text-foreground rounded-full text-xs font-medium hover:bg-primary/20 transition-natural">
+                        {s.title}<ExternalLink className="w-3 h-3" />
+                      </Link>
+                    ))}
+                  </div>
+                );
+              })()}
+            </div>
+          );
+        })}
       </div>
 
       <form onSubmit={submit} className="p-3 border-t border-border flex gap-2">

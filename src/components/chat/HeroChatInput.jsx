@@ -30,7 +30,7 @@ export default function HeroChatInput() {
   }, [draft]);
 
   return (
-    <form onSubmit={submit} className="flex items-end gap-2 max-w-xl mb-10 bg-background border border-border rounded-full px-4 py-2 shadow-sm">
+    <form onSubmit={submit} className="flex items-start gap-2 max-w-xl mb-10 bg-background border border-border rounded-full px-4 py-2 shadow-sm">
       <textarea
         ref={textareaRef}
         value={draft}
@@ -41,7 +41,7 @@ export default function HeroChatInput() {
         style={{ maxHeight: MAX_TEXTAREA_HEIGHT }}
         className="flex-1 bg-transparent text-lg text-foreground placeholder:text-muted-foreground outline-none resize-none overflow-y-auto py-1"
       />
-      <button type="submit" aria-label={t(lang, "chat_send")} className="text-primary shrink-0"><Send className="w-6 h-6" /></button>
+      <button type="submit" aria-label={t(lang, "chat_send")} className="text-primary shrink-0 pt-1"><Send className="w-6 h-6" /></button>
     </form>
   );
 }

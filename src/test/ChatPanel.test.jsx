@@ -84,31 +84,64 @@ describe("ChatPanel", () => {
     expect(strong.tagName.toLowerCase()).toBe("strong");
   });
 
-  it("renders a reference chip per unique source and does not show raw [[n]] markers", () => {
+  it("strips [[n]] citation markers from the visible text", () => {
     setChat({
       messages: [{
         role: "assistant",
-        content: "A fact backed by sources.",
+        content: "A fact.[[1]]",
         sources: [
-          { itemId: "x", groupId: "gx", type: "source", langId: "en", title: "The Source", text: "Cited passage." },
+          { n: 1, itemId: "x", groupId: "gx", type: "source", langId: "en", title: "The Source", text: "Cited passage." },
+        ],
+      }],
+      crisisLang: null,
+    });
+    render(<MemoryRouter><ChatPanel /></MemoryRouter>);
+    expect(screen.getByText("A fact.")).toBeInTheDocument();
+    expect(screen.queryByText(/\[\[\d+\]\]/)).toBeNull();
+  });
+
+  it("renders a reference chip for a cited source that links directly to sectionRoute(type)", () => {
+    setChat({
+      messages: [{
+        role: "assistant",
+        content: "A fact.[[1]]",
+        sources: [
+          { n: 1, itemId: "x", groupId: "gx", type: "source", langId: "en", title: "The Source", text: "Cited passage." },
+        ],
+      }],
+      crisisLang: null,
+    });
+    render(<MemoryRouter><ChatPanel /></MemoryRouter>);
+    const chip = screen.getByText("The Source").closest("a");
+    expect(chip).toHaveAttribute("href", "/sources");
+  });
+
+  it("does not render a chip for a source that was not cited in the text", () => {
+    setChat({
+      messages: [{
+        role: "assistant",
+        content: "A fact.[[1]]",
+        sources: [
+          { n: 1, itemId: "x", groupId: "gx", type: "source", langId: "en", title: "The Source", text: "Cited passage." },
+          { n: 2, itemId: "y", groupId: "gy", type: "tool", langId: "en", title: "Uncited Source", text: "Other text." },
         ],
       }],
       crisisLang: null,
     });
     render(<MemoryRouter><ChatPanel /></MemoryRouter>);
     expect(screen.getByText("The Source")).toBeInTheDocument();
-    expect(screen.queryByText(/\[\[\d+\]\]/)).toBeNull();
+    expect(screen.queryByText("Uncited Source")).toBeNull();
   });
 
-  it("dedupes reference chips by itemId, keeping one pill per unique item", () => {
+  it("dedupes reference chips by itemId, keeping one pill per unique cited item", () => {
     setChat({
       messages: [{
         role: "assistant",
-        content: "A fact.",
+        content: "A fact.[[1]][[2]]",
         sources: [
-          { itemId: "x", groupId: "gx", type: "source", langId: "en", title: "The Source", text: "Chunk one." },
-          { itemId: "x", groupId: "gx", type: "source", langId: "en", title: "The Source", text: "Chunk two." },
-          { itemId: "y", groupId: "gy", type: "tool", langId: "en", title: "Other Source", text: "Other text." },
+          { n: 1, itemId: "x", groupId: "gx", type: "source", langId: "en", title: "The Source", text: "Chunk one." },
+          { n: 1, itemId: "x", groupId: "gx", type: "source", langId: "en", title: "The Source", text: "Chunk two." },
+          { n: 2, itemId: "y", groupId: "gy", type: "tool", langId: "en", title: "Other Source", text: "Other text." },
         ],
       }],
       crisisLang: null,
@@ -118,17 +151,44 @@ describe("ChatPanel", () => {
     expect(screen.getByText("Other Source")).toBeInTheDocument();
   });
 
-  it("clicking a reference chip opens the SourceDrawer with the matching source", () => {
+  it("shows no chips when no sources were cited", () => {
     setChat({
       messages: [{
         role: "assistant",
-        content: "A fact.",
-        sources: [{ itemId: "x", groupId: "gx", type: "source", langId: "en", title: "The Source", text: "Cited passage." }],
+        content: "A fact with no citations.",
+        sources: [
+          { n: 1, itemId: "x", groupId: "gx", type: "source", langId: "en", title: "The Source", text: "Chunk one." },
+        ],
       }],
       crisisLang: null,
     });
     render(<MemoryRouter><ChatPanel /></MemoryRouter>);
-    fireEvent.click(screen.getByText("The Source"));
-    expect(screen.getByText("Cited passage.")).toBeInTheDocument();
+    expect(screen.queryByText("The Source")).toBeNull();
+  });
+
+  it("shows the thinking indicator while sending and the trailing assistant message is empty", () => {
+    setChat({
+      sending: true,
+      messages: [
+        { role: "user", content: "Hi" },
+        { role: "assistant", content: "", sources: [] },
+      ],
+      crisisLang: null,
+    });
+    render(<MemoryRouter><ChatPanel /></MemoryRouter>);
+    expect(screen.getByText("chat_thinking")).toBeInTheDocument();
+  });
+
+  it("does not show the thinking indicator once the assistant reply has content", () => {
+    setChat({
+      sending: true,
+      messages: [
+        { role: "user", content: "Hi" },
+        { role: "assistant", content: "Partial answer", sources: [] },
+      ],
+      crisisLang: null,
+    });
+    render(<MemoryRouter><ChatPanel /></MemoryRouter>);
+    expect(screen.queryByText("chat_thinking")).toBeNull();
   });
 });
