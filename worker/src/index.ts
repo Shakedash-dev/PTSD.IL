@@ -19,7 +19,11 @@ export type Env = {
 const app = new Hono<{ Bindings: Env }>();
 
 app.use("*", async (c, next) => {
-  const mw = cors({ origin: c.env.SITE_ORIGIN, allowMethods: ["POST", "GET", "OPTIONS"] });
+  const mw = cors({
+    origin: c.env.SITE_ORIGIN,
+    allowMethods: ["POST", "GET", "OPTIONS"],
+    allowHeaders: ["Content-Type", "Authorization"],
+  });
   return mw(c, next);
 });
 
