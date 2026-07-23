@@ -3,7 +3,7 @@ import { X, Send } from "lucide-react";
 import { useLang } from "@/lib/LanguageContext";
 import { t } from "@/lib/i18n";
 import { useChat } from "@/lib/ChatContext";
-import { renderWithCitations } from "@/lib/citations";
+import Markdown from "@/components/Markdown";
 import SourceDrawer from "./SourceDrawer";
 
 export default function ChatPanel() {
@@ -51,8 +51,22 @@ export default function ChatPanel() {
         {messages.map((m, i) => (
           <div key={i} className={m.role === "user" ? "text-end" : "text-start"}>
             <span className={`inline-block px-3 py-2 rounded-2xl text-sm ${m.role === "user" ? "bg-primary text-primary-foreground" : "bg-muted"}`}>
-              {m.role === "assistant" ? renderWithCitations(m.content, m.sources || [], setActiveSource) : m.content}
+              {m.role === "assistant" ? <Markdown className="rich-content text-sm">{m.content}</Markdown> : m.content}
             </span>
+            {m.role === "assistant" && m.sources?.length > 0 && (() => {
+              const seen = new Set();
+              const unique = m.sources.filter((s) => !seen.has(s.itemId) && seen.add(s.itemId));
+              return (
+                <div className="flex flex-wrap gap-2 mt-2 pt-2 border-t border-border/50">
+                  {unique.map((s) => (
+                    <button key={s.itemId} onClick={() => setActiveSource(s)}
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-primary/10 text-foreground rounded-full text-xs font-medium hover:bg-primary/20 transition-natural">
+                      {s.title}
+                    </button>
+                  ))}
+                </div>
+              );
+            })()}
           </div>
         ))}
         <SourceDrawer source={activeSource} onClose={() => setActiveSource(null)} />

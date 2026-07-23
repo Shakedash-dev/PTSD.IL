@@ -74,13 +74,61 @@ describe("ChatPanel", () => {
     expect(send).toHaveBeenCalledWith("hello");
   });
 
-  it("clicking a citation opens the SourceDrawer with the matching source", () => {
+  it("renders assistant content as Markdown (bold text becomes <strong>)", () => {
     setChat({
-      messages: [{ role: "assistant", content: "A fact.[[1]]", sources: [{ n: 1, itemId: "x", title: "The Source", type: "source" }] }],
+      messages: [{ role: "assistant", content: "This is **bold** text.", sources: [] }],
       crisisLang: null,
     });
     render(<MemoryRouter><ChatPanel /></MemoryRouter>);
-    fireEvent.click(screen.getByText("1"));
+    const strong = screen.getByText("bold");
+    expect(strong.tagName.toLowerCase()).toBe("strong");
+  });
+
+  it("renders a reference chip per unique source and does not show raw [[n]] markers", () => {
+    setChat({
+      messages: [{
+        role: "assistant",
+        content: "A fact backed by sources.",
+        sources: [
+          { itemId: "x", groupId: "gx", type: "source", langId: "en", title: "The Source", text: "Cited passage." },
+        ],
+      }],
+      crisisLang: null,
+    });
+    render(<MemoryRouter><ChatPanel /></MemoryRouter>);
     expect(screen.getByText("The Source")).toBeInTheDocument();
+    expect(screen.queryByText(/\[\[\d+\]\]/)).toBeNull();
+  });
+
+  it("dedupes reference chips by itemId, keeping one pill per unique item", () => {
+    setChat({
+      messages: [{
+        role: "assistant",
+        content: "A fact.",
+        sources: [
+          { itemId: "x", groupId: "gx", type: "source", langId: "en", title: "The Source", text: "Chunk one." },
+          { itemId: "x", groupId: "gx", type: "source", langId: "en", title: "The Source", text: "Chunk two." },
+          { itemId: "y", groupId: "gy", type: "tool", langId: "en", title: "Other Source", text: "Other text." },
+        ],
+      }],
+      crisisLang: null,
+    });
+    render(<MemoryRouter><ChatPanel /></MemoryRouter>);
+    expect(screen.getAllByText("The Source")).toHaveLength(1);
+    expect(screen.getByText("Other Source")).toBeInTheDocument();
+  });
+
+  it("clicking a reference chip opens the SourceDrawer with the matching source", () => {
+    setChat({
+      messages: [{
+        role: "assistant",
+        content: "A fact.",
+        sources: [{ itemId: "x", groupId: "gx", type: "source", langId: "en", title: "The Source", text: "Cited passage." }],
+      }],
+      crisisLang: null,
+    });
+    render(<MemoryRouter><ChatPanel /></MemoryRouter>);
+    fireEvent.click(screen.getByText("The Source"));
+    expect(screen.getByText("Cited passage.")).toBeInTheDocument();
   });
 });

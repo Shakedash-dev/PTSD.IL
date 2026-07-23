@@ -4,6 +4,7 @@ import { X } from "lucide-react";
 import { useLang } from "@/lib/LanguageContext";
 import { t } from "@/lib/i18n";
 import { sectionRoute } from "@/lib/citations";
+import Markdown from "@/components/Markdown";
 
 export default function SourceDrawer({ source, onClose }) {
   const { lang } = useLang();
@@ -14,7 +15,7 @@ export default function SourceDrawer({ source, onClose }) {
         <X className="w-5 h-5" />
       </button>
       <h3 className="font-heading text-lg font-bold mb-2">{source.title}</h3>
-      <p className="text-sm opacity-70 mb-4">{source.type}</p>
+      {source.text && <Markdown className="rich-content text-sm mb-4">{source.text}</Markdown>}
       <Link to={sectionRoute(source.type)} onClick={onClose} className="text-primary font-semibold underline">
         {t(lang, "chat_view_in_site")}
       </Link>
