@@ -675,9 +675,12 @@ const item: Item = {
 describe("reindexItem", () => {
   it("embeds chunks and upserts them with metadata", async () => {
     const upsert = vi.fn(async () => ({ mutationId: "m" }));
+    // reindexItem clears stale chunks (deleteItem → deleteByIds) before upserting,
+    // so the mock must provide deleteByIds too.
+    const deleteByIds = vi.fn(async () => ({ mutationId: "m" }));
     const env = {
       AI: { run: async (_m: string, i: { text: string[] }) => ({ data: i.text.map(() => [0.1, 0.2]) }) },
-      VECTORIZE: { upsert },
+      VECTORIZE: { upsert, deleteByIds },
     } as unknown as import("../src/index").Env;
 
     const out = await reindexItem(env, item);
