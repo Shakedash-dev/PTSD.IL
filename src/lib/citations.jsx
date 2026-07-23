@@ -14,7 +14,7 @@ export function sectionRoute(type) {
 }
 
 export function renderWithCitations(text, sources, onCite) {
-  const byN = new Map(sources.map((s) => [s.n, s]));
+  const byN = new Map(sources.map((s) => [Number(s.n), s]));
   const parts = String(text).split(/(\[\[\d+\]\])/g);
   return parts.map((part, i) => {
     const m = /^\[\[(\d+)\]\]$/.exec(part);
@@ -26,9 +26,10 @@ export function renderWithCitations(text, sources, onCite) {
         key={i}
         role="button"
         tabIndex={0}
+        aria-label={src.title}
         className="cursor-pointer text-primary font-semibold px-0.5"
         onClick={() => onCite(src)}
-        onKeyDown={(e) => e.key === "Enter" && onCite(src)}
+        onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onCite(src); } }}
       >
         {m[1]}
       </sup>

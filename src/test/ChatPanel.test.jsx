@@ -37,6 +37,27 @@ describe("ChatPanel", () => {
     expect(screen.getByText("chat_disclaimer")).toBeInTheDocument();
   });
 
+  it("crisis banner has role=alert and the phone number is a tappable tel: link", () => {
+    render(<MemoryRouter><ChatPanel /></MemoryRouter>);
+    const alert = screen.getByRole("alert");
+    expect(alert).toBeInTheDocument();
+    const phoneLink = screen.getByText(/1201/).closest("a");
+    expect(phoneLink).toHaveAttribute("href", "tel:1201");
+  });
+
+  it("open panel container has role=dialog", () => {
+    render(<MemoryRouter><ChatPanel /></MemoryRouter>);
+    expect(screen.getByRole("dialog")).toBeInTheDocument();
+  });
+
+  it("pressing Escape on the dialog closes the panel", () => {
+    const setOpen = vi.fn();
+    setChat({ setOpen });
+    render(<MemoryRouter><ChatPanel /></MemoryRouter>);
+    fireEvent.keyDown(screen.getByRole("dialog"), { key: "Escape" });
+    expect(setOpen).toHaveBeenCalledWith(false);
+  });
+
   it("renders nothing when closed", () => {
     setChat({ open: false });
     const { container } = render(<MemoryRouter><ChatPanel /></MemoryRouter>);

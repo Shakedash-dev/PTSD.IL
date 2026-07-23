@@ -17,15 +17,24 @@ export default function ChatPanel() {
   const starters = t(lang, "chat_starters") || [];
 
   return (
-    <div className="fixed bottom-24 left-6 z-50 w-[360px] max-w-[90vw] h-[520px] bg-background border border-border rounded-2xl shadow-xl flex flex-col overflow-hidden">
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-label={t(lang, "chat_title")}
+      onKeyDown={(e) => { if (e.key === "Escape") setOpen(false); }}
+      className="fixed bottom-24 left-6 z-50 w-[360px] max-w-[90vw] h-[520px] bg-background border border-border rounded-2xl shadow-xl flex flex-col overflow-hidden"
+    >
       <div className="flex items-center justify-between p-3 border-b border-border">
         <span className="font-heading font-bold">{t(lang, "chat_title")}</span>
         <button onClick={() => setOpen(false)} aria-label={t(lang, "chat_close")}><X className="w-5 h-5" /></button>
       </div>
 
       {crisisLang && (
-        <div className="bg-destructive/10 text-sm p-3 border-b border-border">
-          <span>{t(crisisLang, "eran_link")}</span> - <span className="font-bold">{t(crisisLang, "eran_phone")}</span>
+        <div role="alert" className="bg-destructive/10 text-sm p-3 border-b border-border">
+          <span>{t(crisisLang, "eran_link")}</span>{" - "}
+          <a href={`tel:${t(crisisLang, "eran_phone")}`} className="font-bold underline">
+            {t(crisisLang, "eran_phone")}
+          </a>
         </div>
       )}
 

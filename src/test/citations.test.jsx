@@ -1,11 +1,15 @@
 import { describe, it, expect, vi } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 import { renderWithCitations, sectionRoute } from "@/lib/citations";
 
 describe("citations", () => {
   it("maps types to section routes", () => {
     expect(sectionRoute("source")).toBe("/sources");
     expect(sectionRoute("treatment_step")).toBe("/treatment");
+    expect(sectionRoute("tool")).toBe("/self-help");
+    expect(sectionRoute("faq")).toBe("/rights");
+    expect(sectionRoute("book")).toBe("/children");
+    expect(sectionRoute("activity")).toBe("/calming");
     expect(sectionRoute("unknown")).toBe("/");
   });
 
@@ -61,5 +65,35 @@ describe("citations", () => {
     render(<p>{nodes}</p>);
     expect(screen.queryByText("5")).toBeNull();
     expect(screen.getByText(/No sources here\./)).toBeTruthy();
+  });
+
+  it("sup has an aria-label equal to the source title", () => {
+    const onCite = vi.fn();
+    const sources = [{ n: 1, itemId: "a", type: "source", title: "The Source Title" }];
+    const nodes = renderWithCitations("A fact.[[1]]", sources, onCite);
+    render(<p>{nodes}</p>);
+    expect(screen.getByText("1")).toHaveAttribute("aria-label", "The Source Title");
+  });
+
+  it("pressing Space on the focused sup calls onCite with the correct source", () => {
+    const onCite = vi.fn();
+    const sources = [{ n: 1, itemId: "a", type: "source", title: "First" }];
+    const nodes = renderWithCitations("A fact.[[1]]", sources, onCite);
+    render(<p>{nodes}</p>);
+    const sup = screen.getByText("1");
+    sup.focus();
+    fireEvent.keyDown(sup, { key: " " });
+    expect(onCite).toHaveBeenCalledWith(sources[0]);
+  });
+
+  it("matches a source whose n is a string against a [[1]] marker", () => {
+    const onCite = vi.fn();
+    const sources = [{ n: "1", itemId: "a", type: "source", title: "String N Source" }];
+    const nodes = renderWithCitations("A fact.[[1]]", sources, onCite);
+    render(<p>{nodes}</p>);
+    const sup = screen.getByText("1");
+    expect(sup.tagName.toLowerCase()).toBe("sup");
+    sup.click();
+    expect(onCite).toHaveBeenCalledWith(sources[0]);
   });
 });
