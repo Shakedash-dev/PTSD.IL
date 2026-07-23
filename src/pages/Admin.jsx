@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Settings, Users, UserCog, KeyRound, FileText, BookOpen, HelpCircle, Wrench, Heart, Baby, Shield, ClipboardList, Pencil, Trash2, Plus, Check, X, LogOut, Info } from 'lucide-react';
+import { Settings, Users, UserCog, FileText, BookOpen, HelpCircle, Wrench, Heart, Baby, Shield, ClipboardList, Pencil, Trash2, Plus, Check, X, LogOut, Info } from 'lucide-react';
 import { toast } from 'sonner';
 import { db } from '@/data/db';
 import RichTextEditor from '@/components/RichTextEditor';
@@ -17,7 +17,7 @@ import {
   loadChildrenGuidelines, saveChildrenGuidelines,
   loadChildrenResource, saveChildrenResource, removeChildrenResource,
 } from '@/api/adminSource';
-import { listUsers, createUser, updateUserRoles, updateUserPassword, deleteUser } from '@/api/adminUsers';
+import { listUsers, createUser, updateUserRoles, deleteUser } from '@/api/adminUsers';
 
 // Runs a create/update/delete call against adminSource, converting the admin
 // client's typed errors (src/api/adminClient.js) into a toast instead of
@@ -110,6 +110,14 @@ const ROLE_BADGE_COLORS = {
   viewer: 'bg-muted text-muted-foreground',
 };
 
+// Only these two roles are assignable in the UI (create form + role edit).
+// The full ROLE_LABELS/ROLE_BADGE_COLORS above are still used to DISPLAY any
+// role an existing user might already have (e.g. moderator/viewer).
+const ASSIGNABLE_ROLE_LABELS = {
+  admin: ROLE_LABELS.admin,
+  masteradmin: ROLE_LABELS.masteradmin,
+};
+
 // Rights categories are audience buckets - order/keys mirror the panel's
 // category tabs. adminSource's loadRightsFaq/saveRightsFaq accept either
 // underscore or hyphen (they normalize internally), so these keys are passed
@@ -124,6 +132,31 @@ function labelFor(map, key) {
 }
 function toOptions(map) {
   return Object.entries(map).map(([value, label]) => ({ value, label }));
+}
+
+// Backend requires a random-strength password (min 8) even though login is
+// Google-only and the password is never used. Generate one so the create form
+// doesn't need a password field. Uses the Web Crypto API (browser runtime).
+function generatePassword() {
+  const bytes = new Uint8Array(18);
+  crypto.getRandomValues(bytes);
+  const base = btoa(String.fromCharCode(...bytes)).replace(/[+/=]/g, '');
+  return base.slice(0, 20) + 'Aa1!';
+}
+
+// Backend requires firstName AND lastName separately, but the UI collects a
+// single "name". Split on the first whitespace run; a single-word name gets a
+// "-" placeholder lastName (backend requires min 1 char).
+function splitName(name) {
+  const parts = name.trim().split(/\s+/);
+  const firstName = parts[0] || '';
+  const lastName = parts.length > 1 ? parts.slice(1).join(' ') : '-';
+  return { firstName, lastName };
+}
+
+// Display name joining firstName/lastName, hiding the "-" placeholder lastName.
+function displayName(user) {
+  return [user.firstName, user.lastName].filter(n => n && n !== '-').join(' ');
 }
 
 // Content CRUD tabs - shown to admin/moderator (hasAdminAccess()).
@@ -1287,8 +1320,6 @@ function ChildrenPanel() {
 function UserRow({ user, currentUserId, onReload }) {
   const [editingRoles, setEditingRoles] = useState(false);
   const [rolesDraft, setRolesDraft] = useState(user.roles);
-  const [resettingPassword, setResettingPassword] = useState(false);
-  const [passwordDraft, setPasswordDraft] = useState('');
   const [saving, setSaving] = useState(false);
   const isSelf = user.id === currentUserId;
 
@@ -1306,24 +1337,9 @@ function UserRow({ user, currentUserId, onReload }) {
     }
   }
 
-  async function handleSavePassword() {
-    if (passwordDraft.length < 8) {
-      toast.error('הסיסמה חייבת להכיל לפחות 8 תווים');
-      return;
-    }
-    setSaving(true);
-    const ok = await runWrite(() => updateUserPassword(user.id, passwordDraft));
-    setSaving(false);
-    if (ok) {
-      toast.success('הסיסמה עודכנה בהצלחה');
-      setResettingPassword(false);
-      setPasswordDraft('');
-    }
-  }
-
   async function handleDelete() {
     if (isSelf) return; // button hidden below; guard kept in case currentUserId is ever stale
-    if (!window.confirm(`למחוק את המשתמש ${user.firstName} ${user.lastName}?`)) return;
+    if (!window.confirm(`למחוק את המשתמש ${displayName(user)}?`)) return;
     setSaving(true);
     const ok = await runWrite(() => deleteUser(user.id));
     setSaving(false);
@@ -1335,11 +1351,10 @@ function UserRow({ user, currentUserId, onReload }) {
       <div className="flex items-start justify-between gap-3 flex-wrap">
         <div>
           <div className="flex items-center gap-2 flex-wrap">
-            <p className="font-medium text-foreground">{user.firstName} {user.lastName}</p>
+            <p className="font-medium text-foreground">{displayName(user)}</p>
             {isSelf && <Badge color="bg-primary/10 text-primary">זה אתה</Badge>}
           </div>
           <p className="text-sm text-muted-foreground mt-0.5">{user.email || 'ללא אימייל'}</p>
-          {user.phone && <p className="text-sm text-muted-foreground">{user.phone}</p>}
           <p className="text-xs text-muted-foreground/70 mt-1">
             נוצר ב-{new Date(user.createdAt).toLocaleDateString('he-IL')}
           </p>
@@ -1348,12 +1363,7 @@ function UserRow({ user, currentUserId, onReload }) {
           <IconBtn
             icon={Pencil}
             title="עריכת תפקידים"
-            onClick={() => { setRolesDraft(user.roles); setResettingPassword(false); setEditingRoles(v => !v); }}
-          />
-          <IconBtn
-            icon={KeyRound}
-            title="איפוס סיסמה"
-            onClick={() => { setPasswordDraft(''); setEditingRoles(false); setResettingPassword(v => !v); }}
+            onClick={() => { setRolesDraft(user.roles); setEditingRoles(v => !v); }}
           />
           {!isSelf && <IconBtn icon={Trash2} title="מחיקה" tone="danger" onClick={handleDelete} />}
         </div>
@@ -1371,7 +1381,7 @@ function UserRow({ user, currentUserId, onReload }) {
         <div className="p-3 rounded-lg border border-primary/40 bg-primary/5 space-y-2">
           <label className="text-xs font-semibold text-muted-foreground block">תפקידים</label>
           <FieldInput
-            field={{ type: 'tags', options: toOptions(ROLE_LABELS) }}
+            field={{ type: 'tags', options: toOptions(ASSIGNABLE_ROLE_LABELS) }}
             value={rolesDraft}
             onChange={setRolesDraft}
           />
@@ -1388,37 +1398,6 @@ function UserRow({ user, currentUserId, onReload }) {
               type="button"
               disabled={saving}
               onClick={() => setEditingRoles(false)}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-muted text-foreground rounded-lg text-xs font-semibold hover:bg-border disabled:opacity-60"
-            >
-              <X className="w-3.5 h-3.5" /> ביטול
-            </button>
-          </div>
-        </div>
-      )}
-
-      {resettingPassword && (
-        <div className="p-3 rounded-lg border border-primary/40 bg-primary/5 space-y-2">
-          <label className="text-xs font-semibold text-muted-foreground block">סיסמה חדשה (לפחות 8 תווים)</label>
-          <input
-            type="password"
-            value={passwordDraft}
-            onChange={e => setPasswordDraft(e.target.value)}
-            autoComplete="new-password"
-            className="w-full px-3 py-2 rounded-lg border border-border bg-background text-sm"
-          />
-          <div className="flex gap-2 pt-1">
-            <button
-              type="button"
-              disabled={saving}
-              onClick={handleSavePassword}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-primary text-white rounded-lg text-xs font-semibold hover:bg-primary/90 disabled:opacity-60"
-            >
-              <Check className="w-3.5 h-3.5" /> {saving ? 'מעדכן...' : 'עדכון סיסמה'}
-            </button>
-            <button
-              type="button"
-              disabled={saving}
-              onClick={() => { setResettingPassword(false); setPasswordDraft(''); }}
               className="flex items-center gap-1.5 px-3 py-1.5 bg-muted text-foreground rounded-lg text-xs font-semibold hover:bg-border disabled:opacity-60"
             >
               <X className="w-3.5 h-3.5" /> ביטול
@@ -1453,30 +1432,23 @@ function UsersPanel() {
   useEffect(() => { reload(); }, []);
 
   const createFields = [
-    { key: 'firstName', label: 'שם פרטי', type: 'text' },
-    { key: 'lastName', label: 'שם משפחה', type: 'text' },
+    { key: 'name', label: 'שם', type: 'text' },
     { key: 'email', label: 'אימייל', type: 'text' },
-    { key: 'password', label: 'סיסמה (לפחות 8 תווים)', type: 'password' },
-    { key: 'phone', label: 'טלפון (אופציונלי)', type: 'text' },
-    { key: 'roles', label: 'תפקידים', type: 'tags', options: toOptions(ROLE_LABELS) },
+    { key: 'roles', label: 'תפקידים', type: 'tags', options: toOptions(ASSIGNABLE_ROLE_LABELS) },
   ];
 
   async function handleCreateUser(draft) {
-    if (!draft.firstName || !draft.lastName || !draft.email) {
-      toast.error('יש למלא שם פרטי, שם משפחה ואימייל');
+    if (!draft.name?.trim() || !draft.email) {
+      toast.error('יש למלא שם ואימייל');
       return false;
     }
-    if (!draft.password || draft.password.length < 8) {
-      toast.error('הסיסמה חייבת להכיל לפחות 8 תווים');
-      return false;
-    }
+    const { firstName, lastName } = splitName(draft.name);
     const payload = {
-      firstName: draft.firstName,
-      lastName: draft.lastName,
+      firstName,
+      lastName,
       email: draft.email,
-      password: draft.password,
-      ...(draft.phone ? { phone: draft.phone } : {}),
-      roles: draft.roles?.length ? draft.roles : ['viewer'],
+      password: generatePassword(),
+      roles: draft.roles?.length ? draft.roles : ['admin'],
     };
     const ok = await runWrite(() => createUser(payload));
     if (ok) {
@@ -1498,7 +1470,7 @@ function UsersPanel() {
           ))}
           {creating && (
             <EditableCard
-              item={{ firstName: '', lastName: '', email: '', password: '', phone: '', roles: ['viewer'] }}
+              item={{ name: '', email: '', roles: ['admin'] }}
               fields={createFields}
               startInEdit
               renderView={() => null}
