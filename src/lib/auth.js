@@ -1,13 +1,15 @@
-// Auth module for the admin panel. Talks to POST /api/auth/login (see
-// docs/api.md §"Auth model" / §"Auth — /api/auth") and manages the resulting
-// JWT.
+// Auth module for the admin panel. Google-only SSO: talks to
+// POST /api/auth/google (see docs/api.md §"Auth model" / §"Auth —
+// /api/auth") with a Google Identity Services idToken and manages the
+// resulting JWT. There is no password login - the backend no longer has
+// that endpoint.
 //
 // Security notes:
 // - The token lives in sessionStorage ONLY (never localStorage) - the admin
 //   session should die with the tab, not persist indefinitely on shared
 //   machines.
-// - The token is never logged (no console.log of it, ever) and never placed
-//   in a URL.
+// - Neither the Google idToken nor the accessToken is ever logged (no
+//   console.log of either, ever) and never placed in a URL.
 // - Role/claims decoding here is for UI gating only (show/hide panels). The
 //   backend re-checks roles on every request - this module grants no access
 //   by itself.
@@ -23,14 +25,14 @@ function notifyAuthChange() {
   window.dispatchEvent(new Event(AUTH_CHANGE_EVENT));
 }
 
-// POST /api/auth/login {email,password} -> {accessToken}. Throws on any
-// non-2xx response (401 for bad credentials); never distinguishes "wrong
-// email" from "wrong password" in the thrown error.
-export async function login(email, password) {
-  const res = await fetch(`${API}/auth/login`, {
+// POST /api/auth/google {idToken} -> {accessToken}. idToken is the Google
+// Identity Services credential from the frontend's Sign-In button. Throws on
+// any non-2xx response (401 for an invalid/expired Google token).
+export async function loginWithGoogle(idToken) {
+  const res = await fetch(`${API}/auth/google`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email, password }),
+    body: JSON.stringify({ idToken }),
   });
 
   if (!res.ok) {

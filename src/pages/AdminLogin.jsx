@@ -1,36 +1,95 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useLang } from '@/lib/LanguageContext';
 import { t } from '@/lib/i18n';
-import { login } from '@/lib/auth';
-import { Lock, Mail, Loader2 } from 'lucide-react';
+import { loginWithGoogle } from '@/lib/auth';
+import { Lock } from 'lucide-react';
+
+const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+const GSI_SCRIPT_SRC = 'https://accounts.google.com/gsi/client';
+
+// Loads the Google Identity Services script at most once per page, even if
+// this component mounts more than once (StrictMode double-invoke, route
+// re-entry, etc). Resolves once `window.google.accounts.id` is usable.
+let gsiScriptPromise = null;
+function loadGsiScript() {
+  if (typeof window === 'undefined') return Promise.reject(new Error('no_window'));
+  if (window.google?.accounts?.id) return Promise.resolve();
+
+  if (!gsiScriptPromise) {
+    gsiScriptPromise = new Promise((resolve, reject) => {
+      const existing = document.querySelector(`script[src="${GSI_SCRIPT_SRC}"]`);
+      if (existing) {
+        existing.addEventListener('load', () => resolve());
+        existing.addEventListener('error', () => reject(new Error('gsi_load_failed')));
+        return;
+      }
+
+      const script = document.createElement('script');
+      script.src = GSI_SCRIPT_SRC;
+      script.async = true;
+      script.defer = true;
+      script.onload = () => resolve();
+      script.onerror = () => reject(new Error('gsi_load_failed'));
+      document.head.appendChild(script);
+    });
+  }
+
+  return gsiScriptPromise;
+}
 
 // Admin login page. Rendered by the /admin route guard (App.jsx) whenever the
-// visitor is not authenticated. On success, login() stores the token and
-// fires AUTH_CHANGE_EVENT - the guard picks that up and swaps in the panel
-// (or the "no access" view) without a manual refresh, so this component does
-// not need to navigate anywhere itself.
+// visitor is not authenticated. Google-only SSO via Google Identity Services
+// (GIS): the rendered button collects a Google idToken, which
+// loginWithGoogle() exchanges for our own JWT. On success loginWithGoogle()
+// stores the token and fires AUTH_CHANGE_EVENT - the guard picks that up and
+// swaps in the panel (or the "no access" view) without a manual refresh, so
+// this component does not need to navigate anywhere itself.
 export default function AdminLogin() {
   const { lang } = useLang();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
+  const buttonRef = useRef(null);
 
-  async function handleSubmit(e) {
-    e.preventDefault();
-    if (loading) return;
-    setLoading(true);
-    setError(false);
-    try {
-      await login(email, password);
-      // No further action needed - AUTH_CHANGE_EVENT triggers the guard.
-    } catch {
-      // Never reveal whether the email or the password was wrong.
-      setError(true);
-    } finally {
-      setLoading(false);
+  useEffect(() => {
+    if (!GOOGLE_CLIENT_ID) return;
+
+    let cancelled = false;
+
+    async function handleCredentialResponse(response) {
+      setError(false);
+      try {
+        // response.credential is the Google idToken - never log it.
+        await loginWithGoogle(response.credential);
+        // No further action needed - AUTH_CHANGE_EVENT triggers the guard.
+      } catch {
+        setError(true);
+      }
     }
-  }
+
+    loadGsiScript()
+      .then(() => {
+        if (cancelled || !buttonRef.current) return;
+        window.google.accounts.id.initialize({
+          client_id: GOOGLE_CLIENT_ID,
+          callback: handleCredentialResponse,
+        });
+        window.google.accounts.id.renderButton(buttonRef.current, {
+          theme: 'outline',
+          size: 'large',
+          width: 320,
+          text: 'signin_with',
+        });
+        // Optional One Tap prompt - best-effort, ignore if it can't display
+        // (e.g. third-party cookies blocked).
+        window.google.accounts.id.prompt();
+      })
+      .catch(() => {
+        if (!cancelled) setError(true);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center px-4 pt-16">
@@ -43,61 +102,21 @@ export default function AdminLogin() {
           <p className="text-muted-foreground text-sm mt-1">{t(lang, 'admin_login_subtitle')}</p>
         </div>
 
-        <form
-          onSubmit={handleSubmit}
-          className="bg-card rounded-super border border-border p-6 shadow-card space-y-4"
-        >
-          <div>
-            <label htmlFor="admin-email" className="text-xs font-semibold text-muted-foreground block mb-1.5">
-              {t(lang, 'admin_email')}
-            </label>
-            <div className="relative">
-              <Mail className="w-4 h-4 text-muted-foreground absolute start-3 top-1/2 -translate-y-1/2 pointer-events-none" />
-              <input
-                id="admin-email"
-                type="email"
-                required
-                autoComplete="username"
-                value={email}
-                onChange={e => setEmail(e.target.value)}
-                className="w-full ps-9 pe-3 py-2 rounded-lg border border-border bg-background text-sm text-foreground"
-              />
-            </div>
-          </div>
-
-          <div>
-            <label htmlFor="admin-password" className="text-xs font-semibold text-muted-foreground block mb-1.5">
-              {t(lang, 'admin_password')}
-            </label>
-            <div className="relative">
-              <Lock className="w-4 h-4 text-muted-foreground absolute start-3 top-1/2 -translate-y-1/2 pointer-events-none" />
-              <input
-                id="admin-password"
-                type="password"
-                required
-                autoComplete="current-password"
-                value={password}
-                onChange={e => setPassword(e.target.value)}
-                className="w-full ps-9 pe-3 py-2 rounded-lg border border-border bg-background text-sm text-foreground"
-              />
-            </div>
-          </div>
-
-          {error && (
-            <p className="text-sm text-red-600" role="alert">
-              {t(lang, 'admin_login_error')}
+        <div className="bg-card rounded-super border border-border p-6 shadow-card space-y-4 flex flex-col items-center">
+          {GOOGLE_CLIENT_ID ? (
+            <div ref={buttonRef} />
+          ) : (
+            <p className="text-sm text-red-600 text-center" role="alert">
+              {t(lang, 'admin_google_config_error')}
             </p>
           )}
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-primary text-white text-sm font-semibold hover:bg-primary/90 transition-natural disabled:opacity-60 disabled:cursor-not-allowed"
-          >
-            {loading && <Loader2 className="w-4 h-4 animate-spin" />}
-            {loading ? t(lang, 'admin_login_loading') : t(lang, 'admin_login_button')}
-          </button>
-        </form>
+          {error && GOOGLE_CLIENT_ID && (
+            <p className="text-sm text-red-600" role="alert">
+              {t(lang, 'admin_google_signin_error')}
+            </p>
+          )}
+        </div>
       </div>
     </div>
   );

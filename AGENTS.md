@@ -49,10 +49,10 @@ src/lib/auth.js         <- login/logout, JWT in sessionStorage, isAuthenticated/
 
 ## Auth & DB access
 
-- **Auth is backend-enforced via JWT.** `POST /api/auth/login {email,password}` -> `{accessToken}`. Every `/api/admin/*` call re-checks the token + role server-side (401/403). The client-side `/admin` guard (`AdminGate` in `App.jsx`, `hasAdminAccess()`) is **UX only** - it shows/hides the panel, it is NOT a security boundary.
+- **Auth is backend-enforced via JWT, Google-only.** `POST /api/auth/google {idToken}` -> `{accessToken}`; the password `/api/auth/login` endpoint is gone (404). `idToken` is the Google Identity Services credential collected by `AdminLogin.jsx`; the returned JWT's shape (`roles`/`sub` claims, sessionStorage handling) is unchanged. Every `/api/admin/*` call re-checks the token + role server-side (401/403). The client-side `/admin` guard (`AdminGate` in `App.jsx`, `hasAdminAccess()`) is **UX only** - it shows/hides the panel, it is NOT a security boundary.
 - **Roles are exact-match** (`docs/api.md`): article CRUD needs `admin` or `moderator`; `masteradmin` manages users but is NOT implicitly admin.
-- **Credentials** for the existing admin user (`masteradmin1@ptsd-il.local`, roles `masteradmin,admin`) live in `PTSD.IL/.env` (gitignored). `VITE_API_URL` lives in `src/.env` (gitignored) and must be set in the Render dashboard for deploys.
-- Auth is temporary email/password; Google SSO is planned (see README "Known limitations").
+- **`VITE_GOOGLE_CLIENT_ID`** (the Google OAuth Web Client ID) is required at build time - it's `VITE_*` so it's baked in, not read at runtime; changing it needs a redeploy. Set in `src/.env` (gitignored, for reference) and in the Render dashboard. `VITE_API_URL` lives the same way. Note: localhost is intentionally not an authorized origin on the OAuth client, so Google sign-in only works on the deployed prod URL, not `npm run dev`.
+- Google sign-in is the only login path (no password fallback) - see README "Known limitations".
 
 ## Stack and conventions
 
