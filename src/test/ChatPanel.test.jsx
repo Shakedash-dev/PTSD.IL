@@ -16,7 +16,7 @@ vi.mock("@/lib/ChatContext", () => ({ useChat: vi.fn() }));
 import { useChat } from "@/lib/ChatContext";
 
 const defaultChat = {
-  open: true, setOpen: () => {}, messages: [], sources: [], crisisLang: "en",
+  open: true, setOpen: () => {}, messages: [], crisisLang: "en",
   sending: false, send: vi.fn(), clear: vi.fn(),
 };
 
@@ -55,8 +55,7 @@ describe("ChatPanel", () => {
 
   it("clicking a citation opens the SourceDrawer with the matching source", () => {
     setChat({
-      messages: [{ role: "assistant", content: "A fact.[[1]]" }],
-      sources: [{ n: 1, itemId: "x", title: "The Source", type: "source" }],
+      messages: [{ role: "assistant", content: "A fact.[[1]]", sources: [{ n: 1, itemId: "x", title: "The Source", type: "source" }] }],
       crisisLang: null,
     });
     render(<MemoryRouter><ChatPanel /></MemoryRouter>);

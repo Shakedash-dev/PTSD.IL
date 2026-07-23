@@ -21,6 +21,17 @@ function sseChunks(chunks) {
 }
 
 describe("streamChat", () => {
+  it("calls onError('no_backend') and does not fetch when base is missing", async () => {
+    const fetchMock = vi.spyOn(globalThis, "fetch");
+    let errorMsg = null;
+    await streamChat(
+      { base: undefined, messages: [], lang: "en", sessionId: "s" },
+      { onError: (msg) => (errorMsg = msg) },
+    );
+    expect(errorMsg).toBe("no_backend");
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
   it("dispatches token, sources, done", async () => {
     vi.spyOn(globalThis, "fetch").mockResolvedValue(sse([
       `event: token\ndata: ${JSON.stringify({ text: "Hi" })}\n\n`,

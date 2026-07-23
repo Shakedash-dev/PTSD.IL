@@ -8,7 +8,7 @@ import SourceDrawer from "./SourceDrawer";
 
 export default function ChatPanel() {
   const { lang } = useLang();
-  const { open, setOpen, messages, sources, crisisLang, sending, send } = useChat();
+  const { open, setOpen, messages, crisisLang, sending, send } = useChat();
   const [draft, setDraft] = useState("");
   const [activeSource, setActiveSource] = useState(null);
   if (!open) return null;
@@ -42,7 +42,7 @@ export default function ChatPanel() {
         {messages.map((m, i) => (
           <div key={i} className={m.role === "user" ? "text-end" : "text-start"}>
             <span className={`inline-block px-3 py-2 rounded-2xl text-sm ${m.role === "user" ? "bg-primary text-primary-foreground" : "bg-muted"}`}>
-              {m.role === "assistant" ? renderWithCitations(m.content, sources, setActiveSource) : m.content}
+              {m.role === "assistant" ? renderWithCitations(m.content, m.sources || [], setActiveSource) : m.content}
             </span>
           </div>
         ))}

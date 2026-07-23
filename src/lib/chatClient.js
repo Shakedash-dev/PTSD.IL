@@ -1,4 +1,5 @@
 export async function streamChat({ base, messages, lang, sessionId }, handlers = {}) {
+  if (!base) { handlers.onError?.("no_backend"); return; }
   const res = await fetch(`${base}/chat`, {
     method: "POST",
     headers: { "content-type": "application/json" },
