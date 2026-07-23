@@ -877,9 +877,11 @@ describe("buildContents", () => {
     const out = buildContents([{ role: "user", content: "מה זה?" }], [hit("aaa", 1), hit("bbb", 2)], "he");
     const sys = out.systemInstruction.parts[0].text;
     expect(sys).toMatch(/\[\[n\]\]/);
-    expect(sys).toMatch(/only.*sources|רק.*מקורות/i);
+    expect(sys).toMatch(/only using the numbered sources/i); // grounding rule
+    expect(sys).toMatch(/only help with topics covered on this site/i); // refusal rule (distinct)
     const ctx = out.contents[0].parts[0].text;
     expect(ctx).toContain("[1]");
+    expect(ctx).toContain("T1"); // source title present
     expect(ctx).toContain("aaa");
     expect(ctx).toContain("[2]");
   });
@@ -935,12 +937,21 @@ function contextBlock(hits: Hit[]): string {
 }
 
 export function buildContents(msgs: Msg[], hits: Hit[], lang: string) {
-  const history = msgs.map((m) => ({
+  const contents = msgs.map((m) => ({
     role: (m.role === "assistant" ? "model" : "user") as "user" | "model",
     parts: [{ text: m.content }],
   }));
-  // Prepend the numbered sources as context to the latest user turn.
-  const contents = [{ role: "user" as const, parts: [{ text: contextBlock(hits) }] }, ...history];
+  // Attach the numbered sources to the final user turn (the current question) rather than
+  // as a separate leading turn — a second consecutive user turn is invalid for Gemini.
+  const lastUser = contents.map((c) => c.role).lastIndexOf("user");
+  if (lastUser >= 0) {
+    contents[lastUser] = {
+      role: "user",
+      parts: [{ text: `${contextBlock(hits)}\n\n${contents[lastUser].parts[0].text}` }],
+    };
+  } else {
+    contents.push({ role: "user", parts: [{ text: contextBlock(hits) }] });
+  }
   return { systemInstruction: { parts: [{ text: system(lang) }] }, contents };
 }
 ```
