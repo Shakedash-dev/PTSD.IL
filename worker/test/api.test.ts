@@ -37,6 +37,13 @@ describe("fetchAllItems", () => {
     expect(items).toHaveLength(1);
     expect(items[0]).toMatchObject({ id: "1", title: "A" });
   });
+
+  it("stringifies object content into a JSON string", async () => {
+    const rows = [{ id: "3", groupId: "g", type: "faq", langId: "he", title: "C", content: { foo: "bar" }, isPublished: true }];
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(new Response(JSON.stringify(rows), { status: 200 }));
+    const items = await fetchAllItems("https://api/x");
+    expect(items[0].content).toBe('{"foo":"bar"}');
+  });
 });
 
 describe("fetchItem", () => {
