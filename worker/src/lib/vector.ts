@@ -20,6 +20,14 @@ export async function upsertItemChunks(
   if (rows.length) await index.upsert(rows as unknown as VectorizeVector[]);
 }
 
+export type VectorRow = { id: string; values: number[]; metadata: ChunkMeta };
+
+// Batched cross-item upsert. The caller slices rows into batches to stay under
+// Vectorize's per-call size and the Worker's per-invocation subrequest limits.
+export async function upsertVectors(index: VectorizeIndex, rows: VectorRow[]): Promise<void> {
+  if (rows.length) await index.upsert(rows as unknown as VectorizeVector[]);
+}
+
 export async function deleteItem(index: VectorizeIndex, itemId: string, maxChunks = 64): Promise<void> {
   const ids = Array.from({ length: maxChunks }, (_, i) => `${itemId}:${i}`);
   await index.deleteByIds(ids);
