@@ -1,6 +1,7 @@
 import { Hono } from "hono";
 import { reindexAll, reindexById } from "./lib/ingest";
 import { handleChat } from "./lib/chat";
+import { verifyAdmin } from "./lib/auth";
 
 export type Env = {
   AI: Ai;
@@ -18,6 +19,9 @@ const app = new Hono<{ Bindings: Env }>();
 app.get("/health", (c) => c.json({ ok: true }));
 
 app.post("/reindex", async (c) => {
+  if (!(await verifyAdmin(c.env, c.req.header("Authorization") ?? null))) {
+    return c.json({ error: "unauthorized" }, 401);
+  }
   const body = await c.req.json<{ scope: "all" } | { scope: "item"; itemId: string }>();
   const result = body.scope === "item"
     ? await reindexById(c.env, body.itemId)
