@@ -7,10 +7,11 @@ import { buildContents } from "./prompt";
 import { streamGemini } from "./gemini";
 
 const RETRIEVAL_MIN_SCORE = 0.4;
-const TOP_K = 8;
+const TOP_K_FETCH = 20; // Vectorize caps topK at 20 with returnMetadata:"all"
+const TOP_K_USE = 15;
 
 const REFUSAL: Record<string, string> = {
-  he: "אני יכול/ה לעזור רק בנושאים שמופיעים באתר. אפשר לנסח מחדש?",
+  he: "אני יכול לעזור רק בנושאים שמופיעים באתר. אפשר לנסח מחדש?",
   ar: "يمكنني المساعدة فقط في المواضيع الموجودة على هذا الموقع.",
   en: "I can only help with topics covered on this site. Could you rephrase?",
   ru: "Я могу помочь только по темам, представленным на этом сайте.",
@@ -31,7 +32,10 @@ export function handleChat(env: Env, body: { messages: Msg[]; lang: string; sess
         if (detectCrisis(last)) send("crisis", { lang: body.lang });
 
         const [qv] = await embed(env.AI, [last]);
-        const hits = (await query(env.VECTORIZE, qv, TOP_K)).filter((h) => h.score >= RETRIEVAL_MIN_SCORE);
+        const all = (await query(env.VECTORIZE, qv, TOP_K_FETCH)).filter((h) => h.score >= RETRIEVAL_MIN_SCORE);
+        const sameLang = all.filter((h) => h.meta.langId === body.lang);
+        const chosen = sameLang.length >= 3 ? sameLang : all.filter((h) => h.meta.langId === "he");
+        const hits = (chosen.length ? chosen : all).slice(0, TOP_K_USE);
 
         if (hits.length === 0) {
           send("token", { text: REFUSAL[body.lang] ?? REFUSAL.en });
@@ -44,7 +48,7 @@ export function handleChat(env: Env, body: { messages: Msg[]; lang: string; sess
 
         send("sources", hits.map((h, i) => ({
           n: i + 1, itemId: h.meta.itemId, groupId: h.meta.groupId,
-          type: h.meta.type, langId: h.meta.langId, title: h.meta.title,
+          type: h.meta.type, langId: h.meta.langId, title: h.meta.title, text: h.meta.text,
         })));
         send("done", {});
       } catch (e) {

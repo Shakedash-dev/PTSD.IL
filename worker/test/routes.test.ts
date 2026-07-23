@@ -48,6 +48,7 @@ describe("/chat route", () => {
     expect(sources[0].itemId).toBe("1");
     expect(sources[0].title).toBe("T1");
     expect(sources[0].n).toBe(1);
+    expect(sources[0].text).toBe("grounded");
   });
 
   it("returns 429 when the session is already over the rate limit", async () => {

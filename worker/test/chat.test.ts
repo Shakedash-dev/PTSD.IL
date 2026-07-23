@@ -65,6 +65,33 @@ describe("handleChat", () => {
     expect(body).not.toContain("event: sources");
   });
 
+  it("drops an English-langId hit for a lang:he request when Hebrew hits exist", async () => {
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(geminiSSE("hi"));
+    const env = baseEnv();
+    env.VECTORIZE.query = async () => ({
+      matches: [
+        { score: 0.9, metadata: { itemId: "en-1", groupId: "g", type: "faq", langId: "en", title: "EnT", text: "english fact", chunkIndex: 0 } },
+        { score: 0.8, metadata: { itemId: "he-1", groupId: "g", type: "faq", langId: "he", title: "HeT", text: "עובדה בעברית", chunkIndex: 0 } },
+      ],
+    });
+    const res = await handleChat(env, { messages: [{ role: "user", content: "שאלה" }], lang: "he", sessionId: "s" });
+    const body = await readSSE(res);
+    const line = body.split("\n").find((l) => l.startsWith("data:") && l.includes("itemId"));
+    expect(line).toBeTruthy();
+    const sources = JSON.parse(line!.slice(5).trim());
+    expect(sources.some((s: any) => s.itemId === "en-1")).toBe(false);
+    expect(sources.some((s: any) => s.itemId === "he-1")).toBe(true);
+  });
+
+  it("includes source text in the sources frame", async () => {
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(geminiSSE("hi"));
+    const res = await handleChat(baseEnv(), { messages: [{ role: "user", content: "hi" }], lang: "en", sessionId: "s" });
+    const body = await readSSE(res);
+    const line = body.split("\n").find((l) => l.startsWith("data:") && l.includes("itemId"));
+    const sources = JSON.parse(line!.slice(5).trim());
+    expect(sources[0].text).toBe("grounded fact");
+  });
+
   it("emits frames in order: crisis < token < sources < done", async () => {
     vi.spyOn(globalThis, "fetch").mockResolvedValue(geminiSSE("hang in there [[1]]"));
     const res = await handleChat(baseEnv(), { messages: [{ role: "user", content: "I want to kill myself" }], lang: "en", sessionId: "s" });
