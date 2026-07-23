@@ -34,4 +34,13 @@ describe("chunk", () => {
     // Reassembling without overlap accounting should still cover the source content.
     expect(out[0].text.length).toBe(1600);
   });
+
+  it("does not hang or drop text when overlap >= max", () => {
+    const input = Array.from({ length: 5000 }, (_, i) => String.fromCharCode(97 + (i % 26))).join("");
+    const out = chunk(input, { max: 1600, overlap: 1600 }); // overlap === max (former infinite-loop case)
+    expect(out.length).toBeGreaterThan(0);
+    expect(out.every((c) => c.text.length > 0)).toBe(true);
+    expect(input.startsWith(out[0].text)).toBe(true);            // no truncation at the start
+    expect(input.endsWith(out[out.length - 1].text)).toBe(true); // no truncation at the end
+  });
 });
