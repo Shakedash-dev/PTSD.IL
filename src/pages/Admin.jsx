@@ -159,6 +159,13 @@ function Section({ title, count }) {
   );
 }
 
+/**
+ * @param {Object} props
+ * @param {React.ComponentType<{className?: string}>} props.icon
+ * @param {() => void} props.onClick
+ * @param {string} props.title
+ * @param {'danger'} [props.tone]
+ */
 function IconBtn({ icon: Icon, onClick, title, tone }) {
   return (
     <button
@@ -354,6 +361,16 @@ function FieldInput({ field, value, onChange }) {
 // draft intact instead of silently closing as if the save had gone through.
 // `onDelete` omitted means the card can't be deleted (not used currently, but
 // supported).
+/**
+ * @param {Object} props
+ * @param {any} props.item
+ * @param {any[]} props.fields
+ * @param {(draft: any) => Promise<boolean|void>} props.onSave
+ * @param {() => void} [props.onCancel]
+ * @param {() => void} [props.onDelete]
+ * @param {(item: any) => React.ReactNode} props.renderView
+ * @param {boolean} [props.startInEdit]
+ */
 function EditableCard({ item, fields, onSave, onCancel, onDelete, renderView, startInEdit = false }) {
   const [editing, setEditing] = useState(startInEdit);
   const [draft, setDraft] = useState(item);

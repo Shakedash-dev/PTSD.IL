@@ -72,6 +72,11 @@ const SOURCE_IDS = {
   questionnaire_hero:       '1456324504439-367cee3b3c32',
 };
 
+// Typed as a plain string-keyed record: callers look keys up both statically
+// (IMAGES.home_hero) and dynamically (IMAGES[p.imageKey] in pages/Home.jsx),
+// and the KEYS_ORDER entries below aren't preserved as literal types once
+// spread through Object.fromEntries.
+/** @type {Record<string, string>} */
 export const IMAGES = {
   ...Object.fromEntries(KEYS_ORDER.map(([key]) => [key, base(key)])),
   home_path1: illus('ptsd_sufferer'),

@@ -16,6 +16,12 @@ const TOOLBAR = [
 
 const FORMATS = ['header', 'bold', 'italic', 'underline', 'strike', 'list', 'blockquote', 'link'];
 
+/**
+ * @param {Object} props
+ * @param {string} [props.value]
+ * @param {(value: string) => void} props.onChange
+ * @param {string} [props.placeholder]
+ */
 export default function RichTextEditor({ value, onChange, placeholder }) {
   const quillRef = useRef(null);
   // Quill's own link tooltip is positioned relative to the text selection and gets

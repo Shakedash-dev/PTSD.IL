@@ -33,6 +33,19 @@ const TONE_CLASSES = {
   dark: 'bg-sanctuary text-sanctuary-foreground',
 };
 
+/**
+ * @param {Object} props
+ * @param {React.ReactNode} props.title
+ * @param {React.ReactNode} [props.subtitle]
+ * @param {React.ReactNode} [props.eyebrow]
+ * @param {'default'|'editorial'|'hero'} [props.size]
+ * @param {'center'|'start'} [props.align]
+ * @param {'card'|'canvas'|'muted'|'dark'} [props.tone]
+ * @param {React.ReactNode} [props.actions]
+ * @param {string} [props.image] optional URL: renders a soft full-bleed background photo
+ * @param {number} [props.imageOpacity] override opacity (0..1). Defaults vary by tone for contrast.
+ * @param {string} [props.className]
+ */
 export default function PageHeader({
   title,
   subtitle,
@@ -41,8 +54,8 @@ export default function PageHeader({
   align = 'center',
   tone = 'card',
   actions,
-  image,         // optional URL: renders a soft full-bleed background photo
-  imageOpacity,  // override opacity (0..1). Defaults vary by tone for contrast.
+  image,
+  imageOpacity,
   className = '',
 }) {
   const s = SIZE_CLASSES[size] || SIZE_CLASSES.default;

@@ -9,7 +9,7 @@ const Toaster = ({
 
   return (
     (<Sonner
-      theme={theme}
+      theme={/** @type {"light"|"dark"|"system"} */ (theme)}
       className="toaster group"
       toastOptions={{
         classNames: {

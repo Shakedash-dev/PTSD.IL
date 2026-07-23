@@ -8,6 +8,14 @@ import { ChevronDown, Check } from 'lucide-react';
 //   value: currently selected key
 //   onChange: (newKey) => void
 //   activeLabel: optional override for chip label when something is selected
+/**
+ * @param {Object} props
+ * @param {React.ReactNode} props.label
+ * @param {{key: string, label: React.ReactNode}[]} props.options
+ * @param {string} props.value
+ * @param {(key: string) => void} props.onChange
+ * @param {React.ReactNode} [props.activeLabel]
+ */
 export default function FilterChip({ label, options, value, onChange, activeLabel }) {
   const [open, setOpen] = useState(false);
   const ref = useRef(null);

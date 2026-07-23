@@ -110,6 +110,13 @@ function parseContent(item) {
 // audienceSlug/ageGroupSlug are accepted but ignored). Any audience/age-group
 // filtering below is therefore done client-side against the relations
 // (`item.audiences`, `item.ageGroups`) included on each returned Article.
+/**
+ * @param {Object} [opts]
+ * @param {string} [opts.type]
+ * @param {string} [opts.langId]
+ * @param {string} [opts.categoryId]
+ * @param {string} [opts.parentId]
+ */
 async function fetchArticles({ type, langId, categoryId, parentId } = {}) {
   const params = new URLSearchParams();
   if (type) params.set('type', type);
