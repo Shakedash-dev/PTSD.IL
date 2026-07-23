@@ -1422,7 +1422,13 @@ import { cors } from "hono/cors";
 import { checkLimit } from "./lib/ratelimit";
 
 app.use("*", async (c, next) => {
-  const mw = cors({ origin: c.env.SITE_ORIGIN, allowMethods: ["POST", "GET", "OPTIONS"] });
+  const mw = cors({
+    origin: c.env.SITE_ORIGIN,
+    allowMethods: ["POST", "GET", "OPTIONS"],
+    // /reindex is called cross-origin from the admin SPA with a Bearer token,
+    // so the preflight must permit the Authorization header explicitly.
+    allowHeaders: ["Content-Type", "Authorization"],
+  });
   return mw(c, next);
 });
 ```
