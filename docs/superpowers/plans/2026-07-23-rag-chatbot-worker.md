@@ -340,7 +340,9 @@ export type Chunk = { text: string; index: number };
 
 export function chunk(text: string, opts: { max?: number; overlap?: number } = {}): Chunk[] {
   const max = opts.max ?? 1600;
-  const overlap = opts.overlap ?? 200;
+  // Clamp overlap to [0, max-1] so the hard-split step (max - overlap) is always >= 1:
+  // guards against an infinite loop (overlap === max) and silent data loss (overlap > max).
+  const overlap = Math.min(Math.max(0, opts.overlap ?? 200), Math.max(0, max - 1));
   const paras = text.split(/\n{2,}/).map((p) => p.trim()).filter(Boolean);
   if (paras.length === 0) return [];
 
