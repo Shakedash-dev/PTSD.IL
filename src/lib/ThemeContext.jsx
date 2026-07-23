@@ -1,40 +1,18 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useEffect } from 'react';
 
-export const PALETTES = [
-  // ─────────────────────────────────────────────────────────────────────────────
-  // THEME 1 · Forest Canopy - Earth & Grounding
-  // ─────────────────────────────────────────────────────────────────────────────
-  {
-    id: 'forest-canopy',
-    label: 'ירוק',
-    background: '#DCF2E6',
-    card:       '#F0FAF5',
-    primary:    '#2E7A48',
-    primaryHover: '#206040',
-    highlight:  '#A86E48',
-    text:       '#1E2E22',
-    secondary:  '#3C5842',
-    muted:      '#BEE0CE',
-    border:     '#8EC4A4',
-  },
-
-  // ─────────────────────────────────────────────────────────────────────────────
-  // THEME 2 · Lavender - soft purple
-  // ─────────────────────────────────────────────────────────────────────────────
-  {
-    id: 'lavender',
-    label: 'סגול',
-    background: '#F5F0FA',
-    card:       '#FDF8FF',
-    primary:    '#8050B8',
-    primaryHover: '#6840A0',
-    highlight:  '#C4708A',
-    text:       '#28183A',
-    secondary:  '#5E4878',
-    muted:      '#EAE5F2',
-    border:     '#D0C0E0',
-  },
-];
+// Single fixed palette · Lavender - soft purple
+const PALETTE = {
+  id: 'lavender',
+  background: '#F5F0FA',
+  card:       '#FDF8FF',
+  primary:    '#8050B8',
+  primaryHover: '#6840A0',
+  highlight:  '#C4708A',
+  text:       '#28183A',
+  secondary:  '#5E4878',
+  muted:      '#EAE5F2',
+  border:     '#D0C0E0',
+};
 
 const ThemeContext = createContext(null);
 
@@ -85,16 +63,12 @@ function applyPalette(palette) {
 }
 
 export function ThemeProvider({ children }) {
-  const [paletteId, setPaletteId] = useState('lavender');
-
-  const palette = PALETTES.find(p => p.id === paletteId) || PALETTES[0];
-
   useEffect(() => {
-    applyPalette(palette);
-  }, [paletteId]);
+    applyPalette(PALETTE);
+  }, []);
 
   return (
-    <ThemeContext.Provider value={{ paletteId, setPaletteId, palette }}>
+    <ThemeContext.Provider value={{ palette: PALETTE }}>
       {children}
     </ThemeContext.Provider>
   );

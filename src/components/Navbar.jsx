@@ -4,7 +4,6 @@ import { useLang } from '@/lib/LanguageContext';
 import { t } from '@/lib/i18n';
 import { useUserType } from '@/contexts/UserTypeContext';
 import LanguageSwitcher from './LanguageSwitcher';
-import ThemePicker from './ThemePicker';
 import { Menu, X } from 'lucide-react';
 
 // Three user-type entry points, shown when the user is on a path-picker page
@@ -95,7 +94,6 @@ export default function Navbar() {
 
         {/* Right controls */}
         <div className="flex items-center gap-3">
-          <ThemePicker />
           <LanguageSwitcher />
           {navItems.length > 0 && (
             <button
