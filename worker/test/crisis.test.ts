@@ -22,4 +22,7 @@ describe("detectCrisis", () => {
     // "hurtful" contains "hurt" but not the phrase "hurt myself"
     expect(detectCrisis("That was a hurtful comment my coworker made.")).toBe(false);
   });
+  it("flags French self-harm phrasing", () => {
+    expect(detectCrisis("je veux en finir avec la vie")).toBe(true);
+  });
 });
