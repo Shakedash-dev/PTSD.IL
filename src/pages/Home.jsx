@@ -7,6 +7,7 @@ import SectionBlock from '@/components/SectionBlock';
 import { Button } from '@/components/ui/button';
 import { IMAGES } from '@/lib/images';
 import ValidatableContent from '@/components/ValidatableContent';
+import HeroChatInput from '@/components/chat/HeroChatInput';
 
 const quickNavItems = [
   { key: 'ptsd_info', path: '/ptsd-info', icon: Brain },
@@ -82,9 +83,7 @@ export default function Home() {
             </h1>
           </ValidatableContent>
           <ValidatableContent contentId="home.hero.subtitle" label="כותרת משנה - הום">
-            <p className="font-body text-lg sm:text-xl opacity-85 max-w-xl leading-relaxed mb-10">
-              {t(lang, 'hero_subtitle')}
-            </p>
+            <HeroChatInput />
           </ValidatableContent>
           <Button asChild variant="pill-green" size="pill-lg">
             <a href="#paths" className="gap-3">
