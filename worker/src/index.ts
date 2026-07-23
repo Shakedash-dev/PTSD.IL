@@ -1,7 +1,9 @@
 import { Hono } from "hono";
+import { cors } from "hono/cors";
 import { reindexAll, reindexById } from "./lib/ingest";
 import { handleChat } from "./lib/chat";
 import { verifyAdmin } from "./lib/auth";
+import { checkLimit } from "./lib/ratelimit";
 
 export type Env = {
   AI: Ai;
@@ -15,6 +17,11 @@ export type Env = {
 };
 
 const app = new Hono<{ Bindings: Env }>();
+
+app.use("*", async (c, next) => {
+  const mw = cors({ origin: c.env.SITE_ORIGIN, allowMethods: ["POST", "GET", "OPTIONS"] });
+  return mw(c, next);
+});
 
 app.get("/health", (c) => c.json({ ok: true }));
 
@@ -31,6 +38,7 @@ app.post("/reindex", async (c) => {
 
 app.post("/chat", async (c) => {
   const body = await c.req.json<{ messages: { role: "user" | "assistant"; content: string }[]; lang: string; sessionId: string }>();
+  if (!(await checkLimit(c.env, body.sessionId))) return c.json({ error: "rate_limited" }, 429);
   return handleChat(c.env, body);
 });
 
