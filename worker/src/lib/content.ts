@@ -16,7 +16,7 @@ const SKIP_KEYS = new Set([
 function walk(node: unknown, key: string, out: string[]): void {
   if (typeof node === "string") {
     const v = node.trim();
-    if (!v || SKIP_KEYS.has(key) || /^https?:\/\//i.test(v)) return;
+    if (!v || /^https?:\/\//i.test(v)) return;
     out.push(v);
   } else if (Array.isArray(node)) {
     for (const child of node) walk(child, key, out);
@@ -29,7 +29,8 @@ function walk(node: unknown, key: string, out: string[]): void {
 }
 
 export function extractText(item: Item): { title: string; text: string } {
-  const parts: string[] = [item.title.trim()].filter(Boolean);
+  const title = item.title.trim();
+  const parts: string[] = [title].filter(Boolean);
   if (item.content) {
     try {
       walk(JSON.parse(item.content), "", parts);
@@ -39,5 +40,5 @@ export function extractText(item: Item): { title: string; text: string } {
   }
   // Dedupe consecutive duplicates (title often repeats inside content).
   const deduped = parts.filter((p, i) => p !== parts[i - 1]);
-  return { title: item.title.trim(), text: deduped.join("\n\n") };
+  return { title, text: deduped.join("\n\n") };
 }
