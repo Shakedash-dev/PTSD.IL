@@ -99,7 +99,7 @@ export default function Navbar() {
             <button
               className="md:hidden p-2 rounded-lg text-foreground hover:bg-muted transition-colors duration-300"
               onClick={() => setMenuOpen(o => !o)}
-              aria-label="תפריט"
+              aria-label={t(lang, 'nav_menu')}
             >
               {menuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>

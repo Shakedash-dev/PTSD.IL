@@ -1,6 +1,8 @@
 import React from 'react';
 import { Outlet, useLocation, Link } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
+import { useLang } from '@/lib/LanguageContext';
+import { t } from '@/lib/i18n';
 import Navbar from './Navbar';
 import Footer from './Footer';
 import ChatbotFAB from './ChatbotFAB';
@@ -36,15 +38,16 @@ export default function Layout() {
   );
 }
 
-// SanctuaryNav intentionally uses hardcoded Hebrew and a tel: anchor - it's a minimal safety strip,
-// not a full i18n'd nav. The crisis line (1201) is Israel-specific and needs no translation.
+// SanctuaryNav is a minimal safety strip for the calming pages. The crisis line (1201)
+// is Israel-specific and intentionally hardcoded; the "Back" label is localized.
 function SanctuaryNav() {
   const location = useLocation();
+  const { lang } = useLang();
   const backTo = location.pathname === '/calming' ? '/' : '/calming';
   return (
     <header className="fixed top-0 inset-x-0 z-50 px-5 h-14 flex items-center justify-between bg-background border-b border-border">
       <Link to={backTo} className="text-muted-foreground hover:text-foreground text-sm transition-colors duration-300">
-        חזרה
+        {t(lang, 'back')}
       </Link>
       <a href="tel:1201" className="text-muted-foreground hover:text-foreground text-xs transition-colors duration-300">ער״ן: 1201</a>
     </header>

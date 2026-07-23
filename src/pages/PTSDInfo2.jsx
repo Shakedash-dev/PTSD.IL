@@ -38,7 +38,7 @@ export default function PTSDInfo2() {
           {/* Sticky TOC */}
           <nav className="md:sticky md:top-24 self-start">
             <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground font-semibold mb-4">
-              {lang === 'en' ? 'Questions' : lang === 'ar' ? 'الأسئلة' : 'שאלות'}
+              {t(lang, 'ptsd_info_questions_heading')}
             </p>
             <ul className="flex flex-col gap-1 max-h-[70vh] overflow-y-auto pr-2">
               {faqs.map((faq, i) => {

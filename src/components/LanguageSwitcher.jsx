@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useLang } from '@/lib/LanguageContext';
-import { LANGUAGES } from '@/lib/i18n';
+import { LANGUAGES, t } from '@/lib/i18n';
 import { Languages } from 'lucide-react';
 
 export default function LanguageSwitcher() {
@@ -15,7 +15,7 @@ export default function LanguageSwitcher() {
       <button
         onClick={() => setOpen(o => !o)}
         className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors duration-300 px-2 py-1"
-        aria-label="שינוי שפה / Change language"
+        aria-label={t(lang, 'lang_switcher_label')}
       >
         <Languages className="w-4 h-4" />
         {current.label}

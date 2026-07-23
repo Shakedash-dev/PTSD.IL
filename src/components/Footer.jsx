@@ -20,7 +20,7 @@ export default function Footer() {
 
           {/* Quick links */}
           <div>
-            <h4 className="font-semibold text-sm mb-3 text-foreground">מידע ותמיכה</h4>
+            <h4 className="font-semibold text-sm mb-3 text-foreground">{t(lang, 'footer_info_heading')}</h4>
             <ul className="space-y-2">
               {[
                 { key: 'ptsd_info', path: '/ptsd-info' },
@@ -39,7 +39,7 @@ export default function Footer() {
 
           {/* Emergency */}
           <div>
-            <h4 className="font-semibold text-sm mb-3 text-foreground">קו חירום - ער״ן</h4>
+            <h4 className="font-semibold text-sm mb-3 text-foreground">{t(lang, 'footer_emergency_heading')}</h4>
             <div className="flex gap-2">
               <a
                 href="tel:1201"
@@ -66,14 +66,14 @@ export default function Footer() {
 
         <div className="border-t border-border pt-6 flex flex-wrap items-center justify-between gap-3 text-xs text-muted-foreground">
           <p>
-            האתר נכתב בשיתוף עם{' '}
+            {t(lang, 'footer_credit_prefix')}{' '}
             <a
               href="https://metiv.org/"
               target="_blank"
               rel="noopener noreferrer"
               className="hover:text-primary transition-natural underline"
             >
-              מטיב - המרכז לפסיכוטראומה
+              {t(lang, 'footer_partner_org')}
             </a>
           </p>
           <Link to="/sources" className="hover:text-primary transition-natural">

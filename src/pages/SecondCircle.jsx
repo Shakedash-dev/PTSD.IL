@@ -8,7 +8,7 @@ import { IMAGES, SECOND_CIRCLE_ILLUSTRATIONS } from '@/lib/images';
 
 const sections = [
   { key: 'ptsd_info', path: '/ptsd-info' },
-  { key: 'second_circle', path: '/second-circle-tools', label_override: 'כלים להתמודדות עם נפגע/ת PTSD' },
+  { key: 'second_circle', path: '/second-circle-tools', labelKey: 'nav_second_circle_tools' },
   { key: 'rights', path: '/rights' },
   { key: 'treatment', path: '/treatment' },
   { key: 'children_content', path: '/children' },
@@ -36,13 +36,13 @@ export default function SecondCircle() {
             <Link key={section.key} to={section.path} className="group block text-center">
               <ArchFrame
                 src={SECOND_CIRCLE_ILLUSTRATIONS[section.key]}
-                alt={section.label_override || t(lang, section.key)}
+                alt={t(lang, section.labelKey || section.key)}
                 aspect="portrait"
                 objectFit="contain"
                 className="mb-4 bg-muted shadow-card group-hover:shadow-card-hover transition-all duration-500 group-hover:-translate-y-1"
               />
               <h3 className="font-heading font-semibold text-base sm:text-lg text-foreground">
-                {section.label_override || t(lang, section.key)}
+                {t(lang, section.labelKey || section.key)}
               </h3>
             </Link>
           ))}
