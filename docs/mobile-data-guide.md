@@ -12,8 +12,9 @@ reference: [`api.md`](./api.md).
 
 ## 1. Fetching (read-only)
 
-Everything the app displays is a **public GET** — no token needed. (Writing is
-admin-only and not something the mobile app does.)
+Everything the app displays is a **public GET - no auth, no token, ever.** The
+app only reads, and every read endpoint is open. (Writing is admin-only, done
+from the website's admin panel behind Google SSO - never from the app.)
 
 | You want | Call |
 |----------|------|
@@ -40,7 +41,7 @@ then `createdAt`. Only published items are returned.
 There is one generic content table. **Each row is one content item, in one
 language.** The `type` field says what kind of thing it is. Despite the name
 "article", it covers FAQs, tools, sources, treatment steps, children content,
-etc. Communities are the one exception — they have their own endpoint/shape (§6).
+etc. Communities are the one exception - they have their own endpoint/shape (§7).
 
 An article looks like this (top-level, from the API):
 
@@ -49,7 +50,7 @@ An article looks like this (top-level, from the API):
   "id": "uuid",
   "type": "faq",              // see enum below
   "groupId": "uuid",          // links translations of the SAME item (§5)
-  "langId": "he",             // "he" | "ar" | "en" | "ru" | "fr"
+  "langId": "he",             // "he" | "ar" | "en" | "ru" | "fr" | "ru" | "fr"
   "title": "…",               // plain text (the question / title / name)
   "description": null,        // native columns below are usually null —
   "content": "{…json…}",      //   the real payload is this JSON STRING (§4)
@@ -242,16 +243,20 @@ today are `/questionnaire` and `/calming`. Detect by `url.startsWith('/')`.
 
 ## 6. Languages & translations
 
-- Request a language with `langId` (`he`, `ar`, `en`, `ru`, `fr`).
-- **Coverage is partial:** Hebrew (`he`) is complete; `ar`/`en` cover only the
-  FAQs; `ru`/`fr` are empty. If a `langId` query returns `[]` (or is missing an
-  item), **fall back to Hebrew** (`he`) — that's the source language.
-- **`groupId` links translations of the same item.** A FAQ that exists in he/ar/en
-  is three rows sharing one `groupId`. If you need the other-language version of a
-  specific item, match on `groupId`. Only FAQs are translated today; everything
-  else is Hebrew-only.
-- **Direction:** `GET /api/languages` gives each language's `direction`
-  (`rtl`/`ltr`). `he`/`ar` are RTL, `en` is LTR.
+- Request a language with `langId` (`he`, `ar`, `en`, `ru`, `fr`). All five are
+  active in the DB (`GET /api/languages`).
+- **Articles are fully translated.** Every content group now exists in all five
+  languages across every `type` (not just FAQs) - one row per language, so a group
+  is five rows. Hebrew (`he`) is the source language. As a defensive measure, if a
+  `langId` query ever returns `[]` or is missing a specific item, **fall back to
+  Hebrew**.
+- **`groupId` links the translations of one item.** To fetch another language's
+  version of a specific item, match on `groupId`.
+- **Communities are the exception - still Hebrew-only.** `GET /api/communities`
+  has no `langId`/`groupId` (one row per community, see §7); it is not yet
+  multilingual. Everything served from `/api/articles` is.
+- **Direction:** each language's `direction` (`rtl`/`ltr`) comes from
+  `GET /api/languages`. `he`/`ar` are RTL; `en`/`ru`/`fr` are LTR.
 
 ---
 
