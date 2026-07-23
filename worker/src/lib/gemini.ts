@@ -22,15 +22,24 @@ export async function* streamGemini(env: Env, payload: Payload): AsyncGenerator<
     buf += value;
     let nl: number;
     while ((nl = buf.indexOf("\n")) >= 0) {
-      const line = buf.slice(0, nl).trim();
+      for (const t of extractTexts(buf.slice(0, nl))) yield t;
       buf = buf.slice(nl + 1);
-      if (!line.startsWith("data:")) continue;
-      const json = line.slice(5).trim();
-      if (!json || json === "[DONE]") continue;
-      try {
-        const obj = JSON.parse(json) as { candidates?: { content?: { parts?: { text?: string }[] } }[] };
-        for (const p of obj.candidates?.[0]?.content?.parts ?? []) if (p.text) yield p.text;
-      } catch { /* ignore partial frame */ }
     }
+  }
+  // Flush a final frame that arrived without a trailing newline (truncated / early close).
+  for (const t of extractTexts(buf)) yield t;
+}
+
+// Parse one SSE line into zero or more text deltas.
+function extractTexts(rawLine: string): string[] {
+  const line = rawLine.trim();
+  if (!line.startsWith("data:")) return [];
+  const json = line.slice(5).trim();
+  if (!json || json === "[DONE]") return [];
+  try {
+    const obj = JSON.parse(json) as { candidates?: { content?: { parts?: { text?: string }[] } }[] };
+    return (obj.candidates?.[0]?.content?.parts ?? []).map((p) => p.text).filter((t): t is string => !!t);
+  } catch {
+    return [];
   }
 }

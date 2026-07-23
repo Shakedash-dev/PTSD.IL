@@ -41,4 +41,13 @@ describe("streamGemini", () => {
     for await (const t of streamGemini(env, { systemInstruction: { parts: [{ text: "s" }] }, contents: [] })) out.push(t);
     expect(out.join("")).toBe("Hello");
   });
+
+  it("captures the final frame when the stream ends without a trailing newline", async () => {
+    const frame = `data: ${JSON.stringify({ candidates: [{ content: { parts: [{ text: "final" }] } }] })}`; // no trailing newline
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(new Response(sseBody([frame]), { status: 200 }));
+    const env = { GEMINI_MODEL: "m", GEMINI_API_KEY: "k" } as any;
+    const out: string[] = [];
+    for await (const t of streamGemini(env, { systemInstruction: { parts: [{ text: "s" }] }, contents: [] })) out.push(t);
+    expect(out.join("")).toBe("final");
+  });
 });
