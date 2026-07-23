@@ -8,15 +8,16 @@ const hit = (text: string, i: number): Hit => ({
 });
 
 describe("buildContents", () => {
-  it("numbers sources and includes grounding rule + Markdown/no-inline-citation rule", () => {
+  it("numbers sources and includes grounding rule + Markdown/internal-citation-marker rule", () => {
     const out = buildContents([{ role: "user", content: "מה זה?" }], [hit("aaa", 1), hit("bbb", 2)], "he");
     const sys = out.systemInstruction.parts[0].text;
-    expect(sys).not.toMatch(/\[\[n\]\]/);
-    expect(sys).toMatch(/markdown/i); // new Markdown-answer rule
-    expect(sys).toMatch(/do not cite sources inline/i); // new no-inline-citation rule
+    expect(sys).toMatch(/\[\[1\]\]/); // internal citation marker instruction re-enabled
+    expect(sys).toMatch(/markdown/i); // Markdown-answer rule
+    expect(sys).toMatch(/do not add your own 'sources'\/'references' section/i); // no self-authored sources heading
     expect(sys).toMatch(/only using the numbered sources/i); // grounding rule
     expect(sys).toMatch(/only help with topics covered on this site/i); // refusal rule (distinct)
     expect(sys).toMatch(/masculine grammatical forms/i); // masculine self-reference persona rule
+    expect(sys).toMatch(/self-help/i); // staged-guidance rule: lead with self-help first
     const ctx = out.contents[0].parts[0].text;
     expect(ctx).toContain("[1]");
     expect(ctx).toContain("T1"); // source title present
