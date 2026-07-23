@@ -1196,8 +1196,7 @@ export function handleChat(env: Env, body: { messages: Msg[]; lang: string; sess
         if (hits.length === 0) {
           send("token", { text: REFUSAL[body.lang] ?? REFUSAL.en });
           send("done", {});
-          ctrl.close();
-          return;
+          return; // the finally block is the sole closer of the controller
         }
 
         const payload = buildContents(body.messages, hits, body.lang);
