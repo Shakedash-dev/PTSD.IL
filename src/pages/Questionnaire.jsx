@@ -14,7 +14,6 @@ const QUESTIONNAIRE = db.questionnaire;
 const PCL5_SECTIONS_HE = QUESTIONNAIRE.he.sections;
 const PCL5_SCALE_HE = QUESTIONNAIRE.he.scale;
 const PCL5_INTRO_HE = QUESTIONNAIRE.he.intro;
-const PCL5_QUESTIONS_EN = QUESTIONNAIRE.en.questions;
 
 const SCALE_KEYS = ['not_at_all', 'a_little', 'moderately', 'quite_a_bit', 'extremely'];
 
@@ -68,7 +67,10 @@ export default function Questionnaire() {
   const { lang } = useLang();
   const isRTL = document.documentElement.getAttribute('dir') === 'rtl';
   const ArrowIcon = isRTL ? ArrowLeft : ArrowRight;
-  const isHebrew = lang !== 'en';
+  // Hebrew renders the sectioned, friendly format below; every other language
+  // (en/ar/ru/fr) uses the flat clinical list with i18n answer-scale labels.
+  const isHebrew = lang === 'he';
+  const flatQuestions = QUESTIONNAIRE[lang]?.questions || QUESTIONNAIRE.en.questions;
 
   const [answers, setAnswers] = useState({});
   const [result, setResult] = useState(null);
@@ -166,7 +168,7 @@ export default function Questionnaire() {
           ) : (
             /* English: flat clinical format */
             <div className="space-y-6">
-              {PCL5_QUESTIONS_EN.map((q, idx) => (
+              {flatQuestions.map((q, idx) => (
                 <QuestionCard
                   key={idx}
                   idx={idx}
@@ -198,7 +200,7 @@ export default function Questionnaire() {
             </button>
             {answered < TOTAL && (
               <p className="text-sm text-muted-foreground mt-2">
-                {isHebrew ? `נותרו ${TOTAL - answered} שאלות` : `${TOTAL - answered} questions remaining`}
+                {`${TOTAL - answered} ${t(lang, 'questions_remaining_suffix')}`}
               </p>
             )}
           </div>
@@ -254,7 +256,7 @@ export default function Questionnaire() {
                 className="px-6 py-3 bg-muted text-foreground rounded-super font-medium hover:bg-muted/80 transition-natural flex items-center justify-center gap-2"
               >
                 <RefreshCw className="w-4 h-4" />
-                {isHebrew ? 'מלא/י מחדש' : 'Start over'}
+                {t(lang, 'start_over')}
               </button>
             </div>
 
