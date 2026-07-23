@@ -5,6 +5,11 @@ export type Item = {
   langId: string;
   title: string;
   content: string; // JSON string, may be empty
+  // Slug of the item's primary category (from the `categories` relation on the
+  // bulk /articles response), used to route `type=faq` chat citations to the
+  // right page (rights vs ptsd-info vs second-circle). Absent when the item
+  // has no category assigned.
+  categorySlug?: string;
 };
 
 // Leaf keys that carry URLs/ids/non-prose - never index as text.

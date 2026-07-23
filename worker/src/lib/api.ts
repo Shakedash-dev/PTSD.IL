@@ -1,8 +1,16 @@
 import type { Item } from "./content";
 
-type Row = Partial<Item> & { isPublished?: boolean };
+// The bulk/single article endpoints don't return a flat `categorySlug` field —
+// they return a `categories` relation (array of Category objects, each with a
+// `slug`), since an article can carry multiple categoryIds. We take the first
+// category's slug as the item's primary category for chip routing. Per
+// docs/frontend-api-integration.md the API's category slugs (e.g. "rights")
+// already match the frontend's expected route slugs, so no remapping is
+// applied here — if that ever diverges, map it in this function.
+type Row = Partial<Item> & { isPublished?: boolean; categories?: Array<{ slug?: string }> };
 
 function normalize(r: Row): Item {
+  const categorySlug = r.categories?.[0]?.slug;
   return {
     id: String(r.id),
     groupId: String(r.groupId ?? r.id),
@@ -10,6 +18,7 @@ function normalize(r: Row): Item {
     langId: String(r.langId ?? "he"),
     title: String(r.title ?? ""),
     content: typeof r.content === "string" ? r.content : JSON.stringify(r.content ?? ""),
+    ...(categorySlug ? { categorySlug } : {}),
   };
 }
 

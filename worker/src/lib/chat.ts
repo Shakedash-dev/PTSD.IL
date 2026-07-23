@@ -49,6 +49,7 @@ export function handleChat(env: Env, body: { messages: Msg[]; lang: string; sess
         send("sources", hits.map((h, i) => ({
           n: i + 1, itemId: h.meta.itemId, groupId: h.meta.groupId,
           type: h.meta.type, langId: h.meta.langId, title: h.meta.title, text: h.meta.text,
+          categorySlug: h.meta.categorySlug,
         })));
         send("done", {});
       } catch (e) {

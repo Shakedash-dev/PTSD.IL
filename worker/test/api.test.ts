@@ -44,6 +44,25 @@ describe("fetchAllItems", () => {
     const items = await fetchAllItems("https://api/x");
     expect(items[0].content).toBe('{"foo":"bar"}');
   });
+
+  it("derives categorySlug from the first entry of the categories relation", async () => {
+    const rows = [
+      {
+        id: "4", groupId: "g", type: "faq", langId: "he", title: "D", content: "{}", isPublished: true,
+        categories: [{ id: "cat-1", slug: "rights", name: "Rights" }, { id: "cat-2", slug: "other", name: "Other" }],
+      },
+    ];
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(new Response(JSON.stringify(rows), { status: 200 }));
+    const items = await fetchAllItems("https://api/x");
+    expect(items[0].categorySlug).toBe("rights");
+  });
+
+  it("leaves categorySlug undefined when the item has no categories", async () => {
+    const rows = [{ id: "5", groupId: "g", type: "faq", langId: "he", title: "E", content: "{}", isPublished: true }];
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(new Response(JSON.stringify(rows), { status: 200 }));
+    const items = await fetchAllItems("https://api/x");
+    expect(items[0].categorySlug).toBeUndefined();
+  });
 });
 
 describe("fetchItem", () => {
@@ -73,5 +92,15 @@ describe("fetchItem", () => {
   it("throws on non-200/non-404", async () => {
     vi.spyOn(globalThis, "fetch").mockResolvedValue(new Response("nope", { status: 502 }));
     await expect(fetchItem("https://api/x", "1")).rejects.toThrow(/502/);
+  });
+
+  it("derives categorySlug from the categories relation", async () => {
+    const row = {
+      id: "1", groupId: "g", type: "faq", langId: "he", title: "A", content: "{}", isPublished: true,
+      categories: [{ id: "cat-1", slug: "ptsd-info", name: "PTSD Info" }],
+    };
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(new Response(JSON.stringify(row), { status: 200 }));
+    const item = await fetchItem("https://api/x", "1");
+    expect(item?.categorySlug).toBe("ptsd-info");
   });
 });

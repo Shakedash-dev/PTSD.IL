@@ -5,6 +5,7 @@ import type { Item } from "../src/lib/content";
 const item: Item = {
   id: "1", groupId: "g", type: "faq", langId: "he", title: "כותרת",
   content: JSON.stringify({ answer: "טקסט תשובה מספיק ארוך כדי להוות צ'אנק." }),
+  categorySlug: "second-circle",
 };
 
 describe("reindexItem", () => {
@@ -20,9 +21,10 @@ describe("reindexItem", () => {
 
     const out = await reindexItem(env, item);
     expect(out.upserted).toBeGreaterThan(0);
-    const call = (upsert.mock.calls[0] as unknown[])[0] as Array<{ id: string; metadata: { itemId: string } }>;
+    const call = (upsert.mock.calls[0] as unknown[])[0] as Array<{ id: string; metadata: { itemId: string; categorySlug?: string } }>;
     expect(call[0].id).toBe("1:0");
     expect(call[0].metadata.itemId).toBe("1");
+    expect(call[0].metadata.categorySlug).toBe("second-circle");
   });
 
   it("clears stale chunks and returns upserted:0 when there is no extractable text", async () => {

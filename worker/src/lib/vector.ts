@@ -6,6 +6,9 @@ export type ChunkMeta = {
   title: string;
   text: string;
   chunkIndex: number;
+  // Primary category slug (rights/ptsd-info/second-circle/...), used by the
+  // frontend to route `type=faq` citation chips to the right page.
+  categorySlug?: string;
 };
 
 export type Hit = { score: number; meta: ChunkMeta };

@@ -25,6 +25,7 @@ export async function reindexItem(env: Env, item: Item): Promise<{ upserted: num
   const metas: ChunkMeta[] = chunks.map((c) => ({
     itemId: item.id, groupId: item.groupId, type: item.type,
     langId: item.langId, title, text: c.text, chunkIndex: c.index,
+    categorySlug: item.categorySlug,
   }));
   await deleteItem(env.VECTORIZE, item.id); // clear stale chunks first
   await upsertItemChunks(env.VECTORIZE, item.id, vectors, metas);
@@ -42,6 +43,7 @@ export async function reindexAll(env: Env): Promise<{ upserted: number }> {
       metas.push({
         itemId: item.id, groupId: item.groupId, type: item.type,
         langId: item.langId, title, text: c.text, chunkIndex: c.index,
+        categorySlug: item.categorySlug,
       });
     }
   }

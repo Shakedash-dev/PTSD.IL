@@ -10,6 +10,7 @@ describe("reindexAll (batched bulk path)", () => {
       id: String(i), groupId: "g", type: "faq", langId: "he", title: `T${i}`,
       content: JSON.stringify({ answer: `answer text number ${i}` }),
       isPublished: true,
+      categories: [{ id: "cat-1", slug: "rights", name: "Rights" }],
     }));
     const aiRun = vi.fn(async (_m: string, inp: { text: string[] }) => ({ data: inp.text.map(() => [0.1, 0.2]) }));
     const upsert = vi.fn(async () => ({ mutationId: "m" }));
@@ -24,10 +25,11 @@ describe("reindexAll (batched bulk path)", () => {
     // 120 vectors / 500-per-upsert-batch = 1 upsert subrequest
     expect(upsert).toHaveBeenCalledTimes(1);
     // total subrequests = 1 fetch + 3 embed + 1 upsert = 5, far under the 50 cap
-    const firstBatch = (upsert.mock.calls[0] as unknown[])[0] as Array<{ id: string; metadata: { itemId: string } }>;
+    const firstBatch = (upsert.mock.calls[0] as unknown[])[0] as Array<{ id: string; metadata: { itemId: string; categorySlug?: string } }>;
     expect(firstBatch).toHaveLength(120);
     expect(firstBatch[0].id).toBe("0:0");
     expect(firstBatch[0].metadata.itemId).toBe("0");
+    expect(firstBatch[0].metadata.categorySlug).toBe("rights");
   });
 
   it("returns upserted:0 and makes no AI/upsert calls when there are no items", async () => {

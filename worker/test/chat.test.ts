@@ -13,7 +13,7 @@ async function readSSE(res: Response): Promise<string> {
 const baseEnv = () => ({
   AI: { run: async (_m: string, i: { text: string[] }) => ({ data: i.text.map(() => [0.1, 0.2]) }) },
   VECTORIZE: {
-    query: async () => ({ matches: [{ score: 0.9, metadata: { itemId: "1", groupId: "g", type: "faq", langId: "he", title: "T", text: "grounded fact", chunkIndex: 0 } }] }),
+    query: async () => ({ matches: [{ score: 0.9, metadata: { itemId: "1", groupId: "g", type: "faq", langId: "he", title: "T", text: "grounded fact", chunkIndex: 0, categorySlug: "rights" } }] }),
   },
   GEMINI_MODEL: "m", GEMINI_API_KEY: "k",
 }) as any;
@@ -90,6 +90,15 @@ describe("handleChat", () => {
     const line = body.split("\n").find((l) => l.startsWith("data:") && l.includes("itemId"));
     const sources = JSON.parse(line!.slice(5).trim());
     expect(sources[0].text).toBe("grounded fact");
+  });
+
+  it("includes categorySlug in the sources frame so faq chips can route to the right page", async () => {
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(geminiSSE("hi"));
+    const res = await handleChat(baseEnv(), { messages: [{ role: "user", content: "hi" }], lang: "en", sessionId: "s" });
+    const body = await readSSE(res);
+    const line = body.split("\n").find((l) => l.startsWith("data:") && l.includes("itemId"));
+    const sources = JSON.parse(line!.slice(5).trim());
+    expect(sources[0].categorySlug).toBe("rights");
   });
 
   it("emits frames in order: crisis < token < sources < done", async () => {
