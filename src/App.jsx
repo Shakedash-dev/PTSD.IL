@@ -13,7 +13,7 @@ import { ThemeProvider } from '@/lib/ThemeContext';
 import { ValidationProvider } from '@/contexts/ValidationContext';
 import { UserTypeProvider } from '@/contexts/UserTypeContext';
 import Layout from '@/components/Layout';
-import { isAuthenticated, hasAdminAccess, logout, AUTH_CHANGE_EVENT } from '@/lib/auth';
+import { isAuthenticated, hasAdminAccess, hasUserManagementAccess, logout, AUTH_CHANGE_EVENT } from '@/lib/auth';
 
 import Home from '@/pages/Home';
 import FirstCircle from '@/pages/FirstCircle';
@@ -36,20 +36,22 @@ import Admin from '@/pages/Admin';
 import AdminLogin from '@/pages/AdminLogin';
 
 // Route guard for /admin: not authenticated -> login page; authenticated but
-// without admin/moderator role -> a short "no access" message + logout
-// button (the panel itself is never rendered in that case); otherwise the
-// panel. Listens for AUTH_CHANGE_EVENT (fired by src/lib/auth.js on
+// without admin/moderator role AND without masteradmin role -> a short "no
+// access" message + logout button (the panel itself is never rendered in
+// that case); otherwise the panel. A pure masteradmin (no admin/moderator)
+// must still get in - Admin.jsx itself decides which tabs/panels that user
+// actually sees. Listens for AUTH_CHANGE_EVENT (fired by src/lib/auth.js on
 // login/logout, and by src/api/adminClient.js on a 401) so the view updates
 // reactively without a manual refresh.
 function AdminGate() {
   const { lang } = useLang();
   const [authed, setAuthed] = useState(() => isAuthenticated());
-  const [allowed, setAllowed] = useState(() => hasAdminAccess());
+  const [allowed, setAllowed] = useState(() => hasAdminAccess() || hasUserManagementAccess());
 
   useEffect(() => {
     function sync() {
       setAuthed(isAuthenticated());
-      setAllowed(hasAdminAccess());
+      setAllowed(hasAdminAccess() || hasUserManagementAccess());
     }
     window.addEventListener(AUTH_CHANGE_EVENT, sync);
     return () => window.removeEventListener(AUTH_CHANGE_EVENT, sync);

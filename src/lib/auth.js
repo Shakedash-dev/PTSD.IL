@@ -98,3 +98,24 @@ export function hasAdminAccess() {
   const roles = getClaims()?.roles || [];
   return roles.some(r => ADMIN_PANEL_ROLES.includes(r));
 }
+
+// User management (/admin/users, docs/api.md §"Users") needs masteradmin -
+// per that doc, masteradmin is NOT implicitly granted admin/moderator CRUD
+// (and vice versa: an admin/moderator without masteradmin cannot manage
+// users), so this is intentionally a separate exact-match check from
+// hasAdminAccess() above, not folded into ADMIN_PANEL_ROLES.
+const USER_MANAGEMENT_ROLES = ['masteradmin'];
+
+export function hasUserManagementAccess() {
+  if (!isAuthenticated()) return false;
+  const roles = getClaims()?.roles || [];
+  return roles.some(r => USER_MANAGEMENT_ROLES.includes(r));
+}
+
+// The authenticated user's own id, read from the JWT `sub` claim (standard
+// JWT/NestJS convention). Used for UI purposes only (e.g. hiding "delete
+// self" in the Users panel) - the backend independently rejects deleting
+// your own account regardless of what this returns.
+export function getCurrentUserId() {
+  return getClaims()?.sub ?? null;
+}

@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Settings, Users, FileText, BookOpen, HelpCircle, Wrench, Heart, Baby, Shield, ClipboardList, Pencil, Trash2, Plus, Check, X, LogOut, Info } from 'lucide-react';
+import { Settings, Users, UserCog, KeyRound, FileText, BookOpen, HelpCircle, Wrench, Heart, Baby, Shield, ClipboardList, Pencil, Trash2, Plus, Check, X, LogOut, Info } from 'lucide-react';
 import { toast } from 'sonner';
 import { db } from '@/data/db';
 import RichTextEditor from '@/components/RichTextEditor';
-import { logout } from '@/lib/auth';
+import { logout, hasAdminAccess, hasUserManagementAccess, getCurrentUserId } from '@/lib/auth';
 import { t } from '@/lib/i18n';
 import { ForbiddenError, UnauthorizedError } from '@/api/adminClient';
 import {
@@ -17,6 +17,7 @@ import {
   loadChildrenGuidelines, saveChildrenGuidelines,
   loadChildrenResource, saveChildrenResource, removeChildrenResource,
 } from '@/api/adminSource';
+import { listUsers, createUser, updateUserRoles, updateUserPassword, deleteUser } from '@/api/adminUsers';
 
 // Runs a create/update/delete call against adminSource, converting the admin
 // client's typed errors (src/api/adminClient.js) into a toast instead of
@@ -94,6 +95,20 @@ const SOURCE_CATEGORY_LABELS = {
   international: 'בינלאומי',
   official: 'רשמי',
 };
+// Valid roles per docs/api.md §"Users" - exact-match, masteradmin is not
+// implicitly any of the others.
+const ROLE_LABELS = {
+  masteradmin: 'מנהל-על',
+  admin: 'מנהל תוכן',
+  moderator: 'מנחה',
+  viewer: 'צופה',
+};
+const ROLE_BADGE_COLORS = {
+  masteradmin: 'bg-red-100 text-red-700',
+  admin: 'bg-blue-100 text-blue-700',
+  moderator: 'bg-purple-100 text-purple-700',
+  viewer: 'bg-muted text-muted-foreground',
+};
 
 // Rights categories are audience buckets - order/keys mirror the panel's
 // category tabs. adminSource's loadRightsFaq/saveRightsFaq accept either
@@ -111,7 +126,8 @@ function toOptions(map) {
   return Object.entries(map).map(([value, label]) => ({ value, label }));
 }
 
-const TABS = [
+// Content CRUD tabs - shown to admin/moderator (hasAdminAccess()).
+const CONTENT_TABS = [
   { key: 'ptsd_faqs',     label: 'שאלות PTSD',        icon: HelpCircle },
   { key: 'self_help',     label: 'כלים עצמיים',        icon: Wrench },
   { key: 'treatment',     label: 'שלבי טיפול',         icon: Heart },
@@ -122,6 +138,9 @@ const TABS = [
   { key: 'children',      label: 'ילדים',              icon: Baby },
   { key: 'questionnaire', label: 'שאלון PCL-5',        icon: ClipboardList },
 ];
+
+// User-management tab - shown ONLY to masteradmin (hasUserManagementAccess()).
+const USERS_TAB = { key: 'users', label: 'ניהול משתמשים', icon: UserCog };
 
 function Badge({ children, color = 'bg-muted text-muted-foreground' }) {
   return (
@@ -285,6 +304,16 @@ function FieldInput({ field, value, onChange }) {
     }
     case 'links':
       return <LinksField value={value} onChange={onChange} />;
+    case 'password':
+      return (
+        <input
+          type="password"
+          value={value || ''}
+          onChange={e => onChange(e.target.value)}
+          autoComplete="new-password"
+          className="w-full px-3 py-2 rounded-lg border border-border bg-background text-sm"
+        />
+      );
     case 'number':
       return (
         <input
@@ -1233,6 +1262,242 @@ function ChildrenPanel() {
   );
 }
 
+// Single user row: view (name/email/phone/roles/created date) + two
+// independent inline edit affordances (roles, password reset) + delete.
+// Roles/password edits don't reuse EditableCard (which edits one flat set of
+// fields at once) since these are two separate actions with separate save
+// buttons, not one combined "edit this record" form.
+function UserRow({ user, currentUserId, onReload }) {
+  const [editingRoles, setEditingRoles] = useState(false);
+  const [rolesDraft, setRolesDraft] = useState(user.roles);
+  const [resettingPassword, setResettingPassword] = useState(false);
+  const [passwordDraft, setPasswordDraft] = useState('');
+  const [saving, setSaving] = useState(false);
+  const isSelf = user.id === currentUserId;
+
+  async function handleSaveRoles() {
+    if (!rolesDraft.length) {
+      toast.error('יש לבחור לפחות תפקיד אחד');
+      return;
+    }
+    setSaving(true);
+    const ok = await runWrite(() => updateUserRoles(user.id, rolesDraft));
+    setSaving(false);
+    if (ok) {
+      setEditingRoles(false);
+      await onReload();
+    }
+  }
+
+  async function handleSavePassword() {
+    if (passwordDraft.length < 8) {
+      toast.error('הסיסמה חייבת להכיל לפחות 8 תווים');
+      return;
+    }
+    setSaving(true);
+    const ok = await runWrite(() => updateUserPassword(user.id, passwordDraft));
+    setSaving(false);
+    if (ok) {
+      toast.success('הסיסמה עודכנה בהצלחה');
+      setResettingPassword(false);
+      setPasswordDraft('');
+    }
+  }
+
+  async function handleDelete() {
+    if (isSelf) return; // button hidden below; guard kept in case currentUserId is ever stale
+    if (!window.confirm(`למחוק את המשתמש ${user.firstName} ${user.lastName}?`)) return;
+    setSaving(true);
+    const ok = await runWrite(() => deleteUser(user.id));
+    setSaving(false);
+    if (ok) await onReload();
+  }
+
+  return (
+    <div className="p-4 rounded-xl border border-border bg-background space-y-3">
+      <div className="flex items-start justify-between gap-3 flex-wrap">
+        <div>
+          <div className="flex items-center gap-2 flex-wrap">
+            <p className="font-medium text-foreground">{user.firstName} {user.lastName}</p>
+            {isSelf && <Badge color="bg-primary/10 text-primary">זה אתה</Badge>}
+          </div>
+          <p className="text-sm text-muted-foreground mt-0.5">{user.email || 'ללא אימייל'}</p>
+          {user.phone && <p className="text-sm text-muted-foreground">{user.phone}</p>}
+          <p className="text-xs text-muted-foreground/70 mt-1">
+            נוצר ב-{new Date(user.createdAt).toLocaleDateString('he-IL')}
+          </p>
+        </div>
+        <div className="flex items-center gap-1.5">
+          <IconBtn
+            icon={Pencil}
+            title="עריכת תפקידים"
+            onClick={() => { setRolesDraft(user.roles); setResettingPassword(false); setEditingRoles(v => !v); }}
+          />
+          <IconBtn
+            icon={KeyRound}
+            title="איפוס סיסמה"
+            onClick={() => { setPasswordDraft(''); setEditingRoles(false); setResettingPassword(v => !v); }}
+          />
+          {!isSelf && <IconBtn icon={Trash2} title="מחיקה" tone="danger" onClick={handleDelete} />}
+        </div>
+      </div>
+
+      <div className="flex flex-wrap gap-1.5">
+        {user.roles.map(r => (
+          <Badge key={r} color={ROLE_BADGE_COLORS[r] || 'bg-muted text-muted-foreground'}>
+            {labelFor(ROLE_LABELS, r)}
+          </Badge>
+        ))}
+      </div>
+
+      {editingRoles && (
+        <div className="p-3 rounded-lg border border-primary/40 bg-primary/5 space-y-2">
+          <label className="text-xs font-semibold text-muted-foreground block">תפקידים</label>
+          <FieldInput
+            field={{ type: 'tags', options: toOptions(ROLE_LABELS) }}
+            value={rolesDraft}
+            onChange={setRolesDraft}
+          />
+          <div className="flex gap-2 pt-1">
+            <button
+              type="button"
+              disabled={saving}
+              onClick={handleSaveRoles}
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-primary text-white rounded-lg text-xs font-semibold hover:bg-primary/90 disabled:opacity-60"
+            >
+              <Check className="w-3.5 h-3.5" /> {saving ? 'שומר...' : 'שמירה'}
+            </button>
+            <button
+              type="button"
+              disabled={saving}
+              onClick={() => setEditingRoles(false)}
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-muted text-foreground rounded-lg text-xs font-semibold hover:bg-border disabled:opacity-60"
+            >
+              <X className="w-3.5 h-3.5" /> ביטול
+            </button>
+          </div>
+        </div>
+      )}
+
+      {resettingPassword && (
+        <div className="p-3 rounded-lg border border-primary/40 bg-primary/5 space-y-2">
+          <label className="text-xs font-semibold text-muted-foreground block">סיסמה חדשה (לפחות 8 תווים)</label>
+          <input
+            type="password"
+            value={passwordDraft}
+            onChange={e => setPasswordDraft(e.target.value)}
+            autoComplete="new-password"
+            className="w-full px-3 py-2 rounded-lg border border-border bg-background text-sm"
+          />
+          <div className="flex gap-2 pt-1">
+            <button
+              type="button"
+              disabled={saving}
+              onClick={handleSavePassword}
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-primary text-white rounded-lg text-xs font-semibold hover:bg-primary/90 disabled:opacity-60"
+            >
+              <Check className="w-3.5 h-3.5" /> {saving ? 'מעדכן...' : 'עדכון סיסמה'}
+            </button>
+            <button
+              type="button"
+              disabled={saving}
+              onClick={() => { setResettingPassword(false); setPasswordDraft(''); }}
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-muted text-foreground rounded-lg text-xs font-semibold hover:bg-border disabled:opacity-60"
+            >
+              <X className="w-3.5 h-3.5" /> ביטול
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// Users panel - masteradmin only (gated in the Admin() tab bar below, not
+// here; this component simply assumes it's allowed to be mounted).
+function UsersPanel() {
+  const currentUserId = getCurrentUserId();
+  const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [creating, setCreating] = useState(false);
+
+  async function reload() {
+    setLoading(true);
+    try {
+      setUsers(await listUsers());
+    } catch (err) {
+      toast.error(err?.message || 'שגיאה בטעינת המשתמשים');
+      setUsers([]);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  useEffect(() => { reload(); }, []);
+
+  const createFields = [
+    { key: 'firstName', label: 'שם פרטי', type: 'text' },
+    { key: 'lastName', label: 'שם משפחה', type: 'text' },
+    { key: 'email', label: 'אימייל', type: 'text' },
+    { key: 'password', label: 'סיסמה (לפחות 8 תווים)', type: 'password' },
+    { key: 'phone', label: 'טלפון (אופציונלי)', type: 'text' },
+    { key: 'roles', label: 'תפקידים', type: 'tags', options: toOptions(ROLE_LABELS) },
+  ];
+
+  async function handleCreateUser(draft) {
+    if (!draft.firstName || !draft.lastName || !draft.email) {
+      toast.error('יש למלא שם פרטי, שם משפחה ואימייל');
+      return false;
+    }
+    if (!draft.password || draft.password.length < 8) {
+      toast.error('הסיסמה חייבת להכיל לפחות 8 תווים');
+      return false;
+    }
+    const payload = {
+      firstName: draft.firstName,
+      lastName: draft.lastName,
+      email: draft.email,
+      password: draft.password,
+      ...(draft.phone ? { phone: draft.phone } : {}),
+      roles: draft.roles?.length ? draft.roles : ['viewer'],
+    };
+    const ok = await runWrite(() => createUser(payload));
+    if (ok) {
+      setCreating(false);
+      await reload();
+    }
+    return ok;
+  }
+
+  return (
+    <div>
+      <Section title="ניהול משתמשים" count={users.length} />
+      {loading ? (
+        <LoadingRow />
+      ) : (
+        <div className="space-y-3">
+          {users.map(u => (
+            <UserRow key={u.id} user={u} currentUserId={currentUserId} onReload={reload} />
+          ))}
+          {creating && (
+            <EditableCard
+              item={{ firstName: '', lastName: '', email: '', password: '', phone: '', roles: ['viewer'] }}
+              fields={createFields}
+              startInEdit
+              renderView={() => null}
+              onSave={handleCreateUser}
+              onCancel={() => setCreating(false)}
+            />
+          )}
+        </div>
+      )}
+      <div className="mt-3">
+        <AddNewButton label="הוספת משתמש חדש" onClick={() => setCreating(true)} />
+      </div>
+    </div>
+  );
+}
+
 // No API endpoint exists for the PCL-5 questionnaire (see src/api/adminSource.js -
 // it has no loadQuestionnaire/saveQuestionnaire). This panel is therefore
 // read-only: it still renders the static content so admins can see what's
@@ -1333,10 +1598,29 @@ const PANELS = {
   second_circle: <SecondCirclePanel />,
   children:      <ChildrenPanel />,
   questionnaire: <QuestionnairePanel />,
+  users:         <UsersPanel />,
 };
 
 export default function Admin() {
-  const [activeTab, setActiveTab] = useState('ptsd_faqs');
+  // Tab visibility mirrors the two independent, exact-match role checks in
+  // src/lib/auth.js: content tabs need admin/moderator, the Users tab needs
+  // masteradmin. AdminGate (src/App.jsx) already guarantees at least one of
+  // these is true for anyone who reaches this component, so `tabs` below is
+  // never empty.
+  const showContent = hasAdminAccess();
+  const showUsers = hasUserManagementAccess();
+  const tabs = [...(showContent ? CONTENT_TABS : []), ...(showUsers ? [USERS_TAB] : [])];
+
+  const [activeTab, setActiveTab] = useState(() => tabs[0]?.key);
+
+  // Defensive guard: if activeTab ever points at a tab this user can't see
+  // (e.g. role claims changed underneath us), fall back to the first visible
+  // tab instead of rendering nothing / a hidden panel.
+  useEffect(() => {
+    if (tabs.length && !tabs.some(tab => tab.key === activeTab)) {
+      setActiveTab(tabs[0].key);
+    }
+  }, [tabs, activeTab]);
 
   return (
     <div className="min-h-screen bg-background pt-16">
@@ -1347,7 +1631,7 @@ export default function Admin() {
               <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
                 <Settings className="w-5 h-5 text-primary" />
               </div>
-              <h1 className="text-2xl font-heading font-bold text-foreground">ממשק ניהול תוכן</h1>
+              <h1 className="text-2xl font-heading font-bold text-foreground">ממשק ניהול</h1>
             </div>
             <button
               type="button"
@@ -1363,7 +1647,7 @@ export default function Admin() {
 
       <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8">
         <div className="flex flex-wrap gap-2 mb-8 border-b border-border pb-4">
-          {TABS.map(tab => {
+          {tabs.map(tab => {
             const Icon = tab.icon;
             return (
               <button
