@@ -4,11 +4,13 @@ Guidance for AI coding agents working in this repo. Human-oriented overview live
 
 ## What this is
 
-Hebrew-first React SPA providing PTSD info, self-help tools, screening, treatment pathways, rights, and community resources for trauma survivors in Israel. 5 languages with RTL support for Hebrew and Arabic. Currently frontend-only - no backend wired up yet.
+Hebrew-first React SPA providing PTSD info, self-help tools, screening, treatment pathways, rights, and community resources for trauma survivors in Israel. 5 languages with RTL support for Hebrew and Arabic.
+
+**It is backed by a live API gateway** (a headless-CMS-style backend that reads/writes a database). The site fetches content from `https://ptsd-il-api.onrender.com/api`. The backend code is NOT in this repo - it's a black box we talk to over HTTP; its contract is documented in `docs/api.md`.
 
 ## Working directory
 
-**All commands run from `/workspace/src`, not the repo root.** The Vite app lives one level down.
+**All commands run from `src/`, not the repo root.** The Vite app lives one level down.
 
 ```bash
 cd src
@@ -16,136 +18,114 @@ npm install
 npm run dev        # vite dev server, localhost:5173
 npm run build      # production build to src/dist
 npm run lint       # eslint, scoped to components/pages
-npm run lint:fix
 npm run typecheck  # tsc against jsconfig.json (checkJs on .jsx)
 ```
 
-There is no test runner configured. Don't claim "tests pass" - there are none.
+There is no test runner configured. Don't claim "tests pass" - there are none. Verify by building and by exercising the change against the live API.
+
+## Architecture: how content flows
+
+**Public reads** (the whole public site):
+```
+src/pages/*.jsx        <- render data; rich text via <Markdown> (react-markdown)
+src/api/hooks.js       <- React Query hooks: useSources(), useRightsFaqs(), ...
+src/api/source.js      <- fetch* adapters: GET the API, reshape to the page shape
+                          THE integration layer. Fully API-backed (no static reads).
+```
+The API returns generic "article" rows. Each row is **one content item in one language**; `type` says the kind (`faq`/`tool`/`treatment_step`/`source`/`book`/`article`/...). The item's real payload is its **`content` column, a JSON string with Markdown leaves** (never HTML - the DB stores pure data, the UI styles it). `source.js` `JSON.parse`es it and maps to the shape each page expects; rich fields render through `src/components/Markdown.jsx`. Full content model: `docs/mobile-data-guide.md`; endpoint reference: `docs/api.md`.
+
+**Admin writes** (`/admin`, behind login):
+```
+src/pages/Admin.jsx    <- 9 content panels (CRUD UI, react-quill editor)
+src/api/adminSource.js <- load/save/remove per entity; taxonomy resolution;
+                          serializes the content JSON; md<->html conversion
+src/lib/markdownHtml.js <- mdToHtml (marked) / htmlToMd (turndown)
+src/api/adminClient.js  <- authenticated fetch (Bearer); 401 -> logout, 403 -> error
+src/lib/auth.js         <- login/logout, JWT in sessionStorage, isAuthenticated/hasAdminAccess
+```
+`Admin.jsx`'s panels edit HTML (react-quill); `adminSource` converts to/from the DB's Markdown on save/load.
+
+**Static layer is mostly retired.** `src/data/static/*` + `src/data/db.js` remain ONLY for: (a) the PCL-5 questionnaire, which has no API endpoint yet (`Questionnaire.jsx` and the read-only admin questionnaire panel still read `db`); (b) historical record - they were the source of truth the DB was migrated from. Do NOT add new content there; new content goes through the API/admin.
+
+## Auth & DB access
+
+- **Auth is backend-enforced via JWT.** `POST /api/auth/login {email,password}` -> `{accessToken}`. Every `/api/admin/*` call re-checks the token + role server-side (401/403). The client-side `/admin` guard (`AdminGate` in `App.jsx`, `hasAdminAccess()`) is **UX only** - it shows/hides the panel, it is NOT a security boundary.
+- **Roles are exact-match** (`docs/api.md`): article CRUD needs `admin` or `moderator`; `masteradmin` manages users but is NOT implicitly admin.
+- **Credentials** for the existing admin user (`masteradmin1@ptsd-il.local`, roles `masteradmin,admin`) live in `PTSD.IL/.env` (gitignored). `VITE_API_URL` lives in `src/.env` (gitignored) and must be set in the Render dashboard for deploys.
+- Auth is temporary email/password; Google SSO is planned (see README "Known limitations").
 
 ## Stack and conventions
 
 - **React 18 + Vite 6**, JSX only (no TS source files, but `.jsx` is type-checked via `checkJs`)
-- **Routing**: `react-router-dom` v6, all routes declared in `src/App.jsx`
-- **Styling**: Tailwind + Radix primitives in `src/components/ui/` (shadcn-style). Prefer composing these over hand-rolled markup.
-- **State**: `@tanstack/react-query` for any async data (client instance in `src/lib/query-client.js`)
-- **Forms**: `react-hook-form` + `zod`
-- **Path alias**: `@/` resolves to the `src/` directory (configured in `vite.config.js` and `jsconfig.json`). Use `@/components/...`, never relative `../../`.
-- **i18n**: translation dictionary in `src/lib/i18n.js`, language context in `src/lib/LanguageContext.jsx`. Access with `useLang()`. Multi-field pattern for entity content: `title_he`, `title_ar`, `title_ru`, `title_en`, `title_fr`.
-- **RTL**: `document.documentElement.dir` is set from the active language. Don't hardcode `left`/`right` - use Tailwind logical properties (`ms-*`, `me-*`, `ps-*`, `pe-*`) or `start/end` variants.
+- **Routing**: `react-router-dom` v6, all routes in `src/App.jsx`
+- **Styling**: Tailwind + Radix primitives in `src/components/ui/` (shadcn-style). Compose these over hand-rolled markup.
+- **State**: `@tanstack/react-query` for async data (client in `src/lib/query-client.js`)
+- **Markdown**: rich content renders via `src/components/Markdown.jsx` (react-markdown). Internal links (`/...`) become router `<Link>`s; external open in a new tab.
+- **Path alias**: `@/` -> `src/`. Use `@/components/...`, never `../../`.
+- **i18n**: UI strings in `src/lib/i18n.js`, language context `src/lib/LanguageContext.jsx`, access with `useLang()`. Content itself comes from the API, not i18n. `source.js` still maps some API fields to `*_he`-suffixed keys the pages expect - that's an internal adapter detail.
+- **RTL**: `document.documentElement.dir` follows the active language. Use logical properties (`ms-*`, `me-*`, `ps-*`, `pe-*`), never hardcoded `left`/`right`.
 
 ## Directory map
 
 ```
-/workspace
-├── src/
-│   ├── App.jsx              # router + providers
-│   ├── pages/               # one file per route
-│   ├── components/
-│   │   ├── ui/              # Radix wrappers (shadcn) - rarely modify
-│   │   └── *.jsx            # app-specific components
-│   ├── lib/                 # i18n, contexts, query client, utils
-│   ├── hooks/
-│   ├── utils/
-│   ├── api/                 # EMPTY - placeholder for future backend client
-│   └── dist/                # build output, gitignored
-├── entities/                # JSON Schemas for the planned backend (not wired up)
-└── data_from_meitiv.txt     # Source material from Matityahu Center (gitignored)
+src/
+├── App.jsx              # router + providers + AdminGate + Toasters
+├── pages/               # one file per route (Admin.jsx = CRUD panels; AdminLogin.jsx)
+├── components/
+│   ├── ui/              # Radix wrappers (shadcn) - rarely modify
+│   ├── Markdown.jsx     # renders content Markdown
+│   └── *.jsx
+├── api/
+│   ├── source.js        # public read adapters (API -> page shapes)
+│   ├── hooks.js         # React Query hooks
+│   ├── adminClient.js   # authenticated fetch wrapper
+│   └── adminSource.js   # admin CRUD layer
+├── lib/                 # auth.js, markdownHtml.js, i18n, contexts, query client
+├── data/                # static/ + db.js - RETAINED ONLY for the questionnaire (see above)
+└── dist/                # build output, gitignored
+docs/
+├── api.md                       # API endpoint reference (the backend contract)
+├── mobile-data-guide.md         # content model + per-type content JSON + markdown used
+└── superpowers/specs/*          # design specs for each migration/wiring stage
 ```
 
 ## Things that bite
 
-- **`src/api/` is empty.** There is no backend. Don't fabricate API calls - check with the user before introducing one. Admin page (`/admin`) is a stub that needs a backend to do anything real.
-- **`entities/` files are JSON Schemas**, not runtime code. They describe the future DB shape. Multi-language fields follow `<field>_<lang>` (e.g. `body_he`).
-- **`localStorage` key is `natal_lang`** (legacy name from before the rename to PTSD-IL). Don't rename it casually - existing visitors would lose their language preference.
-- **ESLint scope is narrow** - `src/lib/**` and `src/components/ui/**` are ignored. Don't assume lint covers everything.
-- **`typecheck` runs on `.jsx`** via `checkJs`. JSDoc types are honored. Don't add `.ts`/`.tsx` files without checking the existing convention.
-- **Mixed date libs**: both `date-fns` and `moment` are dependencies. Prefer `date-fns` in new code.
+- **`content` is a JSON string, not an object** - always `JSON.parse` it (defensively). Native columns `description`/`authors`/`year`/`links` are usually null; the data is inside `content` (except `url` on sources).
+- **The DB stores Markdown, never HTML.** Don't write HTML into content. The admin editor is HTML (react-quill) but `adminSource` converts on save.
+- **The questionnaire is still static** (no API endpoint) - editing it in admin is disabled/read-only.
+- **`VITE_*` env vars are baked at build time**, not read at runtime - changing `VITE_API_URL` needs a redeploy.
+- **`localStorage` key `natal_lang`** (legacy name) holds the language preference - don't rename it.
+- **ESLint scope is narrow** (`src/lib/**`, `src/components/ui/**` ignored). **`typecheck` runs on `.jsx`** via `checkJs`.
+
+## Deployment (Render)
+
+The site is a **Render static site** served from the domain root. There is NO GitHub Pages anymore.
+
+- `src/base-path.js` exports `BASE_PATH = ''` (root). `vite.config.js` uses it for build `base`, `App.jsx` for the Router `basename`.
+- Render config: root directory `src`, build `npm install && npm run build`, publish `dist`.
+- `VITE_API_URL` must be set in the Render dashboard (baked at build).
+- An SPA rewrite (`/*` -> `/index.html`) is configured so deep links/refresh work.
+
+## Git workflow
+
+- **Commit directly to `master`.** No feature branches / worktrees for routine work (small solo project).
+- **Never push and never open a PR** - the repo owner pushes when ready. Render auto-deploys from `master` on push.
+- There is no `gh-pages` branch or `npm run deploy` flow anymore (ignore any lingering script).
 
 ## Content sensitivity
 
 This site serves trauma survivors. When touching content (text, screening questions, treatment descriptions, crisis-related copy):
 
-- **Do not invent clinical content.** The README explicitly flags that current content is unvalidated and needs professional review. If asked to write new mental-health copy, default to "this needs a clinician to author" rather than generating it.
+- **Do not invent clinical content.** Current content needs professional review. If asked to write new mental-health copy, default to "this needs a clinician to author."
 - **Don't remove disclaimers or anonymity language** from the screening questionnaire without explicit instruction.
-
-## Data access (mock backend)
-
-Backend is not built yet, but the data access layer is wired up so components don't import static data directly. See `docs/preparing_for_db.md` for the full plan.
-
-**Layers (top to bottom)**:
-```
-src/pages/*.jsx       <- components use React Query hooks
-src/api/hooks.js      <- useSources(), useCommunities(), etc.
-src/api/source.js     <- fetchSources() etc. - the ONLY swap point when backend ships
-src/data/db.js        <- aggregates all entities into one object
-src/data/static/*.js  <- standalone data files (sources, communities)
-src/lib/pageContent.js, src/pages/*.jsx (exported STATIC_*)  <- larger entities, still inline
-```
-
-**When adding a new entity**:
-1. Add the data to `src/data/static/<entity>.js` (or `export const STATIC_X` in its current file if moving the content is risky)
-2. Add it to `src/data/db.js`
-3. Add a `fetchX()` to `src/api/source.js`
-4. Add a `useX()` hook to `src/api/hooks.js`
-
-**When editing a component that reads content**:
-- Use the React Query hook (`const { data, isLoading, error } = useX()`)
-- Never `import` from `src/data/` or `src/lib/pageContent.js` directly. Sources.jsx is the reference implementation.
-
-**When the real backend ships**: rewrite `src/api/source.js` to call HTTP. Nothing else changes.
 
 ## Punctuation rules
 
-- **Never use em-dashes (`—`) or en-dashes (`–`) anywhere in the codebase** - not in JSX, strings, comments, or markdown. Use a regular hyphen (`-`) instead. This applies to all languages and all files.
+- **Never use em-dashes (`—`) or en-dashes (`–`) anywhere in the codebase** - not in JSX, strings, comments, or markdown. Use a regular hyphen (`-`).
 
 ## Style for changes
 
 - Match the existing JSX style (functional components, hooks, named exports for utilities, default export for pages/components).
-- Keep new components in line with the Radix-plus-Tailwind pattern already in use - don't introduce a competing UI library.
-- When adding a page: create the file in `src/pages/`, register the route in `src/App.jsx`, add any nav strings to `src/lib/i18n.js` for all 5 languages (Hebrew is required, others can be stubbed with a ipsum lorem if needed).
-
-## GitHub Pages compatibility
-
-The site runs on both local dev (`localhost:5173`) and GitHub Pages (`https://shakedash-dev.github.io/PTSD.IL/`). Every new page or piece of content must work on both.
-
-### The base path
-
-The deployment lives under `/PTSD.IL/`, not at the root. The base path is defined once in `src/base-path.js`:
-
-```js
-export const BASE_PATH = '/PTSD.IL';
-```
-
-`vite.config.js` reads it for the build `base`, and `App.jsx` reads it for the Router `basename`. On local dev, Vite's dev server handles `base` transparently so routes work at `/` too.
-
-### Rules for new code
-
-**Always use React Router for internal navigation - never raw HTML or `window.location`.**
-
-| Wrong | Right |
-|---|---|
-| `<a href="/some-page">` | `<Link to="/some-page">` |
-| `window.location.href = '/some-page'` | `useNavigate()('/some-page')` |
-
-The only exception is links inside raw HTML strings (e.g. `dangerouslySetInnerHTML` content). There, React Router can't be used, so prepend `BASE_PATH`:
-
-```js
-import { BASE_PATH } from '@/base-path';
-// inside a template string:
-`<a href="${BASE_PATH}/calming/breathing">...</a>`
-```
-
-**Never hardcode `/PTSD.IL/` as a string literal.** Always import from `@/base-path`.
-
-### Git workflow
-
-- **All commits go to `main`.** Never commit directly to `gh-pages`.
-- `gh-pages` is the release branch managed by the `gh-pages` npm package. Only the user deploys to it:
-  ```bash
-  cd src && npm run deploy
-  ```
-- When asked to commit, push to `main` only and tell the user to run `npm run deploy` if they want the live site updated.
-
-## Out-of-scope warnings
-
-If the user asks for something that requires a backend (auth, persistence, admin CRUD, the chatbot in `ChatbotFAB.jsx`, Stripe checkout), surface that the backend doesn't exist yet rather than mocking it silently.
+- Keep new components in the Radix-plus-Tailwind pattern - don't introduce a competing UI library.
+- When adding a page: create it in `src/pages/`, register the route in `src/App.jsx`, add nav strings to `src/lib/i18n.js` (Hebrew required, others can be stubbed).
