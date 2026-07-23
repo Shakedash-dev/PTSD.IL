@@ -1,5 +1,6 @@
 import { Hono } from "hono";
 import { reindexAll, reindexById } from "./lib/ingest";
+import { handleChat } from "./lib/chat";
 
 export type Env = {
   AI: Ai;
@@ -22,6 +23,11 @@ app.post("/reindex", async (c) => {
     ? await reindexById(c.env, body.itemId)
     : await reindexAll(c.env);
   return c.json({ ok: true, ...result });
+});
+
+app.post("/chat", async (c) => {
+  const body = await c.req.json<{ messages: { role: "user" | "assistant"; content: string }[]; lang: string; sessionId: string }>();
+  return handleChat(c.env, body);
 });
 
 export default app;
