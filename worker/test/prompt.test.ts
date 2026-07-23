@@ -12,9 +12,11 @@ describe("buildContents", () => {
     const out = buildContents([{ role: "user", content: "מה זה?" }], [hit("aaa", 1), hit("bbb", 2)], "he");
     const sys = out.systemInstruction.parts[0].text;
     expect(sys).toMatch(/\[\[n\]\]/);
-    expect(sys).toMatch(/only.*sources|רק.*מקורות/i);
+    expect(sys).toMatch(/only using the numbered sources/i); // grounding rule
+    expect(sys).toMatch(/only help with topics covered on this site/i); // refusal rule (distinct)
     const ctx = out.contents[0].parts[0].text;
     expect(ctx).toContain("[1]");
+    expect(ctx).toContain("T1"); // source title present
     expect(ctx).toContain("aaa");
     expect(ctx).toContain("[2]");
   });
