@@ -34,4 +34,20 @@ describe("HeroChatInput", () => {
     expect(chat.send).not.toHaveBeenCalled();
     expect(chat.setOpen).not.toHaveBeenCalled();
   });
+
+  it("sends and clears on Enter, but Shift+Enter only inserts a newline", () => {
+    chat.send.mockClear();
+    chat.setOpen.mockClear();
+    render(<HeroChatInput />);
+    const input = screen.getByRole("textbox");
+
+    fireEvent.change(input, { target: { value: "line one" } });
+    fireEvent.keyDown(input, { key: "Enter", shiftKey: true });
+    expect(chat.send).not.toHaveBeenCalled();
+
+    fireEvent.keyDown(input, { key: "Enter" });
+    expect(chat.send).toHaveBeenCalledWith("line one");
+    expect(chat.setOpen).toHaveBeenCalledWith(true);
+    expect(input.value).toBe("");
+  });
 });
