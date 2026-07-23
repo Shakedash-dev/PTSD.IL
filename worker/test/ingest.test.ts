@@ -20,7 +20,7 @@ describe("reindexItem", () => {
 
     const out = await reindexItem(env, item);
     expect(out.upserted).toBeGreaterThan(0);
-    const call = upsert.mock.calls[0][0] as unknown as Array<{ id: string; metadata: { itemId: string } }>;
+    const call = (upsert.mock.calls[0] as unknown[])[0] as Array<{ id: string; metadata: { itemId: string } }>;
     expect(call[0].id).toBe("1:0");
     expect(call[0].metadata.itemId).toBe("1");
   });
