@@ -34,6 +34,46 @@ export async function fetchAllItems(apiBase: string): Promise<Item[]> {
   return rows.filter((r) => r.isPublished !== false).map(normalize);
 }
 
+// Communities live on their own endpoint (not /articles) and have a flat shape
+// rather than a `content` JSON blob. They're language-scoped like articles
+// (one row per language, linked by groupId), so `/communities` with no filter
+// returns every language — exactly what the corpus wants. We synthesize an
+// Item whose `content` carries the community's prose (description, organization,
+// target-audience names) so extractText/chunk index it like any other item.
+type CommunityRow = {
+  id?: string | number;
+  groupId?: string | null;
+  langId?: string;
+  name?: string;
+  description?: string | null;
+  organization?: string | null;
+  isActive?: boolean;
+  targetAudiences?: Array<{ name?: string | null }>;
+};
+
+function normalizeCommunity(r: CommunityRow): Item {
+  const audiences = (r.targetAudiences ?? []).map((a) => a.name).filter((n): n is string => !!n);
+  const content = JSON.stringify({
+    description: r.description ?? "",
+    organization: r.organization ?? "",
+    audiences,
+  });
+  return {
+    id: String(r.id),
+    groupId: String(r.groupId ?? r.id),
+    type: "community",
+    langId: String(r.langId ?? "he"),
+    title: String(r.name ?? ""),
+    content,
+    categorySlug: "community",
+  };
+}
+
+export async function fetchAllCommunities(apiBase: string): Promise<Item[]> {
+  const rows = (await getJson(`${apiBase}/communities`)) as unknown as CommunityRow[];
+  return rows.filter((r) => r.isActive !== false).map(normalizeCommunity);
+}
+
 export async function fetchItem(apiBase: string, id: string): Promise<Item | null> {
   const res = await fetch(`${apiBase}/articles/${id}`);
   if (res.status === 404) return null;

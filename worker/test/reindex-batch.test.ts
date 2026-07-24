@@ -12,9 +12,13 @@ describe("reindexAll (batched bulk path)", () => {
       isPublished: true,
       categories: [{ id: "cat-1", slug: "rights", name: "Rights" }],
     }));
+    // reindexAll now hits two endpoints (/articles + /communities); mock per-URL
+    // so only the article corpus contributes here (communities covered below).
     const aiRun = vi.fn(async (_m: string, inp: { text: string[] }) => ({ data: inp.text.map(() => [0.1, 0.2]) }));
     const upsert = vi.fn(async () => ({ mutationId: "m" }));
-    vi.spyOn(globalThis, "fetch").mockResolvedValue(new Response(JSON.stringify(items), { status: 200 }));
+    vi.spyOn(globalThis, "fetch").mockImplementation(async (url: any) =>
+      new Response(JSON.stringify(String(url).endsWith("/communities") ? [] : items), { status: 200 })
+    );
     const env = { API_BASE: "https://api/x", AI: { run: aiRun }, VECTORIZE: { upsert } } as any;
 
     const out = await reindexAll(env);
@@ -32,10 +36,45 @@ describe("reindexAll (batched bulk path)", () => {
     expect(firstBatch[0].metadata.categorySlug).toBe("rights");
   });
 
+  it("indexes communities from /communities alongside articles", async () => {
+    const articles = [{
+      id: "a1", groupId: "g", type: "faq", langId: "he", title: "Article",
+      content: JSON.stringify({ answer: "some article answer text" }), isPublished: true,
+    }];
+    const communities = [{
+      id: "c1", groupId: "cg", langId: "en", name: "NATAL - Support Groups",
+      description: "Support groups for survivors of war-related trauma and their families.",
+      organization: "NATAL Association", isActive: true,
+      targetAudiences: [{ slug: "spouses", name: "Spouses" }],
+    }, {
+      id: "c2", groupId: "cg2", langId: "en", name: "Inactive place", description: "hidden",
+      isActive: false, targetAudiences: [],
+    }];
+    const aiRun = vi.fn(async (_m: string, inp: { text: string[] }) => ({ data: inp.text.map(() => [0.1, 0.2]) }));
+    const upsert = vi.fn(async () => ({ mutationId: "m" }));
+    vi.spyOn(globalThis, "fetch").mockImplementation(async (url: any) =>
+      new Response(JSON.stringify(String(url).endsWith("/communities") ? communities : articles), { status: 200 })
+    );
+    const env = { API_BASE: "https://api/x", AI: { run: aiRun }, VECTORIZE: { upsert } } as any;
+
+    const out = await reindexAll(env);
+
+    const rows = (upsert.mock.calls[0] as unknown[])[0] as Array<{ id: string; metadata: { type: string; itemId: string; langId: string } }>;
+    const community = rows.find((r) => r.metadata.type === "community");
+    expect(community).toBeDefined();
+    expect(community!.metadata.itemId).toBe("c1");
+    expect(community!.metadata.langId).toBe("en");
+    // the inactive community (c2) must not be indexed
+    expect(rows.some((r) => r.metadata.itemId === "c2")).toBe(false);
+    expect(out.upserted).toBe(rows.length);
+  });
+
   it("returns upserted:0 and makes no AI/upsert calls when there are no items", async () => {
     const aiRun = vi.fn();
     const upsert = vi.fn();
-    vi.spyOn(globalThis, "fetch").mockResolvedValue(new Response(JSON.stringify([]), { status: 200 }));
+    // fresh Response per call — reindexAll now fetches two endpoints and a single
+    // Response body can only be read once.
+    vi.spyOn(globalThis, "fetch").mockImplementation(async () => new Response(JSON.stringify([]), { status: 200 }));
     const env = { API_BASE: "https://api/x", AI: { run: aiRun }, VECTORIZE: { upsert } } as any;
 
     const out = await reindexAll(env);

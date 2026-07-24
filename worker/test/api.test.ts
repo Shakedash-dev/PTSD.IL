@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, afterEach } from "vitest";
-import { fetchAllItems, fetchItem } from "../src/lib/api";
+import { fetchAllItems, fetchAllCommunities, fetchItem } from "../src/lib/api";
 
 afterEach(() => vi.restoreAllMocks());
 
@@ -62,6 +62,36 @@ describe("fetchAllItems", () => {
     vi.spyOn(globalThis, "fetch").mockResolvedValue(new Response(JSON.stringify(rows), { status: 200 }));
     const items = await fetchAllItems("https://api/x");
     expect(items[0].categorySlug).toBeUndefined();
+  });
+});
+
+describe("fetchAllCommunities", () => {
+  it("maps communities to type=community items carrying their prose, drops inactive", async () => {
+    const rows = [
+      {
+        id: "c1", groupId: "cg", langId: "en", name: "NATAL - Support Groups",
+        description: "Support groups for war-related trauma.", organization: "NATAL Association",
+        isActive: true, targetAudiences: [{ slug: "spouses", name: "Spouses" }],
+      },
+      { id: "c2", groupId: "cg2", langId: "en", name: "Hidden", description: "x", isActive: false, targetAudiences: [] },
+    ];
+    const fetchSpy = vi
+      .spyOn(globalThis, "fetch")
+      .mockResolvedValue(new Response(JSON.stringify(rows), { status: 200 }));
+    const items = await fetchAllCommunities("https://api/x");
+
+    expect(fetchSpy).toHaveBeenCalledWith("https://api/x/communities");
+    expect(items).toHaveLength(1); // inactive dropped
+    expect(items[0]).toMatchObject({ id: "c1", type: "community", langId: "en", title: "NATAL - Support Groups", categorySlug: "community" });
+    // description, organization and audience name are embedded in content for retrieval
+    expect(items[0].content).toContain("Support groups for war-related trauma.");
+    expect(items[0].content).toContain("NATAL Association");
+    expect(items[0].content).toContain("Spouses");
+  });
+
+  it("throws on non-200", async () => {
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(new Response("nope", { status: 500 }));
+    await expect(fetchAllCommunities("https://api/x")).rejects.toThrow(/500/);
   });
 });
 

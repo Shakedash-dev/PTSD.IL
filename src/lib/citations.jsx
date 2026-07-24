@@ -8,6 +8,7 @@ export function sectionRoute(type, categorySlug) {
     case "source": return "/sources";
     case "tool": return "/self-help";
     case "treatment_step": return "/treatment";
+    case "community": return "/community";
     default: return "/children"; // article, book, activity, story, video
   }
 }

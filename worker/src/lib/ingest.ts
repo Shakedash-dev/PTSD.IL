@@ -4,7 +4,7 @@ import { extractText } from "./content";
 import { chunk } from "./chunk";
 import { embed } from "./embed";
 import { upsertItemChunks, deleteItem, upsertVectors, type ChunkMeta, type VectorRow } from "./vector";
-import { fetchAllItems, fetchItem } from "./api";
+import { fetchAllItems, fetchAllCommunities, fetchItem } from "./api";
 
 // A single Worker invocation is capped at a limited number of subrequests
 // (50 on the free plan). Per-item ingestion does ~3 subrequests each, which
@@ -33,7 +33,12 @@ export async function reindexItem(env: Env, item: Item): Promise<{ upserted: num
 }
 
 export async function reindexAll(env: Env): Promise<{ upserted: number }> {
-  const items = await fetchAllItems(env.API_BASE); // 1 subrequest
+  // 2 concurrent subrequests: articles + communities (each its own endpoint).
+  const [articles, communities] = await Promise.all([
+    fetchAllItems(env.API_BASE),
+    fetchAllCommunities(env.API_BASE),
+  ]);
+  const items = [...articles, ...communities];
 
   // Build all chunk metadata across every item — pure, no subrequests.
   const metas: ChunkMeta[] = [];
@@ -67,6 +72,9 @@ export async function reindexAll(env: Env): Promise<{ upserted: number }> {
   return { upserted: rows.length };
 }
 
+// NOTE: per-item reindex resolves ids against /articles only. Communities are
+// indexed via the full reindexAll path (they have no single-item reindex hook),
+// so don't call this with a community id — it would 404 and delete its vectors.
 export async function reindexById(env: Env, itemId: string): Promise<{ upserted: number }> {
   const item = await fetchItem(env.API_BASE, itemId);
   if (!item) {

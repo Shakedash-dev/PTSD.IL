@@ -6,6 +6,7 @@ describe("citations", () => {
     expect(sectionRoute("source")).toBe("/sources");
     expect(sectionRoute("treatment_step")).toBe("/treatment");
     expect(sectionRoute("tool")).toBe("/self-help");
+    expect(sectionRoute("community")).toBe("/community");
     expect(sectionRoute("book")).toBe("/children");
     expect(sectionRoute("activity")).toBe("/children");
     expect(sectionRoute("story")).toBe("/children");
