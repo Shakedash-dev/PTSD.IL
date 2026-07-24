@@ -14,6 +14,7 @@
 // Do NOT edit Admin.jsx from this file's concerns - this is the layer only.
 
 import { adminApi } from './adminClient';
+import { reindexItem } from './reindex';
 import { mdToHtml, htmlToMd } from '@/lib/markdownHtml';
 
 const ARTICLES = '/admin/articles';
@@ -133,16 +134,25 @@ async function fetchArticles({ type, langId, categoryId, parentId } = {}) {
 // isPublished defaults true, groupId omitted so the API auto-generates one
 // unless ctx.groupId is supplied for linking a new translation).
 async function writeArticle(draft, ctx, payload) {
+  let saved;
   if (draft.id) {
-    return adminApi('PATCH', `${ARTICLES}/${draft.id}`, payload);
+    saved = await adminApi('PATCH', `${ARTICLES}/${draft.id}`, payload);
+  } else {
+    const createPayload = { ...payload, isPublished: ctx.isPublished ?? true };
+    if (ctx.groupId) createPayload.groupId = ctx.groupId;
+    saved = await adminApi('POST', ARTICLES, createPayload);
   }
-  const createPayload = { ...payload, isPublished: ctx.isPublished ?? true };
-  if (ctx.groupId) createPayload.groupId = ctx.groupId;
-  return adminApi('POST', ARTICLES, createPayload);
+  // Sync the chatbot's vector DB for this item (create/update). Runs after the
+  // content write succeeds; a sync failure surfaces as a ChatbotSyncError the
+  // panel treats as a non-fatal warning (the content is already saved).
+  await reindexItem(saved?.id ?? draft.id);
+  return saved;
 }
 
-function removeArticle(id) {
-  return adminApi('DELETE', `${ARTICLES}/${id}`);
+async function removeArticle(id) {
+  const res = await adminApi('DELETE', `${ARTICLES}/${id}`);
+  await reindexItem(id); // worker 404s on the deleted id and drops its vectors
+  return res;
 }
 
 // ─── ptsdFaq — faq, category `ptsd-info`, per langId ───────────────────────
@@ -628,12 +638,18 @@ export async function saveCommunity(draft) {
     contactUrl: draft.contact_url || null,
     audienceIds, // see NOTE above - unverified field name
   };
+  let saved;
   if (draft.id) {
-    return adminApi('PUT', `${COMMUNITIES}/${draft.id}`, payload);
+    saved = await adminApi('PUT', `${COMMUNITIES}/${draft.id}`, payload);
+  } else {
+    saved = await adminApi('POST', COMMUNITIES, payload);
   }
-  return adminApi('POST', COMMUNITIES, payload);
+  await reindexItem(saved?.id ?? draft.id);
+  return saved;
 }
 
-export function removeCommunity(id) {
-  return adminApi('DELETE', `${COMMUNITIES}/${id}`);
+export async function removeCommunity(id) {
+  const res = await adminApi('DELETE', `${COMMUNITIES}/${id}`);
+  await reindexItem(id);
+  return res;
 }

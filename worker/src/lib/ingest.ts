@@ -4,7 +4,7 @@ import { extractText } from "./content";
 import { chunk } from "./chunk";
 import { embed } from "./embed";
 import { upsertItemChunks, deleteItem, upsertVectors, type ChunkMeta, type VectorRow } from "./vector";
-import { fetchAllItems, fetchAllCommunities, fetchItem } from "./api";
+import { fetchAllItems, fetchAllCommunities, fetchItem, fetchCommunity } from "./api";
 
 // A single Worker invocation is capped at a limited number of subrequests
 // (50 on the free plan). Per-item ingestion does ~3 subrequests each, which
@@ -72,14 +72,18 @@ export async function reindexAll(env: Env): Promise<{ upserted: number }> {
   return { upserted: rows.length };
 }
 
-// NOTE: per-item reindex resolves ids against /articles only. Communities are
-// indexed via the full reindexAll path (they have no single-item reindex hook),
-// so don't call this with a community id — it would 404 and delete its vectors.
+// Per-item reindex, type-agnostic so the admin console can sync any content on
+// create/update/delete. Resolves the id against articles first, then
+// communities (their own endpoint/shape). If it's neither — deleted, or a
+// deactivated community — drop its stale vectors. This is what keeps the vector
+// DB in step with all three admin operations.
 export async function reindexById(env: Env, itemId: string): Promise<{ upserted: number }> {
   const item = await fetchItem(env.API_BASE, itemId);
-  if (!item) {
-    await deleteItem(env.VECTORIZE, itemId);
-    return { upserted: 0 };
-  }
-  return reindexItem(env, item);
+  if (item) return reindexItem(env, item);
+
+  const community = await fetchCommunity(env.API_BASE, itemId);
+  if (community) return reindexItem(env, community);
+
+  await deleteItem(env.VECTORIZE, itemId);
+  return { upserted: 0 };
 }

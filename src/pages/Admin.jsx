@@ -6,6 +6,7 @@ import RichTextEditor from '@/components/RichTextEditor';
 import { logout, hasAdminAccess, hasUserManagementAccess, getCurrentUserId } from '@/lib/auth';
 import { t } from '@/lib/i18n';
 import { ForbiddenError, UnauthorizedError } from '@/api/adminClient';
+import { ChatbotSyncError } from '@/api/reindex';
 import {
   loadPtsdFaq, savePtsdFaq, removePtsdFaq,
   loadRightsFaq, saveRightsFaq, removeRightsFaq,
@@ -39,6 +40,13 @@ async function runWrite(action) {
     }
     if (err instanceof UnauthorizedError) {
       throw err;
+    }
+    // The content write succeeded but the chatbot vector-DB sync did not. Treat
+    // it as a warning (not a failed save) and let the panel refresh/close as
+    // usual - the content IS persisted; only the bot is temporarily stale.
+    if (err instanceof ChatbotSyncError) {
+      toast.warning(`${err.message}. נסו לשמור שוב או להריץ אינדוקס מלא.`);
+      return true;
     }
     toast.error(err?.message || 'אירעה שגיאה. נסו שוב.');
     return false;

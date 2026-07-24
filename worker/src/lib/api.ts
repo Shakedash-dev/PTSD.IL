@@ -74,6 +74,18 @@ export async function fetchAllCommunities(apiBase: string): Promise<Item[]> {
   return rows.filter((r) => r.isActive !== false).map(normalizeCommunity);
 }
 
+// Single community by id, for per-item reindex. Returns null when the community
+// is gone (404) OR has been deactivated (isActive:false) — both mean "should not
+// be in the corpus", so the caller drops its vectors.
+export async function fetchCommunity(apiBase: string, id: string): Promise<Item | null> {
+  const res = await fetch(`${apiBase}/communities/${id}`);
+  if (res.status === 404) return null;
+  if (!res.ok) throw new Error(`API ${res.status} for community ${id}`);
+  const row = (await res.json()) as CommunityRow;
+  if (row.isActive === false) return null;
+  return normalizeCommunity(row);
+}
+
 export async function fetchItem(apiBase: string, id: string): Promise<Item | null> {
   const res = await fetch(`${apiBase}/articles/${id}`);
   if (res.status === 404) return null;
