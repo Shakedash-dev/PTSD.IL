@@ -1,6 +1,7 @@
 import type { Env } from "../index";
 import type { Msg } from "./prompt";
 import { detectCrisis } from "./crisis";
+import { detectLang } from "./lang";
 import { embed } from "./embed";
 import { query } from "./vector";
 import { buildContents } from "./prompt";
@@ -29,21 +30,24 @@ export function handleChat(env: Env, body: { messages: Msg[]; lang: string; sess
       const send = (event: string, data: unknown) => ctrl.enqueue(enc.encode(sse(event, data)));
       try {
         const last = [...body.messages].reverse().find((m) => m.role === "user")?.content ?? "";
-        if (detectCrisis(last)) send("crisis", { lang: body.lang });
+        // Reply in the language the user actually WROTE in, not whatever the site
+        // UI is set to. Falls back to the site language only for undecidable input.
+        const lang = detectLang(last, body.lang);
+        if (detectCrisis(last)) send("crisis", { lang });
 
         const [qv] = await embed(env.AI, [last]);
         const all = (await query(env.VECTORIZE, qv, TOP_K_FETCH)).filter((h) => h.score >= RETRIEVAL_MIN_SCORE);
-        const sameLang = all.filter((h) => h.meta.langId === body.lang);
+        const sameLang = all.filter((h) => h.meta.langId === lang);
         const chosen = sameLang.length >= 3 ? sameLang : all.filter((h) => h.meta.langId === "he");
         const hits = (chosen.length ? chosen : all).slice(0, TOP_K_USE);
 
         if (hits.length === 0) {
-          send("token", { text: REFUSAL[body.lang] ?? REFUSAL.en });
+          send("token", { text: REFUSAL[lang] ?? REFUSAL.en });
           send("done", {});
           return; // the finally block is the sole closer of the controller
         }
 
-        const payload = buildContents(body.messages, hits, body.lang);
+        const payload = buildContents(body.messages, hits, lang);
         for await (const delta of streamGemini(env, payload)) send("token", { text: delta });
 
         send("sources", hits.map((h, i) => ({
