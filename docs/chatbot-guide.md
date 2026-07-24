@@ -1,93 +1,56 @@
-# Chatbot — Full Breakdown & App Integration Guide
+# Chatbot — Mobile App Integration Guide
 
-How the site chatbot works end-to-end, and how to add it to the mobile app.
+How to add the site chatbot to the mobile app.
 
-This is the companion to [`mobile-data-guide.md`](./mobile-data-guide.md). That doc
-tells you how to render the site's content; this one tells you how the chatbot
-works and how to wire it into the app.
+Companion to [`mobile-data-guide.md`](./mobile-data-guide.md): that doc is about
+rendering content, this one is about the chatbot.
 
-**The short version for the app dev:** the chatbot is one public HTTP endpoint —
-`POST /chat` — that streams an answer back over Server-Sent Events (SSE). The app
-does **not** need to run any AI, embeddings, vector DB, or ingestion. You send the
-conversation, you read the stream, you render it. Everything heavy already runs on
-Cloudflare. Jump to [§3 The only endpoint the app calls](#3-the-only-endpoint-the-app-calls)
-if you just want to integrate.
+**The whole thing is one endpoint.** You POST the conversation to `POST /chat` and
+read the answer back as a stream. The app runs no AI — everything heavy already
+lives on the server. You send messages, read the stream, render it.
+
+Worker URL (production): `https://ptsd-chatbot-worker.ptsd-il.workers.dev`
 
 ---
 
-## 1. What it is (and what makes it safe)
+## 0. Prerequisite — CORS must be opened first ⚠️
 
-A **grounded RAG chatbot**. It answers **only** from the site's own vetted content
-(the same `/articles` + `/communities` you already fetch), cites its sources, speaks
-in the user's language, and handles distress safely. It is warm 24/7 — no cold
-starts on the user path.
+Right now the chatbot server only accepts requests from the website's origin. **It
+must be changed to allow all origins before the app can call it.** This is a
+one-line server change (not something you do in the app), but nothing below works
+until it's done:
 
-"True to source" is not a hope about model behavior. It's enforced structurally:
+- In [`worker/src/index.ts`](../worker/src/index.ts) the CORS `origin` is set to the
+  single site origin (`c.env.SITE_ORIGIN`).
+- Change it to allow everyone — `origin: "*"`. `/chat` uses no cookies or auth, so
+  `*` is safe here.
+- Redeploy the Worker (`wrangler deploy`).
 
-- **Retrieval grounding** — before answering, the question is embedded and matched
-  against a vector index built from site content. The model is handed the top
-  matching passages and told: *answer only from these; if they don't cover it, say
-  so.* No relevant passages → it refuses instead of inventing.
-- **Citations we own** — the model tags each sourced sentence with a marker like
-  `[[3]]`. The Worker owns the number→source mapping, so citations are trustworthy
-  regardless of whether the model self-cites perfectly. Markers the app can't map
-  are simply dropped.
-- **Deterministic crisis layer** — a keyword check runs on the user's message
-  independently of the model. On a hit, a crisis signal is emitted and the app must
-  surface the ERAN helpline (1201). This does not depend on the model noticing.
-
-What it deliberately does **not** do: general/off-topic chat, medical or clinical
-advice, diagnosis, persistent history across reloads, per-user accounts, or any
-logging of conversations (nothing is stored — see [§9](#9-privacy)).
+Until that ships, `/chat` requests from the app will be rejected. Flag this to
+whoever owns the Worker.
 
 ---
 
-## 2. Architecture (how the pieces fit)
+## 1. What it is (only what affects the app)
 
-The entire user-facing path is Cloudflare-native and always warm. The cold-starting
-Render API is touched **only during offline ingestion**, never on a chat request.
+A chatbot that answers **only** from the site's own vetted content, in the user's
+language, and cites its sources. It never gives medical advice, and it flags user
+distress so the app can show the crisis helpline. Three things this means for your
+UI:
 
-```
-                    USER (app / browser)
-                          |  POST /chat   (SSE stream back)
-                          v
-   +-------------------------------------------------------------+
-   |          Cloudflare Worker  (edge, warm ~5ms)               |
-   |                                                             |
-   |  POST /chat   (public, rate-limited)                        |
-   |    1. crisis check   (deterministic keyword match)          |
-   |    2. embed question -> Workers AI  (bge-m3, 1024-dim)      |
-   |    3. retrieve top-k -> Vectorize   (vector DB)             |
-   |    4. generate       -> Gemini Flash (streamed)            |
-   |                                                             |
-   |  POST /reindex  (admin-JWT gated — app never calls this)    |
-   |    pull -> chunk -> embed -> upsert into Vectorize          |
-   +-------------------------------------------------------------+
-             |  (ingestion only)                  ^
-             v                                    |  admin JWT
-     NestJS API /articles, /communities     Website admin panel
-     (Render free tier; cold starts OK here)
-```
+- **It can refuse.** If the question isn't covered by site content, it returns a
+  short "I can only help with topics on this site" answer instead of making
+  something up. Render it like any other answer.
+- **Answers carry sources.** Each answer comes with the passages behind it, which
+  you turn into tappable links ([§4](#4-citations--in-app-source-links)).
+- **It can signal a crisis.** On distress, the stream emits a `crisis` signal and
+  you must show the ERAN helpline banner ([§5](#5-crisis--safety--required)).
 
-| Piece | Tech | Notes |
-|-------|------|-------|
-| Orchestration | Cloudflare Worker (Hono) | Two routes: `/chat` (public), `/reindex` (admin). |
-| Embeddings | Workers AI `@cf/baai/bge-m3` | Multilingual (incl. Hebrew/Arabic), 1024-dim. Same model for indexing and querying. |
-| Vector DB | Cloudflare Vectorize | Index `ptsd-chatbot`, cosine, 1024-dim. One vector per content **chunk**. |
-| Generation | Google **Gemini Flash** (`gemini-flash-latest`) | Streamed. Strong multilingual incl. Hebrew. |
-| Rate limit | Cloudflare KV | 20 messages / hour / session. |
-
-Live worker URL (production): `https://ptsd-chatbot-worker.ptsd-il.workers.dev`
-
-Source lives in the repo under [`worker/`](../worker); the website widget under
-[`src/components/chat/`](../src/components/chat) and [`src/lib/ChatContext.jsx`](../src/lib/ChatContext.jsx).
-The website reference implementation is the best example to copy from.
+You don't need to know how retrieval or generation works to integrate it.
 
 ---
 
-## 3. The only endpoint the app calls
-
-### `POST /chat`
+## 2. The endpoint: `POST /chat`
 
 **Request** — JSON body:
 
@@ -105,29 +68,25 @@ The website reference implementation is the best example to copy from.
 
 | Field | Type | Meaning |
 |-------|------|---------|
-| `messages` | array of `{ role, content }` | The full conversation so far. `role` is `"user"` or `"assistant"`. Send the whole history each turn (the Worker is stateless) — but **do not** include the empty assistant turn you're about to fill. |
+| `messages` | array of `{ role, content }` | The full conversation so far. `role` is `"user"` or `"assistant"`. Send the whole history each turn (the server keeps no state) — but **not** the empty assistant turn you're about to fill. |
 | `lang` | `"he" \| "ar" \| "en" \| "ru" \| "fr"` | The user's current UI language. The bot answers in this language. |
-| `sessionId` | string (UUID) | Client-generated, held in memory. Identifies the session for rate limiting. Generate once per app session; regenerate on restart. See [§7](#7-rate-limiting--sessions). |
+| `sessionId` | string (UUID) | Client-generated, kept in memory. Used for rate limiting. One per app session ([§6](#6-rate-limiting--sessions)). |
 
-**Response** — `text/event-stream` (SSE). Status codes:
+**Response** — a stream (`text/event-stream`). Status codes:
 
-| Status | Meaning | What the app does |
-|--------|---------|-------------------|
-| `200` + SSE stream | Normal | Read the stream (see [§4](#4-the-sse-stream)). |
-| `429` | Rate limited | Show "too many messages, try again later". |
-| other non-2xx | Worker/backend error | Show a generic error. |
-
-CORS: the Worker restricts browser origins to the website. **Native mobile apps are
-not subject to browser CORS**, so a React Native / native HTTP client calls it
-directly with no issue. A **web-based** app on a different origin would be blocked
-until that origin is added to the Worker's `SITE_ORIGIN` — see [§12](#12-config--gotchas).
+| Status | Meaning | App does |
+|--------|---------|----------|
+| `200` + stream | Normal | Read the stream ([§3](#3-the-stream)). |
+| `429` | Rate limited | Show "too many messages, try again shortly". |
+| other non-2xx | Server error | Show a generic error. |
 
 ---
 
-## 4. The SSE stream
+## 3. The stream
 
-The response body is a stream of SSE frames. Each frame is `event: <name>` + `data:
-<json>`, separated by a blank line (`\n\n`). Frames arrive in this order:
+The `200` response body streams **Server-Sent Events (SSE)**: `event: <name>` +
+`data: <json>` frames, each separated by a blank line (`\n\n`). They arrive in this
+order:
 
 ```
 event: crisis    data: { "lang": "he" }                          (0 or 1, first)
@@ -139,151 +98,125 @@ event: error     data: { "message": "..." }                        (on failure)
 
 | Event | Payload | What to do |
 |-------|---------|------------|
-| `crisis` | `{ lang }` | User's message tripped the crisis check. **Pin the ERAN banner** (helpline 1201) using the `eran_link` + `eran_phone` strings ([§10](#10-copyable-ui-strings)). Fires before any token. |
-| `token` | `{ text }` | A chunk of the answer. **Append** to the current assistant message and render live. Contains inline `[[n]]` markers — strip them for display ([§5](#5-citations--source-links)). |
-| `sources` | array of source objects | The passages behind the answer. Store on the message; use to build source links. Shape below. |
-| `done` | `{}` | Stream finished cleanly. Stop the "thinking" indicator. |
-| `error` | `{ message }` | Something failed mid-stream. Show an error; stop the indicator. |
-
-**Refusal is a normal `200`.** When retrieval finds nothing relevant, the Worker
-sends one `token` with a polite "I can only help with topics on this site" line (in
-the user's language) then `done`. There's no special event — just render it.
+| `crisis` | `{ lang }` | Show the **ERAN banner** ([§5](#5-crisis--safety--required)). Fires before any token. |
+| `token` | `{ text }` | A chunk of the answer. **Append** it to the current assistant message and render live. Contains inline `[[n]]` markers — strip them ([§4](#4-citations--in-app-source-links)). |
+| `sources` | array of source objects | The passages behind the answer. Store them on the message to build links. Shape below. |
+| `done` | `{}` | Finished cleanly. Stop the "thinking" indicator. |
+| `error` | `{ message }` | Failed mid-stream. Show an error; stop the indicator. |
 
 **`sources` object shape:**
 
 ```json
 {
   "n": 1,                       // citation number, matches [[n]] in the text
-  "itemId": "uuid",             // the article/item id
-  "groupId": "uuid",            // translation group (see mobile-data-guide §2)
-  "type": "faq",                // content type: faq | source | tool | treatment_step | article | ...
-  "langId": "he",               // language of the passage (may differ from `lang`)
+  "itemId": "uuid",             // the article/item id (fetch it via the API if needed)
+  "groupId": "uuid",            // translation group (mobile-data-guide §2)
+  "type": "faq",                // faq | source | tool | treatment_step | article | ...
+  "langId": "he",               // language of the passage (MAY differ from `lang`)
   "title": "זכויות נפגעי פעולות איבה",
   "text": "the exact passage the answer drew from",
-  "categorySlug": "rights"      // primary category (used to route faq citations)
+  "categorySlug": "rights"      // primary category, used to route the link
 }
 ```
 
 ---
 
-## 5. Citations → source links
+## 4. Citations → in-app source links
 
-The answer text contains inline markers like `[[1]]` or `[[2]][[3]]` right after
-sentences that used a source. These are **internal** — the reader never sees the raw
-markers. Do this:
+Answer text contains inline markers like `[[1]]` or `[[2]][[3]]` after sentences
+that used a source. These are **internal** — the user never sees the raw markers.
 
-1. **Collect** the cited numbers: regex `/\[\[(\d+)\]\]/g` over the full answer.
-2. **Strip** them from the display text: `.replace(/\[\[\d+\]\]/g, "")`
-   (and tidy any space left before punctuation: `.replace(/[ \t]+([.,!?])/g, "$1")`).
-3. **Render source links** for only the `sources` whose `n` is in the cited set.
-   De-duplicate by `(route, title)` so the same source doesn't appear twice.
+1. **Collect** cited numbers: regex `/\[\[(\d+)\]\]/g` over the full answer text.
+2. **Strip** them from what you display:
+   `.replace(/\[\[\d+\]\]/g, "").replace(/[ \t]+([.,!?])/g, "$1")`
+3. **Show a link** for each `sources` entry whose `n` is in the cited set. De-dupe by
+   `(destination, title)` so the same source doesn't repeat.
 
-On the **website**, each source becomes a chip linking to the section page for that
-content type. The mapping ([`src/lib/citations.jsx`](../src/lib/citations.jsx)):
+Each source links to the screen for that content type. Map `type` (+ `categorySlug`
+for `faq`) to **your in-app navigation**. Reference logic (from the website):
 
 ```js
-function sectionRoute(type, categorySlug) {
+function destinationFor(type, categorySlug) {
   if (type === "faq") {
-    if (categorySlug === "ptsd-info")     return "/ptsd-info";
-    if (categorySlug === "second-circle") return "/second-circle-tools";
-    return "/rights";                       // rights or missing (safe fallback)
+    if (categorySlug === "ptsd-info")     return "ptsd-info screen";
+    if (categorySlug === "second-circle") return "second-circle-tools screen";
+    return "rights screen";                 // rights or missing (safe fallback)
   }
   switch (type) {
-    case "source":         return "/sources";
-    case "tool":           return "/self-help";
-    case "treatment_step": return "/treatment";
-    default:               return "/children";   // article, book, activity, story, video
+    case "source":         return "sources screen";
+    case "tool":           return "self-help screen";
+    case "treatment_step": return "treatment screen";
+    default:               return "children screen"; // article, book, activity, story, video
   }
 }
 ```
 
-**For the app:** replace these web routes with your **in-app navigation targets**
-for each content type. The `type` + `categorySlug` → screen mapping is yours to
-define; the logic above is the reference. You already fetch items by `itemId`
-(mobile-data-guide §1), so a chip can deep-link straight to that item's screen if
-you prefer that over a section screen.
+You already fetch items by `itemId` (mobile-data-guide §1), so a link can deep-link
+straight to that item's screen instead if you prefer.
 
-The website renders the answer as **Markdown** (bold, lists, paragraphs) — use a
-Markdown renderer in the app too, since the model is prompted to format that way.
+**Render answers as Markdown** — the bot formats with bold, lists, and paragraphs.
 
 ---
 
-## 6. Safety & crisis handling — required
+## 5. Crisis & safety — required
 
-This is not optional UI polish. If you ship the chatbot, you ship the crisis banner.
+Not optional. If you ship the chatbot, you ship the crisis banner.
 
-- On a `crisis` event, **pin a visible banner** for the rest of the conversation
-  showing the ERAN helpline. Use the localized strings: `eran_link` (label) +
-  `eran_phone` (`1201`), and make the phone tappable (`tel:1201`). Strings are in
-  [§10](#10-copyable-ui-strings).
-- The check is a per-language keyword/regex match (self-harm / suicide / acute
-  distress phrasing across all 5 languages). It runs **before** the model and is
-  independent of it. False positives fail safe — showing ERAN is low-harm.
-- The model is *also* prompted to surface ERAN on distress (belt and suspenders),
-  but your banner must not depend on the model — key off the `crisis` event.
-- Show a small **"not medical advice"** disclaimer near the chat input
-  (`chat_disclaimer` string). The bot never diagnoses or gives treatment advice by
-  design; the disclaimer reinforces it.
+- On a `crisis` event, **pin a visible banner** for the rest of the conversation with
+  the ERAN helpline: label `eran_link`, number `eran_phone` (`1201`), phone tappable
+  (`tel:1201`). Strings in [§9](#9-ui-strings).
+- The check runs independently of the AI, so **key your banner off the `crisis`
+  event**, not off anything in the answer text.
+- Show a small **"not medical advice"** disclaimer near the input (`chat_disclaimer`).
 
 ---
 
-## 7. Rate limiting & sessions
+## 6. Rate limiting & sessions
 
 - **20 messages per hour per `sessionId`.** Over the limit → `POST /chat` returns
-  `429`. Show a friendly "you've reached the limit, try again shortly" message.
-- `sessionId` is a **client-generated UUID** you create once and keep in memory for
-  the session. On the website it's regenerated on full page reload — so a reload
-  resets the limit. This is intentional and acceptable. For the app: generate one
-  per app launch (or per chat session); it does not need to be stable across
-  restarts.
-- The limit is enforced in Cloudflare KV keyed on `sessionId`. No auth, no account.
+  `429`. Show a friendly "reached the limit, try again shortly".
+- `sessionId` is a **client-generated UUID** you create once and keep in memory.
+  Generate one per app launch (or per chat session). It doesn't need to survive a
+  restart — a fresh id just resets the limit.
 
 ---
 
-## 8. Languages & RTL
+## 7. Languages & RTL
 
-- Five languages: `he`, `ar`, `en`, `ru`, `fr`. Pass the user's current one as
-  `lang`. The bot **answers in that language**.
-- Most vetted content exists only in **Hebrew**. When you ask in another language,
-  the Worker retrieves the Hebrew passages and Gemini translates at answer time.
-  Tradeoff: non-Hebrew answers are one machine-translation hop from the vetted
-  Hebrew text. (Retrieval prefers same-language passages when at least 3 exist,
-  otherwise falls back to Hebrew.)
-- `he` and `ar` are **RTL** — render the chat panel, bubbles, and banner RTL for
-  those languages, LTR otherwise. The website already does this via its language
-  context; mirror that.
+- Five languages: `he`, `ar`, `en`, `ru`, `fr`. Pass the current one as `lang`; the
+  bot answers in it.
+- Most content exists only in **Hebrew**; for other languages the answer is
+  translated at generation time. So `sources[].langId` can be `he` even when the
+  answer is English — **don't filter sources by language.**
+- `he` and `ar` are **RTL** — render the panel, bubbles, and banner RTL for those.
 
 ---
 
-## 9. Privacy
+## 8. Privacy
 
-**Nothing is stored.** No questions, answers, or conversation content are persisted
-anywhere. Requests are processed in memory on the Worker and discarded. There is no
-analytics or transcript logging. Keep it that way in the app — don't log message
-bodies to a backend.
+**Nothing is stored** server-side — no questions, answers, or transcripts. Keep it
+that way in the app: don't log conversation content to any backend.
 
 ---
 
-## 10. Copyable UI strings
+## 9. UI strings
 
-All chat strings already exist localized for all 5 languages in
-[`src/lib/i18n.js`](../src/lib/i18n.js). Copy them into the app's i18n. Keys:
+All chat strings are already localized for all 5 languages in
+[`src/lib/i18n.js`](../src/lib/i18n.js). Copy them into the app. Keys:
 
 | Key | Purpose |
 |-----|---------|
-| `chat_title` | Panel header ("Chat") |
-| `chat_placeholder` | Input placeholder ("Type here…") |
-| `hero_chat_placeholder` | Home/hero input placeholder ("Ask me anything…") |
-| `chat_send` | Send button label |
-| `chat_close` | Close button label |
-| `chat_thinking` | "Thinking" indicator label |
-| `chat_starters` | Array of 3 starter suggestion prompts |
-| `chat_disclaimer` | "This information is general and not medical advice." |
-| `chat_view_in_site` | "View source on site" (rename for app context) |
-| `eran_link` | Crisis banner label ("If you are in distress — talk to ERAN") |
+| `chat_title` | Panel header |
+| `chat_placeholder` | Input placeholder |
+| `hero_chat_placeholder` | Home/hero input placeholder |
+| `chat_send` / `chat_close` | Button labels |
+| `chat_thinking` | "Thinking" indicator |
+| `chat_starters` | Array of 3 starter-suggestion prompts |
+| `chat_disclaimer` | "…general and not medical advice." |
+| `eran_link` | Crisis banner label |
 | `eran_phone` | `1201` |
 
-English reference values:
+English reference values (pull `he`/`ar`/`ru`/`fr` from the same file):
 
 ```js
 chat_title:            "Chat",
@@ -293,24 +226,20 @@ chat_send:             "Send",
 chat_close:            "Close",
 chat_thinking:         "Thinking",
 chat_disclaimer:       "This information is general and not medical advice.",
-chat_view_in_site:     "View source on site",
 chat_starters:         ["What are my rights?", "What is a flashback?", "How can I calm down right now?"],
 eran_link:             "If you are in distress - talk to ERAN",
 eran_phone:            "1201",
 ```
 
-Grab the `he`/`ar`/`ru`/`fr` values from `src/lib/i18n.js` (search the key).
-
 ---
 
-## 11. Reference client (SSE parsing)
+## 10. Reference client + mobile streaming caveat
 
-The website's client is [`src/lib/chatClient.js`](../src/lib/chatClient.js). It POSTs
-the body and parses the SSE frames with a small state machine. The core loop,
-framework-agnostic:
+The website's parser is [`src/lib/chatClient.js`](../src/lib/chatClient.js). The core
+loop — POST, then split the stream into frames on the blank line:
 
 ```js
-export async function streamChat({ base, messages, lang, sessionId }, handlers = {}) {
+async function streamChat({ base, messages, lang, sessionId }, handlers = {}) {
   const res = await fetch(`${base}/chat`, {
     method: "POST",
     headers: { "content-type": "application/json" },
@@ -341,102 +270,53 @@ export async function streamChat({ base, messages, lang, sessionId }, handlers =
 }
 ```
 
-Message-state handling (append tokens, attach sources) is in
-[`src/lib/ChatContext.jsx`](../src/lib/ChatContext.jsx) — copy its `send` reducer
-logic.
+### ⚠️ React Native doesn't stream `fetch` bodies
 
-### ⚠️ Mobile streaming caveat (read this)
+The line above — `res.body.getReader()` — is the one thing that differs on mobile.
+**React Native's default `fetch` returns `res.body === null`**, so you can't read the
+stream that way. Pick one:
 
-`res.body.getReader()` (streaming fetch) is the one thing that differs on mobile.
-**React Native's default `fetch` does not expose a readable stream body** — `res.body`
-is null, so the loop above won't work as-is. Options, pick one:
+- **`expo/fetch`** (`import { fetch } from "expo/fetch"`) — supports streaming
+  bodies and gives you the exact `getReader()` code above. Easiest if you're on Expo.
+- **`react-native-sse`** — an EventSource that supports `method: "POST"` + `body`.
+  Handle its `message`/named events instead of the manual split.
+- **`XMLHttpRequest` + `onprogress`** — RN's XHR exposes partial `responseText` as it
+  arrives; on each `onprogress`, take the new tail and run the same `\n\n` frame
+  split. No extra dependency.
+- **No-streaming fallback** — await the full response text, then split and replay the
+  frames. You lose the live typewriter effect, but the answer, sources, and crisis
+  banner all still work. Fine for a first version.
 
-- **`react-native-sse`** (EventSource for RN) — cleanest. But it's GET-oriented;
-  since `/chat` is POST with a JSON body, use a library that supports POST SSE
-  (e.g. `react-native-sse` supports `method` + `body`), or the XHR approach below.
-- **`XMLHttpRequest` with `onprogress`** — RN's XHR delivers partial
-  `responseText` as it arrives; diff the new tail each `onprogress` and run the same
-  frame-splitting on `\n\n`. Works without extra deps.
-- **Expo:** `expo/fetch` (`fetch` from `expo/fetch`) supports streaming response
-  bodies and gives you the `getReader()` API above directly.
-- **Fallback (no streaming):** call `/chat`, wait for the full response text, then
-  split frames and replay them. You lose the live typewriter effect but the crisis
-  banner, answer, and sources all still work. Fine for a first cut.
-
-Everything else (the frame format, event names, payloads) is identical to the web.
+The frame format and event names are identical to the web either way.
 
 ---
 
-## 12. Config & gotchas
+## 11. App config
 
-**Worker environment** (set in [`worker/wrangler.toml`](../worker/wrangler.toml) +
-secrets):
+One value: the Worker base URL —
+`https://ptsd-chatbot-worker.ptsd-il.workers.dev`. (The website reads it from
+`VITE_CHATBOT_URL`; the app just needs the same URL.)
 
-| Var | Value / purpose |
-|-----|-----------------|
-| `SITE_ORIGIN` | Allowed CORS origin. Currently the website. **Add the app's web origin here if the app is browser-based on a different domain.** Native apps are unaffected. |
-| `API_BASE` | `https://ptsd-il-api.onrender.com/api` — ingestion source. |
-| `GEMINI_MODEL` | `gemini-flash-latest`. |
-| `GEMINI_API_KEY` | Secret (Worker secret, never in any client bundle). |
-| `ADMIN_VERIFY_URL` | Admin endpoint used to validate reindex JWTs. |
-| `VECTORIZE` / `AI` / `RL` | Vectorize index, Workers AI, KV rate-limit bindings. |
-
-**App-side config:** one value — the Worker base URL. The website reads it from
-`VITE_CHATBOT_URL` (`src/.env.example`). Production:
-`https://ptsd-chatbot-worker.ptsd-il.workers.dev`.
-
-**Gotchas:**
-
-- **CORS on web apps.** Native = fine. Web app on a new origin = add it to
-  `SITE_ORIGIN` first, or `/chat` requests get blocked by the browser.
-- **Send history minus the placeholder.** Send prior turns, but not the empty
-  assistant turn you're about to stream into. The Worker takes the last `user`
-  message as the question.
-- **Strip `[[n]]` before display**, always. Raw markers leaking into the UI is the
-  most common integration bug.
-- **`sources[].langId` can differ from `lang`.** A Hebrew source backing an English
-  answer is expected (translate-from-Hebrew). Don't filter sources by language.
-- **First reindex / cold data only.** The chat path is always warm; the Render API
-  cold-start only affects the admin reindex, not users.
+Reminder: CORS must be opened first ([§0](#0-prerequisite--cors-must-be-opened-first-️)).
 
 ---
 
-## 13. Ingestion & reindex (context — the app does NOT do this)
+## 12. Integration checklist
 
-For completeness. The content in the vector index is built by the admin flow, not
-the app:
-
-- `POST /reindex` is **admin-only** (validated against the admin's Google JWT — the
-  same token the website admin panel already holds). The app never calls it.
-- The website admin panel triggers a reindex after create/update/delete, and has a
-  "reindex all" button.
-- Ingestion pulls published items from `/articles` + `/communities`, extracts the
-  Markdown/plain-text leaves from each item's `content` JSON (skipping URLs/ids —
-  see [`worker/src/lib/content.ts`](../worker/src/lib/content.ts)), chunks (~1600
-  chars, 200 overlap), embeds with bge-m3, and upserts into Vectorize keyed
-  `${itemId}:${chunkIndex}`.
-
-If content changes and isn't reflected in answers, the fix is a reindex from the
-admin panel — nothing in the app.
-
----
-
-## 14. App integration checklist
-
+- [ ] Confirm the Worker CORS is opened to all origins ([§0](#0-prerequisite--cors-must-be-opened-first-️)).
 - [ ] Add the Worker base URL to app config.
 - [ ] Generate a `sessionId` (UUID) per session; keep it in memory.
-- [ ] Build the chat UI: message list, input, send button, "thinking" indicator.
-- [ ] POST `{ messages, lang, sessionId }` to `/chat` on send (history minus the
-      empty assistant placeholder).
-- [ ] Parse the SSE stream — pick a mobile streaming approach ([§11](#11-reference-client-sse-parsing)).
-- [ ] Handle each event: `crisis` → banner, `token` → append, `sources` → attach,
+- [ ] Build the chat UI: message list, input, send, "thinking" indicator.
+- [ ] POST `{ messages, lang, sessionId }` on send (history minus the empty
+      assistant placeholder).
+- [ ] Parse the SSE stream — pick a mobile approach ([§10](#10-reference-client--mobile-streaming-caveat)).
+- [ ] Handle events: `crisis` → banner, `token` → append, `sources` → attach,
       `done`/`error` → stop indicator.
 - [ ] Strip `[[n]]` markers from display; build source links from cited `sources`.
-- [ ] Map `type` + `categorySlug` → in-app navigation for source links ([§5](#5-citations--source-links)).
+- [ ] Map `type` (+ `categorySlug`) → in-app navigation for links ([§4](#4-citations--in-app-source-links)).
 - [ ] Render answers as **Markdown**.
-- [ ] Pin the **ERAN banner** on `crisis`; show the **not-medical-advice**
-      disclaimer near the input.
-- [ ] Handle `429` (rate limited) gracefully.
+- [ ] Pin the **ERAN banner** on `crisis`; show the **not-medical-advice** disclaimer.
+- [ ] Handle `429` gracefully.
 - [ ] RTL for `he`/`ar`.
-- [ ] Copy the `chat_*` / `eran_*` i18n strings for all 5 languages.
+- [ ] Copy the `chat_*` / `eran_*` strings for all 5 languages.
 - [ ] Store nothing — no conversation logging.
