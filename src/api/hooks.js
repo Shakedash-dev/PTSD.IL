@@ -22,10 +22,10 @@ export function useSources({ lang }) {
   });
 }
 
-export function useCommunities() {
+export function useCommunities({ lang }) {
   return useQuery({
-    queryKey: ['communities'],
-    queryFn: fetchCommunities,
+    queryKey: ['communities', lang],
+    queryFn: () => fetchCommunities({ lang }),
   });
 }
 

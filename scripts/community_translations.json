@@ -1,0 +1,157 @@
+{
+  "_note": "Translations of the 7 Hebrew communities into en/ar/ru/fr. Keyed by the Hebrew row's id. location/meetingType/audienceIds/contactUrl/isActive are language-independent and copied from the he row by the writer script; only name/description/organization are translated here.",
+  "21d2357a-de6e-4f50-a35c-b23a5a8f7ea9": {
+    "en": {
+      "name": "Association of Rape Crisis Centers in Israel",
+      "description": "National helplines (1202 for women, 1203 for men) and the \"Kol Mila\" chat, plus a nationwide network of regional support centers for survivors of sexual assault and their families.",
+      "organization": "Association of Rape Crisis Centers in Israel"
+    },
+    "ar": {
+      "name": "اتحاد مراكز مساعدة ضحايا الاعتداء الجنسي",
+      "description": "خطوط مساعدة وطنية (1202 للنساء، 1203 للرجال) ودردشة \"كول ميلا\"، بالإضافة إلى شبكة وطنية من مراكز المساعدة الإقليمية للناجيات والناجين من الاعتداء الجنسي وعائلاتهم.",
+      "organization": "اتحاد مراكز مساعدة ضحايا الاعتداء الجنسي"
+    },
+    "ru": {
+      "name": "Ассоциация центров помощи жертвам сексуального насилия",
+      "description": "Общенациональные линии помощи (1202 для женщин, 1203 для мужчин) и чат «Коль Мила», а также общенациональная сеть региональных центров помощи для пострадавших от сексуального насилия и их семей.",
+      "organization": "Ассоциация центров помощи жертвам сексуального насилия"
+    },
+    "fr": {
+      "name": "Association des centres d'aide aux victimes d'agression sexuelle",
+      "description": "Lignes d'assistance nationales (1202 pour les femmes, 1203 pour les hommes) et le chat « Kol Mila », ainsi qu'un réseau national de centres d'aide régionaux pour les victimes d'agression sexuelle et leurs familles.",
+      "organization": "Association des centres d'aide aux victimes d'agression sexuelle"
+    }
+  },
+  "bd8ff2d4-9d60-47c1-aaf5-e14030e9335a": {
+    "en": {
+      "name": "Parents of the Wounded of 'Iron Swords'",
+      "description": "A support group for parents of soldiers wounded in the Iron Swords war - a space for sharing, connection, and building strength.",
+      "organization": "Rehabilitation Division, Ministry of Defense"
+    },
+    "ar": {
+      "name": "أهالي جرحى \"السيوف الحديدية\"",
+      "description": "مجموعة دعم لأهالي الجنود الذين أصيبوا في حرب \"السيوف الحديدية\" - مساحة للمشاركة والتواصل والتقوية.",
+      "organization": "شعبة التأهيل، وزارة الأمن"
+    },
+    "ru": {
+      "name": "Родители раненых в операции «Железные мечи»",
+      "description": "Группа поддержки для родителей солдат, раненных в войне «Железные мечи», - пространство для общения, сближения и обретения сил.",
+      "organization": "Управление реабилитации, Министерство обороны"
+    },
+    "fr": {
+      "name": "Parents des blessés de « Épées de fer »",
+      "description": "Un groupe de soutien pour les parents de soldats blessés lors de la guerre Épées de fer - un espace de partage, de connexion et de renforcement.",
+      "organization": "Direction de la réhabilitation, Ministère de la Défense"
+    }
+  },
+  "5d7e33b5-a4d8-4809-9a9a-634d7bb2838c": {
+    "en": {
+      "name": "HaMaagal - Not Alone - A Supportive Community for Families of PTSD Survivors",
+      "description": "A supportive community and support groups for families and partners of those coping with security-related PTSD - for learning, strengthening, and guidance through the family's coping journey.",
+      "organization": "Lo Levad (Not Alone)"
+    },
+    "ar": {
+      "name": "هَمَعغال - لست وحدك - مجتمع داعم لعائلات المتعايشين مع اضطراب ما بعد الصدمة",
+      "description": "مجتمع داعم ومجموعات دعم لعائلات وأزواج المتعايشين مع اضطراب ما بعد الصدمة على خلفية أمنية، للتعلّم والتقوية والمرافقة في التعامل العائلي.",
+      "organization": "لست وحدك"
+    },
+    "ru": {
+      "name": "ХаМаагаль - «Не один» - поддерживающее сообщество для семей людей с посттравматическим расстройством",
+      "description": "Поддерживающее сообщество и группы поддержки для семей и супругов людей, справляющихся с посттравматическим расстройством на почве боевых действий, - для обучения, укрепления и сопровождения в семейном совладании.",
+      "organization": "Ло Левад («Не один»)"
+    },
+    "fr": {
+      "name": "HaMaagal - « Pas seul » - une communauté de soutien pour les familles de personnes atteintes de TSPT",
+      "description": "Une communauté de soutien et des groupes de soutien pour les familles et les conjoints des personnes confrontées au TSPT d'origine sécuritaire - pour apprendre, se renforcer et être accompagnés dans le parcours familial.",
+      "organization": "Lo Levad (Pas seul)"
+    }
+  },
+  "67843430-f2e0-4af1-84fb-e18f0e1bcdaf": {
+    "en": {
+      "name": "Hosen (Resilience) Center - Jerusalem (Amcha)",
+      "description": "A center for mental health treatment and support for victims of hostile actions, trauma, and anxiety and their families - individual, group, and family therapy, by phone, Zoom, or in person.",
+      "organization": "Amcha Association"
+    },
+    "ar": {
+      "name": "مركز حوسِن (المناعة النفسية) - القدس (عَمْخا)",
+      "description": "مركز للعلاج والدعم النفسي لضحايا الأعمال العدائية والصدمات والقلق وعائلاتهم - علاج فردي وجماعي وعائلي، عبر الهاتف أو زوم أو وجهاً لوجه.",
+      "organization": "جمعية عَمْخا"
+    },
+    "ru": {
+      "name": "Центр «Хосен» (Устойчивость) - Иерусалим (Амха)",
+      "description": "Центр психологической помощи и поддержки для пострадавших от враждебных действий, травмы и тревоги и их семей - индивидуальная, групповая и семейная терапия по телефону, в Zoom или очно.",
+      "organization": "Ассоциация «Амха»"
+    },
+    "fr": {
+      "name": "Centre Hosen (Résilience) - Jérusalem (Amcha)",
+      "description": "Un centre de soins et de soutien psychologique pour les victimes d'actes hostiles, de traumatismes et d'anxiété et leurs familles - thérapie individuelle, de groupe et familiale, par téléphone, Zoom ou en personne.",
+      "organization": "Association Amcha"
+    }
+  },
+  "a37428fd-0f84-4ae3-b672-2dc61e414be2": {
+    "en": {
+      "name": "NATAL - Groups for Partners of Those Coping with Trauma",
+      "description": "A unique support group for partners of PTSD survivors, for learning and strengthening in coping together.",
+      "organization": "NATAL Association"
+    },
+    "ar": {
+      "name": "نطال (NATAL) - مجموعات لأزواج المتعايشين والمتعايشات مع الصدمة",
+      "description": "مجموعة دعم فريدة لأزواج المتعايشين مع اضطراب ما بعد الصدمة، للتعلّم والتقوية في التعامل المشترك.",
+      "organization": "جمعية نطال"
+    },
+    "ru": {
+      "name": "НАТАЛ - группы для супругов людей, справляющихся с травмой",
+      "description": "Уникальная группа поддержки для супругов людей с посттравматическим расстройством, для обучения и укрепления в совместном совладании.",
+      "organization": "Ассоциация НАТАЛ"
+    },
+    "fr": {
+      "name": "NATAL - groupes pour les conjoints de personnes confrontées au trauma",
+      "description": "Un groupe de soutien unique pour les conjoints de personnes atteintes de TSPT, pour apprendre et se renforcer dans un accompagnement commun.",
+      "organization": "Association NATAL"
+    }
+  },
+  "4d70946d-9ec8-4d1f-8fc3-58a13d1dc5a6": {
+    "en": {
+      "name": "NATAL - Support Groups",
+      "description": "Support and therapeutic groups for survivors of trauma and PTSD stemming from war and terror, and for their families.",
+      "organization": "NATAL Association"
+    },
+    "ar": {
+      "name": "نطال (NATAL) - مجموعات دعم",
+      "description": "مجموعات دعم وعلاجية للمتعايشين مع الصدمة واضطراب ما بعد الصدمة على خلفية الحرب والإرهاب ولعائلاتهم.",
+      "organization": "جمعية نطال"
+    },
+    "ru": {
+      "name": "НАТАЛ - группы поддержки",
+      "description": "Группы поддержки и терапевтические группы для переживших травму и посттравматическое расстройство вследствие войны и террора, и для их семей.",
+      "organization": "Ассоциация НАТАЛ"
+    },
+    "fr": {
+      "name": "NATAL - groupes de soutien",
+      "description": "Groupes de soutien et thérapeutiques pour les survivants de traumatismes et de TSPT liés à la guerre et au terrorisme, et pour leurs familles.",
+      "organization": "Association NATAL"
+    }
+  },
+  "da4e5d75-6ef7-4696-af60-13582c7c5338": {
+    "en": {
+      "name": "Support Groups for IDF Disabled Veterans Coping with PTSD",
+      "description": "Dozens of therapeutic groups open for registration across the country for IDF disabled veterans coping with PTSD - a space for sharing, connection, and building strength. Groups can be filtered by region and topic.",
+      "organization": "Rehabilitation Division, Ministry of Defense"
+    },
+    "ar": {
+      "name": "مجموعات دعم لمعوقي الجيش الإسرائيلي المتعايشين مع اضطراب ما بعد الصدمة",
+      "description": "عشرات المجموعات العلاجية المفتوحة للتسجيل في أنحاء البلاد لمعوقي ومعوقات الجيش المتعايشين مع اضطراب ما بعد الصدمة - مساحة للمشاركة والتواصل والتقوية. يمكن تصفية المجموعات حسب المنطقة والموضوع.",
+      "organization": "شعبة التأهيل، وزارة الأمن"
+    },
+    "ru": {
+      "name": "Группы поддержки для инвалидов ЦАХАЛа, справляющихся с посттравматическим расстройством",
+      "description": "Десятки терапевтических групп, открытых для записи по всей стране, для инвалидов ЦАХАЛа, справляющихся с посттравматическим расстройством, - пространство для общения, сближения и обретения сил. Группы можно фильтровать по региону и теме.",
+      "organization": "Управление реабилитации, Министерство обороны"
+    },
+    "fr": {
+      "name": "Groupes de soutien pour les vétérans handicapés de Tsahal confrontés au TSPT",
+      "description": "Des dizaines de groupes thérapeutiques ouverts aux inscriptions dans tout le pays pour les vétérans handicapés de Tsahal confrontés au TSPT - un espace de partage, de connexion et de renforcement. Les groupes peuvent être filtrés par région et par sujet.",
+      "organization": "Direction de la réhabilitation, Ministère de la Défense"
+    }
+  }
+}

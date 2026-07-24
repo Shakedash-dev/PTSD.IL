@@ -44,7 +44,7 @@ export default function Community() {
   const { lang } = useLang();
   const [audienceFilter, setAudienceFilter] = useState('all');
   const [locationFilter, setLocationFilter] = useState('all');
-  const { data: communities = [], isLoading, error } = useCommunities();
+  const { data: communities = [], isLoading, error } = useCommunities({ lang });
 
   const filtered = communities.filter(c => {
     const audMatch = audienceFilter === 'all' ||

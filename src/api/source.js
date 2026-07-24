@@ -69,8 +69,14 @@ export async function fetchSources({ lang = 'he' } = {}) {
   });
 }
 
-export async function fetchCommunities() {
-  const items = await api('/communities');
+// Communities are now language-scoped like every other entity: one row per
+// community per language, translations linked by groupId. Fetch the active
+// language, falling back to Hebrew when a language has no rows yet.
+export async function fetchCommunities({ lang = 'he' } = {}) {
+  let items = await api(`/communities?langId=${lang}`);
+  if (items.length === 0 && lang !== 'he') {
+    items = await api('/communities?langId=he');
+  }
   return items.map(item => ({
     id: item.id,
     name: item.name,

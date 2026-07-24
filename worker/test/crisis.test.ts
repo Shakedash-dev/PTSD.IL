@@ -5,6 +5,9 @@ describe("detectCrisis", () => {
   it("flags Hebrew self-harm phrasing", () => {
     expect(detectCrisis("אני רוצה לשים סוף לחיים שלי")).toBe(true);
   });
+  it("flags Hebrew 'want to die' phrasing", () => {
+    expect(detectCrisis("אני מרגיש שאני רוצה למות")).toBe(true);
+  });
   it("flags English suicidal phrasing", () => {
     expect(detectCrisis("I want to kill myself")).toBe(true);
   });
