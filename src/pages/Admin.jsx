@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Settings, Users, UserCog, FileText, BookOpen, HelpCircle, Wrench, Heart, Baby, Shield, ClipboardList, Pencil, Trash2, Plus, Check, X, LogOut, Info } from 'lucide-react';
+import { Settings, Users, UserCog, FileText, BookOpen, HelpCircle, Wrench, Heart, Baby, Shield, ClipboardList, Pencil, Trash2, Plus, Check, X, LogOut } from 'lucide-react';
 import { toast } from 'sonner';
-import { db } from '@/data/db';
 import RichTextEditor from '@/components/RichTextEditor';
 import { logout, hasAdminAccess, hasUserManagementAccess, getCurrentUserId } from '@/lib/auth';
 import { t } from '@/lib/i18n';

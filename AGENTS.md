@@ -45,7 +45,7 @@ src/lib/auth.js         <- login/logout, JWT in sessionStorage, isAuthenticated/
 ```
 `Admin.jsx`'s panels edit HTML (react-quill); `adminSource` converts to/from the DB's Markdown on save/load.
 
-**Static layer is mostly retired.** `src/data/static/*` + `src/data/db.js` remain ONLY for: (a) the PCL-5 questionnaire, which has no API endpoint yet (`Questionnaire.jsx` and the read-only admin questionnaire panel still read `db`); (b) historical record - they were the source of truth the DB was migrated from. Do NOT add new content there; new content goes through the API/admin.
+**Static layer is fully retired.** `src/data/static/*` and `src/data/db.js` have been deleted. The PCL-5 questionnaire, like every other content type, is now served from dedicated API endpoints (`/api/questionnaires`, `/api/admin/questionnaires`) and is fully editable in the admin panel. `src/data/questionnaireSections.js` remains, but it is a presentation-only overlay (Hebrew section grouping for the question list) - not a content source; do NOT add new content data under `src/data/`, new content goes through the API/admin.
 
 ## Auth & DB access
 
@@ -81,7 +81,7 @@ src/
 │   ├── adminClient.js   # authenticated fetch wrapper
 │   └── adminSource.js   # admin CRUD layer
 ├── lib/                 # auth.js, markdownHtml.js, i18n, contexts, query client
-├── data/                # static/ + db.js - RETAINED ONLY for the questionnaire (see above)
+├── data/                # questionnaireSections.js - Hebrew section overlay only (see above)
 └── dist/                # build output, gitignored
 docs/
 ├── api.md                       # API endpoint reference (the backend contract)
@@ -93,7 +93,7 @@ docs/
 
 - **`content` is a JSON string, not an object** - always `JSON.parse` it (defensively). Native columns `description`/`authors`/`year`/`links` are usually null; the data is inside `content` (except `url` on sources).
 - **The DB stores Markdown, never HTML.** Don't write HTML into content. The admin editor is HTML (react-quill) but `adminSource` converts on save.
-- **The questionnaire is still static** (no API endpoint) - editing it in admin is disabled/read-only.
+- **The questionnaire is now API-backed** (`/api/questionnaires`, `/api/admin/questionnaires`) - fully editable in admin, same as other content types.
 - **`VITE_*` env vars are baked at build time**, not read at runtime - changing `VITE_API_URL` needs a redeploy.
 - **`localStorage` key `natal_lang`** (legacy name) holds the language preference - don't rename it.
 - **ESLint scope is narrow** (`src/lib/**`, `src/components/ui/**` ignored). **`typecheck` runs on `.jsx`** via `checkJs`.
