@@ -611,7 +611,9 @@ export function removeChildrenResource(id) {
 // surface here.
 
 export async function loadCommunity() {
-  const items = await adminApi('GET', '/communities');
+  // Hebrew-only admin: the /communities resource is language-scoped (one row per
+  // language), so filter to he - otherwise every language's rows show up here.
+  const items = await adminApi('GET', '/communities?langId=he');
   return items.map(item => ({
     id: item.id,
     name: item.name,
@@ -630,6 +632,9 @@ export async function saveCommunity(draft) {
     .map(slug => taxonomy.audiencesBySlug.get(toHyphenSlug(slug)))
     .filter(Boolean);
   const payload = {
+    // Hebrew-only admin: langId is required on create (POST 422s without it) and
+    // keeps new communities in the he-scoped list. Verified against the live API.
+    langId: 'he',
     name: draft.name,
     organization: draft.organization || null,
     description: draft.description_he || null,

@@ -61,7 +61,6 @@ function LoadingRow() {
 
 // ─── Hebrew label maps for values that are stored in English internally (filter
 // keys, category ids, etc.) so admins never see raw English tokens. ──────────
-const LANG_LABELS = { he: 'עברית', ar: 'ערבית', en: 'אנגלית' };
 const AUDIENCE_LABELS = {
   general: 'כללי',
   security_forces: 'כוחות ביטחון',
@@ -469,16 +468,15 @@ function EditableCard({ item, fields, onSave, onCancel, onDelete, renderView, st
 }
 
 function PTSDFaqsPanel() {
-  const langs = ['he', 'ar', 'en'];
-  const [lang, setLang] = useState('he');
+  const lang = 'he'; // Hebrew-only: the admin panel manages Hebrew content only.
   const [faqs, setFaqs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [creating, setCreating] = useState(false);
 
-  async function reload(targetLang = lang) {
+  async function reload() {
     setLoading(true);
     try {
-      setFaqs(await loadPtsdFaq({ lang: targetLang }));
+      setFaqs(await loadPtsdFaq({ lang }));
     } catch (err) {
       toast.error(err?.message || 'שגיאה בטעינת השאלות');
       setFaqs([]);
@@ -487,7 +485,7 @@ function PTSDFaqsPanel() {
     }
   }
 
-  useEffect(() => { reload(lang); }, [lang]);
+  useEffect(() => { reload(); }, []);
 
   const fields = [
     { key: 'q', label: 'שאלה', type: 'text' },
@@ -505,14 +503,6 @@ function PTSDFaqsPanel() {
 
   return (
     <div>
-      <div className="flex gap-2 mb-5">
-        {langs.map(l => (
-          <button key={l} onClick={() => setLang(l)}
-            className={`px-3 py-1 rounded-full text-sm font-medium transition-natural ${lang === l ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground hover:bg-border'}`}>
-            {LANG_LABELS[l] || l}
-          </button>
-        ))}
-      </div>
       <Section title="שאלות ותשובות על PTSD" count={faqs.length} />
       {loading ? (
         <LoadingRow />
@@ -526,13 +516,13 @@ function PTSDFaqsPanel() {
               renderView={renderView}
               onSave={async draft => {
                 const ok = await runWrite(() => savePtsdFaq(draft, { lang }));
-                if (ok) await reload(lang);
+                if (ok) await reload();
                 return ok;
               }}
               onDelete={async () => {
                 if (!window.confirm('למחוק שאלה זו?')) return;
                 const ok = await runWrite(() => removePtsdFaq(faq.id));
-                if (ok) await reload(lang);
+                if (ok) await reload();
               }}
             />
           ))}
@@ -546,7 +536,7 @@ function PTSDFaqsPanel() {
                 const ok = await runWrite(() => savePtsdFaq(draft, { lang }));
                 if (ok) {
                   setCreating(false);
-                  await reload(lang);
+                  await reload();
                 }
                 return ok;
               }}
@@ -1068,16 +1058,15 @@ function SourcesPanel() {
 }
 
 function SecondCirclePanel() {
-  const langs = ['he', 'ar', 'en'];
-  const [lang, setLang] = useState('he');
+  const lang = 'he'; // Hebrew-only: the admin panel manages Hebrew content only.
   const [tools, setTools] = useState([]);
   const [loading, setLoading] = useState(true);
   const [creating, setCreating] = useState(false);
 
-  async function reload(targetLang = lang) {
+  async function reload() {
     setLoading(true);
     try {
-      setTools(await loadSecondCircle({ lang: targetLang }));
+      setTools(await loadSecondCircle({ lang }));
     } catch (err) {
       toast.error(err?.message || 'שגיאה בטעינת התכנים');
       setTools([]);
@@ -1086,7 +1075,7 @@ function SecondCirclePanel() {
     }
   }
 
-  useEffect(() => { reload(lang); }, [lang]);
+  useEffect(() => { reload(); }, []);
 
   const fields = [
     { key: 'q', label: 'שאלה', type: 'text' },
@@ -1110,14 +1099,6 @@ function SecondCirclePanel() {
 
   return (
     <div>
-      <div className="flex gap-2 mb-5">
-        {langs.map(l => (
-          <button key={l} onClick={() => setLang(l)}
-            className={`px-3 py-1 rounded-full text-sm font-medium transition-natural ${lang === l ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground hover:bg-border'}`}>
-            {LANG_LABELS[l] || l}
-          </button>
-        ))}
-      </div>
       <Section title="כלים למעגל השני" count={tools.length} />
       {loading ? (
         <LoadingRow />
@@ -1131,13 +1112,13 @@ function SecondCirclePanel() {
               renderView={renderView}
               onSave={async draft => {
                 const ok = await runWrite(() => saveSecondCircle(draft, { lang }));
-                if (ok) await reload(lang);
+                if (ok) await reload();
                 return ok;
               }}
               onDelete={async () => {
                 if (!window.confirm('למחוק פריט זה?')) return;
                 const ok = await runWrite(() => removeSecondCircle(tool.id));
-                if (ok) await reload(lang);
+                if (ok) await reload();
               }}
             />
           ))}
@@ -1151,7 +1132,7 @@ function SecondCirclePanel() {
                 const ok = await runWrite(() => saveSecondCircle(draft, { lang }));
                 if (ok) {
                   setCreating(false);
-                  await reload(lang);
+                  await reload();
                 }
                 return ok;
               }}
