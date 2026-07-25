@@ -258,3 +258,29 @@ export async function fetchSecondCircleTools({ lang = 'he' }) {
       };
     });
 }
+
+// ─── Questionnaires ──────────────────────────────────────────────────────────
+// A DEDICATED API resource (NOT the /articles+content pattern). Native fields
+// only; questions/options come back structured, no JSON.parse needed. See
+// docs/questionnaires-api.md and docs/superpowers/specs/2026-07-25-questionnaire-db-wiring-design.md.
+export async function fetchQuestionnaire({ lang = 'he', slug = 'pcl-5' } = {}) {
+  let q;
+  try {
+    q = await api(`/questionnaires/slug/${slug}?langId=${lang}`);
+  } catch (err) {
+    // 404 = no row for this (slug, lang). Fall back to Hebrew (consistent with
+    // the rest of the site) so a not-yet-seeded language never hard-crashes.
+    if (lang !== 'he' && /^404\b/.test(err.message)) {
+      q = await api(`/questionnaires/slug/${slug}?langId=he`);
+    } else {
+      throw err;
+    }
+  }
+  const questions = [...(q.questions ?? [])]
+    .sort((a, b) => a.sortOrder - b.sortOrder)
+    .map(qn => ({
+      ...qn,
+      options: [...(qn.options ?? [])].sort((a, b) => a.order - b.order),
+    }));
+  return { ...q, questions };
+}

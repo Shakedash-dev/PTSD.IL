@@ -13,6 +13,7 @@ import {
   fetchRightsFaqs,
   fetchPTSDInfoFaqs,
   fetchSecondCircleTools,
+  fetchQuestionnaire,
 } from './source';
 
 export function useSources({ lang }) {
@@ -68,5 +69,12 @@ export function useSecondCircleTools({ lang }) {
   return useQuery({
     queryKey: ['second_circle_tools', lang],
     queryFn: () => fetchSecondCircleTools({ lang }),
+  });
+}
+
+export function useQuestionnaire({ lang, slug = 'pcl-5' }) {
+  return useQuery({
+    queryKey: ['questionnaire', slug, lang],
+    queryFn: () => fetchQuestionnaire({ lang, slug }),
   });
 }
