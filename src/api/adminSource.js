@@ -653,3 +653,78 @@ export async function removeCommunity(id) {
   await reindexItem(id);
   return res;
 }
+
+// ─── Questionnaires (dedicated resource; NOT /admin/articles) ─────────────────
+// totalQuestions is server-managed - never sent. cutoffScore may be null.
+const QUESTIONNAIRES = '/admin/questionnaires';
+
+export function loadQuestionnaires() {
+  return adminApi('GET', QUESTIONNAIRES);
+}
+
+export function loadQuestionnaireDetail(id) {
+  return adminApi('GET', `${QUESTIONNAIRES}/${id}`);
+}
+
+function toNullableInt(v) {
+  return v === '' || v === null || v === undefined ? null : Number(v);
+}
+
+export function createQuestionnaire(draft) {
+  const body = {
+    langId: draft.langId,
+    slug: draft.slug,
+    name: draft.name,
+    description: draft.description ?? null,
+    maxScore: Number(draft.maxScore),
+    cutoffScore: toNullableInt(draft.cutoffScore),
+    isActive: draft.isActive ?? true,
+    sortOrder: Number(draft.sortOrder ?? 0),
+  };
+  if (Array.isArray(draft.audienceIds)) body.audienceIds = draft.audienceIds;
+  return adminApi('POST', QUESTIONNAIRES, body);
+}
+
+export function updateQuestionnaire(id, draft) {
+  const body = {};
+  for (const k of ['langId', 'slug', 'name', 'description', 'isActive']) {
+    if (k in draft) body[k] = draft[k];
+  }
+  if ('maxScore' in draft) body.maxScore = Number(draft.maxScore);
+  if ('cutoffScore' in draft) body.cutoffScore = toNullableInt(draft.cutoffScore);
+  if ('sortOrder' in draft) body.sortOrder = Number(draft.sortOrder);
+  if (Array.isArray(draft.audienceIds)) body.audienceIds = draft.audienceIds;
+  return adminApi('PUT', `${QUESTIONNAIRES}/${id}`, body);
+}
+
+export function removeQuestionnaire(id) {
+  return adminApi('DELETE', `${QUESTIONNAIRES}/${id}`);
+}
+
+function normalizeOptions(options) {
+  return (options ?? []).map((o, i) => ({
+    answer: o.answer,
+    score: Number(o.score),
+    order: o.order === undefined || o.order === '' ? i : Number(o.order),
+  }));
+}
+
+export function addQuestion(questionnaireId, q) {
+  return adminApi('POST', `${QUESTIONNAIRES}/${questionnaireId}/questions`, {
+    sortOrder: Number(q.sortOrder ?? 0),
+    text: q.text,
+    options: normalizeOptions(q.options),
+  });
+}
+
+export function updateQuestion(questionnaireId, id, q) {
+  const body = {};
+  if ('sortOrder' in q) body.sortOrder = Number(q.sortOrder);
+  if ('text' in q) body.text = q.text;
+  if ('options' in q) body.options = normalizeOptions(q.options);
+  return adminApi('PUT', `${QUESTIONNAIRES}/${questionnaireId}/questions/${id}`, body);
+}
+
+export function removeQuestion(questionnaireId, id) {
+  return adminApi('DELETE', `${QUESTIONNAIRES}/${questionnaireId}/questions/${id}`);
+}
