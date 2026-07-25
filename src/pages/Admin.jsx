@@ -1691,6 +1691,7 @@ function QuestionsEditor({ questionnaireId, onChanged }) {
           onSave={async draft => {
             const ok = await runWrite(() => updateQuestion(questionnaireId, qn.id, draft));
             if (ok) { await reload(); await onChanged(); }
+            return ok;
           }}
           onDelete={async () => {
             if (!window.confirm('למחוק שאלה זו?')) return;
@@ -1763,7 +1764,7 @@ function QuestionRow({ index, question, onSave, onDelete, startInEdit = false })
         <button onClick={() => setOptions(os => [...os, { answer: '', score: os.length, order: os.length }])} className="text-xs text-primary flex items-center gap-1 mt-1"><Plus className="w-3 h-3" /> הוספת תשובה</button>
       </div>
       <div className="flex gap-2">
-        <button onClick={() => onSave({ text, sortOrder, options })} className="px-3 py-1.5 rounded-lg bg-primary text-white text-sm flex items-center gap-1"><Check className="w-4 h-4" /> שמירה</button>
+        <button onClick={async () => { const ok = await onSave({ text, sortOrder, options }); if (ok && !startInEdit) setEditing(false); }} className="px-3 py-1.5 rounded-lg bg-primary text-white text-sm flex items-center gap-1"><Check className="w-4 h-4" /> שמירה</button>
         <button onClick={() => { if (startInEdit) { onDelete(); } else { setEditing(false); } }} className="px-3 py-1.5 rounded-lg border border-border text-sm flex items-center gap-1"><X className="w-4 h-4" /> ביטול</button>
       </div>
     </div>
