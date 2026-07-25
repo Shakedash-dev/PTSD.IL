@@ -17,6 +17,9 @@ import {
   loadCommunity, saveCommunity, removeCommunity,
   loadChildrenGuidelines, saveChildrenGuidelines,
   loadChildrenResource, saveChildrenResource, removeChildrenResource,
+  loadQuestionnaires, loadQuestionnaireDetail,
+  createQuestionnaire, updateQuestionnaire, removeQuestionnaire,
+  addQuestion, updateQuestion, removeQuestion,
 } from '@/api/adminSource';
 import { listUsers, createUser, updateUserRoles, deleteUser } from '@/api/adminUsers';
 
@@ -1495,91 +1498,274 @@ function UsersPanel() {
   );
 }
 
-// No API endpoint exists for the PCL-5 questionnaire (see src/api/adminSource.js -
-// it has no loadQuestionnaire/saveQuestionnaire). This panel is therefore
-// read-only: it still renders the static content so admins can see what's
-// live, but every edit/add/delete control has been removed.
+// Full CRUD for the questionnaires resource (dedicated API, not /admin/articles).
+// Lists every (slug x language) row; edit metadata; expand to edit questions +
+// options; create/delete questionnaires and questions. totalQuestions is
+// server-managed (read-only). Deletes are admin-only server-side - a moderator
+// gets a 403 toast via runWrite.
 function QuestionnairePanel() {
-  const q = db.questionnaire;
+  const [items, setItems] = useState(null);
+  const [creating, setCreating] = useState(false);
+
+  async function reload() {
+    try {
+      setItems(await loadQuestionnaires());
+    } catch (err) {
+      toast.error(err?.message || 'שגיאה בטעינת השאלונים');
+      setItems([]);
+    }
+  }
+  useEffect(() => { reload(); }, []);
+
+  if (items === null) return <LoadingRow />;
 
   return (
     <div>
-      <Section title="שאלון PCL-5 להערכה עצמית" count={q.total_questions} />
+      <Section title="שאלונים" count={items.length} />
+      <p className="text-xs text-muted-foreground mb-4">
+        שורה אחת לכל שפה. totalQuestions מנוהל בשרת ומתעדכן אוטומטית עם הוספת/מחיקת שאלות.
+      </p>
 
-      <div className="flex items-start gap-2 p-4 rounded-xl border border-amber-300/60 bg-amber-50 text-amber-900 mb-5">
-        <Info className="w-4 h-4 mt-0.5 flex-shrink-0" />
-        <p className="text-sm">{t('he', 'admin_questionnaire_readonly')}</p>
+      {creating && (
+        <QuestionnaireMetaForm
+          initial={{ langId: 'he', slug: 'pcl-5', name: '', description: '', maxScore: 80, cutoffScore: 33, isActive: true, sortOrder: 0 }}
+          onCancel={() => setCreating(false)}
+          onSave={async draft => {
+            const ok = await runWrite(() => createQuestionnaire(draft));
+            if (ok) { setCreating(false); await reload(); }
+          }}
+        />
+      )}
+
+      <div className="space-y-3 mt-3">
+        {items.map(q => (
+          <QuestionnaireRow key={q.id} q={q} onChanged={reload} />
+        ))}
       </div>
 
-      <div className="p-4 rounded-xl border border-border bg-background mb-5 grid grid-cols-1 sm:grid-cols-3 gap-3">
-        <div>
-          <label className="text-xs font-semibold text-muted-foreground block mb-1">מספר שאלות</label>
-          <input
-            type="number"
-            value={q.total_questions}
-            disabled
-            readOnly
-            className="w-full px-3 py-2 rounded-lg border border-border bg-muted text-sm text-muted-foreground"
+      <AddNewButton label="הוספת שאלון חדש" onClick={() => setCreating(true)} />
+    </div>
+  );
+}
+
+// One questionnaire row: metadata view/edit + expandable questions editor.
+function QuestionnaireRow({ q, onChanged }) {
+  const [editing, setEditing] = useState(false);
+  const [expanded, setExpanded] = useState(false);
+
+  return (
+    <div className="rounded-xl border border-border bg-background">
+      <div className="p-4">
+        {editing ? (
+          <QuestionnaireMetaForm
+            initial={q}
+            onCancel={() => setEditing(false)}
+            onSave={async draft => {
+              const ok = await runWrite(() => updateQuestionnaire(q.id, draft));
+              if (ok) { setEditing(false); await onChanged(); }
+            }}
           />
+        ) : (
+          <div className="flex items-start justify-between gap-3">
+            <div>
+              <p className="font-semibold text-foreground">{q.name}</p>
+              <p className="text-xs text-muted-foreground mt-1">
+                {q.langId} · slug: {q.slug} · שאלות: {q.totalQuestions} · max: {q.maxScore} · סף: {q.cutoffScore ?? '-'} · {q.isActive ? 'פעיל' : 'לא פעיל'}
+              </p>
+            </div>
+            <div className="flex gap-2 flex-shrink-0">
+              <button onClick={() => setEditing(true)} className="p-2 rounded-lg border border-border hover:bg-muted" title="עריכה"><Pencil className="w-4 h-4" /></button>
+              <button
+                onClick={async () => {
+                  if (!window.confirm(`למחוק את השאלון "${q.name}" (${q.langId})? פעולה זו מוחקת גם את כל שאלותיו.`)) return;
+                  const ok = await runWrite(() => removeQuestionnaire(q.id));
+                  if (ok) await onChanged();
+                }}
+                className="p-2 rounded-lg border border-border hover:bg-muted text-clay" title="מחיקה"
+              ><Trash2 className="w-4 h-4" /></button>
+            </div>
+          </div>
+        )}
+      </div>
+
+      <div className="border-t border-border">
+        <button
+          onClick={() => setExpanded(v => !v)}
+          className="w-full text-start px-4 py-2 text-sm font-medium text-muted-foreground hover:bg-muted"
+        >
+          {expanded ? '▾' : '▸'} שאלות ({q.totalQuestions})
+        </button>
+        {expanded && <QuestionsEditor questionnaireId={q.id} onChanged={onChanged} />}
+      </div>
+    </div>
+  );
+}
+
+// Metadata form for create/edit.
+function QuestionnaireMetaForm({ initial, onSave, onCancel }) {
+  const [draft, setDraft] = useState({
+    langId: initial.langId ?? 'he',
+    slug: initial.slug ?? '',
+    name: initial.name ?? '',
+    description: initial.description ?? '',
+    maxScore: initial.maxScore ?? 0,
+    cutoffScore: initial.cutoffScore ?? '',
+    isActive: initial.isActive ?? true,
+    sortOrder: initial.sortOrder ?? 0,
+  });
+  const set = (k, v) => setDraft(d => ({ ...d, [k]: v }));
+  const inputCls = 'w-full px-3 py-2 rounded-lg border border-border bg-background text-sm';
+
+  return (
+    <div className="space-y-3">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <div>
+          <label className="text-xs font-semibold text-muted-foreground block mb-1">שפה (langId)</label>
+          <input className={inputCls} value={draft.langId} onChange={e => set('langId', e.target.value)} />
+        </div>
+        <div>
+          <label className="text-xs font-semibold text-muted-foreground block mb-1">slug</label>
+          <input className={inputCls} value={draft.slug} onChange={e => set('slug', e.target.value)} />
         </div>
         <div>
           <label className="text-xs font-semibold text-muted-foreground block mb-1">ציון מקסימלי</label>
-          <input
-            type="number"
-            value={q.max_score}
-            disabled
-            readOnly
-            className="w-full px-3 py-2 rounded-lg border border-border bg-muted text-sm text-muted-foreground"
-          />
+          <input type="number" className={inputCls} value={draft.maxScore} onChange={e => set('maxScore', e.target.value)} />
         </div>
         <div>
-          <label className="text-xs font-semibold text-muted-foreground block mb-1">סף קליני (מעליו PTSD סביר)</label>
-          <input
-            type="number"
-            value={q.cutoff_score}
-            disabled
-            readOnly
-            className="w-full px-3 py-2 rounded-lg border border-border bg-muted text-sm text-muted-foreground"
-          />
+          <label className="text-xs font-semibold text-muted-foreground block mb-1">סף קליני</label>
+          <input type="number" className={inputCls} value={draft.cutoffScore} onChange={e => set('cutoffScore', e.target.value)} />
         </div>
       </div>
+      <div>
+        <label className="text-xs font-semibold text-muted-foreground block mb-1">שם</label>
+        <input className={inputCls} value={draft.name} onChange={e => set('name', e.target.value)} />
+      </div>
+      <div>
+        <label className="text-xs font-semibold text-muted-foreground block mb-1">תיאור</label>
+        <textarea className={inputCls} rows={2} value={draft.description ?? ''} onChange={e => set('description', e.target.value)} />
+      </div>
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 items-end">
+        <div>
+          <label className="text-xs font-semibold text-muted-foreground block mb-1">סדר תצוגה</label>
+          <input type="number" className={inputCls} value={draft.sortOrder} onChange={e => set('sortOrder', e.target.value)} />
+        </div>
+        <label className="flex items-center gap-2 text-sm">
+          <input type="checkbox" checked={!!draft.isActive} onChange={e => set('isActive', e.target.checked)} />
+          פעיל
+        </label>
+      </div>
+      <div className="flex gap-2">
+        <button onClick={() => onSave(draft)} className="px-4 py-2 rounded-lg bg-primary text-white text-sm font-medium flex items-center gap-1"><Check className="w-4 h-4" /> שמירה</button>
+        <button onClick={onCancel} className="px-4 py-2 rounded-lg border border-border text-sm flex items-center gap-1"><X className="w-4 h-4" /> ביטול</button>
+      </div>
+    </div>
+  );
+}
 
-      <div className="mb-5">
-        <p className="text-xs font-semibold text-muted-foreground mb-2">סולם תשובות (עברית)</p>
-        <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
-          {q.he.scale.map((label, i) => (
-            <div key={i} className="px-2 py-1.5 rounded-lg border border-border bg-muted text-xs text-center text-muted-foreground">
-              {label}
-            </div>
-          ))}
+// Questions editor: lazy-loads the questionnaire detail, lists questions with
+// inline option editing, add/delete.
+function QuestionsEditor({ questionnaireId, onChanged }) {
+  const [detail, setDetail] = useState(null);
+  const [addingNew, setAddingNew] = useState(false);
+
+  async function reload() {
+    try {
+      setDetail(await loadQuestionnaireDetail(questionnaireId));
+    } catch (err) {
+      toast.error(err?.message || 'שגיאה בטעינת השאלות');
+    }
+  }
+  useEffect(() => { reload(); }, [questionnaireId]);
+
+  if (detail === null) return <div className="p-4"><LoadingRow /></div>;
+  const questions = [...(detail.questions ?? [])].sort((a, b) => a.sortOrder - b.sortOrder);
+
+  const blankOptions = () => [0, 1, 2, 3, 4].map(n => ({ answer: '', score: n, order: n }));
+
+  return (
+    <div className="p-4 space-y-3 bg-muted/30">
+      {questions.map((qn, i) => (
+        <QuestionRow
+          key={qn.id}
+          index={i}
+          question={qn}
+          onSave={async draft => {
+            const ok = await runWrite(() => updateQuestion(questionnaireId, qn.id, draft));
+            if (ok) { await reload(); await onChanged(); }
+          }}
+          onDelete={async () => {
+            if (!window.confirm('למחוק שאלה זו?')) return;
+            const ok = await runWrite(() => removeQuestion(questionnaireId, qn.id));
+            if (ok) { await reload(); await onChanged(); }
+          }}
+        />
+      ))}
+
+      {addingNew ? (
+        <QuestionRow
+          index={questions.length}
+          question={{ text: '', sortOrder: questions.length, options: blankOptions() }}
+          startInEdit
+          onSave={async draft => {
+            const ok = await runWrite(() => addQuestion(questionnaireId, draft));
+            if (ok) { setAddingNew(false); await reload(); await onChanged(); }
+          }}
+          onDelete={() => setAddingNew(false)}
+        />
+      ) : (
+        <AddNewButton label="הוספת שאלה" onClick={() => setAddingNew(true)} />
+      )}
+    </div>
+  );
+}
+
+// One question: text + 5-ish options (answer/score/order), view or edit.
+function QuestionRow({ index, question, onSave, onDelete, startInEdit = false }) {
+  const [editing, setEditing] = useState(startInEdit);
+  const [text, setText] = useState(question.text ?? '');
+  const [sortOrder, setSortOrder] = useState(question.sortOrder ?? index);
+  const [options, setOptions] = useState(
+    (question.options ?? []).map(o => ({ answer: o.answer ?? '', score: o.score ?? 0, order: o.order ?? 0 }))
+  );
+  const inputCls = 'px-2 py-1.5 rounded-lg border border-border bg-background text-sm';
+
+  const setOpt = (i, k, v) => setOptions(os => os.map((o, j) => (j === i ? { ...o, [k]: v } : o)));
+
+  if (!editing) {
+    return (
+      <div className="p-3 rounded-lg border border-border bg-background flex items-start justify-between gap-3">
+        <div>
+          <p className="text-sm text-foreground"><span className="text-muted-foreground/60">{index + 1}. </span>{question.text}</p>
+          <p className="text-xs text-muted-foreground mt-1">{(question.options ?? []).map(o => `${o.answer}=${o.score}`).join(' · ')}</p>
+        </div>
+        <div className="flex gap-2 flex-shrink-0">
+          <button onClick={() => setEditing(true)} className="p-2 rounded-lg border border-border hover:bg-muted"><Pencil className="w-4 h-4" /></button>
+          <button onClick={onDelete} className="p-2 rounded-lg border border-border hover:bg-muted text-clay"><Trash2 className="w-4 h-4" /></button>
         </div>
       </div>
+    );
+  }
 
-      <p className="text-xs font-semibold text-muted-foreground mb-2">שאלות (עברית, מקובצות לפי נושא)</p>
-      <div className="space-y-4 mb-3">
-        {q.he.sections.map((section, sIdx) => (
-          <div key={sIdx} className="p-4 rounded-xl border border-border bg-background">
-            <div className="flex items-center gap-2 mb-3">
-              <span className="w-12 px-2 py-1.5 rounded-lg border border-border bg-muted text-sm text-center">{section.icon}</span>
-              <p className="flex-1 px-3 py-1.5 rounded-lg border border-border bg-muted text-sm font-semibold text-foreground">{section.title}</p>
-            </div>
-            <div className="space-y-2">
-              {section.questions.map((question, i) => (
-                <p key={i} className="px-3 py-2 rounded-lg border border-border bg-muted text-sm text-foreground">{question}</p>
-              ))}
-            </div>
-          </div>
-        ))}
+  return (
+    <div className="p-3 rounded-lg border border-primary/30 bg-background space-y-2">
+      <div className="flex gap-2">
+        <input className={`${inputCls} w-16`} type="number" value={sortOrder} onChange={e => setSortOrder(e.target.value)} title="sortOrder" />
+        <input className={`${inputCls} flex-1`} value={text} onChange={e => setText(e.target.value)} placeholder="טקסט השאלה" />
       </div>
-
-      <p className="text-xs font-semibold text-muted-foreground mt-8 mb-2">שאלות (אנגלית, רשימה שטוחה)</p>
-      <div className="space-y-2 mb-3">
-        {q.en.questions.map((question, i) => (
-          <div key={i} className="flex gap-2 items-start">
-            <span className="text-xs text-muted-foreground/60 mt-2.5 w-5 flex-shrink-0">{i + 1}.</span>
-            <p className="flex-1 px-3 py-2 rounded-lg border border-border bg-muted text-sm text-foreground">{question}</p>
+      <div className="space-y-1">
+        {options.map((o, i) => (
+          <div key={i} className="flex gap-2 items-center">
+            <input className={`${inputCls} flex-1`} value={o.answer} onChange={e => setOpt(i, 'answer', e.target.value)} placeholder="תשובה" />
+            <input className={`${inputCls} w-16`} type="number" value={o.score} onChange={e => setOpt(i, 'score', e.target.value)} title="score" />
+            <input className={`${inputCls} w-16`} type="number" value={o.order} onChange={e => setOpt(i, 'order', e.target.value)} title="order" />
+            <button onClick={() => setOptions(os => os.filter((_, j) => j !== i))} className="p-1.5 rounded-lg border border-border hover:bg-muted text-clay"><X className="w-3 h-3" /></button>
           </div>
         ))}
+        <button onClick={() => setOptions(os => [...os, { answer: '', score: os.length, order: os.length }])} className="text-xs text-primary flex items-center gap-1 mt-1"><Plus className="w-3 h-3" /> הוספת תשובה</button>
+      </div>
+      <div className="flex gap-2">
+        <button onClick={() => onSave({ text, sortOrder, options })} className="px-3 py-1.5 rounded-lg bg-primary text-white text-sm flex items-center gap-1"><Check className="w-4 h-4" /> שמירה</button>
+        <button onClick={() => { if (startInEdit) { onDelete(); } else { setEditing(false); } }} className="px-3 py-1.5 rounded-lg border border-border text-sm flex items-center gap-1"><X className="w-4 h-4" /> ביטול</button>
       </div>
     </div>
   );
