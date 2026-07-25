@@ -5,22 +5,15 @@ import { t } from '@/lib/i18n';
 import { ArrowLeft, ArrowRight, CheckCircle, AlertCircle, RefreshCw } from 'lucide-react';
 import PageHeader from '@/components/PageHeader';
 import { IMAGES } from '@/lib/images';
-import { db } from '@/data/db';
+import { useQuestionnaire } from '@/api/hooks';
+import { HE_SECTIONS } from '@/data/questionnaireSections';
 
-// Content (questions, scale, cutoff) lives in src/data/static/questionnaire.js and is
-// managed the same way as every other entity - see src/pages/Admin.jsx "שאלון PCL-5" tab.
-const QUESTIONNAIRE = db.questionnaire;
-
-const PCL5_SECTIONS_HE = QUESTIONNAIRE.he.sections;
-const PCL5_SCALE_HE = QUESTIONNAIRE.he.scale;
-const PCL5_INTRO_HE = QUESTIONNAIRE.he.intro;
-
-const SCALE_KEYS = ['not_at_all', 'a_little', 'moderately', 'quite_a_bit', 'extremely'];
-
-const TOTAL = QUESTIONNAIRE.total_questions;
-
-function QuestionCard({ idx, question, scale, useRawScale, answers, onAnswer, lang }) {
+// `question` is the DB question object: { text, options: [{answer, score, order}] }.
+// The selected value stored in `answers` is the option INDEX; the score comes
+// from that option's `score` field.
+function QuestionCard({ idx, question, answers, onAnswer }) {
   const isAnswered = answers[idx] !== undefined;
+  const opts = question.options;
   return (
     <div className={`p-6 rounded-super bg-card border transition-natural shadow-card ${
       isAnswered ? 'border-primary/30' : 'border-border'
@@ -29,35 +22,31 @@ function QuestionCard({ idx, question, scale, useRawScale, answers, onAnswer, la
         <span className="text-2xl font-heading font-bold text-clay/40 flex-shrink-0 leading-tight mt-0.5">
           {String(idx + 1).padStart(2, '0')}
         </span>
-        <p className="text-foreground leading-relaxed font-medium">{question}</p>
+        <p className="text-foreground leading-relaxed font-medium">{question.text}</p>
       </div>
       <div className="grid grid-cols-5 gap-2">
-        {scale.map((label, val) => (
+        {opts.map((opt, oi) => (
           <button
-            key={val}
-            onClick={() => onAnswer(idx, val)}
+            key={oi}
+            onClick={() => onAnswer(idx, oi)}
             className={`
               flex flex-col items-center gap-1 p-2 rounded-lg border transition-natural text-center
-              ${answers[idx] === val
+              ${answers[idx] === oi
                 ? 'bg-primary border-primary text-white'
                 : 'bg-background border-border hover:border-primary/50 hover:bg-primary/5'
               }
             `}
           >
-            <span className="text-base font-bold">{val}</span>
+            <span className="text-base font-bold">{opt.score}</span>
             <span className="text-[10px] leading-tight text-current opacity-70 hidden sm:block">
-              {useRawScale ? label : t(lang, label)}
+              {opt.answer}
             </span>
           </button>
         ))}
       </div>
       <div className="flex justify-between mt-1 px-1">
-        <span className="text-xs text-muted-foreground">
-          {useRawScale ? scale[0] : t(lang, 'not_at_all')}
-        </span>
-        <span className="text-xs text-muted-foreground">
-          {useRawScale ? scale[4] : t(lang, 'extremely')}
-        </span>
+        <span className="text-xs text-muted-foreground">{opts[0]?.answer}</span>
+        <span className="text-xs text-muted-foreground">{opts[opts.length - 1]?.answer}</span>
       </div>
     </div>
   );
@@ -67,24 +56,28 @@ export default function Questionnaire() {
   const { lang } = useLang();
   const isRTL = document.documentElement.getAttribute('dir') === 'rtl';
   const ArrowIcon = isRTL ? ArrowLeft : ArrowRight;
-  // Hebrew renders the sectioned, friendly format below; every other language
-  // (en/ar/ru/fr) uses the flat clinical list with i18n answer-scale labels.
   const isHebrew = lang === 'he';
-  const flatQuestions = QUESTIONNAIRE[lang]?.questions || QUESTIONNAIRE.en.questions;
+
+  const { data: q, isLoading, error } = useQuestionnaire({ lang });
 
   const [answers, setAnswers] = useState({});
   const [result, setResult] = useState(null);
 
+  const questions = q?.questions ?? [];
+  const TOTAL = q?.totalQuestions ?? questions.length;
   const answered = Object.keys(answers).length;
-  const progress = (answered / TOTAL) * 100;
+  const progress = TOTAL ? (answered / TOTAL) * 100 : 0;
 
-  function handleAnswer(idx, val) {
-    setAnswers(prev => ({ ...prev, [idx]: val }));
+  function handleAnswer(idx, optIdx) {
+    setAnswers(prev => ({ ...prev, [idx]: optIdx }));
   }
 
   function calculate() {
     if (answered < TOTAL) return;
-    const score = Object.values(answers).reduce((s, v) => s + v, 0);
+    const score = questions.reduce((s, qn, i) => {
+      const oi = answers[i];
+      return s + (oi === undefined ? 0 : (qn.options[oi]?.score ?? 0));
+    }, 0);
     setResult(score);
   }
 
@@ -94,7 +87,9 @@ export default function Questionnaire() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  const isHigh = result !== null && result >= QUESTIONNAIRE.cutoff_score;
+  const title = q?.name || t(lang, 'questionnaire_title');
+  const subtitle = q?.description || t(lang, 'questionnaire_intro');
+  const isHigh = result !== null && q?.cutoffScore != null && result >= q.cutoffScore;
 
   return (
     <div className="min-h-screen bg-background">
@@ -104,8 +99,8 @@ export default function Questionnaire() {
         tone="dark"
         image={IMAGES.questionnaire_hero}
         imageOpacity={0.55}
-        title={t(lang, 'questionnaire_title')}
-        subtitle={t(lang, 'questionnaire_intro')}
+        title={title}
+        subtitle={subtitle}
       />
 
       <div className="max-w-3xl mx-auto px-4 sm:px-6 pt-8 pb-4 text-center">
@@ -114,7 +109,18 @@ export default function Questionnaire() {
         </p>
       </div>
 
-      {result === null ? (
+      {isLoading ? (
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 pb-16 text-center text-muted-foreground py-16">
+          {t(lang, 'loading') || 'טוען...'}
+        </div>
+      ) : error || !q ? (
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 pb-16">
+          <div className="rounded-super p-8 text-center bg-card border border-clay/30">
+            <AlertCircle className="w-8 h-8 mx-auto mb-3 text-clay" />
+            <p className="text-muted-foreground">{t(lang, 'error_loading') || 'שגיאה בטעינת השאלון. נסו לרענן.'}</p>
+          </div>
+        </div>
+      ) : result === null ? (
         <div className="max-w-3xl mx-auto px-4 sm:px-6 pb-16">
           {/* Progress */}
           <div className="mb-8">
@@ -130,55 +136,12 @@ export default function Questionnaire() {
             </div>
           </div>
 
-          {/* Hebrew: sectioned friendly format */}
           {isHebrew ? (
-            <div>
-              <p className="text-center text-muted-foreground italic mb-10 text-sm">{PCL5_INTRO_HE}</p>
-              <div className="space-y-10">
-                {(() => {
-                  let idx = 0;
-                  return PCL5_SECTIONS_HE.map((section, sIdx) => (
-                    <div key={sIdx}>
-                      <div className="flex items-center gap-3 mb-5 pb-3 border-b border-border">
-                        <span className="text-2xl">{section.icon}</span>
-                        <h2 className="font-heading font-bold text-foreground text-lg">{section.title}</h2>
-                      </div>
-                      <div className="space-y-4">
-                        {section.questions.map(q => {
-                          const i = idx++;
-                          return (
-                            <QuestionCard
-                              key={i}
-                              idx={i}
-                              question={q}
-                              scale={PCL5_SCALE_HE}
-                              useRawScale
-                              answers={answers}
-                              onAnswer={handleAnswer}
-                              lang={lang}
-                            />
-                          );
-                        })}
-                      </div>
-                    </div>
-                  ));
-                })()}
-              </div>
-            </div>
+            <HebrewSectioned questions={questions} answers={answers} onAnswer={handleAnswer} />
           ) : (
-            /* English: flat clinical format */
             <div className="space-y-6">
-              {flatQuestions.map((q, idx) => (
-                <QuestionCard
-                  key={idx}
-                  idx={idx}
-                  question={q}
-                  scale={SCALE_KEYS}
-                  useRawScale={false}
-                  answers={answers}
-                  onAnswer={handleAnswer}
-                  lang={lang}
-                />
+              {questions.map((qn, idx) => (
+                <QuestionCard key={qn.id ?? idx} idx={idx} question={qn} answers={answers} onAnswer={handleAnswer} />
               ))}
             </div>
           )}
@@ -214,10 +177,7 @@ export default function Questionnaire() {
             <div className={`w-24 h-24 rounded-full mx-auto mb-6 flex items-center justify-center ${
               isHigh ? 'bg-primary/10 text-primary' : 'bg-teal/10 text-teal'
             }`}>
-              {isHigh
-                ? <AlertCircle className="w-10 h-10" />
-                : <CheckCircle className="w-10 h-10" />
-              }
+              {isHigh ? <AlertCircle className="w-10 h-10" /> : <CheckCircle className="w-10 h-10" />}
             </div>
 
             <h2 className="text-2xl font-heading font-bold text-foreground mb-4">
@@ -227,14 +187,11 @@ export default function Questionnaire() {
               {t(lang, isHigh ? 'result_high_text' : 'result_low_text')}
             </p>
 
-            {/* Spectrum bar - always green at the "mild" end and red at the "significant"
-                end regardless of reading direction; no raw numbers, since the score itself
-                isn't the point. */}
             <div className="mb-8">
               <div className={`h-3 rounded-full overflow-hidden ${isRTL ? 'bg-gradient-to-l' : 'bg-gradient-to-r'} from-teal via-yellow-400 to-clay`}>
                 <div
                   className="h-full w-1.5 bg-foreground rounded-full transition-all duration-1000 relative"
-                  style={{ marginInlineStart: `${(result / QUESTIONNAIRE.max_score) * 100}%` }}
+                  style={{ marginInlineStart: `${q.maxScore ? (result / q.maxScore) * 100 : 0}%` }}
                 />
               </div>
               <div className="flex justify-between text-xs text-muted-foreground mt-1">
@@ -266,6 +223,47 @@ export default function Questionnaire() {
           </div>
         </div>
       )}
+    </div>
+  );
+}
+
+// Hebrew sectioned render: slices the flat DB question list into the overlay's
+// sections by order. Any questions beyond the overlay's summed counts render
+// flat below the last section (defensive - never drop a question).
+function HebrewSectioned({ questions, answers, onAnswer }) {
+  let idx = 0;
+  const blocks = HE_SECTIONS.sections.map((section, sIdx) => {
+    const slice = questions.slice(idx, idx + section.count);
+    const startIdx = idx;
+    idx += section.count;
+    return (
+      <div key={sIdx}>
+        <div className="flex items-center gap-3 mb-5 pb-3 border-b border-border">
+          <span className="text-2xl">{section.icon}</span>
+          <h2 className="font-heading font-bold text-foreground text-lg">{section.title}</h2>
+        </div>
+        <div className="space-y-4">
+          {slice.map((qn, i) => (
+            <QuestionCard key={qn.id ?? startIdx + i} idx={startIdx + i} question={qn} answers={answers} onAnswer={onAnswer} />
+          ))}
+        </div>
+      </div>
+    );
+  });
+  const leftover = questions.slice(idx);
+  return (
+    <div>
+      <p className="text-center text-muted-foreground italic mb-10 text-sm">{HE_SECTIONS.intro}</p>
+      <div className="space-y-10">
+        {blocks}
+        {leftover.length > 0 && (
+          <div className="space-y-4">
+            {leftover.map((qn, i) => (
+              <QuestionCard key={qn.id ?? idx + i} idx={idx + i} question={qn} answers={answers} onAnswer={onAnswer} />
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
