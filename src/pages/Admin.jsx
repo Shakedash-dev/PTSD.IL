@@ -1508,7 +1508,11 @@ function QuestionnairePanel() {
 
   async function reload() {
     try {
-      setItems(await loadQuestionnaires());
+      // Hebrew-only for now: the questionnaire is managed in Hebrew from this
+      // panel. Other-language rows still exist in the DB but are hidden here so
+      // the admin never sees language sections or non-Hebrew items.
+      const all = await loadQuestionnaires();
+      setItems(all.filter(q => q.langId === 'he'));
     } catch (err) {
       toast.error(err?.message || 'שגיאה בטעינת השאלונים');
       setItems([]);
@@ -1522,7 +1526,7 @@ function QuestionnairePanel() {
     <div>
       <Section title="שאלונים" count={items.length} />
       <p className="text-xs text-muted-foreground mb-4">
-        שורה אחת לכל שפה. totalQuestions מנוהל בשרת ומתעדכן אוטומטית עם הוספת/מחיקת שאלות.
+        השאלון נערך בעברית בלבד. totalQuestions מנוהל בשרת ומתעדכן אוטומטית עם הוספת/מחיקת שאלות.
       </p>
 
       {creating && (
@@ -1569,14 +1573,14 @@ function QuestionnaireRow({ q, onChanged }) {
             <div>
               <p className="font-semibold text-foreground">{q.name}</p>
               <p className="text-xs text-muted-foreground mt-1">
-                {q.langId} · slug: {q.slug} · שאלות: {q.totalQuestions} · max: {q.maxScore} · סף: {q.cutoffScore ?? '-'} · {q.isActive ? 'פעיל' : 'לא פעיל'}
+                slug: {q.slug} · שאלות: {q.totalQuestions} · max: {q.maxScore} · סף: {q.cutoffScore ?? '-'} · {q.isActive ? 'פעיל' : 'לא פעיל'}
               </p>
             </div>
             <div className="flex gap-2 flex-shrink-0">
               <button onClick={() => setEditing(true)} className="p-2 rounded-lg border border-border hover:bg-muted" title="עריכה"><Pencil className="w-4 h-4" /></button>
               <button
                 onClick={async () => {
-                  if (!window.confirm(`למחוק את השאלון "${q.name}" (${q.langId})? פעולה זו מוחקת גם את כל שאלותיו.`)) return;
+                  if (!window.confirm(`למחוק את השאלון "${q.name}"? פעולה זו מוחקת גם את כל שאלותיו.`)) return;
                   const ok = await runWrite(() => removeQuestionnaire(q.id));
                   if (ok) await onChanged();
                 }}
@@ -1603,7 +1607,7 @@ function QuestionnaireRow({ q, onChanged }) {
 // Metadata form for create/edit.
 function QuestionnaireMetaForm({ initial, onSave, onCancel }) {
   const [draft, setDraft] = useState({
-    langId: initial.langId ?? 'he',
+    langId: 'he', // Hebrew-only for now; langId is fixed and not editable here.
     slug: initial.slug ?? '',
     name: initial.name ?? '',
     description: initial.description ?? '',
@@ -1617,11 +1621,7 @@ function QuestionnaireMetaForm({ initial, onSave, onCancel }) {
 
   return (
     <div className="space-y-3">
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        <div>
-          <label className="text-xs font-semibold text-muted-foreground block mb-1">שפה (langId)</label>
-          <input className={inputCls} value={draft.langId} onChange={e => set('langId', e.target.value)} />
-        </div>
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
         <div>
           <label className="text-xs font-semibold text-muted-foreground block mb-1">slug</label>
           <input className={inputCls} value={draft.slug} onChange={e => set('slug', e.target.value)} />
