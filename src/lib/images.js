@@ -7,7 +7,7 @@
 // root and 404.
 const BASE = import.meta.env.BASE_URL || '/';
 const base = (key) => `${BASE}images/set1/${key}.webp`;
-const illus = (name) => `${BASE}images/illustrations/${name}.png`;
+const illus = (name) => `${BASE}images/illustrations/${name}.webp`;
 
 // Per-slot size used when the file was downloaded. Kept as documentation; the
 // app no longer applies any URL transform because the local file is already
