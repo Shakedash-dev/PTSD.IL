@@ -7,6 +7,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { BASE_PATH } from '@/base-path';
 import PageNotFound from './lib/PageNotFound';
 import ScrollToTop from './components/ScrollToTop';
+import ContentPrefetcher from './components/ContentPrefetcher';
 import { LanguageProvider, useLang } from '@/lib/LanguageContext';
 import { ChatProvider } from '@/lib/ChatContext';
 import { t } from '@/lib/i18n';
@@ -92,6 +93,7 @@ function App() {
               <Router basename={BASE_PATH}>
               <UserTypeProvider>
               <ScrollToTop />
+              <ContentPrefetcher />
               <Routes>
                 <Route element={<Layout />}>
                   <Route path="/" element={<Home />} />

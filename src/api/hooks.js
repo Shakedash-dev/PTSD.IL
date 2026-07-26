@@ -78,3 +78,28 @@ export function useQuestionnaire({ lang, slug = 'pcl-5' }) {
     queryFn: () => fetchQuestionnaire({ lang, slug }),
   });
 }
+
+// Rights FAQs are the only category-scoped query - each tab is a separate
+// cache entry, so warming the cache means prefetching every category.
+const RIGHTS_CATEGORIES = ['security_forces', 'sexual_harassment', 'hostilities', 'accidents_work', 'general'];
+
+// Warm the React Query cache with every entity for `lang` in one shot. Query
+// keys / fns MUST mirror the hooks above so the pages find cached data and
+// never re-fetch (i.e. never show "loading..."). prefetchQuery de-dupes against
+// any in-flight request and, with staleTime set on the client, is a no-op when
+// the entry is already fresh. Call once on load and on every language change.
+export function prefetchAllContent(queryClient, lang) {
+  const warm = (queryKey, queryFn) => queryClient.prefetchQuery({ queryKey, queryFn });
+
+  warm(['sources', lang], () => fetchSources({ lang }));
+  warm(['communities', lang], () => fetchCommunities({ lang }));
+  warm(['self_help_tools', lang], () => fetchSelfHelpTools({ lang }));
+  warm(['treatment_steps', lang], () => fetchTreatmentSteps({ lang }));
+  warm(['children_content', lang], () => fetchChildrenContent({ lang }));
+  warm(['ptsd_info_faqs', lang], () => fetchPTSDInfoFaqs({ lang }));
+  warm(['second_circle_tools', lang], () => fetchSecondCircleTools({ lang }));
+  warm(['questionnaire', 'pcl-5', lang], () => fetchQuestionnaire({ lang, slug: 'pcl-5' }));
+  for (const category of RIGHTS_CATEGORIES) {
+    warm(['rights_faqs', lang, category], () => fetchRightsFaqs({ lang, category }));
+  }
+}
