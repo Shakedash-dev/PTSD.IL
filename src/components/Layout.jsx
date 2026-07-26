@@ -1,6 +1,5 @@
 import React from 'react';
 import { Outlet, useLocation, Link } from 'react-router-dom';
-import { AnimatePresence, motion } from 'framer-motion';
 import { useLang } from '@/lib/LanguageContext';
 import { t } from '@/lib/i18n';
 import Navbar from './Navbar';
@@ -20,17 +19,7 @@ export default function Layout() {
       {!isSanctuary && <Navbar />}
       {isSanctuary && <SanctuaryNav />}
       <main className="flex-1">
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={location.pathname}
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -4 }}
-            transition={{ duration: 0.45, ease: [0.25, 0.1, 0.25, 1] }}
-          >
-            <Outlet />
-          </motion.div>
-        </AnimatePresence>
+        <Outlet />
       </main>
       {!isSanctuary && <Footer />}
       <ChatbotFAB />
