@@ -20,7 +20,7 @@ const app = new Hono<{ Bindings: Env }>();
 
 app.use("*", async (c, next) => {
   const mw = cors({
-    origin: c.env.SITE_ORIGIN,
+    origin: c.env.SITE_ORIGIN.split(",").map((s) => s.trim()),
     allowMethods: ["POST", "GET", "OPTIONS"],
     allowHeaders: ["Content-Type", "Authorization"],
   });
