@@ -2,12 +2,11 @@ import React from 'react';
 import LegalPage from '@/components/LegalPage';
 
 // ---------------------------------------------------------------------------
-// PLACEHOLDERS - swap these two before/at launch and nothing else needs editing.
-// OPERATOR is the legal entity responsible for the site. There is no registered
-// entity yet, so it ships as a visible placeholder rather than a guessed name.
+// Single source of truth for the operator name and contact address. Change
+// them here and both language versions of the page follow.
 // ---------------------------------------------------------------------------
-const OPERATOR_HE = '[שם המפעיל]';
-const OPERATOR_EN = '[ENTITY]';
+const OPERATOR_HE = 'קבוצה 12';
+const OPERATOR_EN = 'Group 12 (קבוצה 12)';
 const CONTACT_EMAIL = 'shakedash912000@gmail.com';
 
 const UPDATED_HE = '13 באוגוסט 2026';
@@ -40,45 +39,19 @@ const he = `
 
 ### 4.1 מידע שנשמר בדפדפן שלך בלבד
 
-האתר שומר בזיכרון המקומי של הדפדפן (localStorage) שני ערכים טכניים, כדי שהאתר יזכור העדפות בין ביקורים:
-
-* \`natal_lang\` - קוד השפה שבחרת (he / ar / ru / en / fr), כדי שהאתר ייפתח בשפה הנכונה.
-* \`ptsd_il_user_type\` - המסלול שבחרת בדף הבית (מתמודד / קרוב / לא בטוח), כדי להתאים את התפריט.
-
-**הערכים האלה נשמרים במכשיר שלך בלבד ולעולם אינם נשלחים אלינו או לצד שלישי.** אפשר למחוק אותם בכל רגע דרך הגדרות הדפדפן (ניקוי נתוני אתר), וזה לא יפגע בשימוש באתר.
+האתר שומר בדפדפן שלך העדפות תצוגה בסיסיות - שפת הממשק והמסלול שבחרת בדף הבית - כדי שלא תצטרך/י לבחור אותן מחדש בכל ביקור. **הן נשמרות במכשיר שלך בלבד ואינן נשלחות אלינו או לצד שלישי.** אפשר למחוק אותן בכל רגע דרך ניקוי נתוני האתר בדפדפן.
 
 ### 4.2 שאלון האיתור העצמי
 
-שאלון האיתור העצמי באתר מבוסס על שאלון PCL-5. הבחירות שלך והציון המתקבל מעובדים **כולם בתוך הדפדפן**, בזיכרון הזמני של הדף בלבד. הם:
-
-* אינם נשלחים לשום שרת - לא שלנו ולא של צד שלישי;
-* אינם נשמרים בבסיס נתונים, בקובץ יומן או ב-localStorage;
-* נמחקים לחלוטין ברגע שמרעננים את הדף, עוברים לעמוד אחר או סוגרים את הכרטיסייה.
-
-זו החלטה מכוונת: תשובות לשאלון כזה הן מידע רפואי רגיש, ולכן בחרנו לא לאסוף אותו כלל. **אנחנו לא יודעים מי מילא את השאלון, מתי, ואיזו תוצאה התקבלה.**
+תשובות השאלון והציון מחושבים **בתוך הדפדפן בלבד**. הם אינם נשלחים לשום שרת, אינם נשמרים אצלנו ונמחקים ברגע שמרעננים או סוגרים את הדף. זו החלטה מכוונת: מדובר במידע רפואי רגיש, ולכן בחרנו לא לאסוף אותו כלל. **אנחנו לא יודעים מי מילא את השאלון ואיזו תוצאה התקבלה.**
 
 ### 4.3 הצ'אט (עוזר מבוסס בינה מלאכותית)
 
-כאשר את/ה שולח/ת הודעה בצ'אט שבאתר, נשלחים לשרת הצ'אט שלנו (Cloudflare Worker):
-
-* **תוכן ההודעות שכתבת** ותוכן התשובות הקודמות באותה שיחה;
-* **קוד השפה** של הממשק;
-* **מזהה שיחה אקראי** (UUID) שנוצר מחדש בכל טעינת דף ואינו מקושר אליך בשום צורה. הוא משמש אך ורק להגבלת קצב שימוש (עד 20 הודעות בשעה) כדי למנוע ניצול לרעה של השירות.
-
-מזהה השיחה נשמר במונה זמני אצל Cloudflare (KV) ונמחק אוטומטית לאחר שעה. **אנחנו לא שומרים את תוכן השיחות ולא בונים מהן היסטוריה או פרופיל משתמש.** עם סגירת הדף השיחה נעלמת גם מהדפדפן שלך.
-
-פירוט מלא על עיבוד השיחה בבינה מלאכותית - בסעיף 6.
+כשאת/ה שולח/ת הודעה בצ'אט, תוכן ההודעות בשיחה ושפת הממשק נשלחים לשרת הצ'אט שלנו, יחד עם מזהה טכני אקראי המשמש להגבלת קצב שימוש בלבד ואינו מקושר אליך. **אנחנו לא שומרים את תוכן השיחות ולא בונים מהן היסטוריה או פרופיל משתמש.** עם סגירת הדף השיחה נעלמת. על העיבוד בבינה מלאכותית - ראו סעיף 6.
 
 ### 4.4 נתונים טכניים בשרתי האירוח
 
-כמו בכל אתר אינטרנט, ספקי האירוח שלנו (ראו סעיף 7) מקבלים ורושמים ביומני שרת סטנדרטיים נתונים טכניים על כל בקשה:
-
-* כתובת IP;
-* סוג הדפדפן ומערכת ההפעלה (User-Agent);
-* כתובת העמוד שנטען ותאריך ושעת הבקשה;
-* קוד תגובה ונפח נתונים.
-
-נתונים אלה נאספים על ידי הספקים לצורכי תפעול, אבטחה, מניעת התקפות ואיתור תקלות, בהתאם למדיניות שלהם. איננו משתמשים ביומנים אלה כדי לזהות גולשים, ואיננו מצליבים אותם עם מידע אחר.
+כמו בכל אתר אינטרנט, ספקי האירוח שלנו (סעיף 7) רושמים ביומני שרת סטנדרטיים נתונים טכניים על כל בקשה - בהם כתובת IP, סוג הדפדפן והעמוד שנטען - לצורכי תפעול, אבטחה ואיתור תקלות, בהתאם למדיניות שלהם. איננו משתמשים ביומנים אלה כדי לזהות גולשים.
 
 ### 4.5 פאנל הניהול
 
@@ -96,14 +69,7 @@ const he = `
 
 ### 6.1 איך זה עובד
 
-הצ'אט באתר הוא עוזר אוטומטי מבוסס מודל שפה. הוא פועל כך:
-
-1. ההודעה שכתבת מומרת לייצוג מתמטי (embedding) באמצעות שירות Workers AI של Cloudflare;
-2. הייצוג משמש לאיתור הקטעים הרלוונטיים ביותר **מתוך תוכן האתר עצמו**, במאגר וקטורי של Cloudflare (Vectorize);
-3. ההודעה שלך, ההודעות הקודמות בשיחה והקטעים שנמצאו נשלחים לממשק ה-API של **Google Gemini**, שמייצר את התשובה;
-4. התשובה מוזרמת חזרה לדפדפן שלך יחד עם המקורות מתוך האתר.
-
-כלומר: **תוכן ההודעות שלך מועבר לשרתי Cloudflare ולשרתי Google.** העיבוד אצלם כפוף לתנאי השירות ולמדיניות הפרטיות שלהם (ראו קישורים בסעיף 7).
+הצ'אט הוא עוזר אוטומטי מבוסס מודל שפה (AI), שעונה על סמך תוכן האתר בלבד. כדי לייצר את התשובה, **תוכן ההודעות שלך מועבר לספקי ענן ובינה מלאכותית חיצוניים - Cloudflare ו-Google (Gemini).** העיבוד אצלם כפוף לתנאי השירות ולמדיניות הפרטיות שלהם (ראו סעיף 7). אנחנו לא משתמשים בשיחות שלך כדי לאמן מודלים.
 
 ### 6.2 מה לא לכתוב בצ'אט
 
@@ -124,17 +90,13 @@ const he = `
 
 **במצב מצוקה מיידית: ער"ן 1201 · מד"א 101 · משטרה 100 · או פנייה לחדר מיון הקרוב.**
 
-### 6.5 אימון מודלים
-
-אנחנו לא משתמשים בשיחות שלך כדי לאמן מודלים, ולא מעבירים אותן לצד שלישי לצורך אימון. השימוש שספקי הבינה המלאכותית עושים בנתונים שעוברים אליהם כפוף לתנאים שלהם, המשתנים מעת לעת.
-
 ## 7. צדדים שלישיים ומעבדי משנה
 
 לצורך הפעלת האתר אנחנו נעזרים בספקים הבאים. לכל אחד מהם מדיניות פרטיות משלו:
 
-* **Render** - אירוח האתר ושרת התוכן. מגיעים אליו נתוני שרת טכניים (סעיף 4.4).
-* **Cloudflare** - שרת הצ'אט, המאגר הווקטורי, מונה הגבלת הקצב והגנת רשת. מגיעים אליו נתוני שרת טכניים, תוכן הודעות הצ'אט ומזהה השיחה האקראי.
-* **Google (Gemini API)** - יצירת תשובות הצ'אט. מגיעים אליו תוכן הודעות הצ'אט וקטעי התוכן הרלוונטיים מהאתר.
+* **Render** - אירוח האתר ושרת התוכן. מגיעים אליו נתוני שרת טכניים.
+* **Cloudflare** - הפעלת שרת הצ'אט והגנת רשת. מגיעים אליו נתוני שרת טכניים ותוכן הודעות הצ'אט.
+* **Google (Gemini)** - יצירת תשובות הצ'אט. מגיע אליו תוכן הודעות הצ'אט.
 * **Google Identity Services** - כניסת מנהלי תוכן בלבד. מגיעים אליו דוא"ל ושם של משתמשי ניהול (לא של גולשים).
 
 מדיניות הפרטיות שלהם: [Render](https://render.com/privacy) · [Cloudflare](https://www.cloudflare.com/privacypolicy/) · [Google](https://policies.google.com/privacy).
@@ -148,9 +110,8 @@ const he = `
 ## 9. משך שמירת המידע ומחיקתו
 
 * **תשובות השאלון** - לא נשמרות כלל.
-* **תוכן שיחות הצ'אט** - לא נשמר על ידינו. הוא קיים בזיכרון הדפדפן עד לסגירת הדף.
-* **מונה הגבלת הקצב** - נמחק אוטומטית שעה לאחר יצירתו.
-* **ערכי localStorage** - נשארים במכשיר שלך עד שתמחק/י אותם דרך הדפדפן.
+* **תוכן שיחות הצ'אט** - לא נשמר על ידינו. הוא קיים בדפדפן עד לסגירת הדף.
+* **ההעדפות שנשמרות בדפדפן** - נשארות במכשיר שלך עד שתמחק/י אותן.
 * **יומני שרת אצל הספקים** - נשמרים לפי מדיניות הספק, בדרך כלל לתקופה קצרה ולצורכי אבטחה ותפעול.
 * **חשבונות ניהול** - נשמרים כל עוד ההרשאה בתוקף.
 
@@ -158,7 +119,7 @@ const he = `
 
 ## 10. אבטחת מידע
 
-התעבורה לאתר ואל שרת הצ'אט מוצפנת ב-HTTPS. הגישה לפאנל הניהול מוגבלת בכניסת Google, אסימון גישה חתום והרשאות לפי תפקיד, ונבדקת בצד השרת בכל פנייה. מכיוון שאיננו מנהלים מאגר של פרטי גולשים, אין באתר מאגר כזה שניתן לדלוף ממנו.
+התעבורה לאתר ואל שרת הצ'אט מוצפנת ב-HTTPS, והגישה לפאנל הניהול מוגבלת בכניסת Google ובהרשאות לפי תפקיד. מכיוון שאיננו מנהלים מאגר של פרטי גולשים, אין באתר מאגר כזה שניתן לדלוף ממנו.
 
 עם זאת, שום מערכת אינה חסינה לחלוטין, ואיננו יכולים להתחייב לאבטחה מוחלטת.
 
@@ -216,45 +177,19 @@ We do not knowingly collect personal information from minors. Because the Site c
 
 ### 4.1 Information stored only in your browser
 
-The Site stores two technical values in your browser's localStorage so that it remembers your preferences between visits:
-
-* \`natal_lang\` - the language code you chose (he / ar / ru / en / fr), so the Site opens in the right language.
-* \`ptsd_il_user_type\` - the path you selected on the home page (coping / relative / unsure), so the navigation matches it.
-
-**These values stay on your device and are never transmitted to us or to any third party.** You can delete them at any time through your browser settings (clear site data); doing so does not affect your use of the Site.
+The Site stores basic display preferences in your browser - the interface language and the path you selected on the home page - so you do not have to choose them again on every visit. **They stay on your device and are never transmitted to us or to any third party.** You can delete them at any time by clearing site data in your browser.
 
 ### 4.2 The self-screening questionnaire
 
-The Site's self-screening questionnaire is based on the PCL-5. Your selections and the resulting score are processed **entirely inside your browser**, in the page's temporary memory only. They are:
-
-* never sent to any server - ours or a third party's;
-* never written to a database, a log file or localStorage;
-* completely erased when you refresh the page, navigate elsewhere or close the tab.
-
-This is deliberate: answers to such a questionnaire are sensitive health information, so we chose not to collect them at all. **We do not know who completed the questionnaire, when, or what result they received.**
+Your questionnaire answers and the resulting score are computed **inside your browser only**. They are never sent to any server, are not stored by us, and are erased the moment you refresh or close the page. This is deliberate: it is sensitive health information, so we chose not to collect it at all. **We do not know who completed the questionnaire or what result they received.**
 
 ### 4.3 The chat (AI assistant)
 
-When you send a message in the Site's chat, the following is transmitted to our chat server (a Cloudflare Worker):
-
-* **the content of your messages** and of the previous replies in the same conversation;
-* **the interface language code**;
-* **a random conversation ID** (UUID) generated afresh on every page load and linked to you in no way. It is used solely for rate limiting (up to 20 messages per hour) to prevent abuse of the service.
-
-The conversation ID is held in a temporary counter at Cloudflare (KV) and is deleted automatically after one hour. **We do not store the content of conversations and do not build any history or user profile from them.** When you close the page, the conversation disappears from your browser as well.
-
-Full detail on AI processing is in section 6.
+When you send a message in the chat, the content of the conversation and the interface language are transmitted to our chat server, together with a random technical identifier used solely for rate limiting and linked to you in no way. **We do not store the content of conversations and do not build any history or user profile from them.** When you close the page, the conversation disappears. On AI processing, see section 6.
 
 ### 4.4 Technical data at our hosting providers
 
-As with any website, our hosting providers (see section 7) receive and record standard server-log data for every request:
-
-* IP address;
-* browser and operating system (User-Agent);
-* the URL requested and the date and time of the request;
-* response code and data volume.
-
-This data is collected by the providers for operations, security, attack prevention and troubleshooting, under their own policies. We do not use these logs to identify visitors and do not cross-reference them with other information.
+As with any website, our hosting providers (section 7) record standard server-log data for every request - including IP address, browser type and the page requested - for operations, security and troubleshooting, under their own policies. We do not use these logs to identify visitors.
 
 ### 4.5 The admin panel
 
@@ -300,17 +235,13 @@ The Site runs an automated mechanism that detects phrases in chat messages sugge
 
 **In immediate distress: ERAN 1201 · Magen David Adom 101 · Police 100 · or go to your nearest emergency room.**
 
-### 6.5 Model training
-
-We do not use your conversations to train models and do not pass them to any third party for training purposes. How the AI providers use data transferred to them is governed by their own terms, which change from time to time.
-
 ## 7. Third parties and subprocessors
 
 We rely on the following providers to run the Site. Each has its own privacy policy:
 
-* **Render** - hosts the Site and the content API. It receives technical server data (section 4.4).
-* **Cloudflare** - runs the chat server, the vector index, the rate-limit counter and network protection. It receives technical server data, chat message content and the random conversation ID.
-* **Google (Gemini API)** - generates the chat answers. It receives chat message content and the relevant content passages from the Site.
+* **Render** - hosts the Site and the content API. It receives technical server data.
+* **Cloudflare** - runs the chat server and network protection. It receives technical server data and chat message content.
+* **Google (Gemini)** - generates the chat answers. It receives chat message content.
 * **Google Identity Services** - content-administrator sign-in only. It receives the email and name of administrative users (not of visitors).
 
 Their privacy policies: [Render](https://render.com/privacy) · [Cloudflare](https://www.cloudflare.com/privacypolicy/) · [Google](https://policies.google.com/privacy).
@@ -324,9 +255,8 @@ The servers of the providers listed in section 7 are located, in whole or in par
 ## 9. Retention and deletion
 
 * **Questionnaire answers** - not retained at all.
-* **Chat conversation content** - not stored by us. It exists in your browser's memory until you close the page.
-* **The rate-limit counter** - deleted automatically one hour after it is created.
-* **localStorage values** - remain on your device until you clear them via your browser.
+* **Chat conversation content** - not stored by us. It exists in your browser until you close the page.
+* **Preferences stored in your browser** - remain on your device until you clear them.
 * **Server logs at providers** - retained under each provider's policy, generally for a short period, for security and operations.
 * **Administrator accounts** - retained while the permission is in force.
 
@@ -334,7 +264,7 @@ The servers of the providers listed in section 7 are located, in whole or in par
 
 ## 10. Security
 
-Traffic to the Site and to the chat server is encrypted over HTTPS. Access to the admin panel is restricted by Google sign-in, a signed access token and role-based permissions, re-checked server-side on every request. Because we operate no database of visitor details, there is no such database on the Site to leak.
+Traffic to the Site and to the chat server is encrypted over HTTPS, and access to the admin panel is restricted by Google sign-in and role-based permissions. Because we operate no database of visitor details, there is no such database on the Site to leak.
 
 That said, no system is entirely immune, and we cannot guarantee absolute security.
 

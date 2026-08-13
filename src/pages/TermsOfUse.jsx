@@ -2,12 +2,11 @@ import React from 'react';
 import LegalPage from '@/components/LegalPage';
 
 // ---------------------------------------------------------------------------
-// PLACEHOLDERS - keep these in sync with PrivacyPolicy.jsx.
-// OPERATOR is the legal entity responsible for the site. There is no registered
-// entity yet, so it ships as a visible placeholder rather than a guessed name.
+// Single source of truth for the operator name and contact address. Keep these
+// in sync with PrivacyPolicy.jsx.
 // ---------------------------------------------------------------------------
-const OPERATOR_HE = '[שם המפעיל]';
-const OPERATOR_EN = '[ENTITY]';
+const OPERATOR_HE = 'קבוצה 12';
+const OPERATOR_EN = 'Group 12 (קבוצה 12)';
 const CONTACT_EMAIL = 'shakedash912000@gmail.com';
 
 const UPDATED_HE = '13 באוגוסט 2026';
@@ -62,7 +61,7 @@ const he = `
 * הצ'אט עונה רק על נושאים המכוסים בתוכן האתר. שאלות שאינן קשורות לתוכן האתר לא ייענו.
 * **תוכן ההודעות שלך נשלח לספקי צד שלישי** (Cloudflare ו-Google) לצורך יצירת התשובה. פירוט מלא במדיניות הפרטיות.
 * **אין להזין בצ'אט פרטים מזהים** - שלך או של אדם אחר: שם, טלפון, ת"ז, כתובת, מספר אישי, פרטי קופת חולים או תיאור מזוהה של מצב רפואי.
-* השימוש בצ'אט מוגבל בקצב (עד 20 הודעות בשעה למזהה שיחה) כדי למנוע ניצול לרעה.
+* השימוש בצ'אט מוגבל בקצב כדי למנוע ניצול לרעה של השירות.
 * אין להשתמש בצ'אט כדי לייצר תוכן פוגעני, מטעה, בלתי חוקי או כזה המעודד פגיעה עצמית או פגיעה באחרים, ואין לנסות לעקוף את מגבלות המערכת (לרבות ניסיונות "prompt injection" או חילוץ הוראות המערכת).
 * מנגנון זיהוי המצוקה שבצ'אט הוא כלי עזר בלבד. הוא עלול לפספס, אינו מהווה ניטור ואינו מזעיק סיוע. ראו סעיף 4.
 
@@ -180,7 +179,7 @@ The chat on the Site is an **automated assistant powered by a language model (AI
 * The chat only answers on topics covered by the Site's content. Questions unrelated to that content will not be answered.
 * **The content of your messages is sent to third-party providers** (Cloudflare and Google) in order to generate the answer. Full detail is in the Privacy Policy.
 * **Do not enter identifying details in the chat** - yours or anyone else's: name, phone number, ID number, address, service number, health-fund details or an identifiable description of a medical condition.
-* Chat use is rate-limited (up to 20 messages per hour per conversation ID) to prevent abuse.
+* Chat use is rate-limited to prevent abuse of the service.
 * Do not use the chat to generate harmful, misleading or unlawful content, or content encouraging self-harm or harm to others, and do not attempt to circumvent the system's limits (including prompt-injection attempts or extracting system instructions).
 * The chat's distress-detection mechanism is an aid only. It may miss cases, does not constitute monitoring, and does not summon help. See section 4.
 
