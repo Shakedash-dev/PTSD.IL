@@ -30,18 +30,20 @@ const he = `
 
 **תשובות שאלון האיתור העצמי והציון מחושבים בדפדפן שלך בלבד.** הם אינם נשלחים לשום שרת ואינם נשמרים אצלנו - איננו יודעים מי מילא את השאלון ואיזו תוצאה התקבלה.
 
+**איננו אוספים ואיננו שומרים את הודעות הצ'אט** - הן נשלחות לספקי צד שלישי לצורך יצירת התשובה בלבד (סעיף 4).
+
 ## 3. מה כן נאסף
 
 * **העדפות בדפדפן** - שפת הממשק והמסלול שבחרת. נשמרות במכשיר שלך בלבד, אינן נשלחות אלינו, וניתן למחוק אותן בניקוי נתוני האתר.
-* **הודעות הצ'אט** - ראו סעיף 4.
 * **נתוני שרת טכניים** - ספקי האירוח רושמים ביומנים כתובת IP, סוג דפדפן והעמוד שנטען, לצורכי תפעול ואבטחה.
-* **פאנל הניהול** - לגבי מנהלי תוכן מורשים בלבד נשמרים דוא"ל ושם מחשבון Google. אינו רלוונטי לגולשים.
 
 **האתר אינו מציב קובצי Cookie משלו**, ואין בו Google Analytics, פיקסלים פרסומיים או מעקב בין אתרים.
 
 ## 4. הצ'אט והבינה המלאכותית
 
-הצ'אט הוא עוזר אוטומטי מבוסס מודל שפה (AI), לא אדם. כדי לייצר תשובה, **תוכן ההודעות שלך מועבר לספקים חיצוניים - Cloudflare ו-Google (Gemini)** - ששרתיהם נמצאים גם מחוץ לישראל, והעיבוד אצלם כפוף למדיניות שלהם. אנחנו לא שומרים את תוכן השיחות ולא משתמשים בהן לאימון מודלים.
+הצ'אט הוא עוזר אוטומטי מבוסס מודל שפה (AI), לא אדם.
+
+**אנחנו לא אוספים ולא שומרים את הודעות הצ'אט.** אין ברשותנו היסטוריית שיחות ואיננו יכולים לשחזר מה נכתב. ההודעות נשלחות לספקי צד שלישי - **Cloudflare ו-Google (Gemini)** - אך ורק כדי לייצר את התשובה, ולשם כך מועברות גם אל מחוץ לישראל. אופן הטיפול שלהם בנתונים כפוף למדיניות שלהם (סעיף 5). איננו משתמשים בשיחות לאימון מודלים.
 
 **אין להזין בצ'אט פרטים מזהים** - שלך או של אדם אחר. התשובות נוצרות אוטומטית, עלולות להיות שגויות, ואינן ייעוץ רפואי או אבחון.
 
@@ -51,13 +53,13 @@ const he = `
 
 ## 5. ספקים
 
-Render (אירוח), Cloudflare (שרת הצ'אט והגנת רשת), Google (Gemini - תשובות הצ'אט; Identity Services - כניסת מנהלים בלבד). לכל אחד מדיניות פרטיות משלו: [Render](https://render.com/privacy) · [Cloudflare](https://www.cloudflare.com/privacypolicy/) · [Google](https://policies.google.com/privacy).
+Render (אירוח), Cloudflare (שרת הצ'אט והגנת רשת), Google (Gemini - יצירת תשובות הצ'אט). לכל אחד מדיניות פרטיות משלו: [Render](https://render.com/privacy) · [Cloudflare](https://www.cloudflare.com/privacypolicy/) · [Google](https://policies.google.com/privacy).
 
 מעבר לכך איננו מעבירים מידע לאף גורם, אלא אם נידרש לכך על פי דין או צו שיפוטי.
 
 ## 6. שמירה ומחיקה
 
-תשובות השאלון ותוכן השיחות אינם נשמרים אצלנו. ההעדפות בדפדפן נשארות במכשיר שלך עד שתמחק/י אותן. יומני שרת נשמרים אצל הספקים לפי המדיניות שלהם, בדרך כלל לתקופה קצרה. חשבונות ניהול נשמרים כל עוד ההרשאה בתוקף.
+תשובות השאלון והודעות הצ'אט אינן נשמרות אצלנו כלל. ההעדפות בדפדפן נשארות במכשיר שלך עד שתמחק/י אותן. יומני שרת נשמרים אצל הספקים לפי המדיניות שלהם, בדרך כלל לתקופה קצרה.
 
 ## 7. הזכויות שלך
 
@@ -91,18 +93,20 @@ There is no registration, no user accounts, no forms and no payment on the Site.
 
 **Your self-screening questionnaire answers and score are computed in your browser only.** They are never sent to any server and are not stored by us - we do not know who completed the questionnaire or what result they received.
 
+**We do not collect or store your chat messages** - they are sent to third-party providers solely to generate the answer (section 4).
+
 ## 3. What is collected
 
 * **Browser preferences** - your interface language and the path you selected. Stored on your device only, never sent to us, and removable by clearing site data.
-* **Chat messages** - see section 4.
 * **Technical server data** - our hosting providers log IP address, browser type and the page requested, for operations and security.
-* **The admin panel** - for authorised content administrators only, we retain an email address and name from their Google account. Not relevant to visitors.
 
 **The Site sets no cookies of its own**, and there is no Google Analytics, no advertising pixels and no cross-site tracking.
 
 ## 4. The chat and AI
 
-The chat is an automated assistant built on a language model (AI), not a person. To generate an answer, **the content of your messages is transferred to external providers - Cloudflare and Google (Gemini)** - whose servers are also located outside Israel, and whose processing is governed by their own policies. We do not store conversation content and do not use it to train models.
+The chat is an automated assistant built on a language model (AI), not a person.
+
+**We do not collect or store your chat messages.** We hold no conversation history and cannot retrieve what was written. Messages are sent to third-party providers - **Cloudflare and Google (Gemini)** - solely in order to generate the answer, and are transferred outside Israel for that purpose. How those providers handle the data is governed by their own policies (section 5). We do not use conversations to train models.
 
 **Do not enter identifying details in the chat** - yours or anyone else's. Answers are generated automatically, may be wrong, and are not medical advice or a diagnosis.
 
@@ -112,13 +116,13 @@ The chat is an automated assistant built on a language model (AI), not a person.
 
 ## 5. Providers
 
-Render (hosting), Cloudflare (chat server and network protection), Google (Gemini - chat answers; Identity Services - administrator sign-in only). Each has its own privacy policy: [Render](https://render.com/privacy) · [Cloudflare](https://www.cloudflare.com/privacypolicy/) · [Google](https://policies.google.com/privacy).
+Render (hosting), Cloudflare (chat server and network protection), Google (Gemini - generating chat answers). Each has its own privacy policy: [Render](https://render.com/privacy) · [Cloudflare](https://www.cloudflare.com/privacypolicy/) · [Google](https://policies.google.com/privacy).
 
 Beyond this we transfer information to no one, unless required by law or court order.
 
 ## 6. Retention and deletion
 
-Questionnaire answers and conversation content are not stored by us. Browser preferences remain on your device until you clear them. Server logs are retained by the providers under their own policies, generally for a short period. Administrator accounts are retained while the permission is in force.
+Questionnaire answers and chat messages are not stored by us at all. Browser preferences remain on your device until you clear them. Server logs are retained by the providers under their own policies, generally for a short period.
 
 ## 7. Your rights
 

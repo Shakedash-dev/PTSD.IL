@@ -40,7 +40,7 @@ const he = `
 
 ## 5. הצ'אט האוטומטי
 
-הצ'אט הוא עוזר מבוסס בינה מלאכותית, לא אדם. התשובות נוצרות אוטומטית, עשויות להיות שגויות או חלקיות, ואין להסתמך עליהן. הצ'אט עונה רק על נושאים המכוסים באתר, ותוכן ההודעות מועבר לספקי צד שלישי (ראו [מדיניות הפרטיות](/privacy-policy)). **אין להזין בו פרטים מזהים.** השימוש מוגבל בקצב, ואין להשתמש בו לייצור תוכן פוגעני או בלתי חוקי או לעקיפת מגבלות המערכת.
+הצ'אט הוא עוזר מבוסס בינה מלאכותית, לא אדם. התשובות נוצרות אוטומטית, עשויות להיות שגויות או חלקיות, ואין להסתמך עליהן. הצ'אט עונה רק על נושאים המכוסים באתר. **הודעות הצ'אט אינן נאספות ואינן נשמרות אצלנו** - הן נשלחות לספקי צד שלישי אך ורק לצורך יצירת התשובה (ראו [מדיניות הפרטיות](/privacy-policy)). **אין להזין בו פרטים מזהים.** השימוש מוגבל בקצב, ואין להשתמש בו לייצור תוכן פוגעני או בלתי חוקי או לעקיפת מגבלות המערכת.
 
 ## 6. גיל
 
@@ -48,7 +48,7 @@ const he = `
 
 ## 7. שימושים אסורים
 
-אין להעתיק, להפיץ או לפרסם מחדש את תוכן האתר אלא לשימוש אישי ולא מסחרי; אין לבצע הנדסה לאחור, גירוד אוטומטי של תוכן (scraping), הפעלת בוטים, עקיפת מגבלות או אמצעי אבטחה, ניסיון גישה לאזור הניהול, העמסה או שיבוש פעולת האתר, שימוש בלתי חוקי או פוגעני, או התחזות לאדם או לגוף כלשהו. אנחנו רשאים לחסום גישה למי שמפר סעיף זה, ללא הודעה מוקדמת.
+אין להעתיק, להפיץ או לפרסם מחדש את תוכן האתר אלא לשימוש אישי ולא מסחרי; אין לבצע הנדסה לאחור, גירוד אוטומטי של תוכן (scraping), הפעלת בוטים, עקיפת מגבלות או אמצעי אבטחה, ניסיון גישה לאזורים מוגבלים באתר, העמסה או שיבוש פעולת האתר, שימוש בלתי חוקי או פוגעני, או התחזות לאדם או לגוף כלשהו. אנחנו רשאים לחסום גישה למי שמפר סעיף זה, ללא הודעה מוקדמת.
 
 ## 8. קניין רוחני
 
@@ -94,7 +94,7 @@ In immediate danger, at risk of self-harm, or having suicidal thoughts, contact 
 
 ## 5. The automated chat
 
-The chat is an AI-powered assistant, not a person. Answers are generated automatically, may be wrong or incomplete, and should not be relied upon. It answers only on topics covered by the Site, and message content is transferred to third-party providers (see the [Privacy Policy](/privacy-policy)). **Do not enter identifying details in it.** Use is rate-limited, and it must not be used to generate harmful or unlawful content or to circumvent the system's limits.
+The chat is an AI-powered assistant, not a person. Answers are generated automatically, may be wrong or incomplete, and should not be relied upon. It answers only on topics covered by the Site. **Chat messages are not collected or stored by us** - they are sent to third-party providers solely in order to generate the answer (see the [Privacy Policy](/privacy-policy)). **Do not enter identifying details in it.** Use is rate-limited, and it must not be used to generate harmful or unlawful content or to circumvent the system's limits.
 
 ## 6. Age
 
@@ -102,7 +102,7 @@ The Site is intended for users aged 18 and over. Use by minors requires the invo
 
 ## 7. Prohibited uses
 
-Do not copy, distribute or republish the Site's content other than for personal, non-commercial use; do not reverse engineer, scrape content automatically, run bots, circumvent limits or security measures, attempt to reach the admin area, overload or disrupt the Site, use it unlawfully or abusively, or impersonate any person or body. We may block access for anyone breaching this section, without prior notice.
+Do not copy, distribute or republish the Site's content other than for personal, non-commercial use; do not reverse engineer, scrape content automatically, run bots, circumvent limits or security measures, attempt to reach restricted areas of the Site, overload or disrupt the Site, use it unlawfully or abusively, or impersonate any person or body. We may block access for anyone breaching this section, without prior notice.
 
 ## 8. Intellectual property
 
