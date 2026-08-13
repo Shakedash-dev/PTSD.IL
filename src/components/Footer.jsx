@@ -76,9 +76,17 @@ export default function Footer() {
               {t(lang, 'footer_partner_org')}
             </a>
           </p>
-          <Link to="/sources" className="hover:text-primary transition-natural">
-            {t(lang, 'sources')}
-          </Link>
+          <nav className="flex flex-wrap items-center gap-x-4 gap-y-2">
+            <Link to="/sources" className="hover:text-primary transition-natural">
+              {t(lang, 'sources')}
+            </Link>
+            <Link to="/privacy-policy" className="hover:text-primary transition-natural">
+              {t(lang, 'privacy_policy')}
+            </Link>
+            <Link to="/terms-of-use" className="hover:text-primary transition-natural">
+              {t(lang, 'terms_of_use')}
+            </Link>
+          </nav>
         </div>
       </div>
     </footer>

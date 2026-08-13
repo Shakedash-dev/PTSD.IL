@@ -235,6 +235,15 @@ export const translations = {
     footer_emergency_heading: 'קו חירום - ער״ן',
     footer_credit_prefix: 'האתר נכתב בשיתוף עם',
     footer_partner_org: 'מטיב - המרכז לפסיכוטראומה',
+
+    // Legal pages (/privacy-policy, /terms-of-use). The page bodies live in
+    // src/pages/PrivacyPolicy.jsx and TermsOfUse.jsx in Hebrew + English only;
+    // these keys are just the labels wrapped around them.
+    privacy_policy: 'מדיניות פרטיות',
+    terms_of_use: 'תנאי שימוש',
+    legal_eyebrow: 'משפטי',
+    legal_last_updated: 'עודכן לאחרונה:',
+    legal_lang_notice: 'העמוד הזה זמין בעברית ובאנגלית בלבד. הנוסח העברי הוא המחייב.',
     sources_approved_prefix: 'כל התוכן שמוצג באתר אושר ע״י',
     ptsd_info_questions_heading: 'שאלות',
     nav_menu: 'תפריט',
@@ -434,6 +443,12 @@ export const translations = {
     footer_emergency_heading: 'Emergency Line - ERAN',
     footer_credit_prefix: 'This site was created in partnership with',
     footer_partner_org: 'Metiv - The Center for Psychotrauma',
+
+    privacy_policy: 'Privacy Policy',
+    terms_of_use: 'Terms of Use',
+    legal_eyebrow: 'Legal',
+    legal_last_updated: 'Last updated:',
+    legal_lang_notice: 'This page is available in Hebrew and English only. The Hebrew version is the binding one.',
     sources_approved_prefix: 'All content on this site is approved by',
     ptsd_info_questions_heading: 'Questions',
     nav_menu: 'Menu',
@@ -633,6 +648,12 @@ export const translations = {
     footer_emergency_heading: 'خط الطوارئ - إيران',
     footer_credit_prefix: 'أُنشئ هذا الموقع بالشراكة مع',
     footer_partner_org: 'ميتيف - مركز علاج الصدمات النفسية',
+
+    privacy_policy: 'سياسة الخصوصية',
+    terms_of_use: 'شروط الاستخدام',
+    legal_eyebrow: 'قانوني',
+    legal_last_updated: 'آخر تحديث:',
+    legal_lang_notice: 'هذه الصفحة متوفرة بالعبرية والإنجليزية فقط، وتُعرض هنا بالعبرية. النص العبري هو الملزم.',
     sources_approved_prefix: 'جميع المحتوى المعروض في هذا الموقع معتمد من',
     ptsd_info_questions_heading: 'الأسئلة',
     nav_menu: 'القائمة',
@@ -832,6 +853,12 @@ export const translations = {
     footer_emergency_heading: 'Экстренная линия - ЭРАН',
     footer_credit_prefix: 'Сайт создан в сотрудничестве с',
     footer_partner_org: 'Метив - Центр психотравмы',
+
+    privacy_policy: 'Политика конфиденциальности',
+    terms_of_use: 'Условия использования',
+    legal_eyebrow: 'Юридическая информация',
+    legal_last_updated: 'Последнее обновление:',
+    legal_lang_notice: 'Эта страница доступна только на иврите и английском; ниже приведена английская версия. Юридическую силу имеет текст на иврите.',
     sources_approved_prefix: 'Весь контент на сайте одобрен организацией',
     ptsd_info_questions_heading: 'Вопросы',
     nav_menu: 'Меню',
@@ -1031,6 +1058,12 @@ export const translations = {
     footer_emergency_heading: "Ligne d'urgence - ERAN",
     footer_credit_prefix: 'Ce site a été créé en partenariat avec',
     footer_partner_org: 'Metiv - Le Centre de psychotraumatologie',
+
+    privacy_policy: 'Politique de confidentialité',
+    terms_of_use: "Conditions d'utilisation",
+    legal_eyebrow: 'Mentions légales',
+    legal_last_updated: 'Dernière mise à jour :',
+    legal_lang_notice: "Cette page n'est disponible qu'en hébreu et en anglais ; la version anglaise est affichée ci-dessous. Le texte hébreu fait foi.",
     sources_approved_prefix: 'Tout le contenu de ce site est approuvé par',
     ptsd_info_questions_heading: 'Questions',
     nav_menu: 'Menu',

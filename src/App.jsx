@@ -34,6 +34,8 @@ import CalmingBreathing from '@/pages/CalmingBreathing';
 import CalmingGrounding from '@/pages/CalmingGrounding';
 import CalmingMuscle from '@/pages/CalmingMuscle';
 import Sources from '@/pages/Sources';
+import PrivacyPolicy from '@/pages/PrivacyPolicy';
+import TermsOfUse from '@/pages/TermsOfUse';
 import Admin from '@/pages/Admin';
 import AdminLogin from '@/pages/AdminLogin';
 
@@ -113,6 +115,8 @@ function App() {
                   <Route path="/calming/grounding" element={<CalmingGrounding />} />
                   <Route path="/calming/muscle" element={<CalmingMuscle />} />
                   <Route path="/sources" element={<Sources />} />
+                  <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+                  <Route path="/terms-of-use" element={<TermsOfUse />} />
                   <Route path="/admin" element={<AdminGate />} />
                 </Route>
                 <Route path="*" element={<PageNotFound />} />

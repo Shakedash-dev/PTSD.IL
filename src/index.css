@@ -324,3 +324,62 @@
 .rich-content h3:first-child {
   margin-top: 0;
 }
+
+/* Legal pages only (/privacy-policy, /terms-of-use). `.rich-content` is tuned
+   for short content cards; a long legal document needs more air and stronger
+   heading hierarchy. Scoped to .legal-prose so nothing else is affected. */
+.legal-prose {
+  font-size: 0.95rem;
+  line-height: 1.75;
+}
+
+.legal-prose h2 {
+  font-size: 1.35rem;
+  margin: 2.25em 0 0.6em;
+  padding-top: 1.25em;
+  border-top: 1px solid hsl(var(--border));
+}
+
+.legal-prose h2:first-child {
+  border-top: 0;
+  padding-top: 0;
+  margin-top: 0;
+}
+
+.legal-prose h3 {
+  font-size: 1.05rem;
+  margin: 1.6em 0 0.4em;
+}
+
+.legal-prose p,
+.legal-prose li {
+  line-height: 1.75;
+}
+
+.legal-prose ul,
+.legal-prose ol {
+  margin: 0.9em 0;
+}
+
+.legal-prose li {
+  margin: 0.5em 0;
+}
+
+.legal-prose blockquote {
+  margin: 1.5em 0;
+  padding: 0.9em 1em;
+  border-inline-start: 3px solid hsl(var(--primary) / 0.5);
+  background: hsl(var(--muted) / 0.5);
+  border-radius: 0.5rem;
+  font-style: normal;
+  font-size: 0.875rem;
+}
+
+.legal-prose code {
+  font-size: 0.85em;
+  padding: 0.1em 0.35em;
+  border-radius: 0.25rem;
+  background: hsl(var(--muted));
+  direction: ltr;
+  display: inline-block;
+}
