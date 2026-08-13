@@ -57,7 +57,9 @@ src/lib/auth.js         <- login/logout, JWT in sessionStorage, isAuthenticated/
 ## Stack and conventions
 
 - **React 18 + Vite 6**, JSX only (no TS source files, but `.jsx` is type-checked via `checkJs`)
-- **Routing**: `react-router-dom` v6, all routes in `src/App.jsx`
+- **Routing**: `react-router-dom` v6, all routes in `src/App.jsx`. **Adding a public route means three more edits**: a `<url>` entry in `src/public/sitemap.xml`, and a title/description key in the two maps in `src/lib/seo.js` (skip both only if the route is intentionally unindexed, like `/admin`).
+- **Page metadata**: the app is client-rendered, so every URL is served the same `src/index.html`. `src/lib/seo.js` rewrites title/description/canonical/OG per route and language; `useSeo()` is called once from `Layout`. `index.html`'s own head tags are the pre-JS defaults a crawler sees - keep them matching the Hebrew home page.
+- **Legal pages**: `/privacy-policy` and `/terms-of-use` deliberately do NOT come from the content API - the text lives in the page files so it cannot be edited by a moderator and still renders when the API is down. Hebrew is the binding version; see `src/components/LegalPage.jsx` for the fallback rules.
 - **Styling**: Tailwind + Radix primitives in `src/components/ui/` (shadcn-style). Compose these over hand-rolled markup.
 - **State**: `@tanstack/react-query` for async data (client in `src/lib/query-client.js`)
 - **Markdown**: rich content renders via `src/components/Markdown.jsx` (react-markdown). Internal links (`/...`) become router `<Link>`s; external open in a new tab.

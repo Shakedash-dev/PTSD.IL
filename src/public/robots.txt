@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+
+# Content-management panel - login-gated, nothing crawlable behind it.
+Disallow: /admin
+
+Sitemap: https://ptsd-il.site/sitemap.xml

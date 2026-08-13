@@ -2,6 +2,7 @@ import React from 'react';
 import { Outlet, useLocation, Link } from 'react-router-dom';
 import { useLang } from '@/lib/LanguageContext';
 import { t } from '@/lib/i18n';
+import useSeo from '@/lib/useSeo';
 import Navbar from './Navbar';
 import Footer from './Footer';
 import ChatbotFAB from './ChatbotFAB';
@@ -10,6 +11,7 @@ import ChatbotFAB from './ChatbotFAB';
 const SANCTUARY_PATHS = ['/calming', '/calming/breathing', '/calming/grounding', '/calming/muscle'];
 
 export default function Layout() {
+  useSeo();
   const location = useLocation();
   const isSanctuary = SANCTUARY_PATHS.some(p => location.pathname.startsWith(p));
   const isHome = location.pathname === '/';

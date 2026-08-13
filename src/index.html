@@ -16,14 +16,41 @@
     </script>
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💚</text></svg>" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>פוסט טראומה - אתה לא לבד</title>
-    <meta name="description" content="מידע, כלים, זכויות ותמיכה לנפגעי טראומה ופוסט-טראומה (PTSD) ובני משפחותיהם - הכל במקום אחד." />
-    <meta property="og:title" content="פוסט טראומה - אתה לא לבד" />
-    <meta property="og:description" content="הדרך להבנה, החלמה ומיצוי זכויות מתחילה כאן" />
+    <!--
+      These are the defaults a crawler or a link-preview bot sees before any JS
+      runs. Once the app mounts, src/lib/useSeo.js rewrites the title,
+      description, canonical and og:title/description/url per route and language.
+      Keep the two in agreement - this block is the Hebrew home page.
+    -->
+    <title>פוסט טראומה - את/ה לא לבד</title>
+    <meta name="description" content="מידע, כלים וזכויות לנפגעי פוסט-טראומה (PTSD) ובני משפחותיהם בישראל. שאלון איתור עצמי, תרגילי הרגעה, דרכי טיפול ומיצוי זכויות - הכל במקום אחד." />
+    <link rel="canonical" href="https://ptsd-il.site/" />
+    <meta property="og:site_name" content="פוסט טראומה - את/ה לא לבד" />
+    <meta property="og:title" content="פוסט טראומה - את/ה לא לבד" />
+    <meta property="og:description" content="מידע, כלים וזכויות לנפגעי פוסט-טראומה (PTSD) ובני משפחותיהם בישראל - הכל במקום אחד." />
     <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://ptsd-il.site/" />
+    <meta property="og:locale" content="he_IL" />
+    <!-- TODO: replace with a purpose-made 1200x630 JPG or PNG. This is a 4:3
+         WebP, so previews centre-crop it and WhatsApp may skip it entirely. -->
+    <meta property="og:image" content="https://ptsd-il.site/images/set1/home_hero.webp" />
+    <meta property="og:image:width" content="2000" />
+    <meta property="og:image:height" content="1500" />
+    <meta property="og:image:alt" content="פוסט טראומה - את/ה לא לבד" />
+    <meta name="twitter:card" content="summary_large_image" />
     <meta name="theme-color" content="#3A7B71" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "פוסט טראומה - את/ה לא לבד",
+        "url": "https://ptsd-il.site/",
+        "inLanguage": ["he", "ar", "ru", "en", "fr"],
+        "description": "מידע, כלים וזכויות לנפגעי פוסט-טראומה (PTSD) ובני משפחותיהם בישראל."
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>

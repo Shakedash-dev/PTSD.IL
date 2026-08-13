@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Public routes only. Keep in sync with the <Route> list in src/App.jsx:
+  /admin is login-gated and excluded, and /ptsd-info-2 is excluded because
+  nothing links to it (an orphan variant of /ptsd-info - listing it would put
+  near-duplicate content in the index).
+
+  The site serves all five languages from the same URLs (language is a browser
+  preference, not part of the path), so there is one entry per route and no
+  hreflang alternates.
+-->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://ptsd-il.site/</loc><lastmod>2026-08-13</lastmod></url>
+  <url><loc>https://ptsd-il.site/first-circle</loc><lastmod>2026-08-13</lastmod></url>
+  <url><loc>https://ptsd-il.site/second-circle</loc><lastmod>2026-08-13</lastmod></url>
+  <url><loc>https://ptsd-il.site/second-circle-tools</loc><lastmod>2026-08-13</lastmod></url>
+  <url><loc>https://ptsd-il.site/questionnaire</loc><lastmod>2026-08-13</lastmod></url>
+  <url><loc>https://ptsd-il.site/ptsd-info</loc><lastmod>2026-08-13</lastmod></url>
+  <url><loc>https://ptsd-il.site/self-help</loc><lastmod>2026-08-13</lastmod></url>
+  <url><loc>https://ptsd-il.site/treatment</loc><lastmod>2026-08-13</lastmod></url>
+  <url><loc>https://ptsd-il.site/rights</loc><lastmod>2026-08-13</lastmod></url>
+  <url><loc>https://ptsd-il.site/community</loc><lastmod>2026-08-13</lastmod></url>
+  <url><loc>https://ptsd-il.site/children</loc><lastmod>2026-08-13</lastmod></url>
+  <url><loc>https://ptsd-il.site/calming</loc><lastmod>2026-08-13</lastmod></url>
+  <url><loc>https://ptsd-il.site/calming/breathing</loc><lastmod>2026-08-13</lastmod></url>
+  <url><loc>https://ptsd-il.site/calming/grounding</loc><lastmod>2026-08-13</lastmod></url>
+  <url><loc>https://ptsd-il.site/calming/muscle</loc><lastmod>2026-08-13</lastmod></url>
+  <url><loc>https://ptsd-il.site/sources</loc><lastmod>2026-08-13</lastmod></url>
+  <url><loc>https://ptsd-il.site/privacy-policy</loc><lastmod>2026-08-13</lastmod></url>
+  <url><loc>https://ptsd-il.site/terms-of-use</loc><lastmod>2026-08-13</lastmod></url>
+</urlset>
