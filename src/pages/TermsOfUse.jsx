@@ -12,122 +12,61 @@ const CONTACT_EMAIL = 'shakedash912000@gmail.com';
 const UPDATED_HE = '13 באוגוסט 2026';
 const UPDATED_EN = '13 August 2026';
 
+// Deliberately minimal. The medical disclaimer, the emergency section and the
+// AI limits are the load-bearing parts for a mental-health site - everything
+// else is trimmed to the shortest form that still does its job.
 const he = `
 ## 1. קבלת התנאים
 
-תנאי שימוש אלה מסדירים את השימוש באתר **ptsd-il.site** ("האתר"), המופעל על ידי ${OPERATOR_HE} ("אנחנו"). עצם הגלישה באתר, השימוש בשאלון או בצ'אט מהווים הסכמה מלאה לתנאים אלה ול[מדיניות הפרטיות](/privacy-policy). אם אינך מסכים/ה לתנאי כלשהו - אנא הפסק/י להשתמש באתר.
+תנאים אלה חלים על השימוש באתר **ptsd-il.site** ("האתר"), המופעל על ידי ${OPERATOR_HE}. גלישה באתר, שימוש בשאלון או בצ'אט מהווים הסכמה לתנאים אלה ול[מדיניות הפרטיות](/privacy-policy). אם אינך מסכים/ה - אנא אל תשתמש/י באתר.
 
 התנאים נכתבו בלשון פנייה כללית ומיועדים לכל המגדרים.
 
 ## 2. מהו השירות
 
-האתר הוא **מאגר מידע וכלים לעזרה עצמית** בנושא פוסט-טראומה (PTSD) עבור נפגעי טראומה בישראל ובני משפחותיהם: מידע מקצועי, כלים להתמודדות, שאלון איתור עצמי, מידע על דרכי טיפול, זכויות וקהילות תמיכה, וכן צ'אט אוטומטי המבוסס על תוכן האתר.
+האתר הוא מאגר מידע וכלים לעזרה עצמית בנושא פוסט-טראומה (PTSD). השימוש בו **חינם**, ואין בו הרשמה, חשבונות, מנויים או תשלומים - אין דבר לחדש או לבטל. האתר **אינו מספק טיפול** ואינו מתווך בין משתמשים למטפלים. התכנים המקצועיים נכתבו בשיתוף עם [מטיב - המרכז לפסיכוטראומה](https://metiv.org/); אין בכך כדי להפוך את האתר לשירות קליני.
 
-* השימוש באתר **חינם לחלוטין**.
-* **אין באתר הרשמה, חשבונות משתמש, מנויים או תשלומים.** אין דבר לחדש, לבטל או להפסיק, ואיננו גובים תשלום כלשהו בשום שלב.
-* האתר **אינו מספק טיפול**, אינו מפעיל מטפלים ואינו מתווך בין משתמשים למטפלים.
-* התכנים המקצועיים באתר נכתבו בשיתוף עם [מטיב - המרכז לפסיכוטראומה](https://metiv.org/). שיתוף זה אינו הופך את האתר לשירות קליני ואינו יוצר יחסי מטפל-מטופל.
+## 3. הבהרה רפואית
 
-## 3. הבהרה רפואית - חשוב מאוד
+**האתר אינו מספק ייעוץ רפואי, נפשי, משפטי או ביטוחי.** התכנים הם מידע כללי בלבד, שאינו מותאם למצבך, והשימוש באתר **אינו יוצר יחסי מטפל-מטופל**. אין להסתמך על האתר כדי לאבחן מצב רפואי, להתחיל טיפול, להפסיקו או לשנותו - לרבות תרופות.
 
-**האתר אינו מספק ייעוץ רפואי, נפשי, משפטי, ביטוחי או מקצועי מכל סוג.**
-
-* התכנים באתר הם מידע כללי בלבד, שאינו מותאם למצבך האישי.
-* **השימוש באתר אינו יוצר יחסי מטפל-מטופל** בינך לבינינו או בין מי מהגורמים המשתתפים בו.
-* אין להסתמך על תוכן האתר כדי לאבחן מצב רפואי, להתחיל טיפול, להפסיק טיפול או לשנות טיפול קיים - לרבות תרופות. **החלטות כאלה יש לקבל אך ורק בייעוץ עם איש מקצוע מוסמך.**
-* **שאלון האיתור העצמי אינו אבחון.** הוא כלי סינון (screening) בלבד, המבוסס על שאלון PCL-5, ותוצאותיו אינן קובעות אם יש או אין לך PTSD. תוצאה גבוהה אינה אבחנה, ותוצאה נמוכה אינה שוללת קיומה של בעיה. בכל מקרה - יש לפנות לאיש מקצוע.
-* המידע על זכויות, ועדות ומסלולי טיפול הוא כללי, עשוי להשתנות ואינו מהווה ייעוץ משפטי. את המידע המחייב יש לאמת מול הגורם הרשמי הרלוונטי.
+**שאלון האיתור העצמי אינו אבחון** אלא כלי סינון בלבד: תוצאה גבוהה אינה אבחנה, ותוצאה נמוכה אינה שוללת קיומה של בעיה. המידע על זכויות הוא כללי, עשוי להשתנות ואינו ייעוץ משפטי - יש לאמת אותו מול הגורם הרשמי הרלוונטי.
 
 ## 4. מצבי חירום
 
-**האתר אינו שירות חירום, אינו קו סיוע ואינו מנוטר על ידי אדם.** אף אחד אינו קורא את מה שנכתב בו בזמן אמת, ואף גורם אינו מוזעק בעקבות שימוש באתר.
+**האתר אינו שירות חירום ואינו מנוטר על ידי אדם.** אף אחד אינו קורא בזמן אמת את מה שנכתב בו, ואף גורם אינו מוזעק בעקבות שימוש בו.
 
-אם את/ה או אדם אחר בסכנה מיידית, בסיכון לפגיעה עצמית או במחשבות אובדניות - יש לפנות עכשיו לאחד מאלה:
+בסכנה מיידית, בסיכון לפגיעה עצמית או במחשבות אובדניות - יש לפנות עכשיו: **ער"ן 1201 · מד"א 101 · משטרה 100 · או חדר המיון הקרוב.**
 
-* **ער"ן - עזרה ראשונה נפשית: 1201** (גם בוואטסאפ)
-* **מד"א: 101**
-* **משטרה: 100**
-* **חדר המיון הקרוב לביתך**
+## 5. הצ'אט האוטומטי
 
-## 5. גיל
+הצ'אט הוא עוזר מבוסס בינה מלאכותית, לא אדם. התשובות נוצרות אוטומטית, עשויות להיות שגויות או חלקיות, ואין להסתמך עליהן. הצ'אט עונה רק על נושאים המכוסים באתר, ותוכן ההודעות מועבר לספקי צד שלישי (ראו [מדיניות הפרטיות](/privacy-policy)). **אין להזין בו פרטים מזהים.** השימוש מוגבל בקצב, ואין להשתמש בו לייצור תוכן פוגעני או בלתי חוקי או לעקיפת מגבלות המערכת.
 
-האתר מיועד לשימוש מגיל 18 ומעלה. משתמשים מתחת לגיל 18 נדרשים להשתמש באתר בליווי ובאישור הורה או אפוטרופוס. תכני "תכנים לילדים" באתר מיועדים לשימוש בליווי מבוגר.
+## 6. גיל
 
-## 6. הצ'אט האוטומטי ובינה מלאכותית
-
-הצ'אט באתר הוא **עוזר אוטומטי המבוסס על מודל שפה (AI)**, ולא אדם. השימוש בו כפוף לתנאים אלה:
-
-* התשובות נוצרות אוטומטית ועשויות להיות **שגויות, חלקיות, לא מדויקות או לא מעודכנות**. אין להסתמך עליהן כעל מקור סמכותי.
-* הצ'אט עונה רק על נושאים המכוסים בתוכן האתר. שאלות שאינן קשורות לתוכן האתר לא ייענו.
-* **תוכן ההודעות שלך נשלח לספקי צד שלישי** (Cloudflare ו-Google) לצורך יצירת התשובה. פירוט מלא במדיניות הפרטיות.
-* **אין להזין בצ'אט פרטים מזהים** - שלך או של אדם אחר: שם, טלפון, ת"ז, כתובת, מספר אישי, פרטי קופת חולים או תיאור מזוהה של מצב רפואי.
-* השימוש בצ'אט מוגבל בקצב כדי למנוע ניצול לרעה של השירות.
-* אין להשתמש בצ'אט כדי לייצר תוכן פוגעני, מטעה, בלתי חוקי או כזה המעודד פגיעה עצמית או פגיעה באחרים, ואין לנסות לעקוף את מגבלות המערכת (לרבות ניסיונות "prompt injection" או חילוץ הוראות המערכת).
-* מנגנון זיהוי המצוקה שבצ'אט הוא כלי עזר בלבד. הוא עלול לפספס, אינו מהווה ניטור ואינו מזעיק סיוע. ראו סעיף 4.
+האתר מיועד לגיל 18 ומעלה. שימוש על ידי קטינים - בליווי ובאישור הורה או אפוטרופוס.
 
 ## 7. שימושים אסורים
 
-בעת השימוש באתר, אין:
-
-* להעתיק, לשכפל, להפיץ, לשדר, לפרסם או ליצור יצירות נגזרות מתוכן האתר, אלא לשימוש אישי ולא מסחרי;
-* לבצע הנדסה לאחור, פירוק או ניסיון לחשוף קוד מקור, מפתחות או הוראות מערכת;
-* לגרד (scraping) תוכן באופן אוטומטי, להפעיל בוטים או סורקים למעט מנועי חיפוש מקובלים;
-* לעקוף או לנסות לעקוף מגבלות קצב, אמצעי אבטחה או בקרות גישה, לרבות ניסיון גישה לאזור הניהול;
-* להעמיס על האתר או לשבש את פעולתו (לרבות מתקפות מניעת שירות);
-* להשתמש באתר לכל מטרה בלתי חוקית, פוגענית, מטרידה או מפרה זכויות של אחר;
-* להתחזות לאדם או לגוף כלשהו, לרבות לצוות האתר או לגורם רפואי.
-
-אנחנו רשאים לחסום גישה, להגביל שימוש או לנקוט בכל אמצעי סביר אחר כלפי מי שמפר סעיף זה, ללא הודעה מוקדמת.
+אין להעתיק, להפיץ או לפרסם מחדש את תוכן האתר אלא לשימוש אישי ולא מסחרי; אין לבצע הנדסה לאחור, גירוד אוטומטי של תוכן (scraping), הפעלת בוטים, עקיפת מגבלות או אמצעי אבטחה, ניסיון גישה לאזור הניהול, העמסה או שיבוש פעולת האתר, שימוש בלתי חוקי או פוגעני, או התחזות לאדם או לגוף כלשהו. אנחנו רשאים לחסום גישה למי שמפר סעיף זה, ללא הודעה מוקדמת.
 
 ## 8. קניין רוחני
 
-מלוא זכויות היוצרים והקניין הרוחני בתוכן האתר, בעיצובו, בקוד שלו ובאופן ארגון המידע שייכים ל${OPERATOR_HE} ו/או לבעלי הזכויות מטעמו, לרבות שותפי תוכן.
+זכויות היוצרים בתוכן האתר, בעיצובו ובקוד שלו שייכות ל${OPERATOR_HE} ו/או לבעלי הזכויות מטעמה. מותר לצפות בתוכן, לשמור אותו ולהדפיסו **לשימוש אישי ולא מסחרי בלבד**. כל שימוש אחר - לרבות פרסום מחדש, שימוש מסחרי או שימוש לאימון מודלים - מחייב אישור מראש ובכתב.
 
-מותר לך לצפות בתוכן, לשמור עותק ולהדפיס אותו **לשימוש אישי, לא מסחרי בלבד**. כל שימוש אחר - לרבות פרסום מחדש, שילוב באתר או ביישום אחר, שימוש מסחרי או שימוש לאימון מודלים - מחייב אישור מראש ובכתב.
+## 9. אחריות
 
-סימני מסחר, שמות וסמלים של צדדים שלישיים המופיעים באתר שייכים לבעליהם.
+האתר ניתן **כמות שהוא ("AS IS")**, ללא התחייבות לזמינות, לדיוק או לפעולה ללא תקלות, וללא אחריות מכל סוג. במידה המרבית המותרת על פי דין, לא נישא באחריות לכל נזק - ישיר או עקיף - הנובע מהשימוש באתר, מהסתמכות על תוכנו, מתוצאות השאלון, מתשובות הצ'אט או משימוש באתרים חיצוניים אליהם הוא מפנה. **אין באמור כדי לגרוע מאחריות שלא ניתן להגבילה על פי דין.**
 
-## 9. תוכן ושירותים של צדדים שלישיים
+את/ה מתחייב/ת לשפות אותנו בגין כל תביעה או הוצאה שייגרמו לנו עקב הפרת תנאים אלה על ידך.
 
-האתר כולל קישורים והפניות לאתרים, לארגונים, לקהילות ולשירותים חיצוניים. הפניות אלה ניתנות לנוחותך בלבד ואינן מהוות המלצה, הסכמה או אחריות שלנו לגביהם. איננו שולטים בתכנים, בזמינות, באיכות או במדיניות של גורמים אלה, ואיננו אחראים להם או לכל נזק שייגרם משימוש בהם. כל התקשרות עם גורם חיצוני היא באחריותך בלבד.
+## 10. שינויים, סיום, דין וסמכות שיפוט
 
-## 10. זמינות השירות ושינויים בו
+אנחנו רשאים לשנות תנאים אלה, את האתר או את זמינותו, ולהגביל או לחסום גישה - בכל עת וללא הודעה מוקדמת. תאריך העדכון מופיע בראש העמוד, והמשך שימוש לאחר מכן מהווה הסכמה. על התנאים יחולו דיני מדינת ישראל, וסמכות השיפוט הבלעדית נתונה לבתי המשפט המוסמכים במחוז תל אביב-יפו. הוראה שתימצא בלתי אכיפה לא תפגע בתוקף יתר ההוראות.
 
-האתר ניתן **כמות שהוא ("AS IS") וכפי שהוא זמין ("AS AVAILABLE")**. איננו מתחייבים לזמינות רציפה, לפעולה ללא תקלות או שגיאות, לזמינות הצ'אט או לשמירה על תכנים כלשהם. אנחנו רשאים בכל עת, לפי שיקול דעתנו וללא הודעה מוקדמת, לשנות את האתר, להוסיף או להסיר תכנים ותכונות, להשעות את פעילותו או להפסיקה כליל.
+## 11. יצירת קשר
 
-## 11. הגבלת אחריות
-
-במידה המרבית המותרת על פי דין:
-
-* התוכן והשירותים באתר ניתנים **ללא כל אחריות מכל סוג**, מפורשת או משתמעת, לרבות אחריות להתאמה למטרה מסוימת, לדיוק, לשלמות או לעדכניות המידע;
-* לא נישא באחריות לכל נזק - ישיר, עקיף, תוצאתי, מיוחד או אחר - הנובע מהשימוש באתר, מהסתמכות על תוכן שבו, מתוצאות השאלון, מתשובות הצ'אט, מאי-זמינות האתר או משימוש באתרים חיצוניים אליהם הוא מפנה;
-* אחריותנו הכוללת, ככל שתקום למרות האמור, לא תעלה על 1 ש"ח.
-
-**אין באמור כדי לגרוע מאחריות שלא ניתן להגבילה או לשלול על פי דין**, ובכלל זה במקרים של מעשה שנעשה בזדון.
-
-## 12. שיפוי
-
-בשימוש באתר את/ה מתחייב/ת לשפות אותנו בגין כל תביעה, דרישה, נזק, הפסד או הוצאה (לרבות שכר טרחת עורך דין סביר) שייגרמו לנו עקב הפרת תנאים אלה על ידך, שימוש בלתי חוקי או בלתי מורשה שלך באתר, או פגיעה שלך בזכויות צד שלישי.
-
-## 13. שינויים בתנאים
-
-אנחנו רשאים לעדכן תנאים אלה מעת לעת. תאריך העדכון האחרון מופיע בראש העמוד. שינוי מהותי ייכנס לתוקף עם פרסומו באתר, והמשך שימוש באתר לאחר מכן מהווה הסכמה לגרסה המעודכנת. מומלץ לעיין בעמוד זה מדי פעם.
-
-## 14. הפסקת שימוש
-
-אנחנו רשאים להגביל, להשעות או לחסום את גישתך לאתר או לחלק ממנו, בכל עת ולפי שיקול דעתנו, בין היתר במקרה של הפרת תנאים אלה - ללא הודעה מוקדמת וללא חובת נימוק. את/ה רשאי/ת להפסיק להשתמש באתר בכל רגע.
-
-## 15. הדין החל וסמכות שיפוט
-
-על תנאים אלה ועל כל הנובע מהם או הקשור אליהם יחולו דיני מדינת ישראל בלבד, ללא כללי ברירת הדין שבהם. סמכות השיפוט הבלעדית נתונה לבתי המשפט המוסמכים במחוז תל אביב-יפו.
-
-אם ייקבע כי הוראה כלשהי בתנאים אלה אינה תקפה או אינה ניתנת לאכיפה, יתר ההוראות יעמדו בתוקפן.
-
-## 16. יצירת קשר
-
-לשאלות בנוגע לתנאים אלה: [${CONTACT_EMAIL}](mailto:${CONTACT_EMAIL}).
-
-ראו גם את [מדיניות הפרטיות](/privacy-policy) של האתר.
+[${CONTACT_EMAIL}](mailto:${CONTACT_EMAIL}) · ראו גם את [מדיניות הפרטיות](/privacy-policy).
 `;
 
 const en = `
@@ -135,117 +74,53 @@ const en = `
 
 ## 1. Acceptance of terms
 
-These Terms of Use govern your use of **ptsd-il.site** ("the Site"), operated by ${OPERATOR_EN} ("we", "us"). Browsing the Site and using the questionnaire or the chat constitute full acceptance of these terms and of the [Privacy Policy](/privacy-policy). If you do not agree with any term, please stop using the Site.
+These terms govern use of **ptsd-il.site** ("the Site"), operated by ${OPERATOR_EN}. Browsing the Site or using the questionnaire or the chat constitutes acceptance of these terms and of the [Privacy Policy](/privacy-policy). If you do not agree, please do not use the Site.
 
 ## 2. What the service is
 
-The Site is an **information and self-help resource** on post-traumatic stress disorder (PTSD) for trauma survivors in Israel and their families: professional information, coping tools, a self-screening questionnaire, information on treatment pathways, rights and support communities, and an automated chat based on the Site's own content.
+The Site is an information and self-help resource on post-traumatic stress disorder (PTSD). Use is **free**, and there is no registration, no accounts, no subscriptions and no payments - there is nothing to renew or cancel. The Site **does not provide treatment** and does not broker contact between users and therapists. The professional content was written in partnership with [Metiv - The Israel Psychotrauma Center](https://metiv.org/); that does not make the Site a clinical service.
 
-* Use of the Site is **entirely free**.
-* **There is no registration, no user accounts, no subscriptions and no payments.** There is nothing to renew, cancel or terminate, and we never charge you at any stage.
-* The Site **does not provide treatment**, does not employ therapists and does not broker contact between users and therapists.
-* The professional content on the Site was written in partnership with [Metiv - The Israel Psychotrauma Center](https://metiv.org/). That partnership does not make the Site a clinical service and does not create a therapist-patient relationship.
+## 3. Medical disclaimer
 
-## 3. Medical disclaimer - important
+**The Site does not provide medical, psychological, legal or insurance advice.** The content is general information only, not tailored to your situation, and using the Site **does not create a therapist-patient relationship**. Do not rely on the Site to diagnose a condition, or to start, stop or change treatment - including medication.
 
-**The Site does not provide medical, psychological, legal, insurance or any other professional advice.**
-
-* The content on the Site is general information only and is not tailored to your personal situation.
-* **Using the Site does not create a therapist-patient relationship** between you and us or any party involved in the Site.
-* Do not rely on the Site's content to diagnose a medical condition, to start treatment, to stop treatment or to change existing treatment - including medication. **Such decisions must be made only in consultation with a qualified professional.**
-* **The self-screening questionnaire is not a diagnosis.** It is a screening tool only, based on the PCL-5, and its result does not determine whether you have PTSD. A high score is not a diagnosis, and a low score does not rule out a problem. In either case, consult a professional.
-* Information about rights, committees and treatment pathways is general, may change, and does not constitute legal advice. Binding information must be verified with the relevant official body.
+**The self-screening questionnaire is not a diagnosis**, only a screening tool: a high score is not a diagnosis, and a low score does not rule out a problem. Information about rights is general, may change, and is not legal advice - verify it with the relevant official body.
 
 ## 4. Emergencies
 
-**The Site is not an emergency service, not a helpline, and is not monitored by a human being.** Nobody reads what is written on it in real time, and no service is dispatched as a result of using it.
+**The Site is not an emergency service and is not monitored by a human.** Nobody reads what is written on it in real time, and no service is dispatched as a result of using it.
 
-If you or someone else is in immediate danger, at risk of self-harm, or having suicidal thoughts, contact one of the following now:
+In immediate danger, at risk of self-harm, or having suicidal thoughts, contact now: **ERAN 1201 · Magen David Adom 101 · Police 100 · or your nearest emergency room.**
 
-* **ERAN - Emotional First Aid: 1201** (also on WhatsApp)
-* **Magen David Adom: 101**
-* **Police: 100**
-* **Your nearest emergency room**
+## 5. The automated chat
 
-## 5. Age
+The chat is an AI-powered assistant, not a person. Answers are generated automatically, may be wrong or incomplete, and should not be relied upon. It answers only on topics covered by the Site, and message content is transferred to third-party providers (see the [Privacy Policy](/privacy-policy)). **Do not enter identifying details in it.** Use is rate-limited, and it must not be used to generate harmful or unlawful content or to circumvent the system's limits.
 
-The Site is intended for users aged 18 and over. Users under 18 must use the Site with the involvement and consent of a parent or guardian. The Site's "For Children" content is intended for use alongside an adult.
+## 6. Age
 
-## 6. The automated chat and AI
-
-The chat on the Site is an **automated assistant powered by a language model (AI)**, not a person. Its use is subject to the following:
-
-* Answers are generated automatically and may be **wrong, incomplete, inaccurate or out of date**. Do not treat them as an authoritative source.
-* The chat only answers on topics covered by the Site's content. Questions unrelated to that content will not be answered.
-* **The content of your messages is sent to third-party providers** (Cloudflare and Google) in order to generate the answer. Full detail is in the Privacy Policy.
-* **Do not enter identifying details in the chat** - yours or anyone else's: name, phone number, ID number, address, service number, health-fund details or an identifiable description of a medical condition.
-* Chat use is rate-limited to prevent abuse of the service.
-* Do not use the chat to generate harmful, misleading or unlawful content, or content encouraging self-harm or harm to others, and do not attempt to circumvent the system's limits (including prompt-injection attempts or extracting system instructions).
-* The chat's distress-detection mechanism is an aid only. It may miss cases, does not constitute monitoring, and does not summon help. See section 4.
+The Site is intended for users aged 18 and over. Use by minors requires the involvement and consent of a parent or guardian.
 
 ## 7. Prohibited uses
 
-When using the Site, you must not:
-
-* copy, reproduce, distribute, transmit, publish or create derivative works from the Site's content, other than for personal, non-commercial use;
-* reverse engineer, decompile or attempt to expose source code, keys or system instructions;
-* scrape content automatically, or run bots or crawlers other than conventional search engines;
-* circumvent or attempt to circumvent rate limits, security measures or access controls, including attempting to reach the admin area;
-* overload the Site or disrupt its operation (including denial-of-service attacks);
-* use the Site for any unlawful, abusive or harassing purpose, or one that infringes another's rights;
-* impersonate any person or body, including the Site's staff or a medical professional.
-
-We may block access, restrict use or take any other reasonable measure against anyone breaching this section, without prior notice.
+Do not copy, distribute or republish the Site's content other than for personal, non-commercial use; do not reverse engineer, scrape content automatically, run bots, circumvent limits or security measures, attempt to reach the admin area, overload or disrupt the Site, use it unlawfully or abusively, or impersonate any person or body. We may block access for anyone breaching this section, without prior notice.
 
 ## 8. Intellectual property
 
-All copyright and intellectual property rights in the Site's content, design, code and information architecture belong to ${OPERATOR_EN} and/or its rights holders, including content partners.
+Copyright in the Site's content, design and code belongs to ${OPERATOR_EN} and/or its rights holders. You may view, save and print the content **for personal, non-commercial use only**. Any other use - including republication, commercial use, or use for training models - requires prior written permission.
 
-You may view the content, save a copy and print it **for personal, non-commercial use only**. Any other use - including republication, incorporation into another site or application, commercial use, or use for training models - requires prior written permission.
+## 9. Liability
 
-Third-party trademarks, names and logos appearing on the Site belong to their respective owners.
+The Site is provided **"AS IS"**, with no undertaking as to availability, accuracy or fault-free operation, and without warranty of any kind. To the maximum extent permitted by law, we shall not be liable for any damage - direct or indirect - arising from use of the Site, reliance on its content, questionnaire results, chat answers, or use of external sites it links to. **None of the above limits liability that cannot be limited by law.**
 
-## 9. Third-party content and services
+You undertake to indemnify us against any claim or expense incurred by us as a result of your breach of these terms.
 
-The Site includes links and references to external sites, organisations, communities and services. These are provided for your convenience only and do not constitute a recommendation, endorsement or warranty by us. We do not control their content, availability, quality or policies, and we are not responsible for them or for any damage arising from their use. Any dealing with an external party is at your own responsibility.
+## 10. Changes, termination, governing law and jurisdiction
 
-## 10. Availability and changes to the service
+We may change these terms, the Site or its availability, and may restrict or block access, at any time and without prior notice. The date of the latest update appears at the top of the page, and continued use thereafter constitutes acceptance. These terms are governed by the laws of the State of Israel, and the competent courts of the Tel Aviv-Jaffa District have exclusive jurisdiction. Any provision found unenforceable does not affect the validity of the rest.
 
-The Site is provided **"AS IS" and "AS AVAILABLE"**. We do not undertake that it will be continuously available, free of faults or errors, that the chat will be available, or that any content will be preserved. We may at any time, at our discretion and without prior notice, modify the Site, add or remove content and features, suspend its operation or discontinue it entirely.
+## 11. Contact
 
-## 11. Limitation of liability
-
-To the maximum extent permitted by law:
-
-* the content and services on the Site are provided **without warranty of any kind**, express or implied, including any warranty of fitness for a particular purpose, accuracy, completeness or currency of information;
-* we shall not be liable for any damage - direct, indirect, consequential, special or otherwise - arising from use of the Site, reliance on its content, questionnaire results, chat answers, unavailability of the Site, or use of external sites it links to;
-* our aggregate liability, should any arise despite the above, shall not exceed ILS 1.
-
-**None of the above limits liability that cannot be limited or excluded by law**, including in cases of wilful misconduct.
-
-## 12. Indemnity
-
-By using the Site you undertake to indemnify us against any claim, demand, damage, loss or expense (including reasonable legal fees) incurred by us as a result of your breach of these terms, your unlawful or unauthorised use of the Site, or your infringement of a third party's rights.
-
-## 13. Changes to these terms
-
-We may update these terms from time to time. The date of the most recent update appears at the top of the page. A material change takes effect upon publication on the Site, and continued use thereafter constitutes acceptance of the updated version. We recommend reviewing this page periodically.
-
-## 14. Termination
-
-We may restrict, suspend or block your access to the Site or any part of it, at any time and at our discretion, including in the event of a breach of these terms - without prior notice and without obligation to give reasons. You may stop using the Site at any time.
-
-## 15. Governing law and jurisdiction
-
-These terms, and anything arising from or connected to them, are governed exclusively by the laws of the State of Israel, without regard to its conflict-of-law rules. The competent courts of the Tel Aviv-Jaffa District have exclusive jurisdiction.
-
-If any provision of these terms is held invalid or unenforceable, the remaining provisions shall remain in force.
-
-## 16. Contact us
-
-For questions regarding these terms: [${CONTACT_EMAIL}](mailto:${CONTACT_EMAIL}).
-
-See also the Site's [Privacy Policy](/privacy-policy).
+[${CONTACT_EMAIL}](mailto:${CONTACT_EMAIL}) · See also the [Privacy Policy](/privacy-policy).
 `;
 
 export default function TermsOfUse() {
