@@ -6,25 +6,32 @@
 
 @layer base {
   :root {
-    /* ── Theme 2: Lavender (default) ───────────────────────────────────────────
-       Page: soft lavender #F5F0FA  ·  Cards: near-white #FDF8FF
-       Primary: muted purple #8050B8  ·  Accent: rose #C4708A
+    /* ── Lavender palette ──────────────────────────────────────────────────────
+       Page: soft lavender #F5F0FA  ·  Cards: near-white #FEFAFF
+       Primary: muted purple #8151B8  ·  Accent: rose #C46E89
        Text: deep plum #28183A
-       These must match PALETTES.lavender in ThemeContext.jsx — it's the
-       ThemeProvider's initial state, and these are the first-paint values
-       before that effect runs. Mismatched values cause a color flash on load.
+
+       This block is the single source of truth for every colour on the site.
+       Nothing overrides it at runtime. Tailwind resolves each utility to these
+       custom properties (see tailwind.config.js), and scripts/build-design-tokens.mjs
+       generates docs/design-tokens.json from here for import into Figma - so a
+       change here reaches the code, the docs and the design file alike.
+
+       The hex in each comment is what the HSL actually renders; the triples came
+       from rounding an earlier hex palette, so a few differ by ~1/255 from the
+       hex that was originally written down.
     ── */
     --background: 270 50% 96%;        /* #F5F0FA soft lavender canvas */
     --foreground: 268 41% 16%;        /* #28183A deep plum */
-    --card: 283 100% 99%;             /* #FDF8FF near-white lavender card */
-    --card-foreground: 268 25% 38%;   /* #5E4878 mid plum text */
+    --card: 283 100% 99%;             /* #FEFAFF near-white lavender card */
+    --card-foreground: 268 25% 38%;   /* #5F4979 mid plum text */
     --popover: 283 100% 99%;
     --popover-foreground: 268 25% 38%;
-    --primary: 268 42% 52%;           /* #8050B8 muted purple */
+    --primary: 268 42% 52%;           /* #8151B8 muted purple */
     --primary-foreground: 270 50% 96%;
-    --secondary: 341 42% 60%;         /* #C4708A rose accent */
+    --secondary: 341 42% 60%;         /* #C46E89 rose accent */
     --secondary-foreground: 270 50% 96%;
-    --muted: 263 33% 92%;             /* #EAE5F2 clearly lavender muted */
+    --muted: 263 33% 92%;             /* #E9E4F1 clearly lavender muted */
     --muted-foreground: 268 25% 38%;
     --accent: 265 43% 44%;            /* #6840A0 darker purple hover */
     --accent-foreground: 270 50% 96%;
@@ -32,7 +39,7 @@
     --destructive-foreground: 0 0% 98%;
 
     /* Semantic status. Lightness is tuned so each passes ~4.5:1 as text on
-       --card (#FDF8FF); they are used both as text and as filled surfaces. */
+       --card (#FEFAFF); they are used both as text and as filled surfaces. */
     --success: 152 45% 30%;
     --success-foreground: 270 50% 96%;
     --warning: 28 70% 38%;
@@ -48,7 +55,7 @@
     --category-3: 152 45% 30%;
     --category-4: 28 70% 38%;
     --category-5: 210 60% 38%;
-    --border: 270 34% 82%;            /* #D0C0E0 medium lavender border */
+    --border: 270 34% 82%;            /* #D1C1E1 medium lavender border */
     --input: 270 34% 82%;
     --ring: 268 42% 52%;
     --radius: 1rem;

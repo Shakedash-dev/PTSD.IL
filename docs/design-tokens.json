@@ -1,0 +1,282 @@
+{
+  "$description": "PTSD.IL design tokens. Generated from src/index.css by scripts/build-design-tokens.mjs - do not edit by hand.",
+  "color": {
+    "background": {
+      "$value": "#f5f0fa",
+      "$type": "color",
+      "$description": "hsl(270 50% 96%)"
+    },
+    "foreground": {
+      "$value": "#28183a",
+      "$type": "color",
+      "$description": "hsl(268 41% 16%)"
+    },
+    "card": {
+      "$value": "#fefaff",
+      "$type": "color",
+      "$description": "hsl(283 100% 99%)"
+    },
+    "card-foreground": {
+      "$value": "#5f4979",
+      "$type": "color",
+      "$description": "hsl(268 25% 38%)"
+    },
+    "popover": {
+      "$value": "#fefaff",
+      "$type": "color",
+      "$description": "hsl(283 100% 99%)"
+    },
+    "popover-foreground": {
+      "$value": "#5f4979",
+      "$type": "color",
+      "$description": "hsl(268 25% 38%)"
+    },
+    "primary": {
+      "$value": "#8151b8",
+      "$type": "color",
+      "$description": "hsl(268 42% 52%)"
+    },
+    "primary-foreground": {
+      "$value": "#f5f0fa",
+      "$type": "color",
+      "$description": "hsl(270 50% 96%)"
+    },
+    "secondary": {
+      "$value": "#c46e89",
+      "$type": "color",
+      "$description": "hsl(341 42% 60%)"
+    },
+    "secondary-foreground": {
+      "$value": "#f5f0fa",
+      "$type": "color",
+      "$description": "hsl(270 50% 96%)"
+    },
+    "muted": {
+      "$value": "#e9e4f1",
+      "$type": "color",
+      "$description": "hsl(263 33% 92%)"
+    },
+    "muted-foreground": {
+      "$value": "#5f4979",
+      "$type": "color",
+      "$description": "hsl(268 25% 38%)"
+    },
+    "accent": {
+      "$value": "#6840a0",
+      "$type": "color",
+      "$description": "hsl(265 43% 44%)"
+    },
+    "accent-foreground": {
+      "$value": "#f5f0fa",
+      "$type": "color",
+      "$description": "hsl(270 50% 96%)"
+    },
+    "destructive": {
+      "$value": "#be3737",
+      "$type": "color",
+      "$description": "hsl(0 55% 48%)"
+    },
+    "destructive-foreground": {
+      "$value": "#fafafa",
+      "$type": "color",
+      "$description": "hsl(0 0% 98%)"
+    },
+    "success": {
+      "$value": "#2a6f4f",
+      "$type": "color",
+      "$description": "hsl(152 45% 30%)"
+    },
+    "success-foreground": {
+      "$value": "#f5f0fa",
+      "$type": "color",
+      "$description": "hsl(270 50% 96%)"
+    },
+    "warning": {
+      "$value": "#a55c1d",
+      "$type": "color",
+      "$description": "hsl(28 70% 38%)"
+    },
+    "warning-foreground": {
+      "$value": "#f5f0fa",
+      "$type": "color",
+      "$description": "hsl(270 50% 96%)"
+    },
+    "info": {
+      "$value": "#27619b",
+      "$type": "color",
+      "$description": "hsl(210 60% 38%)"
+    },
+    "info-foreground": {
+      "$value": "#f5f0fa",
+      "$type": "color",
+      "$description": "hsl(270 50% 96%)"
+    },
+    "category-1": {
+      "$value": "#8151b8",
+      "$type": "color",
+      "$description": "hsl(268 42% 52%)"
+    },
+    "category-2": {
+      "$value": "#9b3b59",
+      "$type": "color",
+      "$description": "hsl(341 45% 42%)"
+    },
+    "category-3": {
+      "$value": "#2a6f4f",
+      "$type": "color",
+      "$description": "hsl(152 45% 30%)"
+    },
+    "category-4": {
+      "$value": "#a55c1d",
+      "$type": "color",
+      "$description": "hsl(28 70% 38%)"
+    },
+    "category-5": {
+      "$value": "#27619b",
+      "$type": "color",
+      "$description": "hsl(210 60% 38%)"
+    },
+    "border": {
+      "$value": "#d1c1e1",
+      "$type": "color",
+      "$description": "hsl(270 34% 82%)"
+    },
+    "input": {
+      "$value": "#d1c1e1",
+      "$type": "color",
+      "$description": "hsl(270 34% 82%)"
+    },
+    "ring": {
+      "$value": "#8151b8",
+      "$type": "color",
+      "$description": "hsl(268 42% 52%)"
+    },
+    "sanctuary": {
+      "$value": "#28183a",
+      "$type": "color",
+      "$description": "hsl(268 41% 16%)"
+    },
+    "sanctuary-foreground": {
+      "$value": "#f5f0fa",
+      "$type": "color",
+      "$description": "hsl(270 50% 96%)"
+    },
+    "sage": {
+      "$value": "#88aa88",
+      "$type": "color",
+      "$description": "hsl(120 17% 60%)"
+    },
+    "sage-deep": {
+      "$value": "#4a7858",
+      "$type": "color",
+      "$description": "hsl(138 24% 38%)"
+    },
+    "oatmeal": {
+      "$value": "#f6f3e9",
+      "$type": "color",
+      "$description": "hsl(43 44% 94%)"
+    },
+    "sidebar-background": {
+      "$value": "#f5f3f0",
+      "$type": "color",
+      "$description": "hsl(37 20% 95%)"
+    },
+    "sidebar-foreground": {
+      "$value": "#2d2e34",
+      "$type": "color",
+      "$description": "hsl(228 8% 19%)"
+    },
+    "sidebar-primary": {
+      "$value": "#397972",
+      "$type": "color",
+      "$description": "hsl(173 36% 35%)"
+    },
+    "sidebar-primary-foreground": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "hsl(0 0% 100%)"
+    },
+    "sidebar-accent": {
+      "$value": "#ebe7e0",
+      "$type": "color",
+      "$description": "hsl(37 20% 90%)"
+    },
+    "sidebar-accent-foreground": {
+      "$value": "#2d2e34",
+      "$type": "color",
+      "$description": "hsl(228 8% 19%)"
+    },
+    "sidebar-border": {
+      "$value": "#e7e2da",
+      "$type": "color",
+      "$description": "hsl(37 20% 88%)"
+    },
+    "sidebar-ring": {
+      "$value": "#397972",
+      "$type": "color",
+      "$description": "hsl(173 36% 35%)"
+    }
+  },
+  "radius": {
+    "base": {
+      "$value": "1rem",
+      "$type": "dimension"
+    },
+    "super": {
+      "$value": "2rem",
+      "$type": "dimension"
+    },
+    "super-sm": {
+      "$value": "1.25rem",
+      "$type": "dimension"
+    }
+  },
+  "font": {
+    "heading": {
+      "$value": "'Fredoka', ui-sans-serif, system-ui, sans-serif",
+      "$type": "fontFamily"
+    },
+    "body": {
+      "$value": "'Fredoka', ui-sans-serif, system-ui, sans-serif",
+      "$type": "fontFamily"
+    },
+    "display": {
+      "$value": "'Fredoka', ui-sans-serif, system-ui, sans-serif",
+      "$type": "fontFamily"
+    },
+    "mono": {
+      "$value": "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace",
+      "$type": "fontFamily"
+    }
+  },
+  "shadow": {
+    "teal": {
+      "$value": "rgba(30, 46, 34, 0.07)",
+      "$type": "shadow"
+    },
+    "teal-md": {
+      "$value": "rgba(30, 46, 34, 0.13)",
+      "$type": "shadow"
+    },
+    "atmospheric": {
+      "$value": "0 1px 4px rgba(26, 58, 50, 0.05)",
+      "$type": "shadow"
+    },
+    "atmospheric-md": {
+      "$value": "0 2px 8px rgba(26, 58, 50, 0.09)",
+      "$type": "shadow"
+    },
+    "atmospheric-lg": {
+      "$value": "0 4px 16px rgba(26, 58, 50, 0.13)",
+      "$type": "shadow"
+    },
+    "card": {
+      "$value": "0 2px 8px rgba(26, 58, 50, 0.07)",
+      "$type": "shadow"
+    },
+    "card-hover": {
+      "$value": "0 6px 20px rgba(26, 58, 50, 0.13)",
+      "$type": "shadow"
+    }
+  }
+}

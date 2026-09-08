@@ -11,8 +11,10 @@ module.exports = {
         super: '2rem',
         'super-sm': '1.25rem',
       },
-      // Colors reference CSS custom properties so ThemeContext.applyPalette() can swap the
-      // entire palette at runtime by updating :root variables - no class toggling needed.
+      // Every colour resolves to a CSS custom property declared in index.css,
+      // which is the single source of truth. Never put a literal hex here - a
+      // literal cannot follow a token change, which is how the palette drifted
+      // green-on-lavender before.
       colors: {
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
