@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useLang } from '@/lib/LanguageContext';
+import useDirection from '@/lib/useDirection';
 import { t } from '@/lib/i18n';
 import { ArrowLeft, ArrowRight, CheckCircle, AlertCircle, RefreshCw } from 'lucide-react';
 import PageHeader from '@/components/patterns/PageHeader';
@@ -52,7 +53,7 @@ function QuestionCard({ idx, question, answers, onAnswer }) {
 
 export default function Questionnaire() {
   const { lang } = useLang();
-  const isRTL = document.documentElement.getAttribute('dir') === 'rtl';
+  const { isRTL } = useDirection();
   const ArrowIcon = isRTL ? ArrowLeft : ArrowRight;
   const isHebrew = lang === 'he';
 

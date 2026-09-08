@@ -198,7 +198,7 @@ export default function ValidatableContent({ contentId, label, children, classNa
         variant="ghost"
         size="none"
         onClick={handleBadgeClick}
-        className={`absolute top-0 right-0 z-50 p-0.5 rounded-bl-md ${cfg.badge} transition-opacity
+        className={`absolute top-0 start-0 z-50 p-0.5 rounded-ee-md ${cfg.badge} transition-opacity
           ${cfg.alwaysVisible ? 'opacity-80 hover:opacity-100' : 'opacity-0 group-hover/v:opacity-100'}`}
         title={`${cfg.label} (${contentId})`}
         style={{ fontSize: 0 }}

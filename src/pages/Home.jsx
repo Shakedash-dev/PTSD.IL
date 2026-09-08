@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useLang } from '@/lib/LanguageContext';
+import useDirection from '@/lib/useDirection';
 import { t } from '@/lib/i18n';
 import { ArrowLeft, ArrowRight, ChevronDown, Brain, Heart, FileText, Users, Shield, Baby } from 'lucide-react';
 import SectionBlock from '@/components/patterns/SectionBlock';
@@ -50,7 +51,7 @@ const PATHS_META = [
 export default function Home() {
   const { lang } = useLang();
   const paths = PATHS_META.map(p => ({ ...p, image: IMAGES[p.imageKey] }));
-  const isRTL = document.documentElement.getAttribute('dir') === 'rtl';
+  const { isRTL } = useDirection();
   const ArrowIcon = isRTL ? ArrowLeft : ArrowRight;
 
   return (

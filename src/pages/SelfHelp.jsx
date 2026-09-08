@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useLang } from '@/lib/LanguageContext';
+import useDirection from '@/lib/useDirection';
 import { t } from '@/lib/i18n';
 import { useSelfHelpTools } from '@/api/hooks';
 import PageHeader from '@/components/patterns/PageHeader';
@@ -74,7 +75,7 @@ function ToolCard({ tool, contentId }) {
 
 export default function SelfHelp() {
   const { lang } = useLang();
-  const isRTL = document.documentElement.getAttribute('dir') === 'rtl';
+  const { isRTL } = useDirection();
   const ArrowIcon = isRTL ? ArrowLeft : ArrowRight;
   const { data: tools = [], isLoading, error } = useSelfHelpTools({ lang });
 

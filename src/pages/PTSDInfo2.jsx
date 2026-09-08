@@ -41,7 +41,7 @@ export default function PTSDInfo2() {
             <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground font-semibold mb-4">
               {t(lang, 'ptsd_info_questions_heading')}
             </p>
-            <ul className="flex flex-col gap-1 max-h-[70vh] overflow-y-auto pr-2">
+            <ul className="flex flex-col gap-1 max-h-[70vh] overflow-y-auto pe-2">
               {faqs.map((faq, i) => {
                 const isActive = i === activeIndex;
                 return (

@@ -25,7 +25,7 @@ const RAW_PALETTE = String.raw`\b(?:text|bg|border|from|to|via|ring|divide|outli
 
 // Physical direction utilities. In an RTL-first site these must be logical
 // (ms/me/ps/pe/start/end) so Hebrew and Arabic mirror automatically.
-const PHYSICAL = String.raw`\b(?:ml|mr|pl|pr)-(?:\d+(?:\.\d+)?|px|auto|full|\d+\/\d+|\[[^\]]+\])\b|\b(?:left|right)-(?:\d+(?:\.\d+)?|px|auto|full|\d+\/\d+|\[[^\]]+\])\b|\btext-(?:left|right)\b|\b(?:rounded|border)-(?:l|r)-`;
+const PHYSICAL = String.raw`\b(?:ml|mr|pl|pr)-(?:\d+\/\d+|\d+(?:\.\d+)?|px|auto|full|\[[^\]]+\])|\b(?:left|right)-(?:\d+\/\d+|\d+(?:\.\d+)?|px|auto|full|\[[^\]]+\])|\btext-(?:left|right)\b|\b(?:rounded|border)-(?:l|r)-`;
 
 function violations(files, pattern, { allow = [] } = {}) {
   const re = new RegExp(pattern, 'g');
@@ -84,14 +84,25 @@ describe('design system: legacy palette', () => {
 });
 
 describe('design system: RTL', () => {
-  // Genuinely physical, not directional. Centering geometry and an explicitly
-  // dir="ltr" floating control are not mirrored by language.
-  const PHYSICAL_ALLOW = [];
+  // Genuinely physical, not directional - keyed by file and class so the list
+  // survives lines moving. Each entry needs a reason:
+  //  - the chat FAB and its panel are pinned to the same screen corner in every
+  //    language (the FAB's wrapper sets dir="ltr" for exactly this reason), so
+  //    mirroring them would separate the panel from the button that opens it
+  //  - the validation toolbar is internal review tooling that deliberately sits
+  //    opposite the chat FAB, in every language
+  //  - left-1/2 paired with -translate-x-1/2 is centering geometry, not direction
+  const PHYSICAL_ALLOW = [
+    ['components/ChatbotFAB.jsx', 'left-6'],
+    ['components/chat/ChatPanel.jsx', 'left-6'],
+    ['components/ValidationOverlay.jsx', 'left-4'],
+    ['pages/Treatment.jsx', 'left-1/2'],
+  ];
 
   it('uses logical direction utilities, not physical ones', () => {
-    const found = violations([...pages(), ...nonUiComponents()], PHYSICAL, {
-      allow: PHYSICAL_ALLOW,
-    });
+    const exempt = (entry) =>
+      PHYSICAL_ALLOW.some(([file, cls]) => entry.startsWith(file) && entry.endsWith(cls));
+    const found = violations([...pages(), ...nonUiComponents()], PHYSICAL).filter((e) => !exempt(e));
     expect(found, `Use ms-/me-/ps-/pe-/start-/end-:\n${found.join('\n')}`).toEqual([]);
   });
 

@@ -1142,9 +1142,13 @@ export function t(lang, key) {
 }
 
 // Unknown language codes default to RTL - safe for a Hebrew-first app.
+/**
+ * @param {string} lang
+ * @returns {'rtl' | 'ltr'}
+ */
 export function getDir(lang) {
   const found = LANGUAGES.find(l => l.code === lang);
-  return found ? found.dir : 'rtl';
+  return found ? /** @type {'rtl' | 'ltr'} */ (found.dir) : 'rtl';
 }
 
 // Fallback chain: requested lang → Hebrew → bare field (for legacy/backend data without lang suffix).

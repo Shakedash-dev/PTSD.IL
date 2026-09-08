@@ -10,7 +10,6 @@ export default function LanguageSwitcher() {
   const [open, setOpen] = useState(false);
 
   const current = LANGUAGES.find(l => l.code === lang) || LANGUAGES[0];
-  const isRTL = document.documentElement.getAttribute('dir') === 'rtl';
 
   return (
     <div className="relative">
@@ -30,7 +29,7 @@ export default function LanguageSwitcher() {
           <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
           <div
             className={`absolute top-full mt-2 z-50 rounded-xl overflow-hidden border border-border bg-card min-w-[130px] ${
-              isRTL ? 'left-0' : 'right-0'
+              'end-0'
             }`}
           >
             {LANGUAGES.map(l => (
