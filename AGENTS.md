@@ -17,11 +17,49 @@ cd src
 npm install
 npm run dev        # vite dev server, localhost:5173
 npm run build      # production build to src/dist
-npm run lint       # eslint, scoped to components/pages
+npm run lint       # eslint, scoped to components/ and pages/
 npm run typecheck  # tsc against jsconfig.json (checkJs on .jsx)
+npm run test       # vitest
+npm run tokens     # regenerate docs/design-tokens.json from index.css
 ```
 
-There is no test runner configured. Don't claim "tests pass" - there are none. Verify by building and by exercising the change against the live API.
+**Vitest is configured** and `src/test/` holds the suite - run `npm run test`
+from `src/`. All four of lint, typecheck, test and build must pass before a
+commit.
+
+Two caveats. `Admin.jsx` has no automated coverage at all, so a change there
+needs manual verification against the live API. And note that Google sign-in
+does not work on `npm run dev` - localhost is not an authorised OAuth origin -
+so `/admin` can only be exercised on the deployed site.
+
+## Design system
+
+Styling follows a documented system - read `docs/design-system.md` before
+changing how anything looks. In short:
+
+- **Colour is defined once**, as HSL custom properties on `:root` in
+  `src/index.css`. `tailwind.config.js` only maps names onto them. Never write a
+  literal hex into the config or a component. To change a colour, edit
+  `index.css` and run `npm run tokens` to regenerate the Figma token export.
+- **Components sit in three tiers.** `components/ui/` holds the shadcn
+  primitives (styled from tokens, no business logic). `components/patterns/`
+  holds composed but content-agnostic pieces - `Disclosure`, `ChoiceChip`,
+  `PageHeader`, `SectionBlock`. `pages/` is data and composition only.
+- **Pages and patterns may not use raw Tailwind palette colours**
+  (`bg-red-500`, `text-zinc-600`) or raw `<button>`. Use a semantic token
+  (`primary`, `muted`, `destructive`, `success`, `warning`, `info`), the
+  categorical scale (`category-1`..`5`), and `Button` / `ChoiceChip`.
+- **Pair text with its background token** - `bg-primary text-primary-foreground`,
+  never `bg-primary text-white`.
+- **Use logical direction utilities** (`ms-`, `ps-`, `start-`, `end-`), never
+  physical ones, and get direction from `useDirection()` rather than reading the
+  `dir` attribute off the DOM.
+- **Need a new look?** Add a variant to the component's `cva` block and document
+  it. Do not inline appearance at the call site.
+
+`src/test/design-system.test.jsx` enforces all of this and will fail the build
+if it is broken. If a rule genuinely does not fit, change the rule and record
+why - do not weaken a check to get a commit through.
 
 ## Architecture: how content flows
 

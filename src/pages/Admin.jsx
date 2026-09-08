@@ -5,7 +5,6 @@ import RichTextEditor from '@/components/RichTextEditor';
 import { Button } from '@/components/ui/button';
 import ChoiceChip from '@/components/patterns/ChoiceChip';
 import { logout, hasAdminAccess, hasUserManagementAccess, getCurrentUserId } from '@/lib/auth';
-import { t } from '@/lib/i18n';
 import { ForbiddenError, UnauthorizedError } from '@/api/adminClient';
 import { ChatbotSyncError } from '@/api/reindex';
 import {

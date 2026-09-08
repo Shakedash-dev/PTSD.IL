@@ -3,7 +3,7 @@ import { useLang } from '@/lib/LanguageContext';
 import { t } from '@/lib/i18n';
 import { useSources } from '@/api/hooks';
 import PageHeader from '@/components/patterns/PageHeader';
-import { BookOpen, ExternalLink, Globe } from 'lucide-react';
+import { ExternalLink, Globe } from 'lucide-react';
 
 const CATEGORY_COLORS = {
   research: 'bg-category-1/10 text-category-1',

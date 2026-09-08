@@ -6,12 +6,16 @@ import pluginUnusedImports from "eslint-plugin-unused-imports";
 
 export default [
   {
+    // Paths are relative to this config's directory (src/), which is also where
+    // `npm run lint` runs. They previously carried an extra "src/" prefix, so
+    // they resolved to src/src/** and matched no files at all - eslint reported
+    // success while linting nothing.
     files: [
-      "src/components/**/*.{js,mjs,cjs,jsx}",
-      "src/pages/**/*.{js,mjs,cjs,jsx}",
-      "src/Layout.jsx",
+      "components/**/*.{js,mjs,cjs,jsx}",
+      "pages/**/*.{js,mjs,cjs,jsx}",
+      "App.jsx",
     ],
-    ignores: ["src/lib/**/*", "src/components/ui/**/*"],
+    ignores: ["lib/**/*", "components/ui/**/*"],
     ...pluginJs.configs.recommended,
     ...pluginReact.configs.flat.recommended,
     languageOptions: {
@@ -55,6 +59,26 @@ export default [
         { ignore: ["cmdk-input-wrapper", "toast-close"] },
       ],
       "react-hooks/rules-of-hooks": "error",
+      // Colour must come from the token layer, never from Tailwind's built-in
+      // palettes - a literal palette class cannot follow a token change. The
+      // same rule is checked over the whole tree by
+      // src/test/design-system.test.jsx; this one catches it in the editor.
+      // Both string and template-literal className forms are covered.
+      "no-restricted-syntax": [
+        "error",
+        {
+          selector:
+            "JSXAttribute[name.name='className'] Literal[value=/\\b(?:text|bg|border|from|to|via|ring|divide|outline)-(?:slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-(?:50|[1-9]00)\\b/]",
+          message:
+            "Raw Tailwind palette colour. Use a semantic token (primary, muted, destructive, success, warning, info) or the categorical scale (category-1..5). See docs/design-system.md.",
+        },
+        {
+          selector:
+            "JSXAttribute[name.name='className'] TemplateElement[value.raw=/\\b(?:text|bg|border|from|to|via|ring|divide|outline)-(?:slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-(?:50|[1-9]00)\\b/]",
+          message:
+            "Raw Tailwind palette colour. Use a semantic token (primary, muted, destructive, success, warning, info) or the categorical scale (category-1..5). See docs/design-system.md.",
+        },
+      ],
     },
   },
 ];

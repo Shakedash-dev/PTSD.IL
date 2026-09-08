@@ -5,7 +5,7 @@ import { useRightsFaqs } from '@/api/hooks';
 import PageHeader from '@/components/patterns/PageHeader';
 import Disclosure from '@/components/patterns/Disclosure';
 import ChoiceChip from '@/components/patterns/ChoiceChip';
-import { Shield, Heart, Users, Car, HelpCircle, ExternalLink, MessageCircle, Scale } from 'lucide-react';
+import { Shield, Heart, Users, Car, HelpCircle, ExternalLink, MessageCircle } from 'lucide-react';
 import { IMAGES } from '@/lib/images';
 import ValidatableContent from '@/components/ValidatableContent';
 import Markdown from '@/components/Markdown';

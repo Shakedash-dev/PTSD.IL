@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { Shield, Download, Upload, ChevronUp, ChevronDown, Eye, EyeOff } from 'lucide-react';
+import { Shield, Download, Upload, ChevronUp, ChevronDown, EyeOff } from 'lucide-react';
 import { useValidation } from '@/contexts/ValidationContext';
 import { Button } from '@/components/ui/button';
 
