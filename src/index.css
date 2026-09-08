@@ -218,15 +218,6 @@
   animation: page-enter 500ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* ── Super-ellipse radius ── */
-.rounded-super {
-  border-radius: 2rem;
-}
-
-.rounded-super-sm {
-  border-radius: 1.25rem;
-}
-
 /* ── Timeline line animation ── */
 @keyframes timeline-glow {
   from { stroke-dashoffset: 1000; }
