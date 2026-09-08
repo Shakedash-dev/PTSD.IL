@@ -11,7 +11,8 @@
     "typecheck": "tsc -p ./jsconfig.json",
     "preview": "vite preview",
     "test": "vitest run",
-    "tokens": "node ../scripts/build-design-tokens.mjs"
+    "tokens": "node ../scripts/build-design-tokens.mjs",
+    "figma": "npm run build && npm run tokens && node ../scripts/build-figma-specs.mjs"
   },
   "dependencies": {
     "@hello-pangea/dnd": "^17.0.0",

@@ -13,48 +13,74 @@ crosses machines is git.
 
 | File | What it is |
 |---|---|
-| `docs/design-tokens.json` | Every colour, radius, font stack and shadow, in W3C Design Tokens format. Import as Figma variables. |
+| `figma-plugin/` | A Figma plugin you import and run - builds the whole library. Start here. |
+| `docs/design-tokens.json` | Every colour, radius, font stack and shadow, in W3C Design Tokens format. |
+| `docs/figma/component-specs.json` | Exact resolved geometry and colour per component variant, from the compiled CSS. |
 | `docs/design-system.md` | The component contract: every component, its variants, and when to use which. |
 | `src/components/ui/` | The primitives. Each one's `cva` block is the authoritative variant list. |
 | `src/components/patterns/` | The composed patterns. |
 
-`design-tokens.json` is **generated** from `src/index.css`. Editing it by hand
-is pointless - the next `npm run tokens` overwrites it. A token change starts in
-`src/index.css`.
+`design-tokens.json`, `component-specs.json` and `figma-plugin/code.js` are all
+**generated**. Editing them by hand is pointless - the next `npm run figma`
+overwrites them. A token change starts in `src/index.css`.
 
 ---
 
-## Setup
-
-1. Clone the repo, or pull the latest `master`.
-2. Have Claude Code with the Figma MCP connected to **your own** Figma account.
-3. Create (or pick) the Figma file the library will live in.
-
 ## Building the library
 
-Ask your Claude Code, in the repo directory:
+There is a plugin in the repo that builds the whole thing. You run it yourself,
+in your own Figma - nothing in this repo touches your account.
 
-> Read `docs/design-tokens.json` and `docs/design-system.md`. Import the tokens
-> as Figma variables into <file>, then generate a component library matching the
-> components documented there.
+1. Clone the repo, or pull the latest `master`.
+2. In the Figma **desktop app**, open the file you want the system in.
+3. **Plugins → Development → Import plugin from manifest…**, pick
+   `figma-plugin/manifest.json`.
+4. **Plugins → Development → PTSD.IL Design System.**
 
-It should use the `/figma-generate-library` skill that ships with the Figma
-plugin. Two things to get right:
+It adds a **Design system** page (Button and ChoiceChip component sets, each with
+LTR and RTL variants, plus a board of all 43 colour tokens), a **Pages** page
+(eight desktop frames using the site's real Hebrew copy), and a **PTSD.IL
+Tokens** variable collection with component fills bound to it. Nothing else in
+the file is touched. Full detail in `figma-plugin/README.md`.
 
-**Variable collections should mirror the token groups** - `color`, `radius`,
-`font`, `shadow` - so a later re-import updates in place instead of creating
-duplicates. Within `color`, the names carry the grouping already
-(`category-1`, `success-foreground`, and so on).
+Enable **Fredoka** in the file first - it is the site's typeface. Without it the
+plugin falls back to Inter and tells you.
 
-**Every component needs LTR and RTL variants.** Figma does not auto-mirror.
-This is the one place the Figma library is deliberately larger than the code:
-in code, one component handles both directions through logical properties
-(`ms-`, `ps-`, `start-`), so **an RTL Figma variant maps to the same React
-component, not a second one**. It is a direction property on one component, not
-two components.
+**Why a plugin rather than a .fig file:** `.fig` is a proprietary binary format
+that cannot be generated outside Figma. The plugin API produces real variables
+and real component sets, which is better than anything an SVG or image import
+would give you - those arrive flattened and uneditable.
 
-Hebrew is the primary language, so build the RTL variant first and treat LTR as
-the mirror, not the other way round.
+**Why every component carries LTR and RTL variants.** Figma does not auto-mirror.
+This is the one place the Figma library is deliberately larger than the code: in
+code, one component handles both directions through logical properties (`ms-`,
+`ps-`, `start-`), so **an RTL Figma variant maps to the same React component, not
+a second one**. It is a direction property on one component, not two components.
+
+Hebrew is the primary language, so RTL is the reference and LTR the mirror.
+
+## Where the fidelity comes from
+
+The plugin does not guess at Tailwind classes. `scripts/build-figma-specs.mjs`
+resolves every component variant against the CSS Vite actually ships:
+
+- the app's own `cva` and `tailwind-merge` produce each variant's real final
+  class list;
+- those classes are looked up in the compiled stylesheet, so the declarations
+  are the ones the browser applies;
+- `rem` is converted at this project's **18px** root, not the 16px default -
+  a spec built on the wrong root would be 12.5% out on every measurement;
+- `hsl(var(--token))` resolves to hex through the token export.
+
+The result is `docs/figma/component-specs.json`: exact geometry and colour for
+every variant, with nothing left unresolved. The Figma library contains the 23
+Button combinations, 4 ChoiceChip and 4 Disclosure variants the site actually
+renders, rather than the full 936-way matrix, which no designer could use.
+
+**What cannot match, by nature:** hover, focus and disabled states, transitions,
+and responsive breakpoints - a static Figma frame has no such concept. Page
+frames are built at the desktop breakpoint. Font rasterisation also differs
+between Figma and a browser.
 
 ---
 
@@ -63,8 +89,9 @@ the mirror, not the other way round.
 **Changing a token value** - a colour, a radius, a font:
 
 1. Change it in Figma to try it out.
-2. To land it, the same change goes into `src/index.css`, then `npm run tokens`
-   from `src/` regenerates `design-tokens.json`.
+2. To land it, the same change goes into `src/index.css`, then `npm run figma`
+   from `src/` rebuilds the CSS and regenerates the tokens, the specs and the
+   plugin.
 3. Both sides now agree, and every component using that token follows
    automatically.
 
