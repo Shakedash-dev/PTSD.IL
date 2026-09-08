@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { X, Send, ExternalLink } from "lucide-react";
 import { useLang } from "@/lib/LanguageContext";
 import { t } from "@/lib/i18n";
+import { Button } from "@/components/ui/button";
 import { useChat } from "@/lib/ChatContext";
 import Markdown from "@/components/Markdown";
 import { sectionRoute } from "@/lib/citations";
@@ -50,7 +51,7 @@ export default function ChatPanel() {
     >
       <div className="flex items-center justify-between p-3 border-b border-border">
         <span className="font-heading font-semibold">{t(lang, "chat_title")}</span>
-        <button onClick={() => setOpen(false)} aria-label={t(lang, "chat_close")}><X className="w-5 h-5" /></button>
+        <Button variant="quiet" size="none" onClick={() => setOpen(false)} aria-label={t(lang, "chat_close")}><X className="w-5 h-5" /></Button>
       </div>
 
       {crisisLang && (
@@ -66,9 +67,9 @@ export default function ChatPanel() {
         {messages.length === 0 && (
           <div className="space-y-2">
             {starters.map((s, i) => (
-              <button key={i} onClick={() => send(s)} className="block w-full text-start text-sm p-2 rounded-lg border border-border hover:bg-muted">
+              <Button key={i} variant="outline" size="none" onClick={() => send(s)} className="block w-full text-start text-sm p-2 rounded-lg">
                 {s}
-              </button>
+              </Button>
             ))}
           </div>
         )}
@@ -138,9 +139,9 @@ export default function ChatPanel() {
           style={{ maxHeight: MAX_TEXTAREA_HEIGHT }}
           className="flex-1 text-sm px-3 py-2 rounded-lg border border-border bg-background resize-none overflow-y-auto"
         />
-        <button type="submit" disabled={sending} aria-label={t(lang, "chat_send")} className="p-2 text-primary disabled:opacity-50 shrink-0">
+        <Button type="submit" variant="quiet" size="none" disabled={sending} aria-label={t(lang, "chat_send")} className="p-2 text-primary shrink-0">
           <Send className="w-5 h-5" />
-        </button>
+        </Button>
       </form>
       <p className="text-[10px] opacity-50 px-3 pb-2 leading-tight">{t(lang, "chat_disclaimer")}</p>
     </div>

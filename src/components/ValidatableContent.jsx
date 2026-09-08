@@ -2,6 +2,7 @@ import React, { useState, useRef, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import { CheckCircle, XCircle, AlertCircle, HelpCircle, X } from 'lucide-react';
 import { useValidation } from '@/contexts/ValidationContext';
+import { Button } from '@/components/ui/button';
 
 const STATUS_CFG = {
   unvalidated: {
@@ -64,9 +65,9 @@ function ValidationDialog({ contentId, label, anchorRect, onClose }) {
             <p className="text-[10px] text-muted-foreground font-mono leading-tight mb-0.5 truncate">{contentId}</p>
             {label && <p className="font-semibold text-sm text-foreground leading-snug">{label}</p>}
           </div>
-          <button onClick={onClose} className="text-muted-foreground hover:text-foreground flex-shrink-0 mt-0.5">
+          <Button variant="quiet" size="none" onClick={onClose} className="flex-shrink-0 mt-0.5">
             <X className="w-4 h-4" />
-          </button>
+          </Button>
         </div>
 
         {/* Status badge */}
@@ -93,18 +94,22 @@ function ValidationDialog({ contentId, label, anchorRect, onClose }) {
               autoFocus
             />
             <div className="flex gap-2 mt-1.5">
-              <button
-                className="flex-1 px-3 py-2 bg-warning text-warning-foreground rounded-lg text-sm font-medium hover:bg-warning/90 transition-colors"
+              <Button
+                variant="warning"
+                size="none"
+                className="flex-1 px-3 py-2 rounded-lg text-sm"
                 onClick={() => { updateValidation(contentId, 'needs_fix', suggestion); onClose(); }}
               >
                 שמור הצעה
-              </button>
-              <button
-                className="px-3 py-2 bg-muted text-muted-foreground rounded-lg text-sm hover:bg-border transition-colors"
+              </Button>
+              <Button
+                variant="subtle"
+                size="none"
+                className="px-3 py-2 rounded-lg text-sm text-muted-foreground hover:bg-border"
                 onClick={() => setMode(null)}
               >
                 ביטול
-              </button>
+              </Button>
             </div>
           </div>
         )}
@@ -112,31 +117,39 @@ function ValidationDialog({ contentId, label, anchorRect, onClose }) {
         {/* Action buttons */}
         {mode !== 'suggest_fix' && (
           <div className="flex flex-col gap-1.5">
-            <button
-              className="w-full px-3 py-2 bg-success text-success-foreground rounded-lg text-sm font-medium hover:bg-success/90 transition-colors text-right"
+            <Button
+              variant="success"
+              size="none"
+              className="w-full px-3 py-2 rounded-lg text-sm justify-end"
               onClick={() => { updateValidation(contentId, 'validated'); onClose(); }}
             >
               ✓ אמת תוכן
-            </button>
-            <button
-              className="w-full px-3 py-2 bg-warning text-warning-foreground rounded-lg text-sm font-medium hover:bg-warning/90 transition-colors text-right"
+            </Button>
+            <Button
+              variant="warning"
+              size="none"
+              className="w-full px-3 py-2 rounded-lg text-sm justify-end"
               onClick={() => setMode('suggest_fix')}
             >
               ✎ הצע תיקון
-            </button>
-            <button
-              className="w-full px-3 py-2 bg-destructive text-destructive-foreground rounded-lg text-sm font-medium hover:bg-destructive/90 transition-colors text-right"
+            </Button>
+            <Button
+              variant="destructive"
+              size="none"
+              className="w-full px-3 py-2 rounded-lg text-sm justify-end"
               onClick={() => { updateValidation(contentId, 'invalid'); onClose(); }}
             >
               ✗ סמן כלא תקין
-            </button>
+            </Button>
             {status !== 'unvalidated' && (
-              <button
-                className="w-full px-3 py-2 bg-muted text-muted-foreground rounded-lg text-sm hover:bg-border transition-colors text-right"
+              <Button
+                variant="subtle"
+                size="none"
+                className="w-full px-3 py-2 rounded-lg text-sm text-muted-foreground hover:bg-border justify-end"
                 onClick={() => { resetValidation(contentId); onClose(); }}
               >
                 ↺ אפס סטטוס
-              </button>
+              </Button>
             )}
           </div>
         )}
@@ -180,8 +193,10 @@ export default function ValidatableContent({ contentId, label, children, classNa
       {children}
 
       {/* Badge - always visible for unvalidated/invalid/needs_fix, hover-only for validated */}
-      <button
+      <Button
         ref={badgeRef}
+        variant="ghost"
+        size="none"
         onClick={handleBadgeClick}
         className={`absolute top-0 right-0 z-50 p-0.5 rounded-bl-md ${cfg.badge} transition-opacity
           ${cfg.alwaysVisible ? 'opacity-80 hover:opacity-100' : 'opacity-0 group-hover/v:opacity-100'}`}
@@ -189,7 +204,7 @@ export default function ValidatableContent({ contentId, label, children, classNa
         style={{ fontSize: 0 }}
       >
         <Icon className="w-3.5 h-3.5" />
-      </button>
+      </Button>
 
       {open && (
         <ValidationDialog

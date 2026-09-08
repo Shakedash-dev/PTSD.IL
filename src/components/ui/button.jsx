@@ -34,6 +34,12 @@ const buttonVariants = cva(
         // Solid primary that also lifts. For the single main action on a screen.
         elevated:
           "bg-primary text-primary-foreground font-medium shadow-atmospheric-md hover:bg-primary/90 hover:shadow-atmospheric-lg transition-all duration-300 disabled:bg-muted disabled:text-muted-foreground disabled:opacity-100 disabled:shadow-none disabled:cursor-not-allowed",
+        // Status actions. The tokens existed but had no variant, so call sites
+        // were hand-writing bg-success/bg-warning with their own hover states.
+        success:
+          "bg-success text-success-foreground font-medium hover:bg-success/90 transition-colors duration-300",
+        warning:
+          "bg-warning text-warning-foreground font-medium hover:bg-warning/90 transition-colors duration-300",
         // Secondary action sitting next to a solid one.
         subtle:
           "bg-muted text-foreground font-medium hover:bg-muted/80 transition-colors duration-300",
@@ -53,6 +59,7 @@ const buttonVariants = cva(
         // Height-free sizes: the content sets the height. Use for multi-line
         // controls, where a fixed h-* would clip.
         none: "",
+        xs: "px-3 py-1.5 text-xs",
         roomy: "px-7 py-3 text-sm",
         "roomy-lg": "px-8 py-3.5 text-lg",
         "roomy-xl": "px-8 py-4 text-lg",

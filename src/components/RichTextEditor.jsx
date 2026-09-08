@@ -1,6 +1,7 @@
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+import { Button } from '@/components/ui/button';
 import './RichTextEditor.css';
 
 // WYSIWYG editor for admin content fields that are stored/rendered as HTML
@@ -93,9 +94,17 @@ export default function RichTextEditor({ value, onChange, placeholder }) {
             }}
           />
           <div className="rte-link-panel-actions">
-            <button type="button" onClick={applyLink}>{linkPanel.url ? 'עדכון' : 'הוספה'}</button>
-            {linkPanel.url && <button type="button" onClick={removeLink}>הסרה</button>}
-            <button type="button" onClick={() => setLinkPanel(null)}>ביטול</button>
+            <Button type="button" variant="solid" size="xs" className="font-semibold" onClick={applyLink}>
+              {linkPanel.url ? 'עדכון' : 'הוספה'}
+            </Button>
+            {linkPanel.url && (
+              <Button type="button" variant="subtle" size="xs" className="font-semibold" onClick={removeLink}>
+                הסרה
+              </Button>
+            )}
+            <Button type="button" variant="subtle" size="xs" className="font-semibold" onClick={() => setLinkPanel(null)}>
+              ביטול
+            </Button>
           </div>
         </div>
       )}

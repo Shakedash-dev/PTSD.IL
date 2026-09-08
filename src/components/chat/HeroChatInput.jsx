@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { Send } from "lucide-react";
 import { useLang } from "@/lib/LanguageContext";
 import { t } from "@/lib/i18n";
+import { Button } from "@/components/ui/button";
 import { useChat } from "@/lib/ChatContext";
 
 // Caps the textarea's growth at roughly 4-5 lines before it starts scrolling.
@@ -41,7 +42,7 @@ export default function HeroChatInput() {
         style={{ maxHeight: MAX_TEXTAREA_HEIGHT }}
         className="flex-1 bg-transparent text-lg text-foreground placeholder:text-muted-foreground outline-none resize-none overflow-y-auto py-1"
       />
-      <button type="submit" aria-label={t(lang, "chat_send")} className="text-primary shrink-0"><Send className="w-6 h-6" /></button>
+      <Button type="submit" variant="quiet" size="none" aria-label={t(lang, "chat_send")} className="text-primary shrink-0"><Send className="w-6 h-6" /></Button>
     </form>
   );
 }
