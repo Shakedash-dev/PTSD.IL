@@ -670,7 +670,7 @@ function TreatmentPanel() {
   function renderView(step) {
     return (
       <div className="flex items-start gap-3 pe-16">
-        <span className="w-7 h-7 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-sm font-bold flex-shrink-0">
+        <span className="w-7 h-7 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-sm font-semibold flex-shrink-0">
           {step.step_number}
         </span>
         <div className="flex-1 min-w-0">
@@ -1795,7 +1795,7 @@ export default function Admin() {
               <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
                 <Settings className="w-5 h-5 text-primary" />
               </div>
-              <h1 className="text-2xl font-heading font-bold text-foreground">ממשק ניהול</h1>
+              <h1 className="text-2xl font-heading font-semibold text-foreground">ממשק ניהול</h1>
             </div>
             <button
               type="button"

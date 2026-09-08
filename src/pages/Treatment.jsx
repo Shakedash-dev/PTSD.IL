@@ -156,7 +156,7 @@ function StepView({ step, index, total, lang, stepImages }) {
                   {Icon && <Icon className="w-5 h-5" />}
                 </div>
                 <div>
-                  <span className="text-xs font-bold uppercase tracking-[0.18em] text-primary block leading-tight">
+                  <span className="text-xs font-semibold uppercase tracking-[0.18em] text-primary block leading-tight">
                     {t(lang, 'step_label')} {step.step_number} / {total}
                   </span>
                   <h2 className="font-heading font-semibold text-xl sm:text-2xl text-foreground leading-tight">
@@ -177,7 +177,7 @@ function StepView({ step, index, total, lang, stepImages }) {
                 </div>
               ) : (
                 <div className="bg-muted/60 rounded-2xl p-4 mb-5">
-                  <p className="text-xs font-bold text-primary uppercase tracking-[0.15em] mb-2">
+                  <p className="text-xs font-semibold text-primary uppercase tracking-[0.15em] mb-2">
                     {t(lang, 'how_to_start')}
                   </p>
                   <Markdown className="text-sm text-foreground leading-relaxed rich-content">
@@ -240,7 +240,7 @@ function TrailMarkers({ stepCount }) {
             className="absolute -translate-x-1/2 -translate-y-1/2 w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-card border-[3px] border-primary flex items-center justify-center shadow-card"
             style={{ left: `${leftPct}%`, top: `${topPct}%` }}
           >
-            <span className="font-heading font-bold text-primary text-2xl sm:text-3xl">
+            <span className="font-heading font-semibold text-primary text-2xl sm:text-3xl">
               {i + 1}
             </span>
           </div>
@@ -266,7 +266,7 @@ export default function Treatment() {
       <section className="min-h-[calc(100vh-4rem)] w-full bg-sanctuary text-sanctuary-foreground flex flex-col items-center justify-center px-5 py-24 relative">
         <ValidatableContent contentId="treatment.hero" label="כותרת דף טיפולים">
         <div className="max-w-3xl mx-auto text-center">
-          <span className="font-heading font-bold text-sm tracking-[0.2em] opacity-70 mb-6 block">
+          <span className="font-heading font-semibold text-sm tracking-[0.2em] opacity-70 mb-6 block">
             {t(lang, 'treatment')}
           </span>
           <h1 className="font-heading font-light text-5xl sm:text-7xl lg:text-8xl leading-[1.0] tracking-tight mb-8">

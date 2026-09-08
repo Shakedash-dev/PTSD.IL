@@ -76,14 +76,14 @@ export default function Children() {
           {/* Guidelines */}
           <ValidatableContent contentId={`children.guidelines.${activeAge}`} label={`הנחיות גיל ${activeAge}`}>
           <div className="bg-card rounded-super border border-border p-6 shadow-card">
-            <h3 className="font-heading font-bold text-foreground mb-4">{t(lang, 'children_guidelines')}</h3>
+            <h3 className="font-heading font-semibold text-foreground mb-4">{t(lang, 'children_guidelines')}</h3>
             <Markdown className="rich-content text-foreground/80">{guidelines}</Markdown>
           </div>
           </ValidatableContent>
 
           {/* Resources */}
           <div className="bg-card rounded-super border border-border p-6 shadow-card">
-            <h3 className="font-heading font-bold text-foreground mb-4">
+            <h3 className="font-heading font-semibold text-foreground mb-4">
               {t(lang, 'resources_library')}
             </h3>
             {resources.length > 0 ? (

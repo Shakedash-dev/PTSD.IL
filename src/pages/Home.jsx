@@ -69,7 +69,7 @@ export default function Home() {
         <div className="absolute inset-0 bg-gradient-to-b from-sanctuary/30 via-sanctuary/45 to-sanctuary/85" aria-hidden="true" />
 
         <div className="relative flex-1 max-w-5xl w-full mx-auto px-5 sm:px-6 pt-24 pb-32 flex flex-col items-center justify-center text-center">
-          <span className="font-heading font-bold text-sm tracking-[0.2em] opacity-70 mb-6">
+          <span className="font-heading font-semibold text-sm tracking-[0.2em] opacity-70 mb-6">
             PTSD<span className="opacity-100 text-primary">.IL</span>
           </span>
           <ValidatableContent contentId="home.hero.tagline" label="כותרת ראשית - הום">
@@ -77,7 +77,7 @@ export default function Home() {
               <span className="block font-heading font-light text-2xl sm:text-3xl lg:text-4xl tracking-tight opacity-80 mb-3">
                 {t(lang, 'hero_eyebrow')}
               </span>
-              <span className="block font-heading font-bold text-6xl sm:text-8xl lg:text-9xl leading-[0.95] tracking-tight">
+              <span className="block font-heading font-semibold text-6xl sm:text-8xl lg:text-9xl leading-[0.95] tracking-tight">
                 {t(lang, 'hero_headline')}
               </span>
             </h1>

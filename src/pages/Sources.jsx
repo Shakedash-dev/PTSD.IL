@@ -54,7 +54,7 @@ export default function Sources() {
                 {source.year && <span className="text-xs text-muted-foreground">{source.year}</span>}
               </div>
 
-              <h3 className="font-heading font-bold text-foreground text-sm leading-snug mb-2 flex-1">
+              <h3 className="font-heading font-semibold text-foreground text-sm leading-snug mb-2 flex-1">
                 {source.title}
               </h3>
 

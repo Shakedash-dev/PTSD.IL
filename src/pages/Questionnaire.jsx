@@ -19,7 +19,7 @@ function QuestionCard({ idx, question, answers, onAnswer }) {
       isAnswered ? 'border-primary/30' : 'border-border'
     }`}>
       <div className="flex gap-3 mb-5">
-        <span className="text-2xl font-heading font-bold text-clay/40 flex-shrink-0 leading-tight mt-0.5">
+        <span className="text-2xl font-heading font-semibold text-clay/40 flex-shrink-0 leading-tight mt-0.5">
           {String(idx + 1).padStart(2, '0')}
         </span>
         <p className="text-foreground leading-relaxed font-medium">{question.text}</p>
@@ -37,7 +37,7 @@ function QuestionCard({ idx, question, answers, onAnswer }) {
               }
             `}
           >
-            <span className="text-base font-bold">{opt.score}</span>
+            <span className="text-base font-semibold">{opt.score}</span>
             <span className="text-[10px] leading-tight text-current opacity-70 hidden sm:block">
               {opt.answer}
             </span>
@@ -152,7 +152,7 @@ export default function Questionnaire() {
               onClick={calculate}
               disabled={answered < TOTAL}
               className={`
-                px-8 py-4 rounded-super font-bold text-lg transition-natural
+                px-8 py-4 rounded-super font-semibold text-lg transition-natural
                 ${answered >= TOTAL
                   ? 'bg-primary text-white hover:bg-primary/90 shadow-atmospheric-md hover:shadow-atmospheric-lg'
                   : 'bg-muted text-muted-foreground cursor-not-allowed'
@@ -180,7 +180,7 @@ export default function Questionnaire() {
               {isHigh ? <AlertCircle className="w-10 h-10" /> : <CheckCircle className="w-10 h-10" />}
             </div>
 
-            <h2 className="text-2xl font-heading font-bold text-foreground mb-4">
+            <h2 className="text-2xl font-heading font-semibold text-foreground mb-4">
               {t(lang, isHigh ? 'result_high_title' : 'result_low_title')}
             </h2>
             <p className="text-muted-foreground leading-relaxed mb-8">
@@ -240,7 +240,7 @@ function HebrewSectioned({ questions, answers, onAnswer }) {
       <div key={sIdx}>
         <div className="flex items-center gap-3 mb-5 pb-3 border-b border-border">
           <span className="text-2xl">{section.icon}</span>
-          <h2 className="font-heading font-bold text-foreground text-lg">{section.title}</h2>
+          <h2 className="font-heading font-semibold text-foreground text-lg">{section.title}</h2>
         </div>
         <div className="space-y-4">
           {slice.map((qn, i) => (

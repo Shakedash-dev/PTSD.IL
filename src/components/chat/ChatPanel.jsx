@@ -49,14 +49,14 @@ export default function ChatPanel() {
       className="fixed inset-0 sm:inset-auto sm:bottom-24 sm:left-6 z-50 w-full h-full sm:w-[460px] sm:max-w-[90vw] sm:h-[min(80vh,640px)] bg-background sm:border sm:border-border sm:rounded-2xl shadow-xl flex flex-col overflow-hidden"
     >
       <div className="flex items-center justify-between p-3 border-b border-border">
-        <span className="font-heading font-bold">{t(lang, "chat_title")}</span>
+        <span className="font-heading font-semibold">{t(lang, "chat_title")}</span>
         <button onClick={() => setOpen(false)} aria-label={t(lang, "chat_close")}><X className="w-5 h-5" /></button>
       </div>
 
       {crisisLang && (
         <div role="alert" className="bg-destructive/10 text-sm p-3 border-b border-border">
           <span>{t(crisisLang, "eran_link")}</span>{" - "}
-          <a href={`tel:${t(crisisLang, "eran_phone")}`} className="font-bold underline">
+          <a href={`tel:${t(crisisLang, "eran_phone")}`} className="font-semibold underline">
             {t(crisisLang, "eran_phone")}
           </a>
         </div>

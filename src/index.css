@@ -112,6 +112,13 @@
     line-height: 1.3;
   }
 
+  /* Fredoka's 700 is too heavy for Hebrew body text - it smears at small sizes.
+     Tailwind preflight sets `b, strong { font-weight: bolder }`, which resolves
+     to 700; pin it to 600 so emphasis reads as emphasis, not as a blot. */
+  b, strong {
+    font-weight: 600;
+  }
+
   /* RTL by default */
   html[dir="rtl"] {
     direction: rtl;
@@ -290,7 +297,7 @@
 }
 
 .rich-content strong {
-  font-weight: 700;
+  font-weight: 600;
   color: inherit;
 }
 
@@ -310,7 +317,7 @@
 
 .rich-content h2 {
   font-size: 1.15em;
-  font-weight: 700;
+  font-weight: 600;
   margin: 0.7em 0 0.35em;
 }
 

@@ -70,7 +70,7 @@ export default function Navbar() {
       <nav className="max-w-5xl mx-auto px-5 sm:px-6 h-16 flex items-center justify-between gap-4">
         {/* Wordmark */}
         <Link to="/" className="flex items-center flex-shrink-0 group">
-          <span className="font-heading font-bold text-lg tracking-tight text-foreground group-hover:text-primary transition-colors duration-300">
+          <span className="font-heading font-semibold text-lg tracking-tight text-foreground group-hover:text-primary transition-colors duration-300">
             PTSD<span className="text-primary">.IL</span>
           </span>
         </Link>

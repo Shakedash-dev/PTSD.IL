@@ -144,7 +144,7 @@ function ValidationDialog({ contentId, label, anchorRect, onClose }) {
         {/* Stored suggestion display */}
         {status === 'needs_fix' && entry?.suggestion && mode !== 'suggest_fix' && (
           <div className="mt-3 p-2.5 bg-orange-50 rounded-lg text-xs text-orange-800 leading-relaxed" dir="rtl">
-            <span className="font-bold">הצעת תיקון: </span>{entry.suggestion}
+            <span className="font-semibold">הצעת תיקון: </span>{entry.suggestion}
           </div>
         )}
       </div>

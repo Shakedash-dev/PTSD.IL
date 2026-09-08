@@ -14,7 +14,7 @@ export default function ValidationOverlay() {
       {/* Stats panel */}
       {expanded && isValidationMode && (
         <div className="bg-white border border-zinc-200 rounded-xl shadow-xl p-4 w-52 text-sm">
-          <p className="font-bold text-zinc-800 mb-3 text-xs uppercase tracking-wider">סטטוס אימות</p>
+          <p className="font-semibold text-zinc-800 mb-3 text-xs uppercase tracking-wider">סטטוס אימות</p>
           <div className="space-y-2">
             <StatRow color="text-green-600" label="מאומת" value={stats.validated || 0} />
             <StatRow color="text-orange-500" label="דורש תיקון" value={stats.needs_fix || 0} />
@@ -76,7 +76,7 @@ export default function ValidationOverlay() {
           <Shield className="w-4 h-4" />
           {isValidationMode ? 'מצב אימות' : 'אימות'}
           {isValidationMode && issues > 0 && (
-            <span className="bg-white text-red-500 rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold leading-none">
+            <span className="bg-white text-red-500 rounded-full w-5 h-5 flex items-center justify-center text-xs font-semibold leading-none">
               {issues}
             </span>
           )}
@@ -103,7 +103,7 @@ function StatRow({ color, label, value }) {
   return (
     <div className="flex justify-between items-center">
       <span className={`${color} text-xs`}>{label}</span>
-      <span className="font-mono font-bold text-zinc-800 text-xs">{value}</span>
+      <span className="font-mono font-semibold text-zinc-800 text-xs">{value}</span>
     </div>
   );
 }

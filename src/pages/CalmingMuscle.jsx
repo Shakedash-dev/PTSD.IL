@@ -335,7 +335,7 @@ export default function CalmingMuscle() {
         ) : done ? (
           <>
             <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mb-6 mx-auto">
-              <span className="text-3xl font-heading font-bold text-primary">✓</span>
+              <span className="text-3xl font-heading font-semibold text-primary">✓</span>
             </div>
             <h2 className="font-heading font-semibold text-3xl text-foreground mb-3">{s.done_title}</h2>
             <p className="text-card-foreground leading-relaxed mb-10 max-w-xs">{s.done_text}</p>
@@ -397,7 +397,7 @@ export default function CalmingMuscle() {
 
             {/* Countdown */}
             <div
-              className="text-5xl font-heading font-bold tabular-nums transition-colors duration-700"
+              className="text-5xl font-heading font-semibold tabular-nums transition-colors duration-700"
               style={{ color: isSqueeze ? COLOR_SQUEEZE : COLOR_RELEASE }}
             >
               {secondsLeft}

@@ -98,7 +98,7 @@ export default function AdminLogin() {
           <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-3">
             <Lock className="w-5 h-5 text-primary" />
           </div>
-          <h1 className="font-heading font-bold text-2xl text-foreground">{t(lang, 'admin_login_title')}</h1>
+          <h1 className="font-heading font-semibold text-2xl text-foreground">{t(lang, 'admin_login_title')}</h1>
           <p className="text-muted-foreground text-sm mt-1">{t(lang, 'admin_login_subtitle')}</p>
         </div>
 

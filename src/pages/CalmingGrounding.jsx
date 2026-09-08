@@ -106,7 +106,7 @@ export default function CalmingGrounding() {
         </div>
 
         <div className="text-center" key={stepIdx}>
-          <div className="text-8xl font-heading font-bold text-primary mb-8 leading-none select-none">
+          <div className="text-8xl font-heading font-semibold text-primary mb-8 leading-none select-none">
             {current.num}
           </div>
           <h2 className="text-2xl sm:text-3xl font-heading font-semibold text-foreground mb-4 leading-snug px-2">

@@ -11,7 +11,7 @@ import React from 'react';
 const SIZE_CLASSES = {
   default: {
     wrapper: 'pt-24 pb-10',
-    title: 'font-bold text-3xl sm:text-4xl leading-snug',
+    title: 'font-semibold text-3xl sm:text-4xl leading-snug',
     subtitle: 'leading-relaxed max-w-2xl',
   },
   editorial: {

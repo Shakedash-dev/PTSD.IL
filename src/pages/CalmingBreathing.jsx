@@ -186,7 +186,7 @@ export default function CalmingBreathing() {
             <ol className="text-start space-y-4 mb-10">
               {s.setup_steps.map((step, i) => (
                 <li key={i} className="flex gap-3 items-start">
-                  <span className="w-6 h-6 rounded-full bg-primary/15 text-primary text-xs font-bold flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <span className="w-6 h-6 rounded-full bg-primary/15 text-primary text-xs font-semibold flex items-center justify-center flex-shrink-0 mt-0.5">
                     {i + 1}
                   </span>
                   <span className="text-card-foreground leading-relaxed">{step}</span>
@@ -244,7 +244,7 @@ export default function CalmingBreathing() {
               <div className="font-heading font-semibold text-xl text-foreground mb-1">
                 {s[phase.key]}
               </div>
-              <div className="font-heading font-bold text-6xl text-foreground tabular-nums leading-none">
+              <div className="font-heading font-semibold text-6xl text-foreground tabular-nums leading-none">
                 {secondsLeft}
               </div>
               <div className="text-xs text-muted-foreground mt-2 tracking-wide">

@@ -37,7 +37,7 @@ function FAQAccordion({ q, a, steps, links, lang }) {
           <Markdown className="text-foreground leading-relaxed rich-content">{a}</Markdown>
           {steps && (
             <div className="p-4 bg-primary/5 rounded-lg">
-              <p className="text-xs font-bold text-primary uppercase tracking-wide mb-2">{t(lang, 'step_by_step')}</p>
+              <p className="text-xs font-semibold text-primary uppercase tracking-wide mb-2">{t(lang, 'step_by_step')}</p>
               <Markdown className="text-sm text-foreground rich-content">{steps}</Markdown>
             </div>
           )}
