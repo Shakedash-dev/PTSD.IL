@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useLang } from '@/lib/LanguageContext';
+import { Button } from '@/components/ui/button';
 import { t } from '@/lib/i18n';
 
 // he/en are the clinician-authored source scripts.
@@ -77,12 +78,14 @@ export default function CalmingGrounding() {
           {t(lang, 'ground_complete')}
         </h2>
         <p className="text-card-foreground mb-10">5 · 4 · 3 · 2 · 1</p>
-        <button
+        <Button
+          variant="solid"
+          radius="xl"
+          size="roomy"
           onClick={() => { setStepIdx(0); setDone(false); }}
-          className="px-7 py-3 bg-primary text-primary-foreground rounded-xl font-medium hover:bg-accent transition-colors duration-300"
         >
           {ui.again}
-        </button>
+        </Button>
         <div className="mt-10">
           <a href="tel:1201" className="text-sm text-muted-foreground hover:text-foreground transition-colors duration-300">{ui.eran}</a>
         </div>
@@ -114,12 +117,15 @@ export default function CalmingGrounding() {
           </h2>
           <p className="text-card-foreground mb-12 leading-relaxed">{current.tip}</p>
 
-          <button
+          <Button
+            variant="solid"
+            radius="xl"
+            size="roomy-lg"
             onClick={advance}
-            className="px-8 py-3.5 bg-primary text-primary-foreground rounded-xl font-medium text-lg hover:bg-accent transition-colors duration-300 w-full max-w-xs"
+            className="w-full max-w-xs"
           >
             {stepIdx < steps.length - 1 ? ui.next : ui.complete}
-          </button>
+          </Button>
         </div>
 
         <div className="mt-12 text-center">

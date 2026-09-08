@@ -3,6 +3,8 @@ import { useLang } from '@/lib/LanguageContext';
 import { t } from '@/lib/i18n';
 import { useChildrenContent } from '@/api/hooks';
 import PageHeader from '@/components/patterns/PageHeader';
+import ChoiceChip from '@/components/patterns/ChoiceChip';
+import { Button } from '@/components/ui/button';
 import { Baby, BookOpen, Video, Download, Star, ChevronDown, ExternalLink } from 'lucide-react';
 import { IMAGES } from '@/lib/images';
 import ValidatableContent from '@/components/ValidatableContent';
@@ -57,17 +59,13 @@ export default function Children() {
         {/* Age tabs */}
         <div className="flex flex-wrap gap-2 mb-8 justify-center">
           {AGE_TABS.map(tab => (
-            <button
+            <ChoiceChip
               key={tab.key}
+              selected={activeAge === tab.key}
               onClick={() => handleAgeChange(tab.key)}
-              className={`px-4 py-2.5 rounded-full border text-sm font-medium transition-natural ${
-                activeAge === tab.key
-                  ? 'bg-primary text-primary-foreground border-primary'
-                  : 'border-border text-muted-foreground hover:bg-muted bg-card'
-              }`}
             >
               {t(lang, tab.labelKey)}
-            </button>
+            </ChoiceChip>
           ))}
         </div>
 
@@ -141,15 +139,16 @@ export default function Children() {
                             {inner}
                           </a>
                         ) : (
-                          <button
-                            type="button"
+                          <Button
+                            variant="ghost"
+                            size="none"
                             onClick={() => hasContent && setOpenResource(isOpen ? null : i)}
                             disabled={!hasContent}
                             className={cardClass}
                             aria-expanded={isOpen}
                           >
                             {inner}
-                          </button>
+                          </Button>
                         )}
                         {hasContent && isOpen && (
                           <div className="px-4 pb-4 pt-1 text-sm text-foreground/90">

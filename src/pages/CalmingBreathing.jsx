@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useLang } from '@/lib/LanguageContext';
+import { Button } from '@/components/ui/button';
 
 const PHASES = [
   { key: 'inhale', seconds: 4 },
@@ -193,12 +194,14 @@ export default function CalmingBreathing() {
                 </li>
               ))}
             </ol>
-            <button
+            <Button
+              variant="elevated"
+              radius="full"
+              size="cta"
               onClick={start}
-              className="px-10 py-4 bg-primary text-primary-foreground rounded-full font-medium text-lg hover:bg-primary/90 transition-colors duration-300 shadow-card hover:shadow-card-hover"
             >
               {s.start}
-            </button>
+            </Button>
           </div>
 
         ) : (
@@ -257,12 +260,14 @@ export default function CalmingBreathing() {
               {s.cycle_label} {cycle}
             </div>
 
-            <button
+            <Button
+              variant="quiet"
+              size="none"
               onClick={() => setStage('setup')}
-              className="mt-10 text-sm text-muted-foreground hover:text-foreground transition-colors duration-300"
+              className="mt-10 text-sm"
             >
               {s.stop}
-            </button>
+            </Button>
           </div>
         )}
 

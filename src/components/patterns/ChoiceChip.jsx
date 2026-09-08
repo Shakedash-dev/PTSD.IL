@@ -7,7 +7,7 @@ import { cn } from '@/lib/utils';
 // selected/unselected pair; this makes the selected state a prop rather than a
 // ternary repeated at each call site, and reports it as aria-pressed.
 const choiceChipVariants = cva(
-  'inline-flex items-center font-medium transition-natural border',
+  'inline-flex items-center font-medium transition-natural',
   {
     variants: {
       size: {
@@ -15,13 +15,22 @@ const choiceChipVariants = cva(
         default: 'gap-2 px-4 py-2.5 text-sm rounded-full',
         // The questionnaire scale: a stacked score + label, not a pill.
         stacked: 'flex-col gap-1 p-2 rounded-lg text-center',
+        // A full-width row in a vertical list of choices.
+        list: 'w-full text-start px-4 py-3 rounded-lg text-sm leading-snug',
       },
-      selected: {
-        true: 'bg-primary text-primary-foreground border-primary',
-        false: 'bg-card text-foreground border-border hover:bg-muted',
+      variant: {
+        outline: 'border',
+        plain: '',
       },
+      selected: { true: '', false: '' },
     },
-    defaultVariants: { size: 'default', selected: false },
+    compoundVariants: [
+      { variant: 'outline', selected: true, class: 'bg-primary text-primary-foreground border-primary' },
+      { variant: 'outline', selected: false, class: 'bg-card text-foreground border-border hover:bg-muted' },
+      { variant: 'plain', selected: true, class: 'bg-primary text-primary-foreground font-semibold' },
+      { variant: 'plain', selected: false, class: 'text-muted-foreground hover:bg-muted hover:text-foreground' },
+    ],
+    defaultVariants: { size: 'default', variant: 'outline', selected: false },
   }
 );
 
@@ -32,7 +41,8 @@ export { choiceChipVariants };
  *
  * @param {{
  *   selected?: boolean,
- *   size?: 'sm'|'default'|'stacked',
+ *   size?: 'sm'|'default'|'stacked'|'list',
+ *   variant?: 'outline'|'plain',
  *   className?: string,
  *   children?: React.ReactNode,
  * } & React.ComponentPropsWithoutRef<'button'>} props
@@ -40,6 +50,7 @@ export { choiceChipVariants };
 export default function ChoiceChip({
   selected = false,
   size = 'default',
+  variant = 'outline',
   className,
   children,
   ...props
@@ -48,7 +59,7 @@ export default function ChoiceChip({
     <button
       type="button"
       aria-pressed={selected}
-      className={cn(choiceChipVariants({ size, selected }), className)}
+      className={cn(choiceChipVariants({ size, variant, selected }), className)}
       {...props}
     >
       {children}

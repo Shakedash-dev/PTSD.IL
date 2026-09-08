@@ -4,6 +4,8 @@ import { useLang } from '@/lib/LanguageContext';
 import { t } from '@/lib/i18n';
 import { ArrowLeft, ArrowRight, CheckCircle, AlertCircle, RefreshCw } from 'lucide-react';
 import PageHeader from '@/components/patterns/PageHeader';
+import ChoiceChip from '@/components/patterns/ChoiceChip';
+import { Button } from '@/components/ui/button';
 import { IMAGES } from '@/lib/images';
 import { useQuestionnaire } from '@/api/hooks';
 import { HE_SECTIONS } from '@/data/questionnaireSections';
@@ -26,22 +28,18 @@ function QuestionCard({ idx, question, answers, onAnswer }) {
       </div>
       <div className="grid grid-cols-5 gap-2">
         {opts.map((opt, oi) => (
-          <button
+          <ChoiceChip
             key={oi}
+            size="stacked"
+            selected={answers[idx] === oi}
             onClick={() => onAnswer(idx, oi)}
-            className={`
-              flex flex-col items-center gap-1 p-2 rounded-lg border transition-natural text-center
-              ${answers[idx] === oi
-                ? 'bg-primary border-primary text-primary-foreground'
-                : 'bg-background border-border hover:border-primary/50 hover:bg-primary/5'
-              }
-            `}
+            className={answers[idx] === oi ? '' : 'bg-background hover:border-primary/50 hover:bg-primary/5'}
           >
             <span className="text-base font-semibold">{opt.score}</span>
             <span className="text-[10px] leading-tight text-current opacity-70 hidden sm:block">
               {opt.answer}
             </span>
-          </button>
+          </ChoiceChip>
         ))}
       </div>
       <div className="flex justify-between mt-1 px-1">
@@ -148,19 +146,16 @@ export default function Questionnaire() {
 
           {/* Calculate button */}
           <div className="mt-10 text-center">
-            <button
+            <Button
+              variant="elevated"
+              radius="super"
+              size="roomy-xl"
+              className="font-semibold"
               onClick={calculate}
               disabled={answered < TOTAL}
-              className={`
-                px-8 py-4 rounded-super font-semibold text-lg transition-natural
-                ${answered >= TOTAL
-                  ? 'bg-primary text-primary-foreground hover:bg-primary/90 shadow-atmospheric-md hover:shadow-atmospheric-lg'
-                  : 'bg-muted text-muted-foreground cursor-not-allowed'
-                }
-              `}
             >
               {t(lang, 'calculate')}
-            </button>
+            </Button>
             {answered < TOTAL && (
               <p className="text-sm text-muted-foreground mt-2">
                 {`${TOTAL - answered} ${t(lang, 'questions_remaining_suffix')}`}
@@ -208,13 +203,16 @@ export default function Questionnaire() {
                 {t(lang, isHigh ? 'go_to_self_help' : 'go_to_calming')}
                 <ArrowIcon className="w-4 h-4" />
               </Link>
-              <button
+              <Button
+                variant="subtle"
+                radius="super"
+                size="none"
                 onClick={reset}
-                className="px-6 py-3 bg-muted text-foreground rounded-super font-medium hover:bg-muted/80 transition-natural flex items-center justify-center gap-2"
+                className="px-6 py-3 gap-2"
               >
                 <RefreshCw className="w-4 h-4" />
                 {t(lang, 'start_over')}
-              </button>
+              </Button>
             </div>
 
             <p className="text-xs text-muted-foreground mt-6">

@@ -113,14 +113,17 @@ export default function Community() {
           {activeFilters.length > 0 && (
             <div className="flex items-center gap-2 ms-auto">
               {activeFilters.map((f, i) => (
-                <button
+                <Button
                   key={i}
+                  variant="subtle"
+                  radius="full"
+                  size="none"
                   onClick={f.clear}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-muted text-foreground text-xs font-medium hover:bg-muted/70 transition-colors duration-200"
+                  className="gap-1.5 px-3 py-1.5 text-xs"
                 >
                   <span>{f.label}</span>
                   <X className="w-3 h-3" />
-                </button>
+                </Button>
               ))}
             </div>
           )}

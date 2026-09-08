@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLang } from '@/lib/LanguageContext';
+import { Button } from '@/components/ui/button';
 
 // Full Jacobson PMR sequence: 6 muscle groups.
 // Each group: squeeze (tense) then release. Total ≈ 2 minutes.
@@ -324,12 +325,14 @@ export default function CalmingMuscle() {
           <>
             <h2 className="font-heading font-semibold text-3xl text-foreground mb-3">{s.title}</h2>
             <p className="text-card-foreground leading-relaxed mb-10 max-w-xs">{s.intro}</p>
-            <button
+            <Button
+              variant="elevated"
+              radius="full"
+              size="cta"
               onClick={() => setStarted(true)}
-              className="px-10 py-4 bg-primary text-primary-foreground rounded-full font-medium text-lg hover:bg-primary/90 transition-colors duration-300 shadow-card hover:shadow-card-hover"
             >
               {s.start}
-            </button>
+            </Button>
           </>
 
         ) : done ? (
@@ -339,12 +342,14 @@ export default function CalmingMuscle() {
             </div>
             <h2 className="font-heading font-semibold text-3xl text-foreground mb-3">{s.done_title}</h2>
             <p className="text-card-foreground leading-relaxed mb-10 max-w-xs">{s.done_text}</p>
-            <button
+            <Button
+              variant="elevated"
+              radius="full"
+              size="cta"
               onClick={restart}
-              className="px-10 py-4 bg-primary text-primary-foreground rounded-full font-medium text-lg hover:bg-primary/90 transition-colors duration-300 shadow-card"
             >
               {s.again}
-            </button>
+            </Button>
           </>
 
         ) : (

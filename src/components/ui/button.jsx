@@ -26,6 +26,20 @@ const buttonVariants = cva(
         // Soft sage pill — light pastel green on dark backgrounds. Hover deepens
         // to the brand primary green for a tactile, "comes alive" feel.
         "pill-green": "bg-muted text-foreground rounded-full font-semibold shadow-atmospheric-md hover:bg-primary hover:text-primary-foreground hover:shadow-atmospheric-lg active:scale-[0.98] transition-all duration-300",
+        // Solid primary action. Its disabled treatment is the site convention -
+        // muted rather than the base 50% opacity, so "you cannot press this yet"
+        // reads clearly (the questionnaire's calculate button depends on it).
+        solid:
+          "bg-primary text-primary-foreground font-medium hover:bg-primary/90 transition-colors duration-300 disabled:bg-muted disabled:text-muted-foreground disabled:opacity-100 disabled:cursor-not-allowed",
+        // Solid primary that also lifts. For the single main action on a screen.
+        elevated:
+          "bg-primary text-primary-foreground font-medium shadow-atmospheric-md hover:bg-primary/90 hover:shadow-atmospheric-lg transition-all duration-300 disabled:bg-muted disabled:text-muted-foreground disabled:opacity-100 disabled:shadow-none disabled:cursor-not-allowed",
+        // Secondary action sitting next to a solid one.
+        subtle:
+          "bg-muted text-foreground font-medium hover:bg-muted/80 transition-colors duration-300",
+        // Low-emphasis text control. Reads as text until hovered.
+        quiet:
+          "text-muted-foreground hover:text-foreground transition-colors duration-300",
       },
       size: {
         default: "h-9 px-4 py-2",
@@ -36,6 +50,21 @@ const buttonVariants = cva(
         pill: "h-11 px-7 rounded-full text-sm",
         "pill-lg": "h-14 px-9 rounded-full text-base",
         "pill-xl": "h-16 px-11 rounded-full text-lg",
+        // Height-free sizes: the content sets the height. Use for multi-line
+        // controls, where a fixed h-* would clip.
+        none: "",
+        roomy: "px-7 py-3 text-sm",
+        "roomy-lg": "px-8 py-3.5 text-lg",
+        "roomy-xl": "px-8 py-4 text-lg",
+        cta: "px-10 py-4 text-lg",
+      },
+      // Radius is its own axis so a variant does not have to be duplicated per
+      // corner treatment. The base class sets rounded-md; this overrides it.
+      radius: {
+        md: "rounded-md",
+        xl: "rounded-xl",
+        super: "rounded-super",
+        full: "rounded-full",
       },
     },
     defaultVariants: {
@@ -50,11 +79,11 @@ const Button = React.forwardRef(
    * @param {React.ButtonHTMLAttributes<HTMLButtonElement> & import("class-variance-authority").VariantProps<typeof buttonVariants> & { asChild?: boolean }} props
    * @param {React.Ref<HTMLButtonElement>} ref
    */
-  ({ className, variant, size, asChild = false, ...props }, ref) => {
+  ({ className, variant, size, radius, asChild = false, ...props }, ref) => {
   const Comp = asChild ? Slot : "button"
   return (
     (<Comp
-      className={cn(buttonVariants({ variant, size, className }))}
+      className={cn(buttonVariants({ variant, size, radius, className }))}
       ref={ref}
       {...props} />)
   );

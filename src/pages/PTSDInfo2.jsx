@@ -3,6 +3,7 @@ import { useLang } from '@/lib/LanguageContext';
 import { t } from '@/lib/i18n';
 import { usePTSDInfoFaqs } from '@/api/hooks';
 import PageHeader from '@/components/patterns/PageHeader';
+import ChoiceChip from '@/components/patterns/ChoiceChip';
 import { IMAGES } from '@/lib/images';
 import ValidatableContent from '@/components/ValidatableContent';
 import Markdown from '@/components/Markdown';
@@ -45,17 +46,15 @@ export default function PTSDInfo2() {
                 const isActive = i === activeIndex;
                 return (
                   <li key={i}>
-                    <button
+                    <ChoiceChip
+                      size="list"
+                      variant="plain"
+                      selected={isActive}
                       onClick={() => setActiveIndex(i)}
-                      className={`w-full text-start px-4 py-3 rounded-lg leading-snug text-sm transition-colors duration-200 ${
-                        isActive
-                          ? 'bg-primary text-primary-foreground font-semibold'
-                          : 'text-muted-foreground hover:bg-muted hover:text-foreground'
-                      }`}
                     >
                       <span className="font-mono text-xs opacity-60 me-2">{i + 1}.</span>
                       {faq.q}
-                    </button>
+                    </ChoiceChip>
                   </li>
                 );
               })}
