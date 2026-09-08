@@ -1,31 +1,24 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useLang } from '@/lib/LanguageContext';
 import { t } from '@/lib/i18n';
 import { useSecondCircleTools } from '@/api/hooks';
 import PageHeader from '@/components/patterns/PageHeader';
-import { ChevronDown } from 'lucide-react';
+import Disclosure from '@/components/patterns/Disclosure';
 import { IMAGES } from '@/lib/images';
 import ValidatableContent from '@/components/ValidatableContent';
 import Markdown from '@/components/Markdown';
 
 function FAQItem({ q, intro, sections, closing, callout, contentId }) {
-  const [open, setOpen] = useState(false);
   return (
     <ValidatableContent contentId={contentId} label={q}>
-    <div className={`border-2 rounded-2xl transition-natural overflow-hidden ${
-      open ? 'bg-card border-primary shadow-card-hover' : 'bg-card border-border hover:border-primary/40'
-    }`}>
-      <button
-        className={`w-full text-start px-6 py-5 flex items-center justify-between gap-4 transition-natural ${
-          open ? 'bg-primary/15' : 'hover:bg-muted/30'
-        }`}
-        onClick={() => setOpen(o => !o)}
-      >
-        <span className="font-heading font-semibold text-foreground leading-snug">{q}</span>
-        <ChevronDown className={`w-5 h-5 text-primary flex-shrink-0 transition-transform duration-300 ${open ? 'rotate-180' : ''}`} />
-      </button>
-      {open && (
-        <div className="px-6 pt-5 pb-6 text-foreground leading-relaxed border-t border-primary/30">
+    <Disclosure
+      label={q}
+      variant="outlined"
+      tintTriggerWhenOpen
+      triggerClassName="hover:bg-muted/30"
+      panelClassName="text-foreground leading-relaxed border-t border-primary/30"
+    >
+      <>
           {intro && (
             <Markdown className="rich-content text-foreground italic bg-primary/5 border-s-2 border-primary/30 ps-3 py-2 rounded">
               {intro}
@@ -47,9 +40,8 @@ function FAQItem({ q, intro, sections, closing, callout, contentId }) {
               {callout}
             </Markdown>
           )}
-        </div>
-      )}
-    </div>
+      </>
+    </Disclosure>
     </ValidatableContent>
   );
 }

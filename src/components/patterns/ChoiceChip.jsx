@@ -28,11 +28,14 @@ const choiceChipVariants = cva(
 export { choiceChipVariants };
 
 /**
- * @param {Object} props
- * @param {boolean} [props.selected]
- * @param {'sm'|'default'|'stacked'} [props.size]
- * @param {string} [props.className]
- * @param {React.ReactNode} [props.children]
+ * Accepts every native button attribute in addition to its own props.
+ *
+ * @param {{
+ *   selected?: boolean,
+ *   size?: 'sm'|'default'|'stacked',
+ *   className?: string,
+ *   children?: React.ReactNode,
+ * } & React.ComponentPropsWithoutRef<'button'>} props
  */
 export default function ChoiceChip({
   selected = false,

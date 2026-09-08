@@ -3,7 +3,9 @@ import { useLang } from '@/lib/LanguageContext';
 import { t } from '@/lib/i18n';
 import { useRightsFaqs } from '@/api/hooks';
 import PageHeader from '@/components/patterns/PageHeader';
-import { Shield, Heart, Users, Car, HelpCircle, ChevronDown, ExternalLink, MessageCircle, Scale } from 'lucide-react';
+import Disclosure from '@/components/patterns/Disclosure';
+import ChoiceChip from '@/components/patterns/ChoiceChip';
+import { Shield, Heart, Users, Car, HelpCircle, ExternalLink, MessageCircle, Scale } from 'lucide-react';
 import { IMAGES } from '@/lib/images';
 import ValidatableContent from '@/components/ValidatableContent';
 import Markdown from '@/components/Markdown';
@@ -18,22 +20,15 @@ const CATEGORIES = [
 
 
 function FAQAccordion({ q, a, steps, links, lang }) {
-  const [open, setOpen] = useState(false);
   return (
-    <div className={`border-2 rounded-2xl transition-natural overflow-hidden ${
-      open ? 'bg-card border-primary shadow-card-hover' : 'bg-card border-border hover:border-primary/40'
-    }`}>
-      <button
-        className={`w-full text-start px-5 py-4 flex items-center justify-between gap-3 transition-natural ${
-          open ? 'bg-primary/15' : ''
-        }`}
-        onClick={() => setOpen(o => !o)}
-      >
-        <span className="font-heading font-semibold text-foreground leading-snug">{q}</span>
-        <ChevronDown className={`w-5 h-5 text-primary flex-shrink-0 transition-transform duration-300 ${open ? 'rotate-180' : ''}`} />
-      </button>
-      {open && (
-        <div className="px-5 pt-4 pb-5 space-y-3 border-t border-primary/30">
+    <Disclosure
+      label={q}
+      variant="outlined"
+      size="compact"
+      tintTriggerWhenOpen
+      panelClassName="space-y-3 border-t border-primary/30"
+    >
+      <>
           <Markdown className="text-foreground leading-relaxed rich-content">{a}</Markdown>
           {steps && (
             <div className="p-4 bg-primary/5 rounded-lg">
@@ -57,9 +52,8 @@ function FAQAccordion({ q, a, steps, links, lang }) {
               ))}
             </div>
           )}
-        </div>
-      )}
-    </div>
+      </>
+    </Disclosure>
   );
 }
 
@@ -90,18 +84,14 @@ export default function Rights() {
           {CATEGORIES.map(cat => {
             const Icon = cat.icon;
             return (
-              <button
+              <ChoiceChip
                 key={cat.key}
+                selected={activeCategory === cat.key}
                 onClick={() => setActiveCategory(cat.key)}
-                className={`flex items-center gap-2 px-4 py-2.5 rounded-full border text-sm font-medium transition-natural ${
-                  activeCategory === cat.key
-                    ? 'bg-primary text-primary-foreground border-primary'
-                    : 'bg-card text-foreground border-border hover:bg-muted'
-                }`}
               >
                 <Icon className="w-4 h-4" />
                 {t(lang, cat.labelKey)}
-              </button>
+              </ChoiceChip>
             );
           })}
         </div>

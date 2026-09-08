@@ -1,43 +1,25 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useLang } from '@/lib/LanguageContext';
 import { t } from '@/lib/i18n';
 import { usePTSDInfoFaqs } from '@/api/hooks';
 import PageHeader from '@/components/patterns/PageHeader';
-import { ChevronDown } from 'lucide-react';
+import Disclosure from '@/components/patterns/Disclosure';
 import { IMAGES } from '@/lib/images';
 import ValidatableContent from '@/components/ValidatableContent';
 import Markdown from '@/components/Markdown';
 
 function FAQCard({ question, answer, contentId }) {
-  const [open, setOpen] = useState(false);
-
   return (
     <ValidatableContent contentId={contentId} label={question}>
-      <div
-        className={`border-2 rounded-2xl overflow-hidden transition-all duration-300 ${
-          open
-            ? 'bg-card border-primary shadow-card-hover'
-            : 'bg-card border-border hover:border-primary/40 hover:shadow-card'
-        }`}
+      <Disclosure
+        label={question}
+        variant="outlined"
+        tintTriggerWhenOpen
+        className="hover:shadow-card"
+        panelClassName="text-foreground leading-relaxed border-t border-primary/30"
       >
-        <button
-          className={`w-full text-start px-6 py-5 flex items-center justify-between gap-4 ${
-            open ? 'bg-primary/15' : ''
-          }`}
-          onClick={() => setOpen(o => !o)}
-          aria-expanded={open}
-        >
-          <span className="font-heading font-semibold text-foreground leading-snug">{question}</span>
-          <ChevronDown
-            className={`w-5 h-5 text-primary flex-shrink-0 transition-transform duration-300 ${open ? 'rotate-180' : ''}`}
-          />
-        </button>
-        {open && (
-          <Markdown className="px-6 pb-6 pt-5 text-foreground leading-relaxed rich-content border-t border-primary/30">
-            {answer}
-          </Markdown>
-        )}
-      </div>
+        <Markdown className="rich-content">{answer}</Markdown>
+      </Disclosure>
     </ValidatableContent>
   );
 }
