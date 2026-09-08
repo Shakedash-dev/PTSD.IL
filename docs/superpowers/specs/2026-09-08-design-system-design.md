@@ -17,10 +17,10 @@ Measured state before work begins:
 
 | Problem | Count |
 |---|---|
-| Raw `<button>` elements instead of `<Button>` | 66 (28 in `Admin.jsx`) |
-| Off-token Tailwind palette colors (`zinc-600`, `red-500`, `orange-50`, ...) | 83 |
+| Raw `<button>` elements instead of `<Button>` | 71 (28 in `Admin.jsx`) |
+| Off-token Tailwind palette colors (`zinc-600`, `red-500`, `orange-50`, ...) | 81 |
 | Legacy green/terracotta classes on a lavender site (`teal`, `clay`, `sage`, `oatmeal`) | 33 |
-| Directional classes that break RTL (`ml-`, `pl-`, `left-`) | ~80 |
+| Directional classes that break RTL (`pr-`, `left-`, `text-right`) | 12 |
 | Duplicated `const isRTL = document.documentElement.getAttribute('dir')` | 4 copies |
 | `components/ui/*` files installed | 60+, 2 imported |
 

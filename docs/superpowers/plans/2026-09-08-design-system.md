@@ -507,8 +507,9 @@ git commit -m "fix: correct misspelled ui component filenames"
 
 ## Task 6: Migrate off-token colors in public pages
 
-Drives the `off-token colors` assertion from ~83 violations to zero for
-`pages/`, excluding `Admin.jsx` which is Task 17.
+Drives the `off-token colors` assertion to zero for `pages/`, excluding
+`Admin.jsx` which is Task 17. Measured: 25 violations in `pages/`, 56 in
+`components/` (Task 7).
 
 **Files:**
 - Modify: every file under `src/pages/` except `Admin.jsx`
@@ -610,7 +611,8 @@ git commit -m "refactor: migrate components off raw Tailwind palette colors"
 
 ## Task 8: Migrate raw buttons in public pages to `<Button>`
 
-38 of the 66 raw `<button>` elements live outside `Admin.jsx`.
+47 of the 71 raw `<button>` elements live in `pages/` outside `Admin.jsx`;
+another 24 live in `components/`.
 
 **Files:**
 - Modify: `src/pages/{CalmingGrounding,Community,PTSDInfo2,CalmingBreathing,CalmingMuscle,Children,SelfHelp,PTSDInfo,SecondCircleTools,Rights,Treatment,Questionnaire}.jsx`
@@ -1439,8 +1441,10 @@ git commit -m "feat: add useDirection hook, replacing four non-reactive DOM read
 
 ## Task 16: Convert physical direction utilities to logical
 
-~80 occurrences. In an RTL-first site these are latent bugs: every `ml-4` is
-correct in English and wrong in Hebrew.
+12 occurrences. In an RTL-first site these are latent bugs: every `pr-2` is
+correct in English and wrong in Hebrew. The codebase already uses logical
+properties in most places, so this is a small task - the earlier "~80" estimate
+was a bad grep that matched `rounded-lg` with the pattern `rounded-l`.
 
 **Files:**
 - Modify: every file under `src/pages/` and `src/components/` outside
