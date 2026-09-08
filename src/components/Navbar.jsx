@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useLang } from '@/lib/LanguageContext';
 import { t } from '@/lib/i18n';
+import { Button } from '@/components/ui/button';
 import { useUserType } from '@/contexts/UserTypeContext';
 import LanguageSwitcher from './LanguageSwitcher';
 import { Menu, X } from 'lucide-react';
@@ -96,13 +97,15 @@ export default function Navbar() {
         <div className="flex items-center gap-3">
           <LanguageSwitcher />
           {navItems.length > 0 && (
-            <button
-              className="md:hidden p-2 rounded-lg text-foreground hover:bg-muted transition-colors duration-300"
+            <Button
+              variant="ghost"
+              size="none"
               onClick={() => setMenuOpen(o => !o)}
+              className="md:hidden p-2 rounded-lg text-foreground"
               aria-label={t(lang, 'nav_menu')}
             >
               {menuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-            </button>
+            </Button>
           )}
         </div>
       </nav>
