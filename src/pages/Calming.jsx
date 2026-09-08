@@ -2,8 +2,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useLang } from '@/lib/LanguageContext';
 import { t } from '@/lib/i18n';
-import SectionBlock from '@/components/SectionBlock';
-import ArchFrame from '@/components/ArchFrame';
+import SectionBlock from '@/components/patterns/SectionBlock';
+import ArchFrame from '@/components/patterns/ArchFrame';
 import { IMAGES } from '@/lib/images';
 
 // breathing = sky, grounding = earth, muscle = hands.

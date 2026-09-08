@@ -2,8 +2,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useLang } from '@/lib/LanguageContext';
 import { t } from '@/lib/i18n';
-import PageHeader from '@/components/PageHeader';
-import ArchFrame from '@/components/ArchFrame';
+import PageHeader from '@/components/patterns/PageHeader';
+import ArchFrame from '@/components/patterns/ArchFrame';
 import { IMAGES, SECOND_CIRCLE_ILLUSTRATIONS } from '@/lib/images';
 
 const sections = [

@@ -2,7 +2,7 @@ import React from 'react';
 import { useLang } from '@/lib/LanguageContext';
 import { t } from '@/lib/i18n';
 import { useSources } from '@/api/hooks';
-import PageHeader from '@/components/PageHeader';
+import PageHeader from '@/components/patterns/PageHeader';
 import { BookOpen, ExternalLink, Globe } from 'lucide-react';
 
 const CATEGORY_COLORS = {

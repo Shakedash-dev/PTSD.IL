@@ -1,7 +1,7 @@
 import React from 'react';
 import { useLang } from '@/lib/LanguageContext';
 import { t } from '@/lib/i18n';
-import PageHeader from '@/components/PageHeader';
+import PageHeader from '@/components/patterns/PageHeader';
 import Markdown from '@/components/Markdown';
 
 // Shared shell for the two legal pages (/privacy-policy, /terms-of-use).

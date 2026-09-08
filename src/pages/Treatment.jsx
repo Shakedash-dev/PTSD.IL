@@ -4,7 +4,7 @@ import { useLang } from '@/lib/LanguageContext';
 import { t } from '@/lib/i18n';
 import { useTreatmentSteps } from '@/api/hooks';
 import { Wrench, Building2, Brain, Leaf, Pill, ExternalLink, ChevronDown } from 'lucide-react';
-import ArchFrame from '@/components/ArchFrame';
+import ArchFrame from '@/components/patterns/ArchFrame';
 import { TREATMENT_STEP_IMAGES } from '@/lib/images';
 import ValidatableContent from '@/components/ValidatableContent';
 import Markdown from '@/components/Markdown';

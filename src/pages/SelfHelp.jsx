@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useLang } from '@/lib/LanguageContext';
 import { t } from '@/lib/i18n';
 import { useSelfHelpTools } from '@/api/hooks';
-import PageHeader from '@/components/PageHeader';
+import PageHeader from '@/components/patterns/PageHeader';
 import { Wind, Moon, PenLine, Smartphone, Zap, ChevronDown, ArrowLeft, ArrowRight, Compass, Wrench, Apple, PlayCircle } from 'lucide-react';
 import { IMAGES } from '@/lib/images';
 import ValidatableContent from '@/components/ValidatableContent';

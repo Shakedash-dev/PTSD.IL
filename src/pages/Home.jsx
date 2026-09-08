@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useLang } from '@/lib/LanguageContext';
 import { t } from '@/lib/i18n';
 import { ArrowLeft, ArrowRight, ChevronDown, Brain, Heart, FileText, Users, Shield, Baby } from 'lucide-react';
-import SectionBlock from '@/components/SectionBlock';
+import SectionBlock from '@/components/patterns/SectionBlock';
 import { Button } from '@/components/ui/button';
 import { IMAGES } from '@/lib/images';
 import ValidatableContent from '@/components/ValidatableContent';

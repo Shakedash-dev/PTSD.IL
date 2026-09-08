@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useLang } from '@/lib/LanguageContext';
 import { t } from '@/lib/i18n';
 import { useChildrenContent } from '@/api/hooks';
-import PageHeader from '@/components/PageHeader';
+import PageHeader from '@/components/patterns/PageHeader';
 import { Baby, BookOpen, Video, Download, Star, ChevronDown, ExternalLink } from 'lucide-react';
 import { IMAGES } from '@/lib/images';
 import ValidatableContent from '@/components/ValidatableContent';

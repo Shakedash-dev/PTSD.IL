@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useLang } from '@/lib/LanguageContext';
 import { t } from '@/lib/i18n';
 import { ArrowLeft, ArrowRight, CheckCircle, AlertCircle, RefreshCw } from 'lucide-react';
-import PageHeader from '@/components/PageHeader';
+import PageHeader from '@/components/patterns/PageHeader';
 import { IMAGES } from '@/lib/images';
 import { useQuestionnaire } from '@/api/hooks';
 import { HE_SECTIONS } from '@/data/questionnaireSections';

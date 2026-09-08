@@ -44,6 +44,10 @@ function violations(files, pattern, { allow = [] } = {}) {
 const pages = () => collect(path.join(SRC, 'pages'));
 const nonUiComponents = () =>
   collect(path.join(SRC, 'components')).filter((f) => !rel(f).startsWith('components/ui/'));
+// The tier contract: primitives (ui/) and patterns (patterns/) are where raw
+// elements and their styling live. Everything above them composes those.
+const composingCode = () =>
+  [...pages(), ...nonUiComponents()].filter((f) => !rel(f).startsWith('components/patterns/'));
 
 describe('design system: off-token colors', () => {
   it('pages use no raw Tailwind palette colors', () => {
@@ -58,14 +62,15 @@ describe('design system: off-token colors', () => {
 });
 
 describe('design system: primitives', () => {
-  it('pages render no bare <button> elements', () => {
-    const found = violations(pages(), String.raw`<button(?=[\s>]|$)`);
-    expect(found, `Use <Button> from @/components/ui/button:\n${found.join('\n')}`).toEqual([]);
-  });
-
-  it('components outside ui/ render no bare <button> elements', () => {
-    const found = violations(nonUiComponents(), String.raw`<button(?=[\s>]|$)`);
-    expect(found, `Use <Button> from @/components/ui/button:\n${found.join('\n')}`).toEqual([]);
+  // A bare <button> is fine inside ui/ and patterns/ - that is where elements
+  // and their styling are defined. Above those tiers it means a control was
+  // styled by hand instead of composed, which is what this rule prevents.
+  it('code above the primitive and pattern tiers renders no bare <button>', () => {
+    const found = violations(composingCode(), String.raw`<button(?=[\s>]|$)`);
+    expect(
+      found,
+      `Compose <Button> from @/components/ui/button, or a pattern from @/components/patterns:\n${found.join('\n')}`
+    ).toEqual([]);
   });
 });
 
