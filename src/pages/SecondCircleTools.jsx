@@ -43,7 +43,7 @@ function FAQItem({ q, intro, sections, closing, callout, contentId }) {
             </Markdown>
           )}
           {callout && (
-            <Markdown className="rich-content bg-amber-50 border border-amber-200 rounded-lg p-3 mt-4 text-foreground">
+            <Markdown className="rich-content bg-warning/10 border border-warning/30 rounded-lg p-3 mt-4 text-foreground">
               {callout}
             </Markdown>
           )}

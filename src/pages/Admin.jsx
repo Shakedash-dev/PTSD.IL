@@ -113,9 +113,9 @@ const ROLE_LABELS = {
   viewer: 'צופה',
 };
 const ROLE_BADGE_COLORS = {
-  masteradmin: 'bg-red-100 text-red-700',
-  admin: 'bg-blue-100 text-blue-700',
-  moderator: 'bg-purple-100 text-purple-700',
+  masteradmin: 'bg-destructive/10 text-destructive',
+  admin: 'bg-info/10 text-info',
+  moderator: 'bg-primary/10 text-primary',
   viewer: 'bg-muted text-muted-foreground',
 };
 
@@ -216,7 +216,7 @@ function IconBtn({ icon: Icon, onClick, title, tone }) {
       title={title}
       className={`p-1.5 rounded-lg bg-card border border-border transition-natural ${
         tone === 'danger'
-          ? 'text-muted-foreground hover:text-red-600 hover:border-red-200'
+          ? 'text-muted-foreground hover:text-destructive hover:border-destructive/30'
           : 'text-muted-foreground hover:text-primary hover:border-primary/30'
       }`}
     >
@@ -264,7 +264,7 @@ function LinksField({ value, onChange }) {
             placeholder="URL"
             className="flex-1 px-2 py-1.5 rounded-lg border border-border bg-background text-xs"
           />
-          <button type="button" onClick={() => removeLink(i)} className="text-muted-foreground hover:text-red-600">
+          <button type="button" onClick={() => removeLink(i)} className="text-muted-foreground hover:text-destructive">
             <X className="w-3.5 h-3.5" />
           </button>
         </div>
@@ -301,7 +301,7 @@ function SectionsField({ value, onChange }) {
               placeholder="כותרת הסעיף"
               className="flex-1 px-2 py-1.5 rounded-lg border border-border bg-background text-sm font-medium"
             />
-            <button type="button" onClick={() => removeSection(i)} className="text-muted-foreground hover:text-red-600">
+            <button type="button" onClick={() => removeSection(i)} className="text-muted-foreground hover:text-destructive">
               <X className="w-3.5 h-3.5" />
             </button>
           </div>
@@ -956,11 +956,11 @@ function SourcesPanel() {
   const [loading, setLoading] = useState(true);
   const [creating, setCreating] = useState(false);
   const categoryColors = {
-    research: 'bg-blue-100 text-blue-700',
-    clinical: 'bg-green-100 text-green-700',
-    ngo: 'bg-purple-100 text-purple-700',
-    international: 'bg-orange-100 text-orange-700',
-    official: 'bg-slate-100 text-slate-700',
+    research: 'bg-category-1/10 text-category-1',
+    clinical: 'bg-category-2/10 text-category-2',
+    ngo: 'bg-category-4/10 text-category-4',
+    international: 'bg-category-5/10 text-category-5',
+    official: 'bg-category-3/10 text-category-3',
   };
 
   async function reload() {

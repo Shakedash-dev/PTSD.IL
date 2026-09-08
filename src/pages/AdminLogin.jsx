@@ -106,13 +106,13 @@ export default function AdminLogin() {
           {GOOGLE_CLIENT_ID ? (
             <div ref={buttonRef} />
           ) : (
-            <p className="text-sm text-red-600 text-center" role="alert">
+            <p className="text-sm text-destructive text-center" role="alert">
               {t(lang, 'admin_google_config_error')}
             </p>
           )}
 
           {error && GOOGLE_CLIENT_ID && (
-            <p className="text-sm text-red-600" role="alert">
+            <p className="text-sm text-destructive" role="alert">
               {t(lang, 'admin_google_signin_error')}
             </p>
           )}
