@@ -32,7 +32,7 @@ function QuestionCard({ idx, question, answers, onAnswer }) {
             className={`
               flex flex-col items-center gap-1 p-2 rounded-lg border transition-natural text-center
               ${answers[idx] === oi
-                ? 'bg-primary border-primary text-white'
+                ? 'bg-primary border-primary text-primary-foreground'
                 : 'bg-background border-border hover:border-primary/50 hover:bg-primary/5'
               }
             `}
@@ -154,7 +154,7 @@ export default function Questionnaire() {
               className={`
                 px-8 py-4 rounded-super font-semibold text-lg transition-natural
                 ${answered >= TOTAL
-                  ? 'bg-primary text-white hover:bg-primary/90 shadow-atmospheric-md hover:shadow-atmospheric-lg'
+                  ? 'bg-primary text-primary-foreground hover:bg-primary/90 shadow-atmospheric-md hover:shadow-atmospheric-lg'
                   : 'bg-muted text-muted-foreground cursor-not-allowed'
                 }
               `}
@@ -203,7 +203,7 @@ export default function Questionnaire() {
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <Link
                 to={isHigh ? '/self-help' : '/calming'}
-                className="px-6 py-3 bg-primary text-white rounded-super font-medium hover:bg-primary/90 transition-natural shadow-atmospheric flex items-center justify-center gap-2"
+                className="px-6 py-3 bg-primary text-primary-foreground rounded-super font-medium hover:bg-primary/90 transition-natural shadow-atmospheric flex items-center justify-center gap-2"
               >
                 {t(lang, isHigh ? 'go_to_self_help' : 'go_to_calming')}
                 <ArrowIcon className="w-4 h-4" />

@@ -341,7 +341,7 @@ function FieldInput({ field, value, onChange }) {
                 key={o.value}
                 onClick={() => onChange(active ? arr.filter(v => v !== o.value) : [...arr, o.value])}
                 className={`px-2.5 py-1 rounded-full text-xs font-medium transition-natural ${
-                  active ? 'bg-primary text-white' : 'bg-muted text-muted-foreground hover:bg-border'
+                  active ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground hover:bg-border'
                 }`}
               >
                 {o.label}
@@ -450,7 +450,7 @@ function EditableCard({ item, fields, onSave, onCancel, onDelete, renderView, st
           type="button"
           disabled={saving}
           onClick={handleSave}
-          className="flex items-center gap-1.5 px-3 py-1.5 bg-primary text-white rounded-lg text-xs font-semibold hover:bg-primary/90 disabled:opacity-60"
+          className="flex items-center gap-1.5 px-3 py-1.5 bg-primary text-primary-foreground rounded-lg text-xs font-semibold hover:bg-primary/90 disabled:opacity-60"
         >
           <Check className="w-3.5 h-3.5" /> {saving ? 'שומר...' : 'שמירה'}
         </button>
@@ -1234,7 +1234,7 @@ function ChildrenPanel() {
                   <button
                     type="button"
                     onClick={handleSaveGuidelines}
-                    className="flex items-center gap-1.5 px-3 py-1.5 bg-primary text-white rounded-lg text-xs font-semibold hover:bg-primary/90"
+                    className="flex items-center gap-1.5 px-3 py-1.5 bg-primary text-primary-foreground rounded-lg text-xs font-semibold hover:bg-primary/90"
                   >
                     <Check className="w-3.5 h-3.5" /> שמירה
                   </button>
@@ -1381,7 +1381,7 @@ function UserRow({ user, currentUserId, onReload }) {
               type="button"
               disabled={saving}
               onClick={handleSaveRoles}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-primary text-white rounded-lg text-xs font-semibold hover:bg-primary/90 disabled:opacity-60"
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-primary text-primary-foreground rounded-lg text-xs font-semibold hover:bg-primary/90 disabled:opacity-60"
             >
               <Check className="w-3.5 h-3.5" /> {saving ? 'שומר...' : 'שמירה'}
             </button>
@@ -1635,7 +1635,7 @@ function QuestionnaireMetaForm({ initial, onSave, onCancel }) {
         </label>
       </div>
       <div className="flex gap-2">
-        <button onClick={() => onSave(draft)} className="px-4 py-2 rounded-lg bg-primary text-white text-sm font-medium flex items-center gap-1"><Check className="w-4 h-4" /> שמירה</button>
+        <button onClick={() => onSave(draft)} className="px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium flex items-center gap-1"><Check className="w-4 h-4" /> שמירה</button>
         <button onClick={onCancel} className="px-4 py-2 rounded-lg border border-border text-sm flex items-center gap-1"><X className="w-4 h-4" /> ביטול</button>
       </div>
     </div>
@@ -1745,7 +1745,7 @@ function QuestionRow({ index, question, onSave, onDelete, startInEdit = false })
         <button onClick={() => setOptions(os => [...os, { answer: '', score: os.length, order: os.length }])} className="text-xs text-primary flex items-center gap-1 mt-1"><Plus className="w-3 h-3" /> הוספת תשובה</button>
       </div>
       <div className="flex gap-2">
-        <button onClick={async () => { const ok = await onSave({ text, sortOrder, options }); if (ok && !startInEdit) setEditing(false); }} className="px-3 py-1.5 rounded-lg bg-primary text-white text-sm flex items-center gap-1"><Check className="w-4 h-4" /> שמירה</button>
+        <button onClick={async () => { const ok = await onSave({ text, sortOrder, options }); if (ok && !startInEdit) setEditing(false); }} className="px-3 py-1.5 rounded-lg bg-primary text-primary-foreground text-sm flex items-center gap-1"><Check className="w-4 h-4" /> שמירה</button>
         <button onClick={() => { if (startInEdit) { onDelete(); } else { setEditing(false); } }} className="px-3 py-1.5 rounded-lg border border-border text-sm flex items-center gap-1"><X className="w-4 h-4" /> ביטול</button>
       </div>
     </div>
@@ -1819,7 +1819,7 @@ export default function Admin() {
                 onClick={() => setActiveTab(tab.key)}
                 className={`flex items-center gap-2 px-4 py-2 rounded-super-sm text-sm font-medium transition-natural ${
                   activeTab === tab.key
-                    ? 'bg-primary text-white'
+                    ? 'bg-primary text-primary-foreground'
                     : 'text-muted-foreground hover:bg-muted hover:text-foreground'
                 }`}
               >
