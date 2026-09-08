@@ -43,6 +43,13 @@ const buttonVariants = cva(
         // Secondary action sitting next to a solid one.
         subtle:
           "bg-muted text-foreground font-medium hover:bg-muted/80 transition-colors duration-300",
+        // Bordered control on a light surface, hovering to muted rather than to
+        // the brand accent. The admin panel's icon and cancel controls.
+        "outline-subtle":
+          "border border-border bg-transparent hover:bg-muted transition-colors duration-300",
+        // "Add another one" affordance.
+        dashed:
+          "border border-dashed border-primary/40 bg-transparent text-primary hover:bg-primary/5 transition-colors duration-300",
         // Low-emphasis text control. Reads as text until hovered.
         quiet:
           "text-muted-foreground hover:text-foreground transition-colors duration-300",

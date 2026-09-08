@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Settings, Users, UserCog, FileText, BookOpen, HelpCircle, Wrench, Heart, Baby, Shield, ClipboardList, Pencil, Trash2, Plus, Check, X, LogOut } from 'lucide-react';
 import { toast } from 'sonner';
 import RichTextEditor from '@/components/RichTextEditor';
+import { Button } from '@/components/ui/button';
+import ChoiceChip from '@/components/patterns/ChoiceChip';
 import { logout, hasAdminAccess, hasUserManagementAccess, getCurrentUserId } from '@/lib/auth';
 import { t } from '@/lib/i18n';
 import { ForbiddenError, UnauthorizedError } from '@/api/adminClient';
@@ -210,30 +212,35 @@ function Section({ title, count }) {
  */
 function IconBtn({ icon: Icon, onClick, title, tone }) {
   return (
-    <button
+    <Button
       type="button"
+      variant="outline-subtle"
+      size="none"
       onClick={onClick}
       title={title}
-      className={`p-1.5 rounded-lg bg-card border border-border transition-natural ${
+      className={`p-1.5 rounded-lg bg-card text-muted-foreground ${
         tone === 'danger'
-          ? 'text-muted-foreground hover:text-destructive hover:border-destructive/30'
-          : 'text-muted-foreground hover:text-primary hover:border-primary/30'
+          ? 'hover:text-destructive hover:border-destructive/30'
+          : 'hover:text-primary hover:border-primary/30'
       }`}
     >
       <Icon className="w-3.5 h-3.5" />
-    </button>
+    </Button>
   );
 }
 
 function AddNewButton({ onClick, label }) {
   return (
-    <button
+    <Button
       type="button"
+      variant="dashed"
+      radius="xl"
+      size="none"
       onClick={onClick}
-      className="w-full flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl border border-dashed border-primary/40 text-primary text-sm font-medium hover:bg-primary/5 transition-natural"
+      className="w-full gap-1.5 px-4 py-2.5 text-sm font-medium"
     >
       <Plus className="w-4 h-4" /> {label}
-    </button>
+    </Button>
   );
 }
 
@@ -264,14 +271,14 @@ function LinksField({ value, onChange }) {
             placeholder="URL"
             className="flex-1 px-2 py-1.5 rounded-lg border border-border bg-background text-xs"
           />
-          <button type="button" onClick={() => removeLink(i)} className="text-muted-foreground hover:text-destructive">
+          <Button type="button" variant="quiet" size="none" onClick={() => removeLink(i)} className="hover:text-destructive">
             <X className="w-3.5 h-3.5" />
-          </button>
+          </Button>
         </div>
       ))}
-      <button type="button" onClick={addLink} className="text-xs text-primary flex items-center gap-1 hover:underline">
+      <Button type="button" variant="link" size="none" onClick={addLink} className="text-xs gap-1">
         <Plus className="w-3 h-3" /> הוספת קישור
-      </button>
+      </Button>
     </div>
   );
 }
@@ -301,16 +308,16 @@ function SectionsField({ value, onChange }) {
               placeholder="כותרת הסעיף"
               className="flex-1 px-2 py-1.5 rounded-lg border border-border bg-background text-sm font-medium"
             />
-            <button type="button" onClick={() => removeSection(i)} className="text-muted-foreground hover:text-destructive">
+            <Button type="button" variant="quiet" size="none" onClick={() => removeSection(i)} className="hover:text-destructive">
               <X className="w-3.5 h-3.5" />
-            </button>
+            </Button>
           </div>
           <RichTextEditor value={s.body} onChange={val => updateSection(i, 'body', val)} />
         </div>
       ))}
-      <button type="button" onClick={addSection} className="text-xs text-primary flex items-center gap-1 hover:underline">
+      <Button type="button" variant="link" size="none" onClick={addSection} className="text-xs gap-1">
         <Plus className="w-3 h-3" /> הוספת סעיף
-      </button>
+      </Button>
     </div>
   );
 }
@@ -336,16 +343,15 @@ function FieldInput({ field, value, onChange }) {
           {field.options.map(o => {
             const active = arr.includes(o.value);
             return (
-              <button
-                type="button"
+              <ChoiceChip
                 key={o.value}
+                variant="plain"
+                selected={active}
                 onClick={() => onChange(active ? arr.filter(v => v !== o.value) : [...arr, o.value])}
-                className={`px-2.5 py-1 rounded-full text-xs font-medium transition-natural ${
-                  active ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground hover:bg-border'
-                }`}
+                className={`px-2.5 py-1 rounded-full text-xs ${active ? '' : 'bg-muted hover:bg-border'}`}
               >
                 {o.label}
-              </button>
+              </ChoiceChip>
             );
           })}
         </div>
@@ -446,22 +452,26 @@ function EditableCard({ item, fields, onSave, onCancel, onDelete, renderView, st
         </div>
       ))}
       <div className="flex gap-2 pt-1">
-        <button
+        <Button
           type="button"
+          variant="solid"
+          size="xs"
           disabled={saving}
           onClick={handleSave}
-          className="flex items-center gap-1.5 px-3 py-1.5 bg-primary text-primary-foreground rounded-lg text-xs font-semibold hover:bg-primary/90 disabled:opacity-60"
+          className="gap-1.5 rounded-lg font-semibold disabled:opacity-60"
         >
           <Check className="w-3.5 h-3.5" /> {saving ? 'שומר...' : 'שמירה'}
-        </button>
-        <button
+        </Button>
+        <Button
           type="button"
+          variant="subtle"
+          size="xs"
           disabled={saving}
           onClick={() => { setDraft(item); setEditing(false); onCancel && onCancel(); }}
-          className="flex items-center gap-1.5 px-3 py-1.5 bg-muted text-foreground rounded-lg text-xs font-semibold hover:bg-border disabled:opacity-60"
+          className="gap-1.5 rounded-lg font-semibold hover:bg-border disabled:opacity-60"
         >
           <X className="w-3.5 h-3.5" /> ביטול
-        </button>
+        </Button>
       </div>
     </div>
   );
@@ -896,10 +906,11 @@ function RightsPanel() {
     <div>
       <div className="flex gap-2 mb-5 flex-wrap">
         {RIGHTS_CATEGORIES.map(c => (
-          <button key={c} onClick={() => { setCat(c); setCreating(false); }}
-            className={`px-3 py-1 rounded-full text-sm font-medium transition-natural ${cat === c ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground hover:bg-border'}`}>
+          <ChoiceChip key={c} variant="plain" selected={cat === c}
+            onClick={() => { setCat(c); setCreating(false); }}
+            className={`px-3 py-1 rounded-full text-sm ${cat === c ? '' : 'bg-muted hover:bg-border'}`}>
             {labelFor(RIGHTS_CATEGORY_LABELS, c)}
-          </button>
+          </ChoiceChip>
         ))}
       </div>
       <Section title={`זכויות - ${labelFor(RIGHTS_CATEGORY_LABELS, cat)}`} count={items.length} />
@@ -1213,10 +1224,11 @@ function ChildrenPanel() {
     <div>
       <div className="flex gap-2 mb-5 flex-wrap">
         {AGE_GROUPS.map(ag => (
-          <button key={ag} onClick={() => { setAgeGroup(ag); setEditingGuidelines(false); setCreating(false); }}
-            className={`px-3 py-1 rounded-full text-sm font-medium transition-natural ${ageGroup === ag ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground hover:bg-border'}`}>
+          <ChoiceChip key={ag} variant="plain" selected={ageGroup === ag}
+            onClick={() => { setAgeGroup(ag); setEditingGuidelines(false); setCreating(false); }}
+            className={`px-3 py-1 rounded-full text-sm ${ageGroup === ag ? '' : 'bg-muted hover:bg-border'}`}>
             {ag}
-          </button>
+          </ChoiceChip>
         ))}
       </div>
       <Section title={`תכנים לגיל ${ageGroup}`} count={resources.length + (guidelinesItem?.guidelines ? 1 : 0)} />
@@ -1231,20 +1243,24 @@ function ChildrenPanel() {
               <div className="space-y-2">
                 <RichTextEditor value={guidelinesDraft} onChange={setGuidelinesDraft} />
                 <div className="flex gap-2">
-                  <button
+                  <Button
                     type="button"
+                    variant="solid"
+                    size="xs"
                     onClick={handleSaveGuidelines}
-                    className="flex items-center gap-1.5 px-3 py-1.5 bg-primary text-primary-foreground rounded-lg text-xs font-semibold hover:bg-primary/90"
+                    className="gap-1.5 rounded-lg font-semibold"
                   >
                     <Check className="w-3.5 h-3.5" /> שמירה
-                  </button>
-                  <button
+                  </Button>
+                  <Button
                     type="button"
+                    variant="subtle"
+                    size="xs"
                     onClick={() => { setGuidelinesDraft(guidelinesItem?.guidelines || ''); setEditingGuidelines(false); }}
-                    className="flex items-center gap-1.5 px-3 py-1.5 bg-muted text-foreground rounded-lg text-xs font-semibold hover:bg-border"
+                    className="gap-1.5 rounded-lg font-semibold hover:bg-border"
                   >
                     <X className="w-3.5 h-3.5" /> ביטול
-                  </button>
+                  </Button>
                 </div>
               </div>
             ) : (
@@ -1377,22 +1393,26 @@ function UserRow({ user, currentUserId, onReload }) {
             onChange={setRolesDraft}
           />
           <div className="flex gap-2 pt-1">
-            <button
+            <Button
               type="button"
+              variant="solid"
+              size="xs"
               disabled={saving}
               onClick={handleSaveRoles}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-primary text-primary-foreground rounded-lg text-xs font-semibold hover:bg-primary/90 disabled:opacity-60"
+              className="gap-1.5 rounded-lg font-semibold disabled:opacity-60"
             >
               <Check className="w-3.5 h-3.5" /> {saving ? 'שומר...' : 'שמירה'}
-            </button>
-            <button
+            </Button>
+            <Button
               type="button"
+              variant="subtle"
+              size="xs"
               disabled={saving}
               onClick={() => setEditingRoles(false)}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-muted text-foreground rounded-lg text-xs font-semibold hover:bg-border disabled:opacity-60"
+              className="gap-1.5 rounded-lg font-semibold hover:bg-border disabled:opacity-60"
             >
               <X className="w-3.5 h-3.5" /> ביטול
-            </button>
+            </Button>
           </div>
         </div>
       )}
@@ -1558,27 +1578,31 @@ function QuestionnaireRow({ q, onChanged }) {
               </p>
             </div>
             <div className="flex gap-2 flex-shrink-0">
-              <button onClick={() => setEditing(true)} className="p-2 rounded-lg border border-border hover:bg-muted" title="עריכה"><Pencil className="w-4 h-4" /></button>
-              <button
+              <Button variant="outline-subtle" size="none" onClick={() => setEditing(true)} className="p-2 rounded-lg" title="עריכה"><Pencil className="w-4 h-4" /></Button>
+              <Button
+                variant="outline-subtle"
+                size="none"
                 onClick={async () => {
                   if (!window.confirm(`למחוק את השאלון "${q.name}"? פעולה זו מוחקת גם את כל שאלותיו.`)) return;
                   const ok = await runWrite(() => removeQuestionnaire(q.id));
                   if (ok) await onChanged();
                 }}
-                className="p-2 rounded-lg border border-border hover:bg-muted text-destructive" title="מחיקה"
-              ><Trash2 className="w-4 h-4" /></button>
+                className="p-2 rounded-lg text-destructive" title="מחיקה"
+              ><Trash2 className="w-4 h-4" /></Button>
             </div>
           </div>
         )}
       </div>
 
       <div className="border-t border-border">
-        <button
+        <Button
+          variant="quiet"
+          size="none"
           onClick={() => setExpanded(v => !v)}
-          className="w-full text-start px-4 py-2 text-sm font-medium text-muted-foreground hover:bg-muted"
+          className="w-full justify-start text-start px-4 py-2 text-sm font-medium hover:bg-muted"
         >
           {expanded ? '▾' : '▸'} שאלות ({q.totalQuestions})
-        </button>
+        </Button>
         {expanded && <QuestionsEditor questionnaireId={q.id} onChanged={onChanged} />}
       </div>
     </div>
@@ -1635,8 +1659,8 @@ function QuestionnaireMetaForm({ initial, onSave, onCancel }) {
         </label>
       </div>
       <div className="flex gap-2">
-        <button onClick={() => onSave(draft)} className="px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium flex items-center gap-1"><Check className="w-4 h-4" /> שמירה</button>
-        <button onClick={onCancel} className="px-4 py-2 rounded-lg border border-border text-sm flex items-center gap-1"><X className="w-4 h-4" /> ביטול</button>
+        <Button variant="solid" size="none" onClick={() => onSave(draft)} className="px-4 py-2 rounded-lg text-sm gap-1"><Check className="w-4 h-4" /> שמירה</Button>
+        <Button variant="outline-subtle" size="none" onClick={onCancel} className="px-4 py-2 rounded-lg text-sm gap-1"><X className="w-4 h-4" /> ביטול</Button>
       </div>
     </div>
   );
@@ -1720,8 +1744,8 @@ function QuestionRow({ index, question, onSave, onDelete, startInEdit = false })
           <p className="text-xs text-muted-foreground mt-1">{(question.options ?? []).map(o => `${o.answer}=${o.score}`).join(' · ')}</p>
         </div>
         <div className="flex gap-2 flex-shrink-0">
-          <button onClick={() => setEditing(true)} className="p-2 rounded-lg border border-border hover:bg-muted"><Pencil className="w-4 h-4" /></button>
-          <button onClick={onDelete} className="p-2 rounded-lg border border-border hover:bg-muted text-destructive"><Trash2 className="w-4 h-4" /></button>
+          <Button variant="outline-subtle" size="none" onClick={() => setEditing(true)} className="p-2 rounded-lg"><Pencil className="w-4 h-4" /></Button>
+          <Button variant="outline-subtle" size="none" onClick={onDelete} className="p-2 rounded-lg text-destructive"><Trash2 className="w-4 h-4" /></Button>
         </div>
       </div>
     );
@@ -1739,14 +1763,14 @@ function QuestionRow({ index, question, onSave, onDelete, startInEdit = false })
             <input className={`${inputCls} flex-1`} value={o.answer} onChange={e => setOpt(i, 'answer', e.target.value)} placeholder="תשובה" />
             <input className={`${inputCls} w-16`} type="number" value={o.score} onChange={e => setOpt(i, 'score', e.target.value)} title="score" />
             <input className={`${inputCls} w-16`} type="number" value={o.order} onChange={e => setOpt(i, 'order', e.target.value)} title="order" />
-            <button onClick={() => setOptions(os => os.filter((_, j) => j !== i))} className="p-1.5 rounded-lg border border-border hover:bg-muted text-destructive"><X className="w-3 h-3" /></button>
+            <Button variant="outline-subtle" size="none" onClick={() => setOptions(os => os.filter((_, j) => j !== i))} className="p-1.5 rounded-lg text-destructive"><X className="w-3 h-3" /></Button>
           </div>
         ))}
-        <button onClick={() => setOptions(os => [...os, { answer: '', score: os.length, order: os.length }])} className="text-xs text-primary flex items-center gap-1 mt-1"><Plus className="w-3 h-3" /> הוספת תשובה</button>
+        <Button variant="link" size="none" onClick={() => setOptions(os => [...os, { answer: '', score: os.length, order: os.length }])} className="text-xs gap-1 mt-1"><Plus className="w-3 h-3" /> הוספת תשובה</Button>
       </div>
       <div className="flex gap-2">
-        <button onClick={async () => { const ok = await onSave({ text, sortOrder, options }); if (ok && !startInEdit) setEditing(false); }} className="px-3 py-1.5 rounded-lg bg-primary text-primary-foreground text-sm flex items-center gap-1"><Check className="w-4 h-4" /> שמירה</button>
-        <button onClick={() => { if (startInEdit) { onDelete(); } else { setEditing(false); } }} className="px-3 py-1.5 rounded-lg border border-border text-sm flex items-center gap-1"><X className="w-4 h-4" /> ביטול</button>
+        <Button variant="solid" size="none" onClick={async () => { const ok = await onSave({ text, sortOrder, options }); if (ok && !startInEdit) setEditing(false); }} className="px-3 py-1.5 rounded-lg text-sm gap-1"><Check className="w-4 h-4" /> שמירה</Button>
+        <Button variant="outline-subtle" size="none" onClick={() => { if (startInEdit) { onDelete(); } else { setEditing(false); } }} className="px-3 py-1.5 rounded-lg text-sm gap-1"><X className="w-4 h-4" /> ביטול</Button>
       </div>
     </div>
   );
@@ -1797,13 +1821,15 @@ export default function Admin() {
               </div>
               <h1 className="text-2xl font-heading font-semibold text-foreground">ממשק ניהול</h1>
             </div>
-            <button
+            <Button
               type="button"
+              variant="subtle"
+              size="none"
               onClick={logout}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-muted text-foreground text-sm font-semibold hover:bg-border transition-natural"
+              className="gap-1.5 px-3 py-1.5 rounded-lg text-sm font-semibold hover:bg-border"
             >
               <LogOut className="w-3.5 h-3.5" /> התנתקות
-            </button>
+            </Button>
           </div>
           <p className="text-muted-foreground text-sm">עריכה, הוספה ומחיקה של תוכן · השינויים נשמרים ישירות מול השרת (למעט שאלון ה-PCL-5, שעריכתו אינה זמינה עדיין)</p>
         </div>
@@ -1814,18 +1840,16 @@ export default function Admin() {
           {tabs.map(tab => {
             const Icon = tab.icon;
             return (
-              <button
+              <ChoiceChip
                 key={tab.key}
+                variant="plain"
+                selected={activeTab === tab.key}
                 onClick={() => setActiveTab(tab.key)}
-                className={`flex items-center gap-2 px-4 py-2 rounded-super-sm text-sm font-medium transition-natural ${
-                  activeTab === tab.key
-                    ? 'bg-primary text-primary-foreground'
-                    : 'text-muted-foreground hover:bg-muted hover:text-foreground'
-                }`}
+                className="gap-2 px-4 py-2 rounded-super-sm text-sm"
               >
                 <Icon className="w-4 h-4" />
                 {tab.label}
-              </button>
+              </ChoiceChip>
             );
           })}
         </div>
