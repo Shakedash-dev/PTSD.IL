@@ -5,6 +5,7 @@ import { t } from '@/lib/i18n';
 import { useTreatmentSteps } from '@/api/hooks';
 import { Wrench, Building2, Brain, Leaf, Pill, ExternalLink, ChevronDown } from 'lucide-react';
 import ArchFrame from '@/components/patterns/ArchFrame';
+import Disclosure from '@/components/patterns/Disclosure';
 import { TREATMENT_STEP_IMAGES } from '@/lib/images';
 import ValidatableContent from '@/components/ValidatableContent';
 import Markdown from '@/components/Markdown';
@@ -15,22 +16,16 @@ const STEP_ICON_MAP = { Wrench, Building2, Brain, Leaf, Pill };
 // several treatment options). Closed by default so a step with many options
 // doesn't dump all their "how to start" text on screen at once.
 function MethodAccordion({ method }) {
-  const [open, setOpen] = useState(false);
   return (
-    <div className={`rounded-2xl border transition-natural overflow-hidden ${
-      open ? 'bg-card border-primary/40' : 'bg-muted/40 border-transparent hover:bg-muted'
-    }`}>
-      <button
-        type="button"
-        className="w-full text-start px-4 py-3 flex items-center justify-between gap-3"
-        onClick={() => setOpen(o => !o)}
-        aria-expanded={open}
-      >
-        <span className="font-heading font-semibold text-sm text-foreground">{method.title_he}</span>
-        <ChevronDown className={`w-4 h-4 text-primary flex-shrink-0 transition-transform duration-300 ${open ? 'rotate-180' : ''}`} />
-      </button>
-      {open && (
-        <div className="px-4 pb-4 space-y-3">
+    <Disclosure
+      label={method.title_he}
+      variant="plain"
+      size="tight"
+      labelClassName="text-sm leading-normal"
+      chevronClassName="w-4 h-4"
+      panelClassName="pb-4 space-y-3"
+    >
+      <>
           <p className="text-sm text-muted-foreground leading-relaxed">{method.description_he}</p>
           {method.how_to_start_he && (
             <div className="bg-primary/5 rounded-lg p-3">
@@ -65,9 +60,8 @@ function MethodAccordion({ method }) {
               )}
             </div>
           )}
-        </div>
-      )}
-    </div>
+      </>
+    </Disclosure>
   );
 }
 

@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { useLang } from '@/lib/LanguageContext';
 import { t } from '@/lib/i18n';
 import { useSelfHelpTools } from '@/api/hooks';
 import PageHeader from '@/components/patterns/PageHeader';
-import { Wind, Moon, PenLine, Smartphone, Zap, ChevronDown, ArrowLeft, ArrowRight, Compass, Wrench, Apple, PlayCircle } from 'lucide-react';
+import Disclosure from '@/components/patterns/Disclosure';
+import { Wind, Moon, PenLine, Smartphone, Zap, ArrowLeft, ArrowRight, Compass, Wrench, Apple, PlayCircle } from 'lucide-react';
 import { IMAGES } from '@/lib/images';
 import ValidatableContent from '@/components/ValidatableContent';
 import Markdown from '@/components/Markdown';
@@ -12,24 +13,20 @@ import Markdown from '@/components/Markdown';
 const TOOL_ICON_MAP = { Wind, Moon, PenLine, Smartphone, Zap, Compass, Wrench };
 
 function ToolCard({ tool, contentId }) {
-  const [open, setOpen] = useState(false);
   const Icon = TOOL_ICON_MAP[tool.icon];
 
   return (
     <ValidatableContent contentId={contentId} label={tool.title_he}>
-      <div className={`bg-card rounded-2xl border transition-natural overflow-hidden ${open ? 'border-primary/40' : 'border-border hover:bg-muted'}`}>
-        <button
-          className="w-full text-start px-6 py-5 flex items-center gap-4 transition-natural"
-          onClick={() => setOpen(o => !o)}
-        >
+      <Disclosure
+        label={tool.title_he}
+        leading={
           <div className="w-11 h-11 rounded-full bg-muted flex items-center justify-center flex-shrink-0">
             {Icon && <Icon className="w-5 h-5 text-primary" />}
           </div>
-          <span className="flex-1 font-heading font-semibold text-foreground">{tool.title_he}</span>
-          <ChevronDown className={`w-5 h-5 text-primary flex-shrink-0 transition-transform duration-300 ${open ? 'rotate-180' : ''}`} />
-        </button>
-        {open && (
-          <div className="px-6 pb-6">
+        }
+        panelClassName="pt-0"
+      >
+          <>
             {tool.content_he && (
               <Markdown className="text-muted-foreground leading-relaxed rich-content">
                 {tool.content_he}
@@ -69,9 +66,8 @@ function ToolCard({ tool, contentId }) {
                 ))}
               </div>
             )}
-          </div>
-        )}
-      </div>
+          </>
+      </Disclosure>
     </ValidatableContent>
   );
 }

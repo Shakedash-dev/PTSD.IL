@@ -80,6 +80,7 @@ export { wrapperVariants, triggerVariants, panelVariants };
  * @param {boolean} [props.tintTriggerWhenOpen] highlight the trigger row while open
  * @param {string} [props.className] wrapper override
  * @param {string} [props.triggerClassName]
+ * @param {string} [props.labelClassName]
  * @param {string} [props.panelClassName]
  * @param {string} [props.chevronClassName]
  * @param {React.ReactNode} [props.children] panel content
@@ -95,6 +96,7 @@ export default function Disclosure({
   tintTriggerWhenOpen = false,
   className,
   triggerClassName,
+  labelClassName,
   panelClassName,
   chevronClassName,
   children,
@@ -126,7 +128,7 @@ export default function Disclosure({
         )}
       >
         {leading}
-        <span className={cn('font-heading font-semibold text-foreground leading-snug', leading && 'flex-1')}>
+        <span className={cn('font-heading font-semibold text-foreground leading-snug', leading && 'flex-1', labelClassName)}>
           {label}
         </span>
         <ChevronDown
