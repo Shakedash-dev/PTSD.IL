@@ -11,7 +11,6 @@ import ContentPrefetcher from './components/ContentPrefetcher';
 import { LanguageProvider, useLang } from '@/lib/LanguageContext';
 import { ChatProvider } from '@/lib/ChatContext';
 import { t } from '@/lib/i18n';
-import { ThemeProvider } from '@/lib/ThemeContext';
 import { ValidationProvider } from '@/contexts/ValidationContext';
 import { UserTypeProvider } from '@/contexts/UserTypeContext';
 import Layout from '@/components/Layout';
@@ -84,15 +83,13 @@ function AdminGate() {
 }
 
 // Provider order matters: QueryClientProvider must be outermost (hooks used inside all children).
-// Toaster sits outside ThemeProvider - it uses its own portal and doesn't need theme context.
 function App() {
   return (
     <QueryClientProvider client={queryClientInstance}>
       <LanguageProvider>
         <ChatProvider>
-          <ThemeProvider>
-            <ValidationProvider>
-              <Router basename={BASE_PATH}>
+          <ValidationProvider>
+            <Router basename={BASE_PATH}>
               <UserTypeProvider>
               <ScrollToTop />
               <ContentPrefetcher />
@@ -123,8 +120,7 @@ function App() {
               </Routes>
               </UserTypeProvider>
             </Router>
-            </ValidationProvider>
-          </ThemeProvider>
+          </ValidationProvider>
           <Toaster />
           <SonnerToaster />
         </ChatProvider>
