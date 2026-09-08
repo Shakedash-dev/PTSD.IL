@@ -51,23 +51,28 @@ module.exports = {
           DEFAULT: 'hsl(var(--sanctuary))',
           foreground: 'hsl(var(--sanctuary-foreground))',
         },
-        // teal = calm/positive (cool green), clay = warm/earthy (terracotta), sage = neutral muted green
-        teal: {
-          DEFAULT: '#2A8D6E',
-          light: '#4BA88C',
-          dark: '#1E6E55',
+        // Semantic status. Every value resolves to a CSS custom property so a
+        // token change in index.css reaches every call site.
+        success: {
+          DEFAULT: 'hsl(var(--success))',
+          foreground: 'hsl(var(--success-foreground))'
         },
-        clay: {
-          DEFAULT: '#C4705A',
-          light: '#D48870',
-          dark: '#A85842',
+        warning: {
+          DEFAULT: 'hsl(var(--warning))',
+          foreground: 'hsl(var(--warning-foreground))'
         },
-        sage: {
-          DEFAULT: '#6B8B7A',
-          deep: '#4E6B5C',
+        info: {
+          DEFAULT: 'hsl(var(--info))',
+          foreground: 'hsl(var(--info-foreground))'
         },
-        oatmeal: '#FAF0E5',
-        midnight: '#1A2E2A',
+        // Categorical: unordered kinds, no good/bad meaning.
+        category: {
+          1: 'hsl(var(--category-1))',
+          2: 'hsl(var(--category-2))',
+          3: 'hsl(var(--category-3))',
+          4: 'hsl(var(--category-4))',
+          5: 'hsl(var(--category-5))'
+        },
         chart: {
           '1': 'hsl(var(--chart-1))',
           '2': 'hsl(var(--chart-2))',

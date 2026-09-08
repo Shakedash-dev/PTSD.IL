@@ -25,7 +25,7 @@ const EXERCISES_META = [
     key: 'muscle',
     path: '/calming/muscle',
     imageKey: 'calming_muscle',
-    placeholder: 'bg-gradient-to-br from-clay/25 via-oatmeal/30 to-card',
+    placeholder: 'bg-gradient-to-br from-secondary/20 via-muted/30 to-card',
   },
 ];
 

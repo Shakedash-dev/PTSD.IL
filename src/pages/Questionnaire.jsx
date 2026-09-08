@@ -19,7 +19,7 @@ function QuestionCard({ idx, question, answers, onAnswer }) {
       isAnswered ? 'border-primary/30' : 'border-border'
     }`}>
       <div className="flex gap-3 mb-5">
-        <span className="text-2xl font-heading font-semibold text-clay/40 flex-shrink-0 leading-tight mt-0.5">
+        <span className="text-2xl font-heading font-semibold text-muted-foreground/40 flex-shrink-0 leading-tight mt-0.5">
           {String(idx + 1).padStart(2, '0')}
         </span>
         <p className="text-foreground leading-relaxed font-medium">{question.text}</p>
@@ -115,8 +115,8 @@ export default function Questionnaire() {
         </div>
       ) : error || !q ? (
         <div className="max-w-3xl mx-auto px-4 sm:px-6 pb-16">
-          <div className="rounded-super p-8 text-center bg-card border border-clay/30">
-            <AlertCircle className="w-8 h-8 mx-auto mb-3 text-clay" />
+          <div className="rounded-super p-8 text-center bg-card border border-warning/30">
+            <AlertCircle className="w-8 h-8 mx-auto mb-3 text-warning" />
             <p className="text-muted-foreground">{t(lang, 'error_loading') || 'שגיאה בטעינת השאלון. נסו לרענן.'}</p>
           </div>
         </div>
@@ -172,10 +172,10 @@ export default function Questionnaire() {
         /* Result */
         <div className="max-w-2xl mx-auto px-4 sm:px-6 pb-16">
           <div className={`rounded-super p-8 sm:p-10 text-center shadow-atmospheric-lg border ${
-            isHigh ? 'bg-card border-primary/30' : 'bg-card border-teal/30'
+            isHigh ? 'bg-card border-primary/30' : 'bg-card border-success/30'
           }`}>
             <div className={`w-24 h-24 rounded-full mx-auto mb-6 flex items-center justify-center ${
-              isHigh ? 'bg-primary/10 text-primary' : 'bg-teal/10 text-teal'
+              isHigh ? 'bg-primary/10 text-primary' : 'bg-success/10 text-success'
             }`}>
               {isHigh ? <AlertCircle className="w-10 h-10" /> : <CheckCircle className="w-10 h-10" />}
             </div>
@@ -188,7 +188,7 @@ export default function Questionnaire() {
             </p>
 
             <div className="mb-8">
-              <div className={`h-3 rounded-full overflow-hidden ${isRTL ? 'bg-gradient-to-l' : 'bg-gradient-to-r'} from-teal via-yellow-400 to-clay`}>
+              <div className={`h-3 rounded-full overflow-hidden ${isRTL ? 'bg-gradient-to-l' : 'bg-gradient-to-r'} from-success via-warning to-destructive`}>
                 <div
                   className="h-full w-1.5 bg-foreground rounded-full transition-all duration-1000 relative"
                   style={{ marginInlineStart: `${q.maxScore ? (result / q.maxScore) * 100 : 0}%` }}

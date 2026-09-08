@@ -1565,7 +1565,7 @@ function QuestionnaireRow({ q, onChanged }) {
                   const ok = await runWrite(() => removeQuestionnaire(q.id));
                   if (ok) await onChanged();
                 }}
-                className="p-2 rounded-lg border border-border hover:bg-muted text-clay" title="מחיקה"
+                className="p-2 rounded-lg border border-border hover:bg-muted text-destructive" title="מחיקה"
               ><Trash2 className="w-4 h-4" /></button>
             </div>
           </div>
@@ -1721,7 +1721,7 @@ function QuestionRow({ index, question, onSave, onDelete, startInEdit = false })
         </div>
         <div className="flex gap-2 flex-shrink-0">
           <button onClick={() => setEditing(true)} className="p-2 rounded-lg border border-border hover:bg-muted"><Pencil className="w-4 h-4" /></button>
-          <button onClick={onDelete} className="p-2 rounded-lg border border-border hover:bg-muted text-clay"><Trash2 className="w-4 h-4" /></button>
+          <button onClick={onDelete} className="p-2 rounded-lg border border-border hover:bg-muted text-destructive"><Trash2 className="w-4 h-4" /></button>
         </div>
       </div>
     );
@@ -1739,7 +1739,7 @@ function QuestionRow({ index, question, onSave, onDelete, startInEdit = false })
             <input className={`${inputCls} flex-1`} value={o.answer} onChange={e => setOpt(i, 'answer', e.target.value)} placeholder="תשובה" />
             <input className={`${inputCls} w-16`} type="number" value={o.score} onChange={e => setOpt(i, 'score', e.target.value)} title="score" />
             <input className={`${inputCls} w-16`} type="number" value={o.order} onChange={e => setOpt(i, 'order', e.target.value)} title="order" />
-            <button onClick={() => setOptions(os => os.filter((_, j) => j !== i))} className="p-1.5 rounded-lg border border-border hover:bg-muted text-clay"><X className="w-3 h-3" /></button>
+            <button onClick={() => setOptions(os => os.filter((_, j) => j !== i))} className="p-1.5 rounded-lg border border-border hover:bg-muted text-destructive"><X className="w-3 h-3" /></button>
           </div>
         ))}
         <button onClick={() => setOptions(os => [...os, { answer: '', score: os.length, order: os.length }])} className="text-xs text-primary flex items-center gap-1 mt-1"><Plus className="w-3 h-3" /> הוספת תשובה</button>

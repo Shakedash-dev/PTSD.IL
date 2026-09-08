@@ -35,9 +35,9 @@ const CARD_PLACEHOLDERS = [
   'bg-gradient-to-br from-primary/30 via-muted to-card',
   'bg-gradient-to-br from-secondary/35 via-muted to-card',
   'bg-gradient-to-br from-accent/30 via-primary/15 to-muted',
-  'bg-gradient-to-br from-clay/30 via-oatmeal/30 to-muted',
-  'bg-gradient-to-br from-teal/25 via-muted to-primary/20',
-  'bg-gradient-to-br from-sage/40 via-muted to-card',
+  'bg-gradient-to-br from-secondary/25 via-muted/30 to-muted',
+  'bg-gradient-to-br from-primary/20 via-muted to-primary/20',
+  'bg-gradient-to-br from-primary/25 via-muted to-card',
 ];
 
 export default function Community() {
@@ -165,8 +165,8 @@ export default function Community() {
                     </h3>
                     {c.meeting_type && (
                       <span className={`px-2.5 py-1 rounded-full text-xs font-medium flex-shrink-0 ${
-                        c.meeting_type === 'digital' ? 'bg-teal/15 text-teal-dark' :
-                        c.meeting_type === 'hybrid' ? 'bg-clay/15 text-clay-dark' :
+                        c.meeting_type === 'digital' ? 'bg-category-1/15 text-category-1' :
+                        c.meeting_type === 'hybrid' ? 'bg-category-2/15 text-category-2' :
                         'bg-muted text-foreground'
                       }`}>
                         {t(lang, 'meeting_' + c.meeting_type)}

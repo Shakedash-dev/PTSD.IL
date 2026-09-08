@@ -6,11 +6,11 @@ import PageHeader from '@/components/PageHeader';
 import { BookOpen, ExternalLink, Globe } from 'lucide-react';
 
 const CATEGORY_COLORS = {
-  research: 'bg-teal/10 text-teal',
-  clinical: 'bg-clay/10 text-clay',
-  official: 'bg-secondary/10 text-secondary',
-  ngo: 'bg-teal/10 text-teal',
-  international: 'bg-clay/10 text-clay',
+  research: 'bg-category-1/10 text-category-1',
+  clinical: 'bg-category-2/10 text-category-2',
+  official: 'bg-category-3/10 text-category-3',
+  ngo: 'bg-category-4/10 text-category-4',
+  international: 'bg-category-5/10 text-category-5',
 };
 
 export default function Sources() {

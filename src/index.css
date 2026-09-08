@@ -30,6 +30,24 @@
     --accent-foreground: 270 50% 96%;
     --destructive: 0 55% 48%;
     --destructive-foreground: 0 0% 98%;
+
+    /* Semantic status. Lightness is tuned so each passes ~4.5:1 as text on
+       --card (#FDF8FF); they are used both as text and as filled surfaces. */
+    --success: 152 45% 30%;
+    --success-foreground: 270 50% 96%;
+    --warning: 28 70% 38%;
+    --warning-foreground: 270 50% 96%;
+    --info: 210 60% 38%;
+    --info-foreground: 270 50% 96%;
+
+    /* Categorical scale: tags unordered kinds (source categories, meeting
+       types). Carries no good/bad meaning - never use it for status. Each of
+       the five is visually distinct and readable as text on a 10% tint. */
+    --category-1: 268 42% 52%;
+    --category-2: 341 45% 42%;
+    --category-3: 152 45% 30%;
+    --category-4: 28 70% 38%;
+    --category-5: 210 60% 38%;
     --border: 270 34% 82%;            /* #D0C0E0 medium lavender border */
     --input: 270 34% 82%;
     --ring: 268 42% 52%;

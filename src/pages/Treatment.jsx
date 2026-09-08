@@ -90,8 +90,8 @@ const STEP_TINTS = [
   'bg-gradient-to-br from-primary/30 via-muted to-card',           // 1 self-help
   'bg-gradient-to-br from-secondary/30 via-muted to-card',         // 2 healthcare
   'bg-gradient-to-br from-accent/30 via-primary/15 to-muted',      // 3 trauma therapy
-  'bg-gradient-to-br from-sage/35 via-oatmeal/20 to-card',         // 4 mind-body
-  'bg-gradient-to-br from-clay/30 via-oatmeal/30 to-muted',        // 5 medication
+  'bg-gradient-to-br from-primary/20 via-muted/40 to-card',        // 4 mind-body
+  'bg-gradient-to-br from-secondary/25 via-muted/30 to-muted',     // 5 medication
 ];
 
 // Builds an SVG path that snakes between the 5 waypoints with smooth bezier curves.
