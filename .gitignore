@@ -37,3 +37,5 @@ edits_from_metiv.docx
 more_data.txt
 
 .claude/
+# Local Figma reference snapshots (regenerable, never pushed)
+.figma-snapshot/
