@@ -28,9 +28,10 @@ from `src/`. All four of lint, typecheck, test and build must pass before a
 commit.
 
 Two caveats. `Admin.jsx` has no automated coverage at all, so a change there
-needs manual verification against the live API. And note that Google sign-in
-does not work on `npm run dev` - localhost is not an authorised OAuth origin -
-so `/admin` can only be exercised on the deployed site.
+needs manual verification against the live API. Google sign-in does not work on
+`npm run dev` (localhost is not an authorised OAuth origin), so the panel's real
+read/write behaviour can only be exercised on the deployed site - the local
+preview shows the UI against sample data, not the real thing.
 
 ## Design system
 
@@ -91,6 +92,15 @@ src/lib/auth.js         <- login/logout, JWT in sessionStorage, isAuthenticated/
 - **Roles are exact-match** (`docs/api.md`): article CRUD needs `admin` or `moderator`; `masteradmin` manages users but is NOT implicitly admin.
 - **`VITE_GOOGLE_CLIENT_ID`** (the Google OAuth Web Client ID) is required at build time - it's `VITE_*` so it's baked in, not read at runtime; changing it needs a redeploy. Set in `src/.env` (gitignored, for reference) and in the Render dashboard. `VITE_API_URL` lives the same way. Note: localhost is intentionally not an authorized origin on the OAuth client, so Google sign-in only works on the deployed prod URL, not `npm run dev`.
 - Google sign-in is the only login path (no password fallback) - see README "Known limitations".
+- **`/admin` opens without signing in on a dev server**, read-only, against
+  sample data - see `src/lib/adminPreview.js`. It exists because Google is the
+  only login path and localhost is not an authorised OAuth origin, so the panel
+  could not otherwise be opened locally at all. Every write is refused, a banner
+  marks it as sample data, and the whole branch is compiled out of production
+  builds (`import.meta.env.DEV`), which `src/test/admin-preview.test.jsx`
+  asserts against the built bundle. Set `VITE_ADMIN_PREVIEW=off` in `src/.env`
+  for the real login screen. It grants no access: the backend re-checks the JWT
+  on every `/api/admin/*` call, and in preview no request is made at all.
 
 ## Stack and conventions
 

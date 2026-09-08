@@ -9,6 +9,7 @@
 // generic failure.
 
 import { getToken, logout } from '@/lib/auth';
+import { ADMIN_PREVIEW } from '@/lib/adminPreview';
 
 const API = import.meta.env.VITE_API_URL;
 
@@ -16,6 +17,15 @@ export class UnauthorizedError extends Error {
   constructor(message = 'Session expired or invalid - please log in again') {
     super(message);
     this.name = 'UnauthorizedError';
+  }
+}
+
+// Thrown when the read-only preview is asked to write. Never occurs in a
+// production build - the preview branch is compiled out entirely.
+export class ReadOnlyPreviewError extends Error {
+  constructor(message = 'תצוגה מקדימה בלבד - עריכה מושבתת') {
+    super(message);
+    this.name = 'ReadOnlyPreviewError';
   }
 }
 
@@ -30,6 +40,17 @@ export class ForbiddenError extends Error {
 // path: e.g. '/admin/articles' (joined onto VITE_API_URL)
 // body: optional plain object, JSON-encoded
 export async function adminApi(method, path, body) {
+  if (ADMIN_PREVIEW) {
+    if (method !== 'GET') throw new ReadOnlyPreviewError();
+    // Dynamic so the fixtures are not part of a production build.
+    const { previewGet } = await import('./adminPreviewFixtures');
+    const data = previewGet(path);
+    if (data === undefined) {
+      throw new Error(`admin preview has no sample data for ${path} - add one in src/api/adminPreviewFixtures.js`);
+    }
+    return JSON.parse(JSON.stringify(data));
+  }
+
   const token = getToken();
 
   const res = await fetch(`${API}${path}`, {

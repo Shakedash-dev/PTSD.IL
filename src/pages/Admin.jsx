@@ -3,6 +3,7 @@ import { Settings, Users, UserCog, FileText, BookOpen, HelpCircle, Wrench, Heart
 import { toast } from 'sonner';
 import RichTextEditor from '@/components/RichTextEditor';
 import { Button } from '@/components/ui/button';
+import { ADMIN_PREVIEW } from '@/lib/adminPreview';
 import ChoiceChip from '@/components/patterns/ChoiceChip';
 import { logout, hasAdminAccess, hasUserManagementAccess, getCurrentUserId } from '@/lib/auth';
 import { ForbiddenError, UnauthorizedError } from '@/api/adminClient';
@@ -1830,7 +1831,9 @@ export default function Admin() {
               <LogOut className="w-3.5 h-3.5" /> התנתקות
             </Button>
           </div>
-          <p className="text-muted-foreground text-sm">עריכה, הוספה ומחיקה של תוכן · השינויים נשמרים ישירות מול השרת (למעט שאלון ה-PCL-5, שעריכתו אינה זמינה עדיין)</p>
+          <p className="text-muted-foreground text-sm">{ADMIN_PREVIEW
+            ? 'תצוגה מקדימה לעיצוב · נתוני דוגמה · שמירה, הוספה ומחיקה מושבתות'
+            : 'עריכה, הוספה ומחיקה של תוכן · השינויים נשמרים ישירות מול השרת (למעט שאלון ה-PCL-5, שעריכתו אינה זמינה עדיין)'}</p>
         </div>
       </div>
 

@@ -15,6 +15,7 @@ import { ValidationProvider } from '@/contexts/ValidationContext';
 import { UserTypeProvider } from '@/contexts/UserTypeContext';
 import Layout from '@/components/Layout';
 import { isAuthenticated, hasAdminAccess, hasUserManagementAccess, logout, AUTH_CHANGE_EVENT } from '@/lib/auth';
+import { ADMIN_PREVIEW } from '@/lib/adminPreview';
 
 import Home from '@/pages/Home';
 import FirstCircle from '@/pages/FirstCircle';
@@ -46,6 +47,20 @@ import AdminLogin from '@/pages/AdminLogin';
 // actually sees. Listens for AUTH_CHANGE_EVENT (fired by src/lib/auth.js on
 // login/logout, and by src/api/adminClient.js on a 401) so the view updates
 // reactively without a manual refresh.
+// Local design preview: the panel opens without signing in, backed by sample
+// data, with every write disabled. Only ever reachable on a dev server - see
+// src/lib/adminPreview.js for why it cannot exist in a production build.
+function AdminPreviewBanner() {
+  return (
+    <div
+      role="status"
+      className="fixed top-0 inset-x-0 z-[9999] bg-warning text-warning-foreground text-center text-sm font-semibold py-1.5 px-4"
+    >
+      תצוגה מקדימה לעיצוב · נתוני דוגמה, לא המסד האמיתי · שמירה ומחיקה מושבתות
+    </div>
+  );
+}
+
 function AdminGate() {
   const { lang } = useLang();
   const [authed, setAuthed] = useState(() => isAuthenticated());
@@ -59,6 +74,15 @@ function AdminGate() {
     window.addEventListener(AUTH_CHANGE_EVENT, sync);
     return () => window.removeEventListener(AUTH_CHANGE_EVENT, sync);
   }, []);
+
+  if (ADMIN_PREVIEW) {
+    return (
+      <>
+        <AdminPreviewBanner />
+        <Admin />
+      </>
+    );
+  }
 
   if (!authed) return <AdminLogin />;
 

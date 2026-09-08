@@ -84,6 +84,22 @@ between Figma and a browser.
 
 ---
 
+## Seeing the admin panel
+
+The admin panel is behind Google sign-in, which does not work on a local dev
+server. To let it be designed anyway, it opens locally without signing in:
+
+```bash
+cd src && npm install && npm run dev
+```
+
+then open `http://localhost:5173/admin`. It is read-only, filled with obvious
+sample data, and marked with a banner. Saving and deleting are disabled. This
+exists only on a dev server - it is not present in the deployed site.
+
+The rest of the site runs from the same dev server against the live content API,
+so every public page shows real content.
+
 ## Round trip
 
 **Changing a token value** - a colour, a radius, a font:

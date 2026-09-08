@@ -14,6 +14,8 @@
 //   backend re-checks roles on every request - this module grants no access
 //   by itself.
 
+import { ADMIN_PREVIEW } from '@/lib/adminPreview';
+
 const API = import.meta.env.VITE_API_URL;
 const TOKEN_KEY = 'ptsd_admin_token';
 
@@ -87,6 +89,9 @@ export function getClaims() {
 
 // Token present AND not expired (exp is seconds since epoch, per JWT spec).
 export function isAuthenticated() {
+  // Local design preview opens the panel with no session - see
+  // src/lib/adminPreview.js. Compiled out of production builds.
+  if (ADMIN_PREVIEW) return true;
   const claims = getClaims();
   if (!claims || typeof claims.exp !== 'number') return false;
   return claims.exp * 1000 > Date.now();
@@ -96,6 +101,7 @@ export function isAuthenticated() {
 const ADMIN_PANEL_ROLES = ['admin', 'moderator'];
 
 export function hasAdminAccess() {
+  if (ADMIN_PREVIEW) return true;
   if (!isAuthenticated()) return false;
   const roles = getClaims()?.roles || [];
   return roles.some(r => ADMIN_PANEL_ROLES.includes(r));
@@ -109,6 +115,7 @@ export function hasAdminAccess() {
 const USER_MANAGEMENT_ROLES = ['masteradmin'];
 
 export function hasUserManagementAccess() {
+  if (ADMIN_PREVIEW) return true;
   if (!isAuthenticated()) return false;
   const roles = getClaims()?.roles || [];
   return roles.some(r => USER_MANAGEMENT_ROLES.includes(r));
