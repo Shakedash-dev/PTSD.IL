@@ -17,6 +17,7 @@ const CATEGORIES = [
   { id: 'cat-sources', slug: 'sources', name: 'מקורות', children: [] },
   { id: 'cat-children', slug: 'children', name: 'ילדים', children: [] },
   { id: 'cat-second-circle', slug: 'second-circle', name: 'מעגל שני', children: [] },
+  { id: 'cat-site-copy', slug: 'site-copy', name: 'תוכן דפים', children: [] },
 ];
 
 const AUDIENCES = [
@@ -66,6 +67,10 @@ const ARTICLES = [
   article('a12', 'source', 'cat-sources', 'הנחיות קליניות לדוגמה', { url: 'https://example.org', category: 'clinical', description: 'תקציר לדוגמה.' }, 2),
   article('a13', 'article', 'cat-children', 'הנחיות להורים', { guidelines: 'תוכן לדוגמה להנחיות.' }, 1),
   article('a14', 'article', 'cat-children', 'משאב לדוגמה לגיל 6-12', { title: 'משאב', description: 'תיאור לדוגמה', url: '' }, 2),
+  // Site copy: `title` is the i18n key, content is `{ text }`. Two overridden
+  // keys so the panel shows both states - overridden and shipped-as-is.
+  article('a15', 'article', 'cat-site-copy', 'treatment_title', { text: 'מפת הדרכים לטיפול (תצוגה מקדימה)' }, 0),
+  article('a16', 'article', 'cat-site-copy', 'hero_headline', { text: 'את/ה לא לבד (תצוגה מקדימה)' }, 0),
 ];
 
 const COMMUNITIES = [
@@ -125,9 +130,11 @@ export function previewGet(path) {
   if (base === '/admin/articles') {
     const type = params.get('type');
     const categoryId = params.get('categoryId');
+    const langId = params.get('langId');
     return ARTICLES.filter(
       (a) =>
         (!type || a.type === type) &&
+        (!langId || a.langId === langId) &&
         (!categoryId || a.categories.some((c) => c.id === categoryId))
     );
   }

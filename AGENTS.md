@@ -86,6 +86,37 @@ src/lib/auth.js         <- login/logout, JWT in sessionStorage, isAuthenticated/
 
 **Static layer is fully retired.** `src/data/static/*` and `src/data/db.js` have been deleted. The PCL-5 questionnaire, like every other content type, is now served from dedicated API endpoints (`/api/questionnaires`, `/api/admin/questionnaires`) and is fully editable in the admin panel. `src/data/questionnaireSections.js` remains, but it is a presentation-only overlay (Hebrew section grouping for the question list) - not a content source; do NOT add new content data under `src/data/`, new content goes through the API/admin.
 
+### Site copy: the strings that aren't articles
+
+Page headings, subtitles, intros, questionnaire result text, the footer and the
+SEO descriptions are **not** article rows - they ship in `src/lib/i18n.js`, five
+languages of them. They are still editable, through an override layer rather
+than a migration:
+
+- `translations` in `i18n.js` stays the shipped default and the only thing that
+  renders when the API is unreachable or has never been touched.
+- `COPY_SECTIONS` (same file) groups every `he` key into the sections /admin's
+  **תוכן דפים** tab shows. `src/test/site-copy.test.jsx` fails if a key is added
+  to `translations.he` without landing in exactly one section, which is what
+  keeps the panel exhaustive - do not add a key without placing it.
+- An admin override is one article row: `type: 'article'`, category `site-copy`,
+  `title` = the i18n key, `content` = `{ text }`, one row per key **per
+  language**. Sparse by design: no row means the shipped string, and clearing a
+  field deletes the row instead of storing `''`.
+- `fetchSiteCopy()` (`src/api/source.js`) reads them; `LanguageProvider`
+  installs them via `setCopyOverrides()` and bumps `copyVersion` so consumers
+  of `useLang()` re-render. `t()` then resolves
+  *lang override -> lang default -> Hebrew override -> Hebrew default -> key*.
+- The `site-copy` category is created on first save (`resolveOrCreateCategoryId`)
+  - a fresh DB has no such row. These writes skip the chatbot reindex: button
+  labels and meta descriptions are chrome, not answerable content.
+
+Two knock-on facts worth knowing. `src/lib/seo.js` calls `t()` from a plain Node
+script for the prerendered `<title>`/description, so it sees shipped defaults
+only - an override reaches the live page but not that script's output. And this
+is the one admin panel that is not Hebrew-only; it carries its own language
+picker because the rows are per language.
+
 ## Auth & DB access
 
 - **Auth is backend-enforced via JWT, Google-only.** `POST /api/auth/google {idToken}` -> `{accessToken}`; the password `/api/auth/login` endpoint is gone (404). `idToken` is the Google Identity Services credential collected by `AdminLogin.jsx`; the returned JWT's shape (`roles`/`sub` claims, sessionStorage handling) is unchanged. Every `/api/admin/*` call re-checks the token + role server-side (401/403). The client-side `/admin` guard (`AdminGate` in `App.jsx`, `hasAdminAccess()`) is **UX only** - it shows/hides the panel, it is NOT a security boundary.

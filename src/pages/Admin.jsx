@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { Settings, Users, UserCog, FileText, BookOpen, HelpCircle, Wrench, Heart, Baby, Shield, ClipboardList, Pencil, Trash2, Plus, Check, X, LogOut, ChevronUp, ChevronDown } from 'lucide-react';
+import React, { useState, useEffect, useCallback } from 'react';
+import { Settings, Users, UserCog, FileText, BookOpen, HelpCircle, Wrench, Heart, Baby, Shield, ClipboardList, Type, Pencil, Trash2, Plus, Check, X, RotateCcw, LogOut, ChevronUp, ChevronDown } from 'lucide-react';
 import { toast } from 'sonner';
 import RichTextEditor from '@/components/RichTextEditor';
 import { Button } from '@/components/ui/button';
 import { ADMIN_PREVIEW } from '@/lib/adminPreview';
+import { COPY_SECTIONS, LANGUAGES, translations } from '@/lib/i18n';
 import ChoiceChip from '@/components/patterns/ChoiceChip';
 import { logout, hasAdminAccess, hasUserManagementAccess, getCurrentUserId } from '@/lib/auth';
 import { ForbiddenError, UnauthorizedError } from '@/api/adminClient';
@@ -18,6 +19,7 @@ import {
   loadCommunity, saveCommunity, removeCommunity,
   loadChildrenGuidelines, saveChildrenGuidelines,
   loadChildrenResource, saveChildrenResource, removeChildrenResource,
+  loadSiteCopy, saveSiteCopy,
   loadQuestionnaires, loadQuestionnaireDetail,
   createQuestionnaire, updateQuestionnaire, removeQuestionnaire,
   addQuestion, updateQuestion, removeQuestion,
@@ -181,6 +183,7 @@ const CONTENT_TABS = [
   { key: 'second_circle', label: 'מעגל שני',           icon: Shield },
   { key: 'children',      label: 'ילדים',              icon: Baby },
   { key: 'questionnaire', label: 'שאלון PCL-5',        icon: ClipboardList },
+  { key: 'site_copy',     label: 'תוכן דפים',           icon: Type },
 ];
 
 // User-management tab - shown ONLY to masteradmin (hasUserManagementAccess()).
@@ -1855,6 +1858,191 @@ function QuestionRow({ index, question, onSave, onDelete, startInEdit = false })
   );
 }
 
+// ─── Site copy ──────────────────────────────────────────────────────────────
+// The one panel that is NOT list-of-items CRUD. It edits the fixed set of UI
+// strings the site ships with (src/lib/i18n.js) - page headings, subtitles,
+// intros, questionnaire result text, footer, SEO descriptions - by storing a
+// per-language override row for the keys an editor changes. A key with no row
+// keeps the shipped wording, and clearing a field deletes the row rather than
+// saving an empty string, so "revert to default" is a real operation.
+//
+// It is also the only panel that is not Hebrew-only: overrides are per
+// language, so it carries its own language picker.
+
+// A one-line key gets an input, a paragraph gets a textarea. Purely about how
+// much room the string needs on screen.
+function isLongCopy(text) {
+  return (text || '').length > 70;
+}
+
+function CopyRow({ copyKey, shipped, override, lang, onSaved }) {
+  const stored = override?.text ?? '';
+  const [draft, setDraft] = useState(stored || shipped);
+  const [saving, setSaving] = useState(false);
+
+  // A language switch or a reload swaps the whole row's meaning - re-seed.
+  useEffect(() => { setDraft(stored || shipped); }, [stored, shipped, lang]);
+
+  const isOverridden = Boolean(override);
+  const dirty = draft !== (stored || shipped);
+
+  async function save() {
+    setSaving(true);
+    // Saving the shipped wording verbatim is a revert, not an override - let
+    // saveSiteCopy drop the row so the key keeps following the shipped string.
+    const text = draft.trim() === shipped.trim() ? '' : draft;
+    const ok = await runWrite(() => saveSiteCopy({ id: override?.id, key: copyKey, text }, { lang }));
+    setSaving(false);
+    if (ok) await onSaved();
+  }
+
+  async function revert() {
+    if (!override) { setDraft(shipped); return; }
+    setSaving(true);
+    const ok = await runWrite(() => saveSiteCopy({ id: override.id, key: copyKey, text: '' }, { lang }));
+    setSaving(false);
+    if (ok) await onSaved();
+  }
+
+  return (
+    <div className="p-3 rounded-xl border border-border bg-background space-y-2">
+      <div className="flex items-center justify-between gap-2">
+        <code className="text-xs text-muted-foreground" dir="ltr">{copyKey}</code>
+        {isOverridden && <Badge color="bg-info/10 text-info">נערך</Badge>}
+      </div>
+      {isLongCopy(shipped) || isLongCopy(draft) ? (
+        <textarea
+          value={draft}
+          onChange={e => setDraft(e.target.value)}
+          rows={3}
+          className="w-full px-3 py-2 rounded-lg border border-border bg-background text-sm leading-relaxed"
+        />
+      ) : (
+        <input
+          type="text"
+          value={draft}
+          onChange={e => setDraft(e.target.value)}
+          className="w-full px-3 py-2 rounded-lg border border-border bg-background text-sm"
+        />
+      )}
+      {isOverridden && (
+        <p className="text-xs text-muted-foreground">
+          ברירת מחדל: <span className="text-muted-foreground/80">{shipped}</span>
+        </p>
+      )}
+      <div className="flex gap-2">
+        <Button
+          type="button"
+          variant="solid"
+          size="xs"
+          disabled={saving || !dirty}
+          onClick={save}
+          className="gap-1.5 rounded-lg font-semibold disabled:opacity-40"
+        >
+          <Check className="w-3.5 h-3.5" /> {saving ? 'שומר...' : 'שמירה'}
+        </Button>
+        {isOverridden && (
+          <Button
+            type="button"
+            variant="subtle"
+            size="xs"
+            disabled={saving}
+            onClick={revert}
+            className="gap-1.5 rounded-lg font-semibold hover:bg-border disabled:opacity-40"
+          >
+            <RotateCcw className="w-3.5 h-3.5" /> חזרה לברירת מחדל
+          </Button>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function SiteCopyPanel() {
+  const [lang, setLang] = useState('he');
+  const [sectionId, setSectionId] = useState(COPY_SECTIONS[0].id);
+  const [overrides, setOverrides] = useState({});
+  const [loading, setLoading] = useState(true);
+
+  const reload = useCallback(async () => {
+    setLoading(true);
+    try {
+      setOverrides(await loadSiteCopy({ lang }));
+    } catch (err) {
+      toast.error(err?.message || 'שגיאה בטעינת תוכן הדפים');
+      setOverrides({});
+    } finally {
+      setLoading(false);
+    }
+  }, [lang]);
+
+  useEffect(() => { reload(); }, [reload]);
+
+  const section = COPY_SECTIONS.find(s => s.id === sectionId) || COPY_SECTIONS[0];
+  // What the site would show for this key in this language with no override:
+  // the language's own string, else the Hebrew one. Mirrors t()'s fallback.
+  function shippedFor(key) {
+    return translations[lang]?.[key] ?? translations.he?.[key] ?? key;
+  }
+  const overriddenCount = Object.keys(overrides).length;
+
+  return (
+    <div>
+      <Section title="תוכן דפים" count={section.keys.length} />
+      <p className="text-sm text-muted-foreground -mt-3 mb-5">
+        כותרות, כותרות משנה וטקסטים קבועים בדפי האתר. מה שלא נערך כאן מוצג בנוסח שהאתר מגיע איתו.
+        {overriddenCount > 0 && ` ${overriddenCount} טקסטים נערכו בשפה זו.`}
+      </p>
+
+      <div className="flex flex-wrap gap-4 mb-5">
+        <div>
+          <label htmlFor="site-copy-lang" className="text-xs font-semibold text-muted-foreground block mb-1">שפה</label>
+          <select
+            id="site-copy-lang"
+            value={lang}
+            onChange={e => setLang(e.target.value)}
+            className="px-3 py-2 rounded-lg border border-border bg-background text-sm text-foreground"
+          >
+            {LANGUAGES.map(l => (
+              <option key={l.code} value={l.code}>{l.label}</option>
+            ))}
+          </select>
+        </div>
+        <div className="flex-1 min-w-[14rem]">
+          <label htmlFor="site-copy-section" className="text-xs font-semibold text-muted-foreground block mb-1">אזור באתר</label>
+          <select
+            id="site-copy-section"
+            value={sectionId}
+            onChange={e => setSectionId(e.target.value)}
+            className="w-full px-3 py-2 rounded-lg border border-border bg-background text-sm text-foreground"
+          >
+            {COPY_SECTIONS.map(s => (
+              <option key={s.id} value={s.id}>{s.label}</option>
+            ))}
+          </select>
+        </div>
+      </div>
+
+      {loading ? (
+        <LoadingRow />
+      ) : (
+        <div className="space-y-3">
+          {section.keys.map(key => (
+            <CopyRow
+              key={`${lang}:${key}`}
+              copyKey={key}
+              lang={lang}
+              shipped={shippedFor(key)}
+              override={overrides[key]}
+              onSaved={reload}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 const PANELS = {
   ptsd_faqs:     <PTSDFaqsPanel />,
   self_help:     <SelfHelpPanel />,
@@ -1865,6 +2053,7 @@ const PANELS = {
   second_circle: <SecondCirclePanel />,
   children:      <ChildrenPanel />,
   questionnaire: <QuestionnairePanel />,
+  site_copy:     <SiteCopyPanel />,
   users:         <UsersPanel />,
 };
 

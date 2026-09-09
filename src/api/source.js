@@ -52,6 +52,33 @@ async function fetchWithHebrewFallback(path, lang) {
   return items;
 }
 
+// ─── Site copy ───────────────────────────────────────────────────────────────
+// Admin overrides for the UI strings that ship in src/lib/i18n.js: page
+// headings, subtitles, intros, questionnaire result text, footer, SEO
+// descriptions. Each row is one key in one language - `title` holds the i18n
+// key, `content` is `{ text }`.
+//
+// Deliberately NOT run through fetchWithHebrewFallback: t() already falls back
+// to Hebrew itself, and fetching Hebrew rows for, say, French would make a
+// Hebrew override leak onto the French page, overwriting a perfectly good
+// French default. A language with no rows simply gets no overrides.
+//
+// Returns {} when the `site-copy` category doesn't exist yet - the API answers
+// an unknown categorySlug with an empty list, which is exactly the "no
+// overrides, use the shipped strings" case.
+export async function fetchSiteCopy({ lang = 'he' } = {}) {
+  const items = await api(`/articles?type=article&categorySlug=site-copy&langId=${lang}`);
+  /** @type {Record<string, string>} */
+  const map = {};
+  for (const item of items) {
+    const text = parseContent(item).text;
+    if (item.title && typeof text === 'string' && text !== '') {
+      map[item.title] = text;
+    }
+  }
+  return map;
+}
+
 export async function fetchSources({ lang = 'he' } = {}) {
   const items = await fetchWithHebrewFallback('/articles?type=source', lang);
   return items.map(item => {

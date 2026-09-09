@@ -1135,10 +1135,239 @@ export const translations = {
 };
 
 // Falls back to Hebrew (assumed complete), then to the key string itself so missing translations are visible in UI.
+// Every `he` key above, grouped into the sections the admin panel shows. This
+// is the catalogue behind /admin's "תוכן דפים" tab: an editor picks a section,
+// sees the site's current wording for each key, and overrides the ones they
+// want changed. `src/test/site-copy.test.jsx` asserts this stays exhaustive -
+// add a key to `translations.he` and it must land in exactly one section here,
+// or the suite fails and the key would be silently uneditable.
+export const COPY_SECTIONS = [
+  {
+    id: 'navigation',
+    label: 'ניווט',
+    keys: [
+      'home', 'ptsd_info', 'self_help', 'rights', 'treatment', 'community', 'second_circle',
+      'children_content', 'calming', 'questionnaire', 'sources', 'admin', 'nav_path1',
+      'nav_path2', 'nav_path3', 'nav_self_help', 'nav_ptsd_info', 'nav_treatment',
+      'nav_rights', 'nav_community', 'nav_children', 'nav_second_circle_tools'
+    ],
+  },
+  {
+    id: 'hero',
+    label: 'דף הבית - כותרת ראשית ומסלולים',
+    keys: [
+      'hero_eyebrow', 'hero_headline', 'hero_tagline', 'hero_subtitle', 'path1_title',
+      'path1_subtitle', 'path2_title', 'path2_subtitle', 'path3_title', 'path3_subtitle',
+      'enter_path'
+    ],
+  },
+  {
+    id: 'home_about',
+    label: 'דף הבית - על פוסט-טראומה',
+    keys: [
+      'about_ptsd_short', 'read_more'
+    ],
+  },
+  {
+    id: 'home_quick_nav',
+    label: 'דף הבית - ניווט מהיר',
+    keys: [
+      'quick_nav_title'
+    ],
+  },
+  {
+    id: 'first_circle',
+    label: 'דף מעגל ראשון',
+    keys: [
+      'first_circle_welcome'
+    ],
+  },
+  {
+    id: 'second_circle',
+    label: 'דף מעגל שני',
+    keys: [
+      'second_circle_welcome'
+    ],
+  },
+  {
+    id: 'questionnaire',
+    label: 'שאלון PCL-5',
+    keys: [
+      'questionnaire_title', 'questionnaire_intro', 'pcl_instruction', 'not_at_all',
+      'a_little', 'moderately', 'quite_a_bit', 'extremely', 'calculate', 'result_low_title',
+      'result_low_text', 'result_high_title', 'result_high_text', 'go_to_calming',
+      'go_to_self_help', 'scale_mild', 'scale_significant', 'questionnaire_anonymous_note',
+      'questions_remaining_suffix', 'start_over'
+    ],
+  },
+  {
+    id: 'calming',
+    label: 'תרגילי הרגעה',
+    keys: [
+      'calming_title', 'calming_subtitle', 'breathing_title', 'breathing_subtitle',
+      'grounding_title', 'grounding_subtitle', 'muscle_title', 'muscle_subtitle', 'eran_link',
+      'eran_phone', 'back', 'next_step', 'start_exercise'
+    ],
+  },
+  {
+    id: 'grounding_steps',
+    label: 'תרגיל קרקוע - שלבים',
+    keys: [
+      'ground_step_5', 'ground_step_4', 'ground_step_3', 'ground_step_2', 'ground_step_1',
+      'ground_complete'
+    ],
+  },
+  {
+    id: 'rights',
+    label: 'זכויות ובירוקרטיה',
+    keys: [
+      'rights_title', 'rights_subtitle', 'rights_security', 'rights_sexual',
+      'rights_hostilities', 'rights_accidents', 'rights_general', 'rights_faq_title',
+      'chatbot_soon', 'chatbot_description'
+    ],
+  },
+  {
+    id: 'treatment',
+    label: 'דרכי טיפול',
+    keys: [
+      'treatment_title', 'treatment_subtitle', 'how_to_start', 'step_label', 'step_by_step'
+    ],
+  },
+  {
+    id: 'community',
+    label: 'קהילות ומפגשים',
+    keys: [
+      'community_title', 'community_subtitle', 'community_why_p1', 'community_why_p2',
+      'community_filter', 'filter_audience', 'filter_location', 'all_audiences',
+      'all_locations', 'audience_security_forces', 'audience_hostilities',
+      'audience_sexual_harassment', 'audience_spouses', 'audience_general', 'join_community',
+      'location_north', 'location_center', 'location_south', 'location_jerusalem',
+      'location_online', 'meeting_frontal', 'meeting_digital', 'meeting_hybrid',
+      'no_communities'
+    ],
+  },
+  {
+    id: 'children',
+    label: 'תכנים לילדים',
+    keys: [
+      'children_title', 'children_intro', 'age_until4', 'age_4_6', 'age_7_10', 'age_10_13',
+      'age_14_16', 'age_16plus', 'resources_library', 'children_guidelines',
+      'resources_coming_soon'
+    ],
+  },
+  {
+    id: 'self_help',
+    label: 'כלים לעזרה עצמית',
+    keys: [
+      'self_help_title', 'self_help_intro', 'self_help_overflow_prompt',
+      'self_help_overflow_cta'
+    ],
+  },
+  {
+    id: 'second_circle_tools',
+    label: 'כלים למעגל שני',
+    keys: [
+      'second_circle_tools_title', 'second_circle_tools_subtitle', 'second_circle_tools_intro'
+    ],
+  },
+  {
+    id: 'ptsd_info',
+    label: 'על פוסט-טראומה',
+    keys: [
+      'ptsd_info_title', 'ptsd_info_subtitle', 'ptsd_info_instruction'
+    ],
+  },
+  {
+    id: 'sources',
+    label: 'מקורות',
+    keys: [
+      'sources_title', 'sources_subtitle', 'source_cat_research', 'source_cat_clinical',
+      'source_cat_official', 'source_cat_ngo', 'source_cat_international', 'source_link'
+    ],
+  },
+  {
+    id: 'admin',
+    label: 'ממשק ניהול (טקסטים פנימיים)',
+    keys: [
+      'admin_title', 'admin_subtitle', 'admin_faq', 'admin_communities', 'admin_rights',
+      'admin_treatment', 'admin_children', 'admin_sources', 'admin_login_title',
+      'admin_login_subtitle', 'admin_google_signin_error', 'admin_google_config_error',
+      'admin_no_access', 'admin_logout', 'admin_questionnaire_readonly', 'save', 'cancel',
+      'add_new', 'edit', 'delete', 'confirm_delete', 'saved'
+    ],
+  },
+  {
+    id: 'general',
+    label: 'כללי, כותרת תחתונה ותיאורי SEO',
+    keys: [
+      'loading', 'error', 'content_error', 'chatbot_placeholder', 'chat_tooltip',
+      'footer_rights', 'footer_disclaimer', 'footer_info_heading', 'footer_emergency_heading',
+      'footer_credit_prefix', 'footer_partner_org', 'privacy_policy', 'terms_of_use',
+      'legal_eyebrow', 'legal_last_updated', 'legal_lang_notice', 'site_name', 'seo_desc_home',
+      'seo_desc_first_circle', 'seo_desc_second_circle', 'seo_desc_second_circle_tools',
+      'seo_desc_breathing', 'seo_desc_grounding', 'seo_desc_muscle', 'seo_desc_questionnaire',
+      'seo_desc_ptsd_info', 'seo_desc_self_help', 'seo_desc_treatment', 'seo_desc_rights',
+      'seo_desc_community', 'seo_desc_children', 'seo_desc_calming', 'seo_desc_sources',
+      'seo_desc_privacy', 'seo_desc_terms', 'sources_approved_prefix',
+      'ptsd_info_questions_heading', 'nav_menu', 'lang_switcher_label', 'page_not_found_title',
+      'page_not_found_text', 'page_not_found_cta'
+    ],
+  },
+  {
+    id: 'chat',
+    label: 'צ׳אט',
+    keys: [
+      'chat_title', 'chat_close', 'chat_send', 'chat_placeholder', 'chat_thinking',
+      'hero_chat_placeholder', 'chat_disclaimer', 'chat_view_in_site', 'chat_starters'
+    ],
+  },
+];
+
+// ─── Admin overrides ────────────────────────────────────────────────────────
+// The strings above are the shipped defaults. /admin can override any of them
+// per language (stored in the API as `site_copy` rows - see
+// src/api/source.js's fetchSiteCopy), and LanguageContext installs whatever
+// comes back here on load and on every language change.
+//
+// A module-level registry rather than React context because `t()` is a plain
+// function called from ~20 files and from src/lib/seo.js, which is imported by
+// a plain Node script and must not pull React in. Consumers re-render because
+// LanguageProvider bumps a version in its context value when overrides land.
+/** @type {Record<string, Record<string, string>>} */
+let overrides = {};
+
+/**
+ * Replace the override map for one language. Pass null to clear it.
+ * @param {string} lang
+ * @param {Record<string, string> | null | undefined} map
+ */
+export function setCopyOverrides(lang, map) {
+  overrides = { ...overrides, [lang]: map || {} };
+}
+
+/** Current override map for a language - the admin panel reads it to show what is overridden. */
+export function getCopyOverrides(lang) {
+  return overrides[lang] || {};
+}
+
+/** Drop every override. Tests use this; nothing in the app does. */
+export function clearCopyOverrides() {
+  overrides = {};
+}
+
+// Resolution order, unchanged from before except for the two override steps:
+// this language's override -> this language's default -> Hebrew override ->
+// Hebrew default -> the key itself. An override on Hebrew deliberately does
+// NOT leak into a language that has its own default string; it only fills the
+// same gap the Hebrew default used to fill.
 export function t(lang, key) {
-  return (translations[lang] && translations[lang][key])
-    || (translations['he'] && translations['he'][key])
-    || key;
+  const forLang = overrides[lang];
+  if (forLang && forLang[key]) return forLang[key];
+  if (translations[lang] && translations[lang][key]) return translations[lang][key];
+  const forHe = overrides['he'];
+  if (forHe && forHe[key]) return forHe[key];
+  if (translations['he'] && translations['he'][key]) return translations['he'][key];
+  return key;
 }
 
 // Unknown language codes default to RTL - safe for a Hebrew-first app.

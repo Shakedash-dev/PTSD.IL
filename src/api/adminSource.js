@@ -69,6 +69,20 @@ function requireCategoryId(taxonomy, slug) {
   return id;
 }
 
+// Like requireCategoryId, but creates the category if the DB has never seen it.
+// Only site copy needs this: it is the one bucket introduced after the initial
+// migration, so a fresh database has no `site-copy` row and the first admin to
+// save a string would otherwise hit "Unknown category slug". Creating it needs
+// the same admin/moderator role the write itself needs. The taxonomy cache is
+// dropped afterwards so the new id is picked up by later calls.
+async function resolveOrCreateCategoryId(taxonomy, slug, name) {
+  const existing = taxonomy.categoriesBySlug.get(slug);
+  if (existing) return existing;
+  const created = await adminApi('POST', '/admin/categories', { slug, name });
+  taxonomy.categoriesBySlug.set(slug, created.id);
+  return created.id;
+}
+
 function requireAgeGroupId(taxonomy, slug) {
   const id = taxonomy.ageGroupsBySlug.get(slug);
   if (!id) throw new Error(`Unknown age group slug: "${slug}"`);
@@ -145,14 +159,84 @@ async function writeArticle(draft, ctx, payload) {
   // Sync the chatbot's vector DB for this item (create/update). Runs after the
   // content write succeeds; a sync failure surfaces as a ChatbotSyncError the
   // panel treats as a non-fatal warning (the content is already saved).
-  await reindexItem(saved?.id ?? draft.id);
+  // `ctx.skipReindex` is for rows that are UI chrome rather than answerable
+  // content - see saveSiteCopy.
+  if (!ctx.skipReindex) await reindexItem(saved?.id ?? draft.id);
   return saved;
 }
 
-async function removeArticle(id) {
+async function removeArticle(id, { skipReindex = false } = {}) {
   const res = await adminApi('DELETE', `${ARTICLES}/${id}`);
-  await reindexItem(id); // worker 404s on the deleted id and drops its vectors
+  if (!skipReindex) await reindexItem(id); // worker 404s on the deleted id and drops its vectors
   return res;
+}
+
+// ─── siteCopy — article, category `site-copy`, per langId ──────────────────
+// Admin overrides for the UI strings shipped in src/lib/i18n.js: page
+// headings, subtitles, intros, questionnaire result text, footer, SEO
+// descriptions. One row per i18n key per language - `title` IS the key,
+// content JSON is `{ text }`.
+//
+// Two things make this bucket different from the rest:
+//   - It is sparse. A key with no row simply uses the string the site shipped
+//     with, so an untouched site has zero rows and behaves exactly as before.
+//     Clearing a field deletes the row rather than storing an empty string.
+//   - It is skipped by the chatbot reindex. These are button labels, nav items
+//     and meta descriptions; embedding "שמירה" or "טוען..." would only add
+//     noise to the bot's retrieval.
+const SITE_COPY_CATEGORY = 'site-copy';
+const SITE_COPY_CATEGORY_NAME = 'תוכן דפים';
+
+/**
+ * Every override stored for one language.
+ * @param {{ lang?: string }} [ctx]
+ * @returns {Promise<Record<string, { id: string, text: string }>>} keyed by i18n key
+ */
+export async function loadSiteCopy(ctx = {}) {
+  const lang = ctx.lang || 'he';
+  const taxonomy = await getTaxonomy();
+  const categoryId = taxonomy.categoriesBySlug.get(SITE_COPY_CATEGORY);
+  /** @type {Record<string, { id: string, text: string }>} */
+  const map = {};
+  // Nothing has ever been overridden - the category itself does not exist yet.
+  if (!categoryId) return map;
+  const items = await fetchArticles({ type: 'article', langId: lang, categoryId });
+  for (const item of items) {
+    if (!item.title) continue;
+    map[item.title] = { id: item.id, text: parseContent(item).text ?? '' };
+  }
+  return map;
+}
+
+/**
+ * Override one key in one language. Pass an empty `text` to drop the override
+ * and fall back to the shipped string.
+ * @param {{ id?: string, key: string, text: string }} draft
+ * @param {{ lang?: string }} [ctx]
+ */
+export async function saveSiteCopy(draft, ctx = {}) {
+  const lang = ctx.lang || 'he';
+  const text = (draft.text ?? '').trim();
+  if (!text) {
+    // Reverting to the shipped string. Nothing to delete if it was never saved.
+    return draft.id ? removeSiteCopy(draft.id) : null;
+  }
+  const taxonomy = await getTaxonomy();
+  const categoryId = await resolveOrCreateCategoryId(
+    taxonomy, SITE_COPY_CATEGORY, SITE_COPY_CATEGORY_NAME
+  );
+  const payload = {
+    type: 'article',
+    langId: lang,
+    title: draft.key,
+    content: JSON.stringify({ text }),
+    categoryIds: [categoryId],
+  };
+  return writeArticle(draft, { ...ctx, skipReindex: true }, payload);
+}
+
+export function removeSiteCopy(id) {
+  return removeArticle(id, { skipReindex: true });
 }
 
 // ─── ptsdFaq — faq, category `ptsd-info`, per langId ───────────────────────
