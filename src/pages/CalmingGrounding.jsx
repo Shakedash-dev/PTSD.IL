@@ -3,68 +3,22 @@ import { useLang } from '@/lib/LanguageContext';
 import { Button } from '@/components/ui/button';
 import { t } from '@/lib/i18n';
 
-// he/en are the clinician-authored source scripts.
-// ar/ru/fr are machine-assisted translations pending clinician review.
-const STEPS = {
-  he: [
-    { num: 5, instruction: 'מצאו 5 דברים שאתם רואים סביבכם', tip: 'הכיסא, הדלת, החלון' },
-    { num: 4, instruction: 'מצאו 4 דברים שאתם יכולים לגעת בהם', tip: 'המשטח שעליו אתם יושבים, הבגד' },
-    { num: 3, instruction: 'הקשיבו ל-3 קולות שאתם שומעים', tip: 'נשימה, תנועת אוויר, קולות מבחוץ' },
-    { num: 2, instruction: 'שימו לב ל-2 ריחות שאתם מריחים', tip: 'אפילו ריח עדין של האוויר' },
-    { num: 1, instruction: 'שימו לב לטעם אחד שאתם טועמים', tip: 'הטעם שנמצא כרגע בפה' },
-  ],
-  en: [
-    { num: 5, instruction: 'Find 5 things you can see around you', tip: 'The chair, the door, the window' },
-    { num: 4, instruction: 'Find 4 things you can touch', tip: "The surface you're sitting on, your clothing" },
-    { num: 3, instruction: 'Listen for 3 sounds you can hear', tip: 'Breathing, air movement, sounds from outside' },
-    { num: 2, instruction: 'Notice 2 things you can smell', tip: 'Even the faint smell of the air' },
-    { num: 1, instruction: 'Notice 1 thing you can taste', tip: 'The taste currently in your mouth' },
-  ],
-  ar: [
-    { num: 5, instruction: 'ابحث عن 5 أشياء تراها حولك', tip: 'الكرسي، الباب، النافذة' },
-    { num: 4, instruction: 'ابحث عن 4 أشياء يمكنك لمسها', tip: 'السطح الذي تجلس عليه، ملابسك' },
-    { num: 3, instruction: 'أنصت إلى 3 أصوات تسمعها', tip: 'التنفّس، حركة الهواء، أصوات من الخارج' },
-    { num: 2, instruction: 'انتبه إلى رائحتين تشمّهما', tip: 'حتى الرائحة الخفيفة للهواء' },
-    { num: 1, instruction: 'انتبه إلى طعم واحد تتذوّقه', tip: 'الطعم الموجود في فمك الآن' },
-  ],
-  ru: [
-    { num: 5, instruction: 'Найдите 5 вещей, которые вы видите вокруг', tip: 'Стул, дверь, окно' },
-    { num: 4, instruction: 'Найдите 4 вещи, которых вы можете коснуться', tip: 'Поверхность, на которой вы сидите, ваша одежда' },
-    { num: 3, instruction: 'Прислушайтесь к 3 звукам, которые вы слышите', tip: 'Дыхание, движение воздуха, звуки снаружи' },
-    { num: 2, instruction: 'Обратите внимание на 2 запаха', tip: 'Даже едва уловимый запах воздуха' },
-    { num: 1, instruction: 'Обратите внимание на 1 вкус', tip: 'Вкус, который сейчас у вас во рту' },
-  ],
-  fr: [
-    { num: 5, instruction: 'Trouvez 5 choses que vous voyez autour de vous', tip: 'La chaise, la porte, la fenêtre' },
-    { num: 4, instruction: 'Trouvez 4 choses que vous pouvez toucher', tip: 'La surface sur laquelle vous êtes assis, vos vêtements' },
-    { num: 3, instruction: 'Écoutez 3 sons que vous entendez', tip: 'La respiration, le mouvement de l\'air, les bruits du dehors' },
-    { num: 2, instruction: 'Remarquez 2 odeurs que vous sentez', tip: 'Même l\'odeur légère de l\'air' },
-    { num: 1, instruction: 'Remarquez 1 goût que vous percevez', tip: 'Le goût présent dans votre bouche en ce moment' },
-  ],
-};
-
-// UI chrome for the grounding flow (buttons + crisis-line label).
-// he/en source; ar/ru/fr machine-assisted, pending clinician review.
-const UI = {
-  he: { next: 'הבא', complete: 'סיום', again: 'להתחיל מחדש', eran: 'ער״ן: 1201' },
-  en: { next: 'Next', complete: 'Complete', again: 'Start again', eran: 'Eran: 1201' },
-  ar: { next: 'التالي', complete: 'إنهاء', again: 'ابدأ من جديد', eran: 'إيران: 1201' },
-  ru: { next: 'Далее', complete: 'Завершить', again: 'Начать заново', eran: 'ЭРАН: 1201' },
-  fr: { next: 'Suivant', complete: 'Terminer', again: 'Recommencer', eran: 'ERAN : 1201' },
-};
+// The 5-4-3-2-1 script lives in src/lib/i18n.js so /admin can reword it in
+// every language - see the "תרגיל קרקוע - שלבים" and "תרגילי הרגעה - הנחיות
+// התרגיל" sections there. The countdown (5 senses, 5 down to 1) is the
+// exercise's structure, not copy, so it stays here.
+const STEP_NUMBERS = [5, 4, 3, 2, 1];
 
 export default function CalmingGrounding() {
   const { lang } = useLang();
-  const steps = STEPS[lang] || STEPS.he;
-  const ui = UI[lang] || UI.he;
 
   const [stepIdx, setStepIdx] = useState(0);
   const [done, setDone] = useState(false);
 
-  const current = steps[stepIdx];
+  const currentNum = STEP_NUMBERS[stepIdx];
 
   function advance() {
-    if (stepIdx < steps.length - 1) {
+    if (stepIdx < STEP_NUMBERS.length - 1) {
       setStepIdx(i => i + 1);
     } else {
       setDone(true);
@@ -84,10 +38,10 @@ export default function CalmingGrounding() {
           size="roomy"
           onClick={() => { setStepIdx(0); setDone(false); }}
         >
-          {ui.again}
+          {t(lang, 'ground_again')}
         </Button>
         <div className="mt-10">
-          <a href="tel:1201" className="text-sm text-muted-foreground hover:text-foreground transition-colors duration-300">{ui.eran}</a>
+          <a href="tel:1201" className="text-sm text-muted-foreground hover:text-foreground transition-colors duration-300">{t(lang, 'crisis_line_short')}</a>
         </div>
       </div>
     );
@@ -98,9 +52,9 @@ export default function CalmingGrounding() {
       <div className="w-full max-w-lg">
         {/* Progress */}
         <div className="flex justify-center gap-2 mb-12">
-          {steps.map((s, i) => (
+          {STEP_NUMBERS.map((num, i) => (
             <div
-              key={i}
+              key={num}
               className={`h-1.5 rounded-full transition-colors duration-300 ${
                 i < stepIdx ? 'w-8 bg-primary' : i === stepIdx ? 'w-8 bg-accent' : 'w-3 bg-border'
               }`}
@@ -110,12 +64,12 @@ export default function CalmingGrounding() {
 
         <div className="text-center" key={stepIdx}>
           <div className="text-8xl font-heading font-semibold text-primary mb-8 leading-none select-none">
-            {current.num}
+            {currentNum}
           </div>
           <h2 className="text-2xl sm:text-3xl font-heading font-semibold text-foreground mb-4 leading-snug px-2">
-            {current.instruction}
+            {t(lang, `ground_step_${currentNum}`)}
           </h2>
-          <p className="text-card-foreground mb-12 leading-relaxed">{current.tip}</p>
+          <p className="text-card-foreground mb-12 leading-relaxed">{t(lang, `ground_tip_${currentNum}`)}</p>
 
           <Button
             variant="solid"
@@ -124,12 +78,12 @@ export default function CalmingGrounding() {
             onClick={advance}
             className="w-full max-w-xs"
           >
-            {stepIdx < steps.length - 1 ? ui.next : ui.complete}
+            {t(lang, stepIdx < STEP_NUMBERS.length - 1 ? 'ground_next' : 'ground_finish')}
           </Button>
         </div>
 
         <div className="mt-12 text-center">
-          <a href="tel:1201" className="text-sm text-muted-foreground hover:text-foreground transition-colors duration-300">{ui.eran}</a>
+          <a href="tel:1201" className="text-sm text-muted-foreground hover:text-foreground transition-colors duration-300">{t(lang, 'crisis_line_short')}</a>
         </div>
       </div>
     </div>

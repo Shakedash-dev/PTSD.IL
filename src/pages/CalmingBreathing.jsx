@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useLang } from '@/lib/LanguageContext';
+import { t } from '@/lib/i18n';
 import { Button } from '@/components/ui/button';
 
 const PHASES = [
@@ -8,95 +9,16 @@ const PHASES = [
   { key: 'exhale', seconds: 8 },
 ];
 
-// he/en are the clinician-authored source scripts.
-// ar/ru/fr are machine-assisted translations pending clinician review.
-const STRINGS = {
-  he: {
-    setup_title: 'לפני שמתחילים',
-    setup_steps: [
-      'שב/י או שכב/י בנוחות.',
-      'יד אחת על הבטן, יד שנייה על החזה.',
-      'תן/י לבטן לעלות עם השאיפה - לא לחזה.',
-      'הכתפיים והגרון רפויים.',
-    ],
-    start: 'התחלה',
-    stop: 'עצירה',
-    inhale: 'שאיפה',
-    hold: 'החזיקו',
-    exhale: 'נשיפה',
-    next_label: 'הבא',
-    cycle_label: 'מחזור',
-    eran_link: 'ער״ן: 1201',
-  },
-  en: {
-    setup_title: 'Before you begin',
-    setup_steps: [
-      'Sit or lie down comfortably.',
-      'One hand on your belly, one on your chest.',
-      'Let the belly rise on the inhale - not the chest.',
-      'Keep shoulders and throat relaxed.',
-    ],
-    start: 'Start',
-    stop: 'Stop',
-    inhale: 'Inhale',
-    hold: 'Hold',
-    exhale: 'Exhale',
-    next_label: 'Next',
-    cycle_label: 'Cycle',
-    eran_link: 'Eran helpline: 1201',
-  },
-  ar: {
-    setup_title: 'قبل أن نبدأ',
-    setup_steps: [
-      'اجلس أو استلقِ بشكل مريح.',
-      'ضع يدًا على بطنك، واليد الأخرى على صدرك.',
-      'دع بطنك يرتفع مع الشهيق - لا صدرك.',
-      'أبقِ كتفيك وحلقك مرتخيين.',
-    ],
-    start: 'ابدأ',
-    stop: 'توقّف',
-    inhale: 'شهيق',
-    hold: 'احبس النفس',
-    exhale: 'زفير',
-    next_label: 'التالي',
-    cycle_label: 'دورة',
-    eran_link: 'إيران: 1201',
-  },
-  ru: {
-    setup_title: 'Прежде чем начать',
-    setup_steps: [
-      'Сядьте или лягте удобно.',
-      'Одну руку положите на живот, другую на грудь.',
-      'Пусть на вдохе поднимается живот, а не грудь.',
-      'Плечи и горло расслаблены.',
-    ],
-    start: 'Начать',
-    stop: 'Остановить',
-    inhale: 'Вдох',
-    hold: 'Задержка',
-    exhale: 'Выдох',
-    next_label: 'Далее',
-    cycle_label: 'Цикл',
-    eran_link: 'ЭРАН: 1201',
-  },
-  fr: {
-    setup_title: 'Avant de commencer',
-    setup_steps: [
-      'Asseyez-vous ou allongez-vous confortablement.',
-      'Une main sur le ventre, l\'autre sur la poitrine.',
-      'Laissez le ventre se soulever à l\'inspiration, pas la poitrine.',
-      'Gardez les épaules et la gorge détendues.',
-    ],
-    start: 'Commencer',
-    stop: 'Arrêter',
-    inhale: 'Inspiration',
-    hold: 'Retenez',
-    exhale: 'Expiration',
-    next_label: 'Suivant',
-    cycle_label: 'Cycle',
-    eran_link: 'ERAN : 1201',
-  },
-};
+// The exercise's wording lives in src/lib/i18n.js so /admin can edit it in
+// every language - see the "תרגילי הרגעה - הנחיות התרגיל" section there. The
+// four setup bullets are numbered keys rather than one blob so an editor can
+// reword a single line.
+const SETUP_STEP_KEYS = [
+  'breathing_setup_step_1',
+  'breathing_setup_step_2',
+  'breathing_setup_step_3',
+  'breathing_setup_step_4',
+];
 
 const TICK_MS = 100;
 
@@ -133,7 +55,6 @@ function ProgressRing({ progress }) {
 
 export default function CalmingBreathing() {
   const { lang } = useLang();
-  const s = STRINGS[lang] || STRINGS.he;
 
   const [stage, setStage] = useState('setup');
   const [phaseIndex, setPhaseIndex] = useState(0);
@@ -182,15 +103,15 @@ export default function CalmingBreathing() {
         {stage === 'setup' ? (
           <div className="text-center max-w-sm">
             <h2 className="font-heading font-light text-3xl text-foreground mb-8">
-              {s.setup_title}
+              {t(lang, 'breathing_setup_title')}
             </h2>
             <ol className="text-start space-y-4 mb-10">
-              {s.setup_steps.map((step, i) => (
-                <li key={i} className="flex gap-3 items-start">
+              {SETUP_STEP_KEYS.map((stepKey, i) => (
+                <li key={stepKey} className="flex gap-3 items-start">
                   <span className="w-6 h-6 rounded-full bg-primary/15 text-primary text-xs font-semibold flex items-center justify-center flex-shrink-0 mt-0.5">
                     {i + 1}
                   </span>
-                  <span className="text-card-foreground leading-relaxed">{step}</span>
+                  <span className="text-card-foreground leading-relaxed">{t(lang, stepKey)}</span>
                 </li>
               ))}
             </ol>
@@ -200,7 +121,7 @@ export default function CalmingBreathing() {
               size="cta"
               onClick={start}
             >
-              {s.start}
+              {t(lang, 'breathing_start')}
             </Button>
           </div>
 
@@ -216,7 +137,7 @@ export default function CalmingBreathing() {
                       ? 'bg-primary text-primary-foreground shadow-card scale-105'
                       : 'text-muted-foreground'
                   }`}>
-                    {s[p.key]}
+                    {t(lang, `breathing_${p.key}`)}
                   </span>
                   {i < PHASES.length - 1 && (
                     <div className="w-5 h-px bg-border mx-0.5 flex-shrink-0" />
@@ -245,19 +166,19 @@ export default function CalmingBreathing() {
             {/* Phase label + countdown below circle */}
             <div className="mt-7 text-center">
               <div className="font-heading font-semibold text-xl text-foreground mb-1">
-                {s[phase.key]}
+                {t(lang, `breathing_${phase.key}`)}
               </div>
               <div className="font-heading font-semibold text-6xl text-foreground tabular-nums leading-none">
                 {secondsLeft}
               </div>
               <div className="text-xs text-muted-foreground mt-2 tracking-wide">
-                {s.next_label}: {s[nextPhase.key]}
+                {t(lang, 'breathing_next_label')}: {t(lang, `breathing_${nextPhase.key}`)}
               </div>
             </div>
 
             {/* Cycle counter */}
             <div className="mt-6 text-xs uppercase tracking-[0.2em] text-muted-foreground font-semibold">
-              {s.cycle_label} {cycle}
+              {t(lang, 'breathing_cycle_label')} {cycle}
             </div>
 
             <Button
@@ -266,14 +187,14 @@ export default function CalmingBreathing() {
               onClick={() => setStage('setup')}
               className="mt-10 text-sm"
             >
-              {s.stop}
+              {t(lang, 'breathing_stop')}
             </Button>
           </div>
         )}
 
         <div className="mt-12 text-center">
           <a href="tel:1201" className="text-sm text-muted-foreground hover:text-foreground transition-colors duration-300">
-            {s.eran_link}
+            {t(lang, 'crisis_line_short')}
           </a>
         </div>
       </div>
