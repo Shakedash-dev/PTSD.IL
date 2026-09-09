@@ -14,6 +14,7 @@ import {
   fetchPTSDInfoFaqs,
   fetchSecondCircleTools,
   fetchQuestionnaire,
+  fetchLegalDocs,
 } from './source';
 
 export function useSources({ lang }) {
@@ -79,6 +80,16 @@ export function useQuestionnaire({ lang, slug = 'pcl-5' }) {
   });
 }
 
+// Admin replacements for the two legal documents, keyed by slug. Only ever
+// consulted by LegalPage, which renders its shipped Markdown until (and unless)
+// this resolves - a failure here is not an error state, it is the normal case.
+export function useLegalDocs({ lang }) {
+  return useQuery({
+    queryKey: ['legal_docs', lang],
+    queryFn: () => fetchLegalDocs({ lang }),
+  });
+}
+
 // Rights FAQs are the only category-scoped query - each tab is a separate
 // cache entry, so warming the cache means prefetching every category.
 const RIGHTS_CATEGORIES = ['security_forces', 'sexual_harassment', 'hostilities', 'accidents_work', 'general'];
@@ -91,6 +102,7 @@ const RIGHTS_CATEGORIES = ['security_forces', 'sexual_harassment', 'hostilities'
 export function prefetchAllContent(queryClient, lang) {
   const warm = (queryKey, queryFn) => queryClient.prefetchQuery({ queryKey, queryFn });
 
+  warm(['legal_docs', lang], () => fetchLegalDocs({ lang }));
   warm(['sources', lang], () => fetchSources({ lang }));
   warm(['communities', lang], () => fetchCommunities({ lang }));
   warm(['self_help_tools', lang], () => fetchSelfHelpTools({ lang }));

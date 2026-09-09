@@ -141,13 +141,21 @@ The Site links to external sites and services whose content and privacy practice
 We may update this policy; the date of the latest update appears at the top of the page, and continued use constitutes acceptance. This policy is governed by the laws of the State of Israel, and the competent courts of the Tel Aviv-Jaffa District have exclusive jurisdiction.
 `;
 
+// Exported so /admin's legal panel can seed its editor with the text the site
+// actually ships, rather than a blank box - an admin edits from the real
+// baseline. src/components/LegalPage.jsx uses these as the fallback whenever
+// no override row exists.
+export const PRIVACY_CONTENT = { he, en };
+export const PRIVACY_UPDATED = { he: UPDATED_HE, en: UPDATED_EN };
+
 export default function PrivacyPolicy() {
   return (
     <LegalPage
+      slug="privacy-policy"
       titleKey="privacy_policy"
       eyebrowKey="legal_eyebrow"
-      updated={{ he: UPDATED_HE, en: UPDATED_EN }}
-      content={{ he, en }}
+      updated={PRIVACY_UPDATED}
+      content={PRIVACY_CONTENT}
     />
   );
 }

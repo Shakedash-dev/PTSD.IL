@@ -117,6 +117,29 @@ only - an override reaches the live page but not that script's output. And this
 is the one admin panel that is not Hebrew-only; it carries its own language
 picker because the rows are per language.
 
+### Legal documents
+
+`/privacy-policy` and `/terms-of-use` were previously code-only on purpose.
+They are now editable, but the two reasons behind that decision are kept:
+
+- **The shipped Markdown is still the source of truth.** `PrivacyPolicy.jsx`
+  and `TermsOfUse.jsx` export `*_CONTENT` / `*_UPDATED`, `LegalPage` renders
+  them, and a stored row only displaces them when one exists. The policy
+  therefore stays on screen when the content API is down. Clearing the editor
+  deletes the row and reverts.
+- **`admin` only, never `moderator`** - `hasLegalEditAccess()` in
+  `src/lib/auth.js`, its own tab outside `CONTENT_TABS`. Read the comment
+  there: like every other role check in this app it is a **UI gate**, and the
+  API authorises article writes by role alone with no per-category rule, so a
+  moderator with a token could still write the row directly. Closing that
+  needs a backend change.
+
+Stored as `type: 'article'`, category `legal`, `title` = the slug, content
+`{ body, updated }`. Raw Markdown, deliberately **not** the html<->md
+round-trip the other panels use - a legal document must come back out exactly
+as it was typed. Body and date are saved together so the date can never
+describe the wrong version. Skipped by the chatbot reindex.
+
 ## Auth & DB access
 
 - **Auth is backend-enforced via JWT, Google-only.** `POST /api/auth/google {idToken}` -> `{accessToken}`; the password `/api/auth/login` endpoint is gone (404). `idToken` is the Google Identity Services credential collected by `AdminLogin.jsx`; the returned JWT's shape (`roles`/`sub` claims, sessionStorage handling) is unchanged. Every `/api/admin/*` call re-checks the token + role server-side (401/403). The client-side `/admin` guard (`AdminGate` in `App.jsx`, `hasAdminAccess()`) is **UX only** - it shows/hides the panel, it is NOT a security boundary.

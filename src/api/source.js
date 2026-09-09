@@ -79,6 +79,29 @@ export async function fetchSiteCopy({ lang = 'he' } = {}) {
   return map;
 }
 
+// ─── Legal documents ─────────────────────────────────────────────────────────
+// The privacy policy and terms of use. Like site copy, this is an override
+// layer, not a migration: each page ships its own Markdown (see
+// src/components/LegalPage.jsx) and that is what renders unless an admin has
+// saved a replacement. Legal text has to keep appearing when the API is down,
+// which rules out making the DB the only source.
+//
+// `title` is the document slug ("privacy-policy" / "terms-of-use"), content is
+// `{ body, updated }` - body is Markdown, updated is the displayed
+// last-updated date.
+export async function fetchLegalDocs({ lang = 'he' } = {}) {
+  const items = await api(`/articles?type=article&categorySlug=legal&langId=${lang}`);
+  /** @type {Record<string, { body: string, updated: string }>} */
+  const map = {};
+  for (const item of items) {
+    const c = parseContent(item);
+    if (item.title && typeof c.body === 'string' && c.body.trim() !== '') {
+      map[item.title] = { body: c.body, updated: c.updated ?? '' };
+    }
+  }
+  return map;
+}
+
 export async function fetchSources({ lang = 'he' } = {}) {
   const items = await fetchWithHebrewFallback('/articles?type=source', lang);
   return items.map(item => {

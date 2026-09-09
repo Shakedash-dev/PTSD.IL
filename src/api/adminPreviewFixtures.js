@@ -18,6 +18,7 @@ const CATEGORIES = [
   { id: 'cat-children', slug: 'children', name: 'ילדים', children: [] },
   { id: 'cat-second-circle', slug: 'second-circle', name: 'מעגל שני', children: [] },
   { id: 'cat-site-copy', slug: 'site-copy', name: 'תוכן דפים', children: [] },
+  { id: 'cat-legal', slug: 'legal', name: 'מסמכים משפטיים', children: [] },
 ];
 
 const AUDIENCES = [
@@ -71,6 +72,9 @@ const ARTICLES = [
   // keys so the panel shows both states - overridden and shipped-as-is.
   article('a15', 'article', 'cat-site-copy', 'treatment_title', { text: 'מפת הדרכים לטיפול (תצוגה מקדימה)' }, 0),
   article('a16', 'article', 'cat-site-copy', 'hero_headline', { text: 'את/ה לא לבד (תצוגה מקדימה)' }, 0),
+  // One legal document overridden, one left on its shipped text, so the panel
+  // shows both states.
+  article('a17', 'article', 'cat-legal', 'privacy-policy', { body: '## מדיניות פרטיות\n\nתוכן לדוגמה עבור התצוגה המקדימה.', updated: '1 בינואר 2026' }, 0),
 ];
 
 const COMMUNITIES = [

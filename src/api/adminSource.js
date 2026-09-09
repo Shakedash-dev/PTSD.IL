@@ -239,6 +239,76 @@ export function removeSiteCopy(id) {
   return removeArticle(id, { skipReindex: true });
 }
 
+// ─── legalDoc — article, category `legal`, per langId ──────────────────────
+// The privacy policy and the terms of use. `title` is the document slug,
+// content JSON is `{ body, updated }` - body is raw Markdown (NOT the
+// html<->md round-trip the other panels use: a legal document should come back
+// out byte-for-byte as it was typed, and turndown is not the place to find out
+// otherwise), `updated` is the last-updated date shown in the page header.
+//
+// Like site copy this is an override layer: no row means the page renders the
+// Markdown it ships with (src/pages/PrivacyPolicy.jsx, TermsOfUse.jsx), which
+// is what keeps the legal text on screen when the API is unreachable.
+// Deleting a row reverts to that shipped text.
+//
+// Only the two documents below exist - this is a fixed pair, not a list an
+// editor adds to.
+const LEGAL_CATEGORY = 'legal';
+const LEGAL_CATEGORY_NAME = 'מסמכים משפטיים';
+export const LEGAL_DOC_SLUGS = ['privacy-policy', 'terms-of-use'];
+
+/**
+ * @param {{ lang?: string }} [ctx]
+ * @returns {Promise<Record<string, { id: string, body: string, updated: string }>>} keyed by slug
+ */
+export async function loadLegalDocs(ctx = {}) {
+  const lang = ctx.lang || 'he';
+  const taxonomy = await getTaxonomy();
+  const categoryId = taxonomy.categoriesBySlug.get(LEGAL_CATEGORY);
+  /** @type {Record<string, { id: string, body: string, updated: string }>} */
+  const map = {};
+  if (!categoryId) return map; // nothing overridden yet
+  const items = await fetchArticles({ type: 'article', langId: lang, categoryId });
+  for (const item of items) {
+    if (!item.title) continue;
+    const c = parseContent(item);
+    map[item.title] = { id: item.id, body: c.body ?? '', updated: c.updated ?? '' };
+  }
+  return map;
+}
+
+/**
+ * @param {{ id?: string, slug: string, body: string, updated?: string }} draft
+ * @param {{ lang?: string }} [ctx]
+ */
+export async function saveLegalDoc(draft, ctx = {}) {
+  const lang = ctx.lang || 'he';
+  const body = (draft.body ?? '').trim();
+  if (!body) {
+    // Emptying the editor means "go back to the text the site ships with".
+    return draft.id ? removeLegalDoc(draft.id) : null;
+  }
+  const taxonomy = await getTaxonomy();
+  const categoryId = await resolveOrCreateCategoryId(
+    taxonomy, LEGAL_CATEGORY, LEGAL_CATEGORY_NAME
+  );
+  const payload = {
+    type: 'article',
+    langId: lang,
+    title: draft.slug,
+    content: JSON.stringify({ body, updated: draft.updated ?? '' }),
+    categoryIds: [categoryId],
+  };
+  // Kept out of the chatbot index on purpose: the bot answers questions about
+  // trauma and rights, and a liability disclaimer retrieved as an "answer"
+  // would be worse than no answer.
+  return writeArticle(draft, { ...ctx, skipReindex: true }, payload);
+}
+
+export function removeLegalDoc(id) {
+  return removeArticle(id, { skipReindex: true });
+}
+
 // ─── ptsdFaq — faq, category `ptsd-info`, per langId ───────────────────────
 // draft: { id, groupId, langId, q, a }         (a = rich, md<->html)
 // content JSON: { answer }

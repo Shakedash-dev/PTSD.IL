@@ -1,12 +1,14 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Settings, Users, UserCog, FileText, BookOpen, HelpCircle, Wrench, Heart, Baby, Shield, ClipboardList, Type, Pencil, Trash2, Plus, Check, X, RotateCcw, LogOut, ChevronUp, ChevronDown } from 'lucide-react';
+import { Settings, Users, UserCog, FileText, BookOpen, HelpCircle, Wrench, Heart, Baby, Shield, ClipboardList, Type, Scale, Pencil, Trash2, Plus, Check, X, RotateCcw, LogOut, ChevronUp, ChevronDown } from 'lucide-react';
 import { toast } from 'sonner';
 import RichTextEditor from '@/components/RichTextEditor';
 import { Button } from '@/components/ui/button';
 import { ADMIN_PREVIEW } from '@/lib/adminPreview';
 import { COPY_SECTIONS, LANGUAGES, translations } from '@/lib/i18n';
+import { PRIVACY_CONTENT, PRIVACY_UPDATED } from '@/pages/PrivacyPolicy';
+import { TERMS_CONTENT, TERMS_UPDATED } from '@/pages/TermsOfUse';
 import ChoiceChip from '@/components/patterns/ChoiceChip';
-import { logout, hasAdminAccess, hasUserManagementAccess, getCurrentUserId } from '@/lib/auth';
+import { logout, hasAdminAccess, hasUserManagementAccess, hasLegalEditAccess, getCurrentUserId } from '@/lib/auth';
 import { ForbiddenError, UnauthorizedError } from '@/api/adminClient';
 import { ChatbotSyncError } from '@/api/reindex';
 import {
@@ -20,6 +22,7 @@ import {
   loadChildrenGuidelines, saveChildrenGuidelines,
   loadChildrenResource, saveChildrenResource, removeChildrenResource,
   loadSiteCopy, saveSiteCopy,
+  loadLegalDocs, saveLegalDoc,
   loadQuestionnaires, loadQuestionnaireDetail,
   createQuestionnaire, updateQuestionnaire, removeQuestionnaire,
   addQuestion, updateQuestion, removeQuestion,
@@ -185,6 +188,10 @@ const CONTENT_TABS = [
   { key: 'questionnaire', label: 'שאלון PCL-5',        icon: ClipboardList },
   { key: 'site_copy',     label: 'תוכן דפים',           icon: Type },
 ];
+
+// Legal-documents tab - shown ONLY to admin, never moderator
+// (hasLegalEditAccess()). Kept out of CONTENT_TABS for that reason.
+const LEGAL_TAB = { key: 'legal', label: 'מסמכים משפטיים', icon: Scale };
 
 // User-management tab - shown ONLY to masteradmin (hasUserManagementAccess()).
 const USERS_TAB = { key: 'users', label: 'ניהול משתמשים', icon: UserCog };
@@ -2043,6 +2050,201 @@ function SiteCopyPanel() {
   );
 }
 
+// ─── Legal documents ────────────────────────────────────────────────────────
+// The privacy policy and the terms of use. Three things make this panel unlike
+// the others, all of them deliberate:
+//
+//  1. `admin` only, never `moderator` (hasLegalEditAccess) - these carry
+//     liability and privacy undertakings, not editorial content.
+//  2. Raw Markdown in a plain textarea, not the rich-text editor. Every other
+//     panel round-trips through html<->markdown; a legal document should come
+//     back out exactly as it was typed.
+//  3. Empty means "use the text the site ships with". Saving an empty editor
+//     deletes the override, which is how an admin undoes a change - and why
+//     the pages keep rendering if the API is unreachable.
+const LEGAL_DOC_META = [
+  {
+    slug: 'privacy-policy',
+    label: 'מדיניות פרטיות',
+    shipped: PRIVACY_CONTENT,
+    shippedUpdated: PRIVACY_UPDATED,
+  },
+  {
+    slug: 'terms-of-use',
+    label: 'תנאי שימוש',
+    shipped: TERMS_CONTENT,
+    shippedUpdated: TERMS_UPDATED,
+  },
+];
+
+// Only he/en exist: LegalPage maps ar->he and ru/fr->en, so those are the only
+// two documents that ever render.
+const LEGAL_LANGS = [
+  { code: 'he', label: 'עברית' },
+  { code: 'en', label: 'English' },
+];
+
+function LegalDocEditor({ doc, lang, override, onSaved }) {
+  const shippedBody = doc.shipped[lang] ?? '';
+  const shippedUpdated = doc.shippedUpdated[lang] ?? '';
+  const [body, setBody] = useState(override?.body ?? shippedBody);
+  const [updated, setUpdated] = useState(override?.updated ?? shippedUpdated);
+  const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    setBody(override?.body ?? shippedBody);
+    setUpdated(override?.updated ?? shippedUpdated);
+  }, [override, shippedBody, shippedUpdated, lang]);
+
+  const isOverridden = Boolean(override);
+  const dirty = body !== (override?.body ?? shippedBody) || updated !== (override?.updated ?? shippedUpdated);
+
+  async function save() {
+    if (!window.confirm(`לשמור שינוי ב"${doc.label}"? זהו מסמך משפטי המחייב את האתר.`)) return;
+    setSaving(true);
+    // Re-saving the shipped text unchanged is a revert, not an override.
+    const next = body.trim() === shippedBody.trim() ? '' : body;
+    const ok = await runWrite(() => saveLegalDoc(
+      { id: override?.id, slug: doc.slug, body: next, updated }, { lang }
+    ));
+    setSaving(false);
+    if (ok) await onSaved();
+  }
+
+  async function revert() {
+    if (!override) { setBody(shippedBody); setUpdated(shippedUpdated); return; }
+    if (!window.confirm(`לחזור לנוסח שהאתר מגיע איתו עבור "${doc.label}"?`)) return;
+    setSaving(true);
+    const ok = await runWrite(() => saveLegalDoc(
+      { id: override.id, slug: doc.slug, body: '', updated: '' }, { lang }
+    ));
+    setSaving(false);
+    if (ok) await onSaved();
+  }
+
+  return (
+    <div className="p-4 rounded-xl border border-border bg-background space-y-3">
+      <div className="flex items-center justify-between gap-2">
+        <h3 className="font-heading font-semibold text-foreground">{doc.label}</h3>
+        {isOverridden
+          ? <Badge color="bg-info/10 text-info">נערך</Badge>
+          : <Badge>נוסח מקורי</Badge>}
+      </div>
+
+      <div>
+        <label className="text-xs font-semibold text-muted-foreground block mb-1">תאריך עדכון אחרון</label>
+        <input
+          type="text"
+          value={updated}
+          onChange={e => setUpdated(e.target.value)}
+          className="w-full px-3 py-2 rounded-lg border border-border bg-background text-sm"
+        />
+      </div>
+
+      <div>
+        <label className="text-xs font-semibold text-muted-foreground block mb-1">
+          תוכן המסמך (Markdown)
+        </label>
+        <textarea
+          value={body}
+          onChange={e => setBody(e.target.value)}
+          rows={20}
+          dir={lang === 'he' ? 'rtl' : 'ltr'}
+          className="w-full px-3 py-2 rounded-lg border border-border bg-background text-sm leading-relaxed font-mono"
+        />
+        <p className="text-xs text-muted-foreground mt-1">
+          ‎## לכותרת, ‎**מודגש**, ‎[טקסט](כתובת) לקישור. ריקון השדה מחזיר את הנוסח שהאתר מגיע איתו.
+        </p>
+      </div>
+
+      <div className="flex gap-2">
+        <Button
+          type="button"
+          variant="solid"
+          size="xs"
+          disabled={saving || !dirty}
+          onClick={save}
+          className="gap-1.5 rounded-lg font-semibold disabled:opacity-40"
+        >
+          <Check className="w-3.5 h-3.5" /> {saving ? 'שומר...' : 'שמירה'}
+        </Button>
+        {isOverridden && (
+          <Button
+            type="button"
+            variant="subtle"
+            size="xs"
+            disabled={saving}
+            onClick={revert}
+            className="gap-1.5 rounded-lg font-semibold hover:bg-border disabled:opacity-40"
+          >
+            <RotateCcw className="w-3.5 h-3.5" /> חזרה לנוסח המקורי
+          </Button>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function LegalPanel() {
+  const [lang, setLang] = useState('he');
+  const [overrides, setOverrides] = useState({});
+  const [loading, setLoading] = useState(true);
+
+  const reload = useCallback(async () => {
+    setLoading(true);
+    try {
+      setOverrides(await loadLegalDocs({ lang }));
+    } catch (err) {
+      toast.error(err?.message || 'שגיאה בטעינת המסמכים המשפטיים');
+      setOverrides({});
+    } finally {
+      setLoading(false);
+    }
+  }, [lang]);
+
+  useEffect(() => { reload(); }, [reload]);
+
+  return (
+    <div>
+      <Section title="מסמכים משפטיים" count={LEGAL_DOC_META.length} />
+      <p className="text-sm text-muted-foreground -mt-3 mb-5">
+        מדיניות הפרטיות ותנאי השימוש. הנוסח העברי הוא המחייב; דוברי ערבית רואים אותו, ודוברי
+        רוסית וצרפתית רואים את הנוסח האנגלי. עריכה כאן משנה את מה שמוצג בפועל באתר.
+      </p>
+
+      <div className="mb-5">
+        <label htmlFor="legal-lang" className="text-xs font-semibold text-muted-foreground block mb-1">שפת המסמך</label>
+        <select
+          id="legal-lang"
+          value={lang}
+          onChange={e => setLang(e.target.value)}
+          className="px-3 py-2 rounded-lg border border-border bg-background text-sm text-foreground"
+        >
+          {LEGAL_LANGS.map(l => (
+            <option key={l.code} value={l.code}>{l.label}</option>
+          ))}
+        </select>
+      </div>
+
+      {loading ? (
+        <LoadingRow />
+      ) : (
+        <div className="space-y-4">
+          {LEGAL_DOC_META.map(doc => (
+            <LegalDocEditor
+              key={`${lang}:${doc.slug}`}
+              doc={doc}
+              lang={lang}
+              override={overrides[doc.slug]}
+              onSaved={reload}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 const PANELS = {
   ptsd_faqs:     <PTSDFaqsPanel />,
   self_help:     <SelfHelpPanel />,
@@ -2054,6 +2256,7 @@ const PANELS = {
   children:      <ChildrenPanel />,
   questionnaire: <QuestionnairePanel />,
   site_copy:     <SiteCopyPanel />,
+  legal:         <LegalPanel />,
   users:         <UsersPanel />,
 };
 
@@ -2064,8 +2267,13 @@ export default function Admin() {
   // these is true for anyone who reaches this component, so `tabs` below is
   // never empty.
   const showContent = hasAdminAccess();
+  const showLegal = hasLegalEditAccess();
   const showUsers = hasUserManagementAccess();
-  const tabs = [...(showContent ? CONTENT_TABS : []), ...(showUsers ? [USERS_TAB] : [])];
+  const tabs = [
+    ...(showContent ? CONTENT_TABS : []),
+    ...(showLegal ? [LEGAL_TAB] : []),
+    ...(showUsers ? [USERS_TAB] : []),
+  ];
 
   const [activeTab, setActiveTab] = useState(() => tabs[0]?.key);
 

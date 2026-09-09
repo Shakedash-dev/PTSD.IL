@@ -123,13 +123,21 @@ We may change these terms, the Site or its availability, and may restrict or blo
 [${CONTACT_EMAIL}](mailto:${CONTACT_EMAIL}) · See also the [Privacy Policy](/privacy-policy).
 `;
 
+// Exported so /admin's legal panel can seed its editor with the text the site
+// actually ships, rather than a blank box - an admin edits from the real
+// baseline. src/components/LegalPage.jsx uses these as the fallback whenever
+// no override row exists.
+export const TERMS_CONTENT = { he, en };
+export const TERMS_UPDATED = { he: UPDATED_HE, en: UPDATED_EN };
+
 export default function TermsOfUse() {
   return (
     <LegalPage
+      slug="terms-of-use"
       titleKey="terms_of_use"
       eyebrowKey="legal_eyebrow"
-      updated={{ he: UPDATED_HE, en: UPDATED_EN }}
-      content={{ he, en }}
+      updated={TERMS_UPDATED}
+      content={TERMS_CONTENT}
     />
   );
 }

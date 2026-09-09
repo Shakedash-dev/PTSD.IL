@@ -1,14 +1,21 @@
 import React from 'react';
 import { useLang } from '@/lib/LanguageContext';
 import { t } from '@/lib/i18n';
+import { useLegalDocs } from '@/api/hooks';
 import PageHeader from '@/components/patterns/PageHeader';
 import Markdown from '@/components/Markdown';
 
 // Shared shell for the two legal pages (/privacy-policy, /terms-of-use).
 //
-// Legal text is deliberately NOT API/admin-backed: it is not editorial content,
-// it must not be changeable by a moderator, and it has to keep rendering even if
-// the content API is down. Each page ships its own `content` map instead.
+// The Markdown each page ships with is the source of truth and always renders
+// first: legal text has to appear even when the content API is down, so the DB
+// is an override layer, never the only copy. If an admin has saved a
+// replacement for this document in this content language, it displaces the
+// shipped text (body and last-updated date together, so the date can never
+// describe the wrong version).
+//
+// Who can save one: `admin` only, not `moderator` - see hasLegalEditAccess()
+// in src/lib/auth.js, including what that gate does and does not guarantee.
 //
 // The map only carries Hebrew and English. The Hebrew version is the binding one;
 // every other UI language falls back (Arabic -> Hebrew, keeps RTL; Russian and
@@ -17,11 +24,18 @@ import Markdown from '@/components/Markdown';
 // French visitor still renders LTR.
 const CONTENT_LANG = { he: 'he', ar: 'he', en: 'en', ru: 'en', fr: 'en' };
 
-export default function LegalPage({ titleKey, eyebrowKey, updated, content }) {
+export default function LegalPage({ slug, titleKey, eyebrowKey, updated, content }) {
   const { lang } = useLang();
   const contentLang = CONTENT_LANG[lang] || 'en';
-  const body = content[contentLang];
   const isFallback = contentLang !== lang;
+
+  // Overrides are stored per content language, so a Hebrew edit reaches the
+  // Arabic visitor reading the Hebrew fallback - which is right, it is the
+  // same document.
+  const { data: docs } = useLegalDocs({ lang: contentLang });
+  const override = docs?.[slug];
+  const body = override?.body || content[contentLang];
+  const updatedOn = override?.updated || updated[contentLang];
 
   return (
     <div className="min-h-screen bg-background">
@@ -31,7 +45,7 @@ export default function LegalPage({ titleKey, eyebrowKey, updated, content }) {
         tone="canvas"
         eyebrow={t(lang, eyebrowKey)}
         title={t(lang, titleKey)}
-        subtitle={`${t(lang, 'legal_last_updated')} ${updated[contentLang]}`}
+        subtitle={`${t(lang, 'legal_last_updated')} ${updatedOn}`}
       />
 
       <div className="max-w-3xl mx-auto px-4 sm:px-6 pb-24">

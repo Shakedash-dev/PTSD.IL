@@ -22,6 +22,8 @@ vi.mock('@/api/hooks', () => {
     usePTSDInfoFaqs: () => empty,
     useSecondCircleTools: () => empty,
     useQuestionnaire: () => one,
+    // No override rows - the legal pages fall back to the Markdown they ship.
+    useLegalDocs: () => one,
   };
 });
 
