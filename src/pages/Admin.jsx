@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Settings, Users, UserCog, FileText, BookOpen, HelpCircle, Wrench, Heart, Baby, Shield, ClipboardList, Pencil, Trash2, Plus, Check, X, LogOut } from 'lucide-react';
+import { Settings, Users, UserCog, FileText, BookOpen, HelpCircle, Wrench, Heart, Baby, Shield, ClipboardList, Pencil, Trash2, Plus, Check, X, LogOut, ChevronUp, ChevronDown } from 'lucide-react';
 import { toast } from 'sonner';
 import RichTextEditor from '@/components/RichTextEditor';
 import { Button } from '@/components/ui/button';
@@ -322,6 +322,77 @@ function SectionsField({ value, onChange }) {
   );
 }
 
+// Repeatable treatment-method editor. A treatment step (steps 3 and 4 on the
+// public page) offers several therapies, each rendered as its own accordion by
+// src/pages/Treatment.jsx's MethodAccordion. Each one carries a title, a plain
+// description, a rich "how to start" body and its own links - so it gets the
+// same structured controls as the step itself rather than being flattened into
+// the step's text.
+function MethodsField({ value, onChange }) {
+  const methods = value || [];
+  function updateMethod(i, key, val) {
+    onChange(methods.map((m, idx) => (idx === i ? { ...m, [key]: val } : m)));
+  }
+  function removeMethod(i) {
+    onChange(methods.filter((_, idx) => idx !== i));
+  }
+  function addMethod() {
+    onChange([...methods, { title_he: '', description_he: '', how_to_start_he: '', links: [] }]);
+  }
+  function move(i, delta) {
+    const target = i + delta;
+    if (target < 0 || target >= methods.length) return;
+    const next = methods.slice();
+    [next[i], next[target]] = [next[target], next[i]];
+    onChange(next);
+  }
+  return (
+    <div className="space-y-3">
+      {methods.map((m, i) => (
+        <div key={i} className="p-3 rounded-lg border border-border bg-muted/30 space-y-2">
+          <div className="flex gap-2 items-center">
+            <input
+              value={m.title_he || ''}
+              onChange={e => updateMethod(i, 'title_he', e.target.value)}
+              placeholder="שם השיטה"
+              className="flex-1 px-2 py-1.5 rounded-lg border border-border bg-background text-sm font-medium"
+            />
+            <Button type="button" variant="quiet" size="none" onClick={() => move(i, -1)} disabled={i === 0} title="הזזה למעלה" className="disabled:opacity-30">
+              <ChevronUp className="w-3.5 h-3.5" />
+            </Button>
+            <Button type="button" variant="quiet" size="none" onClick={() => move(i, 1)} disabled={i === methods.length - 1} title="הזזה למטה" className="disabled:opacity-30">
+              <ChevronDown className="w-3.5 h-3.5" />
+            </Button>
+            <Button type="button" variant="quiet" size="none" onClick={() => removeMethod(i)} title="מחיקת שיטה" className="hover:text-destructive">
+              <X className="w-3.5 h-3.5" />
+            </Button>
+          </div>
+          <div>
+            <label className="text-xs font-semibold text-muted-foreground block mb-1">תיאור</label>
+            <textarea
+              value={m.description_he || ''}
+              onChange={e => updateMethod(i, 'description_he', e.target.value)}
+              rows={3}
+              className="w-full px-3 py-2 rounded-lg border border-border bg-background text-sm leading-relaxed"
+            />
+          </div>
+          <div>
+            <label className="text-xs font-semibold text-muted-foreground block mb-1">איך מתחילים</label>
+            <RichTextEditor value={m.how_to_start_he} onChange={val => updateMethod(i, 'how_to_start_he', val)} />
+          </div>
+          <div>
+            <label className="text-xs font-semibold text-muted-foreground block mb-1">קישורים</label>
+            <LinksField value={m.links} onChange={val => updateMethod(i, 'links', val)} />
+          </div>
+        </div>
+      ))}
+      <Button type="button" variant="link" size="none" onClick={addMethod} className="text-xs gap-1">
+        <Plus className="w-3 h-3" /> הוספת שיטת טיפול
+      </Button>
+    </div>
+  );
+}
+
 function FieldInput({ field, value, onChange }) {
   switch (field.type) {
     case 'select':
@@ -391,6 +462,8 @@ function FieldInput({ field, value, onChange }) {
       return <RichTextEditor value={value} onChange={onChange} />;
     case 'sections':
       return <SectionsField value={value} onChange={onChange} />;
+    case 'methods':
+      return <MethodsField value={value} onChange={onChange} />;
     default:
       return (
         <input
@@ -674,6 +747,7 @@ function TreatmentPanel() {
     { key: 'title_he', label: 'כותרת', type: 'text' },
     { key: 'description_he', label: 'תיאור', type: 'textarea' },
     { key: 'how_to_start_he', label: 'איך מתחילים', type: 'richtext' },
+    { key: 'methods', label: 'שיטות טיפול', type: 'methods' },
     { key: 'links', label: 'קישורים', type: 'links' },
   ];
 
@@ -688,6 +762,11 @@ function TreatmentPanel() {
           <p className="text-sm text-muted-foreground mt-1">{step.description_he}</p>
           {step.how_to_start_he && (
             <div className="text-xs text-muted-foreground/80 mt-2 line-clamp-2" dangerouslySetInnerHTML={{ __html: step.how_to_start_he }} />
+          )}
+          {step.methods?.length > 0 && (
+            <p className="text-xs text-muted-foreground mt-2">
+              {step.methods.length} שיטות טיפול: {step.methods.map(m => m.title_he).join(' · ')}
+            </p>
           )}
           {step.links?.length > 0 && (
             <div className="mt-2 flex gap-2 flex-wrap">
@@ -728,7 +807,7 @@ function TreatmentPanel() {
           ))}
           {creating && (
             <EditableCard
-              item={{ step_number: steps.length + 1, title_he: '', description_he: '', how_to_start_he: '', links: [] }}
+              item={{ step_number: steps.length + 1, title_he: '', description_he: '', how_to_start_he: '', methods: [], links: [] }}
               fields={fields}
               startInEdit
               renderView={renderView}

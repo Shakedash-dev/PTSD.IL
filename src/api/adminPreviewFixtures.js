@@ -58,7 +58,10 @@ const ARTICLES = [
   article('a7', 'tool', 'cat-self-help', 'תרגיל נשימה מרובעת', { content: 'תוכן לדוגמה', icon: 'Wind', apps: [] }, 1),
   article('a8', 'tool', 'cat-self-help', 'יומן מחשבות', { content: 'תוכן לדוגמה', icon: 'PenLine', apps: [] }, 2),
   article('a9', 'treatment_step', 'cat-treatment', 'שלב 1 - זיהוי', { description: 'תוכן לדוגמה', icon: 'Wrench', methods: [] }, 1),
-  article('a10', 'treatment_step', 'cat-treatment', 'שלב 2 - פנייה לעזרה', { description: 'תוכן לדוגמה', icon: 'Building2', methods: [] }, 2),
+  article('a10', 'treatment_step', 'cat-treatment', 'שלב 2 - פנייה לעזרה', { description: 'תוכן לדוגמה', icon: 'Building2', methods: [
+    { title: 'שיטת טיפול לדוגמה', description: 'תיאור לדוגמה של השיטה.', how_to_start: 'כך מתחילים - טקסט לדוגמה.', links: [{ label: 'קישור לדוגמה', url: 'https://example.org' }] },
+    { title: 'שיטה שנייה לדוגמה', description: 'תיאור שני לדוגמה.', how_to_start: 'טקסט לדוגמה נוסף.', links: [] },
+  ] }, 2),
   article('a11', 'source', 'cat-sources', 'מחקר לדוגמה על טיפול ממוקד טראומה', { url: 'https://example.org', category: 'research', description: 'תקציר לדוגמה.' }, 1),
   article('a12', 'source', 'cat-sources', 'הנחיות קליניות לדוגמה', { url: 'https://example.org', category: 'clinical', description: 'תקציר לדוגמה.' }, 2),
   article('a13', 'article', 'cat-children', 'הנחיות להורים', { guidelines: 'תוכן לדוגמה להנחיות.' }, 1),

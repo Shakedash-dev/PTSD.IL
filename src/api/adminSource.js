@@ -363,11 +363,14 @@ export function removeSelfHelp(id) {
 }
 
 // ─── treatment — treatment_step, category `treatment`, he ──────────────────
-// draft: { id, groupId, langId, step_number, title_he, description_he, how_to_start_he, methods?, links }
-//   (how_to_start_he = rich; description_he = plain per spec notes; methods
-//   is an optional passthrough array - no dedicated panel UI edits it yet;
-//   within it, how_to_start is rich, title/description/links are plain/native)
+// draft: { id, groupId, langId, step_number, title_he, description_he, how_to_start_he, methods, links }
+//   (how_to_start_he = rich; description_he = plain per spec notes; `methods`
+//   is the per-step list of individual therapies - steps 3 and 4 carry them -
+//   edited by Admin.jsx's MethodsField; within a method, how_to_start is rich
+//   and title/description/links are plain/native)
 // content JSON: { description, how_to_start, methods?, links? }
+//   `methods` is omitted from the JSON entirely when the step has none, so a
+//   step without therapies doesn't grow an empty array in the DB.
 // sortOrder = step_number
 
 export async function loadTreatment() {
@@ -387,16 +390,14 @@ export async function loadTreatment() {
         title_he: item.title,
         description_he: c.description ?? '',
         how_to_start_he: mdToHtml(c.how_to_start),
-        ...(c.methods?.length
-          ? {
-              methods: c.methods.map(m => ({
-                title_he: m.title,
-                description_he: m.description ?? '',
-                how_to_start_he: mdToHtml(m.how_to_start),
-                links: m.links ?? [],
-              })),
-            }
-          : {}),
+        // Always an array (never undefined) - the panel binds a methods editor
+        // to every step, including ones that don't have any therapies yet.
+        methods: (c.methods ?? []).map(m => ({
+          title_he: m.title ?? '',
+          description_he: m.description ?? '',
+          how_to_start_he: mdToHtml(m.how_to_start),
+          links: m.links ?? [],
+        })),
         links: c.links ?? [],
       };
     });
@@ -411,7 +412,7 @@ export async function saveTreatment(draft, ctx = {}) {
     ...(draft.methods?.length
       ? {
           methods: draft.methods.map(m => ({
-            title: m.title_he,
+            title: m.title_he ?? '',
             description: m.description_he ?? '',
             how_to_start: htmlToMd(m.how_to_start_he),
             links: m.links ?? [],
