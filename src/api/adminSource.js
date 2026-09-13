@@ -516,7 +516,7 @@ export function removeSelfHelp(id) {
   return removeArticle(id);
 }
 
-// ─── treatment — treatment_step, category `treatment`, he ──────────────────
+// ─── treatment — treatment_step, category `treatment`, per langId ──────────
 // draft: { id, groupId, langId, step_number, title_he, description_he, how_to_start_he, methods, links }
 //   (how_to_start_he = rich; description_he = plain per spec notes; `methods`
 //   is the per-step list of individual therapies - steps 3 and 4 carry them -
@@ -527,10 +527,14 @@ export function removeSelfHelp(id) {
 //   step without therapies doesn't grow an empty array in the DB.
 // sortOrder = step_number
 
-export async function loadTreatment() {
+// ctx.lang picks the translation to edit. All five languages carry their own
+// rows (linked by groupId), so the panel has to be able to reach each of them -
+// Hebrew-only would leave four fifths of the treatment page uneditable.
+export async function loadTreatment(ctx = {}) {
+  const lang = ctx.lang || 'he';
   const taxonomy = await getTaxonomy();
   const categoryId = requireCategoryId(taxonomy, 'treatment');
-  const items = await fetchArticles({ type: 'treatment_step', langId: 'he', categoryId });
+  const items = await fetchArticles({ type: 'treatment_step', langId: lang, categoryId });
   return items
     .slice()
     .sort((a, b) => a.sortOrder - b.sortOrder)
@@ -558,6 +562,9 @@ export async function loadTreatment() {
 }
 
 export async function saveTreatment(draft, ctx = {}) {
+  // An existing row keeps its own language: PATCHing an English step with
+  // langId 'he' would silently re-label it as Hebrew.
+  const lang = draft.langId || ctx.lang || 'he';
   const taxonomy = await getTaxonomy();
   const categoryId = requireCategoryId(taxonomy, 'treatment');
   const content = {
@@ -577,7 +584,7 @@ export async function saveTreatment(draft, ctx = {}) {
   };
   const payload = {
     type: 'treatment_step',
-    langId: 'he',
+    langId: lang,
     title: draft.title_he,
     content: JSON.stringify(content),
     categoryIds: [categoryId],

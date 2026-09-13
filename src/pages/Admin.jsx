@@ -734,23 +734,27 @@ function SelfHelpPanel() {
 }
 
 function TreatmentPanel() {
+  // Unlike most panels this one is not Hebrew-only: every language has its own
+  // treatment rows, and the method descriptions have to be kept accurate in all
+  // of them, not just the Hebrew source.
+  const [lang, setLang] = useState('he');
   const [steps, setSteps] = useState([]);
   const [loading, setLoading] = useState(true);
   const [creating, setCreating] = useState(false);
 
-  async function reload() {
+  const reload = useCallback(async () => {
     setLoading(true);
     try {
-      setSteps(await loadTreatment());
+      setSteps(await loadTreatment({ lang }));
     } catch (err) {
       toast.error(err?.message || 'שגיאה בטעינת שלבי הטיפול');
       setSteps([]);
     } finally {
       setLoading(false);
     }
-  }
+  }, [lang]);
 
-  useEffect(() => { reload(); }, []);
+  useEffect(() => { setCreating(false); reload(); }, [reload]);
 
   const fields = [
     { key: 'step_number', label: 'מספר שלב', type: 'number' },
@@ -793,18 +797,31 @@ function TreatmentPanel() {
   return (
     <div>
       <Section title="שלבי טיפול" count={steps.length} />
+      <div className="mb-5">
+        <label htmlFor="treatment-lang" className="text-xs font-semibold text-muted-foreground block mb-1">שפה</label>
+        <select
+          id="treatment-lang"
+          value={lang}
+          onChange={e => setLang(e.target.value)}
+          className="px-3 py-2 rounded-lg border border-border bg-background text-sm text-foreground"
+        >
+          {LANGUAGES.map(l => (
+            <option key={l.code} value={l.code}>{l.label}</option>
+          ))}
+        </select>
+      </div>
       {loading ? (
         <LoadingRow />
       ) : (
         <div className="space-y-3">
           {steps.map(step => (
             <EditableCard
-              key={step.id}
+              key={`${lang}:${step.id}`}
               item={step}
               fields={fields}
               renderView={renderView}
               onSave={async draft => {
-                const ok = await runWrite(() => saveTreatment(draft));
+                const ok = await runWrite(() => saveTreatment(draft, { lang }));
                 if (ok) await reload();
                 return ok;
               }}
@@ -822,7 +839,7 @@ function TreatmentPanel() {
               startInEdit
               renderView={renderView}
               onSave={async draft => {
-                const ok = await runWrite(() => saveTreatment(draft));
+                const ok = await runWrite(() => saveTreatment(draft, { lang }));
                 if (ok) {
                   setCreating(false);
                   await reload();
