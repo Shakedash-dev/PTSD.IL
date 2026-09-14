@@ -1,0 +1,717 @@
+{
+  "id": "64d9e39d-7aea-40af-b9bc-6d10db45e2c6",
+  "langId": "he",
+  "slug": "pcl-5",
+  "name": "שאלון בדיקה עצמית לתסמיני PTSD",
+  "description": "תגובה לאירוע טראומטי היא אנושית לחלוטין - הגוף והנפש שלך עשו מה שהם יודעים לעשות כדי להגן עליך. השאלון הזה הוא כלי לבדיקה עצמית בלבד, אנונימי לחלוטין, ואינו מהווה אבחנה רפואית.",
+  "totalQuestions": 20,
+  "maxScore": 80,
+  "cutoffScore": 33,
+  "targetAudiences": [],
+  "questions": [
+    {
+      "id": "16aaebe0-4369-4e7d-aa40-8ba14aac6e81",
+      "questionnaireId": "64d9e39d-7aea-40af-b9bc-6d10db45e2c6",
+      "sortOrder": 0,
+      "text": "הזיכרון של מה שקרה פשוט קופץ לך לראש פתאום, בלי שתרצה?",
+      "options": [
+        {
+          "order": 0,
+          "score": 0,
+          "answer": "בכלל לא"
+        },
+        {
+          "order": 1,
+          "score": 1,
+          "answer": "קצת"
+        },
+        {
+          "order": 2,
+          "score": 2,
+          "answer": "ככה ככה"
+        },
+        {
+          "order": 3,
+          "score": 3,
+          "answer": "הרבה"
+        },
+        {
+          "order": 4,
+          "score": 4,
+          "answer": "מאוד מפריע"
+        }
+      ],
+      "createdAt": "2026-07-25T21:27:15.925Z",
+      "updatedAt": "2026-07-25T21:54:34.762Z"
+    },
+    {
+      "id": "2785e014-3e58-4f7b-88d1-d053f2896deb",
+      "questionnaireId": "64d9e39d-7aea-40af-b9bc-6d10db45e2c6",
+      "sortOrder": 1,
+      "text": "יש לך חלומות רעים או סיוטים בלילה על מה שהיה?",
+      "options": [
+        {
+          "order": 0,
+          "score": 0,
+          "answer": "בכלל לא"
+        },
+        {
+          "order": 1,
+          "score": 1,
+          "answer": "קצת"
+        },
+        {
+          "order": 2,
+          "score": 2,
+          "answer": "ככה ככה"
+        },
+        {
+          "order": 3,
+          "score": 3,
+          "answer": "הרבה"
+        },
+        {
+          "order": 4,
+          "score": 4,
+          "answer": "מאוד מפריע"
+        }
+      ],
+      "createdAt": "2026-07-25T21:27:16.569Z",
+      "updatedAt": "2026-07-25T21:27:16.569Z"
+    },
+    {
+      "id": "9b0a24bd-f20a-4f8c-b279-058e4bc93c80",
+      "questionnaireId": "64d9e39d-7aea-40af-b9bc-6d10db45e2c6",
+      "sortOrder": 2,
+      "text": "קורה לך שאתה מרגיש לרגע כאילו אתה ממש נמצא שם שוב?",
+      "options": [
+        {
+          "order": 0,
+          "score": 0,
+          "answer": "בכלל לא"
+        },
+        {
+          "order": 1,
+          "score": 1,
+          "answer": "קצת"
+        },
+        {
+          "order": 2,
+          "score": 2,
+          "answer": "ככה ככה"
+        },
+        {
+          "order": 3,
+          "score": 3,
+          "answer": "הרבה"
+        },
+        {
+          "order": 4,
+          "score": 4,
+          "answer": "מאוד מפריע"
+        }
+      ],
+      "createdAt": "2026-07-25T21:27:17.220Z",
+      "updatedAt": "2026-07-25T21:27:17.220Z"
+    },
+    {
+      "id": "4e8b6c05-4462-47f0-9e3e-7dba6864b157",
+      "questionnaireId": "64d9e39d-7aea-40af-b9bc-6d10db45e2c6",
+      "sortOrder": 3,
+      "text": "כשמשהו מזכיר לך את זה, הלב שלך נופל או מרגיש מועקה קשה?",
+      "options": [
+        {
+          "order": 0,
+          "score": 0,
+          "answer": "בכלל לא"
+        },
+        {
+          "order": 1,
+          "score": 1,
+          "answer": "קצת"
+        },
+        {
+          "order": 2,
+          "score": 2,
+          "answer": "ככה ככה"
+        },
+        {
+          "order": 3,
+          "score": 3,
+          "answer": "הרבה"
+        },
+        {
+          "order": 4,
+          "score": 4,
+          "answer": "מאוד מפריע"
+        }
+      ],
+      "createdAt": "2026-07-25T21:27:17.862Z",
+      "updatedAt": "2026-07-25T21:27:17.862Z"
+    },
+    {
+      "id": "5c151352-f86f-4e2a-b903-88a21ef76635",
+      "questionnaireId": "64d9e39d-7aea-40af-b9bc-6d10db45e2c6",
+      "sortOrder": 4,
+      "text": "כשהזיכרון עולה, הגוף מגיב? (למשל דופק גבוה, זיעה קרה, רעד, קוצר נשימה)",
+      "options": [
+        {
+          "order": 0,
+          "score": 0,
+          "answer": "בכלל לא"
+        },
+        {
+          "order": 1,
+          "score": 1,
+          "answer": "קצת"
+        },
+        {
+          "order": 2,
+          "score": 2,
+          "answer": "ככה ככה"
+        },
+        {
+          "order": 3,
+          "score": 3,
+          "answer": "הרבה"
+        },
+        {
+          "order": 4,
+          "score": 4,
+          "answer": "מאוד מפריע"
+        }
+      ],
+      "createdAt": "2026-07-25T21:27:18.507Z",
+      "updatedAt": "2026-07-25T21:27:18.507Z"
+    },
+    {
+      "id": "c78f8d7f-a274-4d8c-a91c-c800e14b0394",
+      "questionnaireId": "64d9e39d-7aea-40af-b9bc-6d10db45e2c6",
+      "sortOrder": 5,
+      "text": "אתה מנסה בכוח להשתיק מחשבות, רגשות או זיכרונות שקשורים לזה?",
+      "options": [
+        {
+          "order": 0,
+          "score": 0,
+          "answer": "בכלל לא"
+        },
+        {
+          "order": 1,
+          "score": 1,
+          "answer": "קצת"
+        },
+        {
+          "order": 2,
+          "score": 2,
+          "answer": "ככה ככה"
+        },
+        {
+          "order": 3,
+          "score": 3,
+          "answer": "הרבה"
+        },
+        {
+          "order": 4,
+          "score": 4,
+          "answer": "מאוד מפריע"
+        }
+      ],
+      "createdAt": "2026-07-25T21:27:19.156Z",
+      "updatedAt": "2026-07-25T21:27:19.156Z"
+    },
+    {
+      "id": "28264ab6-e387-44a5-975e-a84e3bf8a640",
+      "questionnaireId": "64d9e39d-7aea-40af-b9bc-6d10db45e2c6",
+      "sortOrder": 6,
+      "text": "אתה מתרחק ממקומות, אנשים או מצבים שמזכירים לך את מה שקרה, כדי לא להרגיש רע?",
+      "options": [
+        {
+          "order": 0,
+          "score": 0,
+          "answer": "בכלל לא"
+        },
+        {
+          "order": 1,
+          "score": 1,
+          "answer": "קצת"
+        },
+        {
+          "order": 2,
+          "score": 2,
+          "answer": "ככה ככה"
+        },
+        {
+          "order": 3,
+          "score": 3,
+          "answer": "הרבה"
+        },
+        {
+          "order": 4,
+          "score": 4,
+          "answer": "מאוד מפריע"
+        }
+      ],
+      "createdAt": "2026-07-25T21:27:19.803Z",
+      "updatedAt": "2026-07-25T21:27:19.803Z"
+    },
+    {
+      "id": "beb449a4-d280-402c-8f48-4dff322d90a5",
+      "questionnaireId": "64d9e39d-7aea-40af-b9bc-6d10db45e2c6",
+      "sortOrder": 7,
+      "text": "יש חלקים או פרטים חשובים מהאירוע שאתה פשוט לא מצליח לזכור?",
+      "options": [
+        {
+          "order": 0,
+          "score": 0,
+          "answer": "בכלל לא"
+        },
+        {
+          "order": 1,
+          "score": 1,
+          "answer": "קצת"
+        },
+        {
+          "order": 2,
+          "score": 2,
+          "answer": "ככה ככה"
+        },
+        {
+          "order": 3,
+          "score": 3,
+          "answer": "הרבה"
+        },
+        {
+          "order": 4,
+          "score": 4,
+          "answer": "מאוד מפריע"
+        }
+      ],
+      "createdAt": "2026-07-25T21:27:20.454Z",
+      "updatedAt": "2026-07-25T21:27:20.454Z"
+    },
+    {
+      "id": "7e652c57-bbcb-416d-8c46-05277d36c5a6",
+      "questionnaireId": "64d9e39d-7aea-40af-b9bc-6d10db45e2c6",
+      "sortOrder": 8,
+      "text": "התחלת לחשוב דברים קשים על עצמך או על העולם - כמו \"אני אשם\", \"העולם מסוכן\", \"אי אפשר לסמוך על אף אחד\"?",
+      "options": [
+        {
+          "order": 0,
+          "score": 0,
+          "answer": "בכלל לא"
+        },
+        {
+          "order": 1,
+          "score": 1,
+          "answer": "קצת"
+        },
+        {
+          "order": 2,
+          "score": 2,
+          "answer": "ככה ככה"
+        },
+        {
+          "order": 3,
+          "score": 3,
+          "answer": "הרבה"
+        },
+        {
+          "order": 4,
+          "score": 4,
+          "answer": "מאוד מפריע"
+        }
+      ],
+      "createdAt": "2026-07-25T21:27:21.098Z",
+      "updatedAt": "2026-07-25T21:27:21.098Z"
+    },
+    {
+      "id": "1378c42b-062d-4cc5-a521-9728e4001d84",
+      "questionnaireId": "64d9e39d-7aea-40af-b9bc-6d10db45e2c6",
+      "sortOrder": 9,
+      "text": "אתה מוצא את עצמך מאשים את עצמך במה שקרה, שוב ושוב - גם כשאתה יודע שזה לא הגיוני?",
+      "options": [
+        {
+          "order": 0,
+          "score": 0,
+          "answer": "בכלל לא"
+        },
+        {
+          "order": 1,
+          "score": 1,
+          "answer": "קצת"
+        },
+        {
+          "order": 2,
+          "score": 2,
+          "answer": "ככה ככה"
+        },
+        {
+          "order": 3,
+          "score": 3,
+          "answer": "הרבה"
+        },
+        {
+          "order": 4,
+          "score": 4,
+          "answer": "מאוד מפריע"
+        }
+      ],
+      "createdAt": "2026-07-25T21:27:21.757Z",
+      "updatedAt": "2026-07-25T21:27:21.757Z"
+    },
+    {
+      "id": "fbdcecf4-9475-4f43-a2db-879b5cebf760",
+      "questionnaireId": "64d9e39d-7aea-40af-b9bc-6d10db45e2c6",
+      "sortOrder": 10,
+      "text": "אתה מרגיש שרגשות כבדים כמו פחד, עצב, עצבנות או בושה פשוט לא משחררים אותך?",
+      "options": [
+        {
+          "order": 0,
+          "score": 0,
+          "answer": "בכלל לא"
+        },
+        {
+          "order": 1,
+          "score": 1,
+          "answer": "קצת"
+        },
+        {
+          "order": 2,
+          "score": 2,
+          "answer": "ככה ככה"
+        },
+        {
+          "order": 3,
+          "score": 3,
+          "answer": "הרבה"
+        },
+        {
+          "order": 4,
+          "score": 4,
+          "answer": "מאוד מפריע"
+        }
+      ],
+      "createdAt": "2026-07-25T21:27:22.400Z",
+      "updatedAt": "2026-07-25T21:27:22.400Z"
+    },
+    {
+      "id": "3dada748-df8d-473f-962d-6566b847ff6d",
+      "questionnaireId": "64d9e39d-7aea-40af-b9bc-6d10db45e2c6",
+      "sortOrder": 11,
+      "text": "איבדת חשק לדברים ולתחביבים שפעם ממש אהבת ועשו לך טוב?",
+      "options": [
+        {
+          "order": 0,
+          "score": 0,
+          "answer": "בכלל לא"
+        },
+        {
+          "order": 1,
+          "score": 1,
+          "answer": "קצת"
+        },
+        {
+          "order": 2,
+          "score": 2,
+          "answer": "ככה ככה"
+        },
+        {
+          "order": 3,
+          "score": 3,
+          "answer": "הרבה"
+        },
+        {
+          "order": 4,
+          "score": 4,
+          "answer": "מאוד מפריע"
+        }
+      ],
+      "createdAt": "2026-07-25T21:27:23.043Z",
+      "updatedAt": "2026-07-25T21:27:23.043Z"
+    },
+    {
+      "id": "5ac0cff8-22d7-4d20-bf03-5f0633128b19",
+      "questionnaireId": "64d9e39d-7aea-40af-b9bc-6d10db45e2c6",
+      "sortOrder": 12,
+      "text": "אתה מרגיש מנותק, לבד, או שאף אחד לא באמת מבין אותך?",
+      "options": [
+        {
+          "order": 0,
+          "score": 0,
+          "answer": "בכלל לא"
+        },
+        {
+          "order": 1,
+          "score": 1,
+          "answer": "קצת"
+        },
+        {
+          "order": 2,
+          "score": 2,
+          "answer": "ככה ככה"
+        },
+        {
+          "order": 3,
+          "score": 3,
+          "answer": "הרבה"
+        },
+        {
+          "order": 4,
+          "score": 4,
+          "answer": "מאוד מפריע"
+        }
+      ],
+      "createdAt": "2026-07-25T21:27:23.707Z",
+      "updatedAt": "2026-07-25T21:27:23.707Z"
+    },
+    {
+      "id": "3ffc065c-cd97-4b65-b464-ee98e50fa18a",
+      "questionnaireId": "64d9e39d-7aea-40af-b9bc-6d10db45e2c6",
+      "sortOrder": 13,
+      "text": "קשה לך להרגיש אהבה, שמחה, או סתם שקט נפשי?",
+      "options": [
+        {
+          "order": 0,
+          "score": 0,
+          "answer": "בכלל לא"
+        },
+        {
+          "order": 1,
+          "score": 1,
+          "answer": "קצת"
+        },
+        {
+          "order": 2,
+          "score": 2,
+          "answer": "ככה ככה"
+        },
+        {
+          "order": 3,
+          "score": 3,
+          "answer": "הרבה"
+        },
+        {
+          "order": 4,
+          "score": 4,
+          "answer": "מאוד מפריע"
+        }
+      ],
+      "createdAt": "2026-07-25T21:27:24.362Z",
+      "updatedAt": "2026-07-25T21:27:24.362Z"
+    },
+    {
+      "id": "c5ca9ba4-dcfd-4da8-8756-19a041070562",
+      "questionnaireId": "64d9e39d-7aea-40af-b9bc-6d10db45e2c6",
+      "sortOrder": 14,
+      "text": "אתה מוצא את עצמך עצבני, קצר רוח, או מתפרץ על אנשים בלי שרצית?",
+      "options": [
+        {
+          "order": 0,
+          "score": 0,
+          "answer": "בכלל לא"
+        },
+        {
+          "order": 1,
+          "score": 1,
+          "answer": "קצת"
+        },
+        {
+          "order": 2,
+          "score": 2,
+          "answer": "ככה ככה"
+        },
+        {
+          "order": 3,
+          "score": 3,
+          "answer": "הרבה"
+        },
+        {
+          "order": 4,
+          "score": 4,
+          "answer": "מאוד מפריע"
+        }
+      ],
+      "createdAt": "2026-07-25T21:27:25.099Z",
+      "updatedAt": "2026-07-25T21:27:25.099Z"
+    },
+    {
+      "id": "1555b049-f3ad-46ba-ba5e-8e6668295b39",
+      "questionnaireId": "64d9e39d-7aea-40af-b9bc-6d10db45e2c6",
+      "sortOrder": 15,
+      "text": "אתה עושה שטויות או דברים מסוכנים בלי לחשוב על התוצאות?",
+      "options": [
+        {
+          "order": 0,
+          "score": 0,
+          "answer": "בכלל לא"
+        },
+        {
+          "order": 1,
+          "score": 1,
+          "answer": "קצת"
+        },
+        {
+          "order": 2,
+          "score": 2,
+          "answer": "ככה ככה"
+        },
+        {
+          "order": 3,
+          "score": 3,
+          "answer": "הרבה"
+        },
+        {
+          "order": 4,
+          "score": 4,
+          "answer": "מאוד מפריע"
+        }
+      ],
+      "createdAt": "2026-07-25T21:27:25.743Z",
+      "updatedAt": "2026-07-25T21:27:25.743Z"
+    },
+    {
+      "id": "bc3f66b9-d280-4cd9-9c7e-212493b855b1",
+      "questionnaireId": "64d9e39d-7aea-40af-b9bc-6d10db45e2c6",
+      "sortOrder": 16,
+      "text": "אתה מרגיש כל הזמן \"על הקצה\" - מחפש סכנות, בודק מי סביבך, במתח תמידי?",
+      "options": [
+        {
+          "order": 0,
+          "score": 0,
+          "answer": "בכלל לא"
+        },
+        {
+          "order": 1,
+          "score": 1,
+          "answer": "קצת"
+        },
+        {
+          "order": 2,
+          "score": 2,
+          "answer": "ככה ככה"
+        },
+        {
+          "order": 3,
+          "score": 3,
+          "answer": "הרבה"
+        },
+        {
+          "order": 4,
+          "score": 4,
+          "answer": "מאוד מפריע"
+        }
+      ],
+      "createdAt": "2026-07-25T21:27:26.386Z",
+      "updatedAt": "2026-07-25T21:27:26.386Z"
+    },
+    {
+      "id": "0122b119-7e97-436c-86b4-070be3b984aa",
+      "questionnaireId": "64d9e39d-7aea-40af-b9bc-6d10db45e2c6",
+      "sortOrder": 17,
+      "text": "אתה קופץ ונבהל בקלות מכל רעש קטן או תנועה פתאומית?",
+      "options": [
+        {
+          "order": 0,
+          "score": 0,
+          "answer": "בכלל לא"
+        },
+        {
+          "order": 1,
+          "score": 1,
+          "answer": "קצת"
+        },
+        {
+          "order": 2,
+          "score": 2,
+          "answer": "ככה ככה"
+        },
+        {
+          "order": 3,
+          "score": 3,
+          "answer": "הרבה"
+        },
+        {
+          "order": 4,
+          "score": 4,
+          "answer": "מאוד מפריע"
+        }
+      ],
+      "createdAt": "2026-07-25T21:27:27.226Z",
+      "updatedAt": "2026-07-25T21:27:27.226Z"
+    },
+    {
+      "id": "23fb9b04-0425-4bd7-8510-fe90dc897cfb",
+      "questionnaireId": "64d9e39d-7aea-40af-b9bc-6d10db45e2c6",
+      "sortOrder": 18,
+      "text": "חווה ירידה ביכולת הריכוז? מתמודד עם קושי להתמקד במשימות, בעבודה או בלימודים?",
+      "options": [
+        {
+          "order": 0,
+          "score": 0,
+          "answer": "בכלל לא"
+        },
+        {
+          "order": 1,
+          "score": 1,
+          "answer": "קצת"
+        },
+        {
+          "order": 2,
+          "score": 2,
+          "answer": "ככה ככה"
+        },
+        {
+          "order": 3,
+          "score": 3,
+          "answer": "הרבה"
+        },
+        {
+          "order": 4,
+          "score": 4,
+          "answer": "מאוד מפריע"
+        }
+      ],
+      "createdAt": "2026-07-25T21:27:27.886Z",
+      "updatedAt": "2026-07-25T21:27:27.886Z"
+    },
+    {
+      "id": "84033ff1-a47e-42d4-b125-66a17dae0bcb",
+      "questionnaireId": "64d9e39d-7aea-40af-b9bc-6d10db45e2c6",
+      "sortOrder": 19,
+      "text": "השינה שלך נפגעה? (קשה להירדם, מתעורר המון, או ישן גרוע)",
+      "options": [
+        {
+          "order": 0,
+          "score": 0,
+          "answer": "בכלל לא"
+        },
+        {
+          "order": 1,
+          "score": 1,
+          "answer": "קצת"
+        },
+        {
+          "order": 2,
+          "score": 2,
+          "answer": "ככה ככה"
+        },
+        {
+          "order": 3,
+          "score": 3,
+          "answer": "הרבה"
+        },
+        {
+          "order": 4,
+          "score": 4,
+          "answer": "מאוד מפריע"
+        }
+      ],
+      "createdAt": "2026-07-25T21:27:28.534Z",
+      "updatedAt": "2026-07-25T21:27:28.534Z"
+    }
+  ],
+  "isActive": true,
+  "sortOrder": 0,
+  "createdAt": "2026-07-25T21:27:15.274Z",
+  "updatedAt": "2026-07-25T21:54:37.788Z"
+}

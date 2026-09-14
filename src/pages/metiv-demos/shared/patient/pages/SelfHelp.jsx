@@ -1,0 +1,134 @@
+import React from 'react';
+import Disclosure from '@/components/patterns/Disclosure';
+import { Wind, Moon, PenLine, Smartphone, Zap, ArrowLeft, Compass, Wrench, Apple, PlayCircle, Youtube, ExternalLink } from 'lucide-react';
+import { IMAGES } from '@/lib/images';
+import { DemoLink, useDemoChrome } from '@/pages/metiv-demos/shared/DemoChrome';
+import { ROUTES } from '@/pages/metiv-demos/shared/routes';
+import { tx } from '../copy';
+import { getSelfHelpTools } from '../staticData';
+import { KitMarkdown } from '../components';
+import { VIDEO_LECTURES } from '../additions';
+
+const TOOL_ICON_MAP = { Wind, Moon, PenLine, Smartphone, Zap, Compass, Wrench };
+
+function ToolCard({ tool }) {
+  const Icon = TOOL_ICON_MAP[tool.icon];
+
+  return (
+    <Disclosure
+      label={tool.title_he}
+      leading={
+        <div className="w-11 h-11 rounded-full bg-muted flex items-center justify-center flex-shrink-0">
+          {Icon && <Icon className="w-5 h-5 text-primary" />}
+        </div>
+      }
+      panelClassName="pt-0"
+    >
+      <>
+        {tool.content_he && (
+          <KitMarkdown className="text-muted-foreground leading-relaxed rich-content">
+            {tool.content_he}
+          </KitMarkdown>
+        )}
+        {tool.apps?.length > 0 && (
+          <div className="space-y-4">
+            {tool.apps.map((app, i) => (
+              <div key={i} className={i > 0 ? 'pt-4 border-t border-border' : ''}>
+                <p className="font-heading font-semibold text-foreground text-sm mb-1">{app.title_he}</p>
+                <p className="text-muted-foreground text-sm leading-relaxed mb-2">{app.description_he}</p>
+                <div className="flex gap-2">
+                  {app.ios_url && (
+                    <a
+                      href={app.ios_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-foreground text-background rounded-full text-xs font-medium hover:opacity-90 transition-colors duration-300"
+                    >
+                      <Apple className="w-3.5 h-3.5" />
+                      App Store
+                    </a>
+                  )}
+                  {app.android_url && (
+                    <a
+                      href={app.android_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-foreground text-background rounded-full text-xs font-medium hover:opacity-90 transition-colors duration-300"
+                    >
+                      <PlayCircle className="w-3.5 h-3.5" />
+                      Google Play
+                    </a>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </>
+    </Disclosure>
+  );
+}
+
+export default function SelfHelp() {
+  const { PageHeader } = useDemoChrome();
+  const tools = getSelfHelpTools();
+
+  return (
+    <div className="min-h-screen bg-background">
+      <PageHeader
+        size="editorial"
+        align="start"
+        tone="card"
+        image={IMAGES.selfhelp_hero}
+        eyebrow={tx('self_help')}
+        title={tx('self_help_title')}
+        subtitle={tx('self_help_intro')}
+      />
+
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 py-16">
+        {/* Quick calming shortcut */}
+        <div className="mb-8 p-5 rounded-2xl bg-card border border-border flex items-center justify-between gap-4">
+          <div>
+            <p className="text-muted-foreground text-sm">{tx('self_help_overflow_prompt')}</p>
+            <p className="text-foreground font-medium">{tx('self_help_overflow_cta')} ←</p>
+          </div>
+          <DemoLink
+            to={ROUTES.calming}
+            className="px-4 py-2 bg-primary text-primary-foreground rounded-xl text-sm font-medium hover:bg-accent transition-natural flex-shrink-0 flex items-center gap-1"
+          >
+            {tx('calming')}
+            <ArrowLeft className="w-4 h-4" />
+          </DemoLink>
+        </div>
+
+        <div className="space-y-3">
+          {tools.map((tool, i) => (
+            <ToolCard key={i} tool={tool} />
+          ))}
+        </div>
+
+        {/* Metiv addition 7: video lectures */}
+        <section id={VIDEO_LECTURES.id} className="scroll-mt-24 mt-12 p-6 rounded-super bg-card border border-border shadow-card">
+          <div className="flex items-start gap-3">
+            <div className="w-11 h-11 rounded-full bg-muted flex items-center justify-center flex-shrink-0">
+              <Youtube className="w-5 h-5 text-primary" aria-hidden="true" />
+            </div>
+            <div>
+              <h2 className="font-heading font-semibold text-xl text-foreground mb-1">{VIDEO_LECTURES.title}</h2>
+              <p className="text-muted-foreground leading-relaxed mb-4">{VIDEO_LECTURES.text}</p>
+              <a
+                href={VIDEO_LECTURES.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 px-4 py-2 bg-primary/10 text-foreground rounded-full text-sm font-medium hover:bg-primary/20 transition-colors duration-300"
+              >
+                {VIDEO_LECTURES.linkLabel}
+                <ExternalLink className="w-3 h-3" aria-hidden="true" />
+              </a>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  );
+}

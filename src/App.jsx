@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, lazy, Suspense } from 'react';
 import { Toaster } from "@/components/ui/toaster"
 import { Toaster as SonnerToaster } from "@/components/ui/sonner"
 import { QueryClientProvider } from '@tanstack/react-query'
@@ -38,6 +38,15 @@ import PrivacyPolicy from '@/pages/PrivacyPolicy';
 import TermsOfUse from '@/pages/TermsOfUse';
 import Admin from '@/pages/Admin';
 import AdminLogin from '@/pages/AdminLogin';
+
+// Metiv merged-site demos (see pages/metiv-demos/README.md). Lazy so none of the
+// demo code or its static content enters the main bundle; each version renders
+// outside <Layout> with its own header and footer.
+const MetivDemoChooser = lazy(() => import('@/pages/metiv-demos/chooser/Chooser'));
+const MetivDemoV1 = lazy(() => import('@/pages/metiv-demos/v1/Site'));
+const MetivDemoV2 = lazy(() => import('@/pages/metiv-demos/v2/Site'));
+const MetivDemoV3 = lazy(() => import('@/pages/metiv-demos/v3/Site'));
+const MetivDemoV4 = lazy(() => import('@/pages/metiv-demos/v4/Site'));
 
 // Route guard for /admin: not authenticated -> login page; authenticated but
 // without admin/moderator role AND without masteradmin role -> a short "no
@@ -140,6 +149,11 @@ function App() {
                   <Route path="/terms-of-use" element={<TermsOfUse />} />
                   <Route path="/admin" element={<AdminGate />} />
                 </Route>
+                <Route path="/metiv-site-demo" element={<Suspense fallback={null}><MetivDemoChooser /></Suspense>} />
+                <Route path="/metiv-site-demo-v1/*" element={<Suspense fallback={null}><MetivDemoV1 /></Suspense>} />
+                <Route path="/metiv-site-demo-v2/*" element={<Suspense fallback={null}><MetivDemoV2 /></Suspense>} />
+                <Route path="/metiv-site-demo-v3/*" element={<Suspense fallback={null}><MetivDemoV3 /></Suspense>} />
+                <Route path="/metiv-site-demo-v4/*" element={<Suspense fallback={null}><MetivDemoV4 /></Suspense>} />
                 <Route path="*" element={<PageNotFound />} />
               </Routes>
               </UserTypeProvider>

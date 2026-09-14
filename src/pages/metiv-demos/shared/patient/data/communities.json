@@ -1,0 +1,91 @@
+[
+  {
+    "id": "21d2357a-de6e-4f50-a35c-b23a5a8f7ea9",
+    "name": "איגוד מרכזי הסיוע לנפגעות ולנפגעי תקיפה מינית",
+    "organization": "איגוד מרכזי הסיוע לנפגעות ולנפגעי תקיפה מינית",
+    "description_he": "קווי סיוע ארציים (1202 לנשים, 1203 לגברים) וצ'אט \"קולמילה\", וכן רשת ארצית של מרכזי סיוע אזוריים לנפגעות ולנפגעי תקיפה מינית ומשפחותיהם.",
+    "target_audience": [
+      "sexual_harassment"
+    ],
+    "location": "online",
+    "meeting_type": "hybrid",
+    "contact_url": "https://www.1202.org.il/"
+  },
+  {
+    "id": "bd8ff2d4-9d60-47c1-aaf5-e14030e9335a",
+    "name": "הורים לפצועי 'חרבות ברזל'",
+    "organization": "אגף השיקום, משרד הביטחון",
+    "description_he": "קבוצת תמיכה להורים לחיילות ולחיילים שנפצעו במלחמת חרבות ברזל - מרחב לשיתוף, התחברות והתחזקות.",
+    "target_audience": [
+      "security_forces",
+      "parents"
+    ],
+    "location": "center",
+    "meeting_type": "frontal",
+    "contact_url": "https://shikum.mod.gov.il/groups/4548"
+  },
+  {
+    "id": "5d7e33b5-a4d8-4809-9a9a-634d7bb2838c",
+    "name": "המעגל - לא לבד - קהילה תומכת למשפחות נפגעי פוסט-טראומה",
+    "organization": "לא לבד",
+    "description_he": "קהילה תומכת וקבוצות תמיכה למשפחות ולבני/בנות זוג של מתמודדים עם פוסט-טראומה על רקע ביטחוני, ללימוד, חיזוק וליווי בהתמודדות המשפחתית.",
+    "target_audience": [
+      "spouses",
+      "security_forces"
+    ],
+    "location": "center",
+    "meeting_type": "frontal",
+    "contact_url": "https://www.hamaagal.co.il/"
+  },
+  {
+    "id": "67843430-f2e0-4af1-84fb-e18f0e1bcdaf",
+    "name": "מרכז חוסן - ירושלים (עמך)",
+    "organization": "עמותת עמך",
+    "description_he": "מרכז טיפול ותמיכה נפשית לנפגעי פעולות איבה, טראומה וחרדה ומשפחותיהם - טיפול פרטני, קבוצתי ומשפחתי, בטלפון, בזום או פנים אל פנים.",
+    "target_audience": [
+      "general",
+      "hostilities"
+    ],
+    "location": "jerusalem",
+    "meeting_type": "hybrid",
+    "contact_url": "https://www.amcha.org/"
+  },
+  {
+    "id": "a37428fd-0f84-4ae3-b672-2dc61e414be2",
+    "name": "נט\"ל - קבוצות לבנות ובני זוג של מתמודדים ומתמודדות",
+    "organization": "עמותת נט\"ל",
+    "description_he": "קבוצת תמיכה ייחודית לבני ובנות זוג של נפגעי פוסט-טראומה, ללימוד והתחזקות בהתמודדות המשותפת.",
+    "target_audience": [
+      "spouses"
+    ],
+    "location": "center",
+    "meeting_type": "frontal",
+    "contact_url": "https://www.natal.org.il/תמיכה-וטיפול-נפשי/קבוצות-טיפוליות-וקבוצות-תמיכה/קבוצות-לבנות-ובני-זוג-של-מתמודדים-ומתמודדות/partners-support-group/"
+  },
+  {
+    "id": "4d70946d-9ec8-4d1f-8fc3-58a13d1dc5a6",
+    "name": "נט\"ל - קבוצות תמיכה",
+    "organization": "עמותת נט\"ל",
+    "description_he": "קבוצות תמיכה וטיפוליות לנפגעי טראומה ופוסט-טראומה על רקע מלחמה וטרור ולבני משפחותיהם.",
+    "target_audience": [
+      "security_forces",
+      "general",
+      "hostilities"
+    ],
+    "location": "center",
+    "meeting_type": "frontal",
+    "contact_url": "https://www.natal.org.il/תמיכה-וטיפול-נפשי/קבוצות-טיפוליות-וקבוצות-תמיכה/"
+  },
+  {
+    "id": "da4e5d75-6ef7-4696-af60-13582c7c5338",
+    "name": "קבוצות תמיכה לנכי צה\"ל המתמודדים עם פוסט-טראומה",
+    "organization": "אגף השיקום, משרד הביטחון",
+    "description_he": "עשרות קבוצות טיפוליות הפתוחות להרשמה ברחבי הארץ לנכי ולנכות צה\"ל המתמודדים עם פוסט-טראומה - מרחב לשיתוף, התחברות והתחזקות. ניתן לסנן קבוצות לפי אזור ונושא.",
+    "target_audience": [
+      "security_forces"
+    ],
+    "location": "center",
+    "meeting_type": "frontal",
+    "contact_url": "https://shikum.mod.gov.il/groups"
+  }
+]
