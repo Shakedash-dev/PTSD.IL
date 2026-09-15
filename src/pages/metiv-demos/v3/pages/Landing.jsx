@@ -2,6 +2,7 @@ import React from 'react';
 import { ArrowLeft, CalendarDays, GraduationCap, HeartHandshake, MapPin } from 'lucide-react';
 import { DemoLink } from '@/pages/metiv-demos/shared/DemoChrome';
 import { ROUTES } from '@/pages/metiv-demos/shared/routes';
+import { PATIENT_HUB } from '@/pages/metiv-demos/shared/patient';
 import { FIRST_CIRCLE_ILLUSTRATIONS, TREATMENT_STEP_IMAGES } from '@/lib/images';
 import { NamedIcon } from '@/pages/metiv-demos/shared/patient/components';
 import {
@@ -71,7 +72,7 @@ function DoorCard({ door }) {
   return (
     <article aria-labelledby={headingId} className="group relative flex flex-col rounded-super bg-card border-2 border-border hover:border-primary/60 shadow-card hover:shadow-card-hover transition-natural overflow-hidden text-start">
       {/* Hidden on phones: the label would cover the illustration, and the CTA should sit higher. */}
-      <div className={cn('relative hidden sm:flex sm:h-40 lg:h-44 bg-muted items-end justify-center overflow-hidden', door.key === 'therapist' && 'bg-secondary/15')}>
+      <div className={cn('relative hidden sm:flex [@media(max-height:820px)]:hidden sm:h-40 lg:h-44 bg-muted items-end justify-center overflow-hidden', door.key === 'therapist' && 'bg-secondary/15')}>
         <img
           src={door.image}
           alt=""
@@ -116,12 +117,17 @@ export default function Landing() {
       <section aria-labelledby="landing-title" className="relative overflow-hidden bg-background min-h-[calc(100svh-4rem)] flex flex-col">
         <span aria-hidden="true" className="pointer-events-none absolute -top-40 -start-40 w-[34rem] h-[34rem] rounded-full bg-primary/10" />
         <span aria-hidden="true" className="pointer-events-none absolute top-40 -end-48 w-[28rem] h-[28rem] rounded-full bg-secondary/10" />
-        <div className="relative flex-1 flex flex-col justify-center w-full max-w-6xl mx-auto px-5 sm:px-8 py-8 sm:py-10">
+        {/* Short screens (laptops) tighten spacing so both door CTAs stay above the fold. */}
+        <div className="relative flex-1 flex flex-col justify-center w-full max-w-6xl mx-auto px-5 sm:px-8 py-8 sm:py-10 [@media(max-height:820px)]:py-5">
           <div className="text-center max-w-3xl mx-auto">
-            <h1 id="landing-title" className="font-heading font-semibold text-2xl sm:text-3xl leading-snug text-foreground">
-              {ORG.name}
+            {/* The name carries the page: a large "מטיב" over the full name. The hidden
+                separator keeps the accessible name "מטיב - המרכז הישראלי ...". */}
+            <h1 id="landing-title" className="font-heading text-foreground">
+              <span className="block font-semibold text-5xl sm:text-6xl lg:text-7xl [@media(max-height:820px)]:text-5xl leading-none tracking-tight text-accent">מטיב</span>
+              <span className="sr-only"> - </span>
+              <span className="mt-2 sm:mt-3 block font-medium text-xl sm:text-2xl lg:text-3xl leading-snug">המרכז הישראלי לטיפול בפסיכוטראומה</span>
             </h1>
-            <p className="mt-2 text-base sm:text-lg text-muted-foreground leading-relaxed">{METIV_INTRO}</p>
+            <p className="mt-3 sm:mt-4 text-base sm:text-lg text-muted-foreground leading-relaxed">{METIV_INTRO}</p>
           </div>
 
           <div className="mt-6 sm:mt-8 grid gap-6 lg:gap-8 md:grid-cols-2">
@@ -130,7 +136,23 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* ── 2. Metiv services ── */}
+      {/* ── 2. About PTSD, just below the doors. Uses the site's existing copy. ── */}
+      <Band tone="card" labelledBy="landing-ptsd">
+        <div className="grid gap-8 md:grid-cols-[minmax(0,1fr)_auto] md:items-center">
+          <div className="max-w-3xl">
+            <SectionHeading id="landing-ptsd" eyebrow="על פוסט-טראומה" title="מה זה פוסט-טראומה?" className="mb-4" />
+            <p className="text-lg sm:text-xl text-foreground leading-relaxed">{PATIENT_HUB.hero.about}</p>
+          </div>
+          <div className="flex flex-wrap gap-3">
+            <DemoLink to={PATIENT_HUB.hero.aboutRoute} className={PILL_SOLID}>
+              {PATIENT_HUB.hero.aboutLinkLabel} <ArrowLeft className="w-4 h-4" aria-hidden="true" />
+            </DemoLink>
+            <DemoLink to={ROUTES.questionnaire} className={PILL_OUTLINE}>שאלון אנונימי</DemoLink>
+          </div>
+        </div>
+      </Band>
+
+      {/* ── 3. Metiv services ── */}
       <Band tone="canvas" labelledBy="landing-services">
         <SectionHeading id="landing-services" eyebrow="מה מטיב עושה" title="השירותים הטיפוליים של מטיב" intro="מרפאות ותוכניות של מטיב. בכל כרטיס: למי זה מתאים, ואיך פונים." />
         <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">

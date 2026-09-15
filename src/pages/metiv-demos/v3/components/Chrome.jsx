@@ -28,6 +28,12 @@ const AREAS = [
 /** @type {Record<string, string>} */
 const NAV_LABELS = { firstCircle: ROUTE_META.firstCircle.label, secondCircle: ROUTE_META.secondCircle.label, questionnaire: ROUTE_META.questionnaire.label };
 
+/** @type {typeof PATIENT_NAV[number]} */
+const RELEASE_JOURNEY_ITEM = { key: 'releaseJourney', label: 'מסע שחרור', route: `${ROUTES.whereToGetHelp}#release-journey` };
+
+// The full menu's patient list: the kit nav with מסע שחרור right above "איפה מקבלים טיפול".
+const MENU_PATIENT_NAV = PATIENT_NAV.flatMap((item) => (item.key === 'whereToGetHelp' ? [RELEASE_JOURNEY_ITEM, item] : [item]));
+
 // ── Help now: the crisis line lives in the header button, on every page ─────
 
 function HelpNowContent() {
@@ -144,7 +150,7 @@ function MenuSheet({ area }) {
                 <HeartHandshake className="w-4 h-4" aria-hidden="true" /> למטופלים ולמשפחות
               </h2>
               <ul className="space-y-0.5">
-                {PATIENT_NAV.map((item) => (
+                {MENU_PATIENT_NAV.map((item) => (
                   <li key={item.key}>
                     <DemoLink to={item.route} className={cn(link, 'font-medium')}>{item.key === 'patient' ? 'כל הנושאים' : NAV_LABELS[item.key] || item.label}</DemoLink>
                     {item.children && (

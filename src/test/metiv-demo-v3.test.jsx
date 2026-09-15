@@ -139,6 +139,9 @@ describe('metiv demo v3 (Guided Journey)', () => {
     expect(hrefs.filter((h) => h === `${BASE}/therapist`).length).toBeGreaterThanOrEqual(2);
     expect(hrefs).toContain(`${BASE}/patient/first-circle`);
     expect(hrefs).toContain(`${BASE}/therapist/organizations`);
+    // Owner feedback: a short about-PTSD section right below the doors.
+    expect(container.querySelector('#landing-ptsd')).not.toBeNull();
+    expect(hrefs).toContain(`${BASE}/patient/ptsd-info`);
     // Owner feedback: the doors are the focus; no sitemap, no help band, no question headline.
     expect(container.querySelector('#sitemap')).toBeNull();
     expect(container.querySelector('h1')?.textContent).toBe('מטיב - המרכז הישראלי לטיפול בפסיכוטראומה');
