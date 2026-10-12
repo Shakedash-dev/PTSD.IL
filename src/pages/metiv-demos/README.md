@@ -13,6 +13,10 @@ Four design variations of the same site:
 | `/metiv-site-demo-v3` | `v3/` |
 | `/metiv-site-demo-v4` | `v4/` |
 
+V3 is the chosen direction and carries pages the others do not: the "על מטיב"
+sub-pages and the two מסע שחרור pages. Their paths are `V3_ROUTES` in
+`v3/meta.js`, not `shared/routes.js`.
+
 The site is **Metiv's**. The patient area is the former PTSD-IL site, rebranded:
 no "PTSD.IL" wordmark, no "PTSD-IL" phrasing anywhere. The Metiv logo is
 `/images/metiv-demo/metiv-logo.png`.

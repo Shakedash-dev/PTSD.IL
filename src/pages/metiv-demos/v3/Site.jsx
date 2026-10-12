@@ -3,11 +3,16 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 import { DemoChromeProvider } from '@/pages/metiv-demos/shared/DemoChrome';
 import { ROUTES } from '@/pages/metiv-demos/shared/routes';
 import { PATIENT_PAGES } from '@/pages/metiv-demos/shared/patient';
-import { BASE, VERSION } from './meta';
+import { BASE, V3_ROUTES, VERSION } from './meta';
 import PageHeaderV3 from './components/PageHeaderV3';
 import { DocumentMeta, ScrollManager, SiteShell } from './components/Chrome';
 import Landing from './pages/Landing';
 import About from './pages/About';
+import AboutHistory from './pages/AboutHistory';
+import AboutTeam from './pages/AboutTeam';
+import AboutPartners from './pages/AboutPartners';
+import AboutCollaborations from './pages/AboutCollaborations';
+import ReleaseJourneyPro from './pages/ReleaseJourneyPro';
 import Donate from './pages/Donate';
 import Contact from './pages/Contact';
 import Accessibility from './pages/Accessibility';
@@ -44,6 +49,8 @@ import Treatment from './patient/Treatment';
 import Community from './patient/Community';
 import Children from './patient/Children';
 import Sources from './patient/Sources';
+import ReleaseJourney from './patient/ReleaseJourney';
+import WhereToGetHelp from './patient/WhereToGetHelp';
 import { VersionLinks } from './patient/PtsdIlRouting';
 
 // V3 "Guided Journey". Mounted by App.jsx at /metiv-site-demo-v3/*.
@@ -52,7 +59,6 @@ import { VersionLinks } from './patient/PtsdIlRouting';
 /** @param {string} path */
 const rel = (path) => path.replace(/^\//, '');
 
-const WhereToGetHelp = PATIENT_PAGES.whereToGetHelp;
 const FreeTreatmentAndResearch = PATIENT_PAGES.freeTreatment;
 const PrivacyPolicy = PATIENT_PAGES.privacy;
 const TermsOfUse = PATIENT_PAGES.terms;
@@ -75,7 +81,6 @@ export default function Site() {
         <Routes>
           <Route element={<SiteShell area="metiv" />}>
             <Route index element={<Landing />} />
-            <Route path={rel(ROUTES.about)} element={<About />} />
             <Route path={rel(ROUTES.donate)} element={<Donate />} />
             <Route path={rel(ROUTES.contact)} element={<Contact />} />
             <Route path={rel(ROUTES.accessibility)} element={<Accessibility />} />
@@ -102,6 +107,7 @@ export default function Site() {
             <Route path={rel(ROUTES.calmingMuscle)} element={<CalmingMuscle />} />
             <Route path={rel(ROUTES.whereToGetHelp)} element={<KitPage><WhereToGetHelp /></KitPage>} />
             <Route path={rel(ROUTES.freeTreatment)} element={<KitPage><FreeTreatmentAndResearch /></KitPage>} />
+            <Route path={rel(V3_ROUTES.releaseJourney)} element={<ReleaseJourney />} />
           </Route>
 
           <Route element={<SiteShell area="therapist" />}>
@@ -116,6 +122,13 @@ export default function Site() {
             <Route path={rel(ROUTES.articles)} element={<Articles />} />
             <Route path={rel(ROUTES.article)} element={<ArticlePage />} />
             <Route path={rel(ROUTES.events)} element={<Events />} />
+            <Route path={rel(V3_ROUTES.releaseJourneyPro)} element={<ReleaseJourneyPro />} />
+            {/* "על מטיב" lives in the professional area (owner feedback). */}
+            <Route path={rel(ROUTES.about)} element={<About />} />
+            <Route path={rel(V3_ROUTES.aboutHistory)} element={<AboutHistory />} />
+            <Route path={rel(V3_ROUTES.aboutTeam)} element={<AboutTeam />} />
+            <Route path={rel(V3_ROUTES.aboutPartners)} element={<AboutPartners />} />
+            <Route path={rel(V3_ROUTES.aboutCollaborations)} element={<AboutCollaborations />} />
           </Route>
 
           <Route path="*" element={<Navigate to={BASE} replace />} />

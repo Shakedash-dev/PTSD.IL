@@ -7,7 +7,7 @@ import { ROUTES } from '@/pages/metiv-demos/shared/routes';
 import { PATIENT_HUB, PATIENT_NAV } from '@/pages/metiv-demos/shared/patient';
 import { NAV as THERAPIST_NAV, ORG } from '@/pages/metiv-demos/shared/therapist';
 import { cn } from '@/lib/utils';
-import { resolveRoute, routeLabel, ROUTE_META, NEXT_STEPS, BRAND } from '../meta';
+import { resolveRoute, routeLabel, ALL_ROUTES, ROUTE_META, NEXT_STEPS, BRAND, V3_ROUTES } from '../meta';
 import { Band, FOCUS, TEXT_LINK, WasThisHelpful } from './kit';
 import { Popover, PopoverContent, PopoverTrigger } from './Popover';
 import { Sheet, SheetContent, SheetDescription, SheetTitle, SheetTrigger } from './Sheet';
@@ -29,10 +29,21 @@ const AREAS = [
 const NAV_LABELS = { firstCircle: ROUTE_META.firstCircle.label, secondCircle: ROUTE_META.secondCircle.label, questionnaire: ROUTE_META.questionnaire.label };
 
 /** @type {typeof PATIENT_NAV[number]} */
-const RELEASE_JOURNEY_ITEM = { key: 'releaseJourney', label: 'מסע שחרור', route: `${ROUTES.whereToGetHelp}#release-journey` };
+const RELEASE_JOURNEY_ITEM = { key: 'releaseJourney', label: 'מסע שחרור', route: V3_ROUTES.releaseJourney };
 
 // The full menu's patient list: the kit nav with מסע שחרור right above "איפה מקבלים טיפול".
 const MENU_PATIENT_NAV = PATIENT_NAV.flatMap((item) => (item.key === 'whereToGetHelp' ? [RELEASE_JOURNEY_ITEM, item] : [item]));
+
+// The professional area's tabs: the shared nav, with "על מטיב" right after the
+// area home and מסע שחרור at the end (owner feedback).
+const ABOUT_CHILDREN = ['aboutHistory', 'aboutTeam', 'aboutPartners', 'aboutCollaborations'];
+
+const PRO_NAV = [
+  THERAPIST_NAV[0],
+  { key: 'about', label: ROUTE_META.about.label, route: ROUTES.about },
+  ...THERAPIST_NAV.slice(1),
+  { key: 'releaseJourneyPro', label: ROUTE_META.releaseJourneyPro.label, route: V3_ROUTES.releaseJourneyPro },
+];
 
 // ── Help now: the crisis line lives in the header button, on every page ─────
 
@@ -169,15 +180,24 @@ function MenuSheet({ area }) {
                 <GraduationCap className="w-4 h-4" aria-hidden="true" /> לאנשי טיפול ומקצוע
               </h2>
               <ul className="space-y-0.5">
-                {THERAPIST_NAV.map((item) => (
-                  <li key={item.key}><DemoLink to={item.route} className={cn(link, 'font-medium')}>{item.key === 'therapist' ? 'ראשי' : item.label}</DemoLink></li>
+                {PRO_NAV.map((item) => (
+                  <li key={item.key}>
+                    <DemoLink to={item.route} className={cn(link, 'font-medium')}>{item.key === 'therapist' ? 'ראשי' : item.label}</DemoLink>
+                    {item.key === 'about' && (
+                      <ul className="ms-4 border-s-2 border-dashed border-primary/30 ps-2">
+                        {ABOUT_CHILDREN.map((k) => (
+                          <li key={k}><DemoLink to={ALL_ROUTES[k]} className={cn(link, 'text-sm py-1.5')}>{ROUTE_META[k].label}</DemoLink></li>
+                        ))}
+                      </ul>
+                    )}
+                  </li>
                 ))}
               </ul>
             </section>
             <section>
               <h2 className="font-heading font-semibold text-accent mb-2">מטיב</h2>
               <ul className="space-y-0.5">
-                {['home', 'about', 'donate', 'contact', 'accessibility', 'privacy', 'terms'].map((k) => (
+                {['home', 'donate', 'contact', 'accessibility', 'privacy', 'terms'].map((k) => (
                   <li key={k}><DemoLink to={ROUTES[k]} className={cn(link, 'font-medium')}>{ROUTE_META[k].label}</DemoLink></li>
                 ))}
               </ul>
@@ -217,7 +237,7 @@ function AreaNav({ area }) {
   const Icon = meta?.icon || HeartHandshake;
   const items = isPatient
     ? PATIENT_NAV.map((i) => ({ key: i.key, label: i.key === 'patient' ? 'כל הנושאים' : NAV_LABELS[i.key] || i.label, route: i.route, childKeys: (i.children || []).map((c) => c.key) }))
-    : THERAPIST_NAV.map((i) => ({ key: i.key, label: i.key === 'therapist' ? 'ראשי' : i.label, route: i.route, childKeys: [] }));
+    : PRO_NAV.map((i) => ({ key: i.key, label: i.key === 'therapist' ? 'ראשי' : i.label, route: i.route, childKeys: [] }));
   const parentKey = key ? ROUTE_META[key]?.parent : undefined;
   const isActive = (/** @type {{ key: string, childKeys: string[] }} */ i) => i.key === key || (i.key !== area && i.key === parentKey);
 

@@ -12,6 +12,7 @@ import { IMAGES } from '@/lib/images';
 import ValidatableContent from '@/components/ValidatableContent';
 import { EntrySection } from '@/pages/metiv-demos/shared/patient/components';
 import { VETERANS_PROGRAMS, ADDITION_ANCHORS } from '@/pages/metiv-demos/shared/patient/additions';
+import { withReleaseJourneyPage } from '../data/releaseJourneyLinks';
 import { VersionLinks } from './PtsdIlRouting';
 
 // Metiv demo (V3): a copy of src/pages/Community.jsx. Change only: the approved
@@ -218,7 +219,7 @@ export default function Community() {
             id={ADDITION_ANCHORS.veterans}
             title="חיילים משוחררים ומילואימניקים"
             intro="תכניות קבוצתיות של מטיב לחיילים משוחררים, למילואימניקים ולבני משפחותיהם."
-            entries={VETERANS_PROGRAMS}
+            entries={withReleaseJourneyPage(VETERANS_PROGRAMS)}
           />
         </SectionBlock>
       </VersionLinks>

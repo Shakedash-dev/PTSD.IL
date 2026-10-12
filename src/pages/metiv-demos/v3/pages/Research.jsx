@@ -3,6 +3,7 @@ import { ArrowLeft, Check, PlayCircle, Users } from 'lucide-react';
 import Disclosure from '@/components/patterns/Disclosure';
 import { DemoLink, DemoMarkdown } from '@/pages/metiv-demos/shared/DemoChrome';
 import { ROUTES } from '@/pages/metiv-demos/shared/routes';
+import { V3_ROUTES } from '../meta';
 import { ACTIVE_STUDIES, RESEARCH_INTRO } from '@/pages/metiv-demos/shared/therapist';
 import { cn } from '@/lib/utils';
 import PageHeaderV3 from '../components/PageHeaderV3';
@@ -72,6 +73,9 @@ export default function Research() {
               </div>
               <h3 className="mt-3 font-heading font-semibold text-xl text-foreground">{s.title}</h3>
               <p className="mt-1 text-foreground leading-relaxed">{s.summary}</p>
+              {s.slug === 'release-journey-study' && (
+                <DemoLink to={V3_ROUTES.releaseJourneyPro} className="mt-2 font-medium text-accent underline underline-offset-4">לעמוד מסע שחרור</DemoLink>
+              )}
               <FactGrid className="mt-4" columns={1} items={[{ label: 'אוכלוסיית המחקר', value: s.population, icon: <Users className="w-5 h-5" /> }]} />
               {s.eligibility?.length > 0 && (
                 <div className="mt-4">

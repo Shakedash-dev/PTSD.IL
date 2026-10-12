@@ -27,6 +27,7 @@ vi.mock('@/api/hooks', () => {
   };
 });
 import { ROUTES } from '@/pages/metiv-demos/shared/routes';
+import { ALL_ROUTES, V3_ROUTES } from '@/pages/metiv-demos/v3/meta';
 import { ARTICLES, COURSES } from '@/pages/metiv-demos/shared/therapist';
 
 const BASE = '/metiv-site-demo-v3';
@@ -54,7 +55,7 @@ function renderAt(path) {
   );
 }
 
-const routeCases = Object.entries(ROUTES).map(([key, path]) => [
+const routeCases = Object.entries(ALL_ROUTES).map(([key, path]) => [
   key,
   path.replace(':slug', key === 'course' ? SLUGS.course : SLUGS.article),
 ]);
@@ -184,6 +185,43 @@ describe('metiv demo v3 (Guided Journey)', () => {
     }
     expect(main?.querySelector('#paths')).not.toBeNull();
     assertClean(container);
+  });
+
+  it('"על מטיב" is a tab of the professional area, opening with the departments and leading to its sub-pages', () => {
+    const { container } = renderAt('/about');
+    const tabs = container.querySelector('nav[aria-label="על מטיב"]');
+    const tabHrefs = [...(tabs?.querySelectorAll('a[href]') || [])].map((a) => a.getAttribute('href'));
+    expect(tabHrefs).toEqual([`${BASE}/about`, ...['aboutHistory', 'aboutTeam', 'aboutPartners', 'aboutCollaborations'].map((k) => `${BASE}${V3_ROUTES[k]}`)]);
+    const areaNav = container.querySelector('nav[aria-label^="ניווט ב"]');
+    expect(areaNav?.querySelector(`a[href="${BASE}/about"]`)?.getAttribute('aria-current')).toBe('page');
+    expect(areaNav?.querySelector(`a[href="${BASE}${V3_ROUTES.releaseJourneyPro}"]`)).not.toBeNull();
+    for (const id of ['adults-clinic', 'kids-clinic', 'migdalor', 'release-journey', 'training-unit', 'research-unit']) {
+      expect(container.querySelector(`#dept-${id}`), id).not.toBeNull();
+    }
+    assertClean(container);
+  });
+
+  it('מסע שחרור has a page in each area, with different content, and the existing mentions lead to it', () => {
+    const patient = renderAt(V3_ROUTES.releaseJourney);
+    const patientText = patient.container.querySelector('main')?.textContent || '';
+    expect(patient.container.querySelector('h1')?.textContent).toBe('מסע שחרור');
+    expect(patient.container.querySelector(`header a[href="${BASE}${V3_ROUTES.releaseJourney}"]`), 'tab in the patient navbar').not.toBeNull();
+    expect(patientText).toMatch(/3,500/);
+    expect(patient.container.querySelector('a[href="https://peaceofmind.org.il/"]')).not.toBeNull();
+    patient.unmount();
+
+    const pro = renderAt(V3_ROUTES.releaseJourneyPro);
+    const proText = pro.container.querySelector('main')?.textContent || '';
+    expect(proText).toMatch(/צוות מסע שחרור/);
+    expect(proText).not.toBe(patientText);
+    expect(patientText).not.toMatch(/צוות מסע שחרור/);
+    pro.unmount();
+
+    for (const path of [ROUTES.whereToGetHelp, ROUTES.community]) {
+      const { container, unmount } = renderAt(path);
+      expect(container.querySelector(`main a[href="${BASE}${V3_ROUTES.releaseJourney}"]`), path).not.toBeNull();
+      unmount();
+    }
   });
 
   it('course finder narrows the list and "show all" restores it', () => {

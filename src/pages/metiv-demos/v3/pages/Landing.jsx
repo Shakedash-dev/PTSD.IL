@@ -18,6 +18,7 @@ import {
   UPCOMING_EVENTS,
 } from '@/pages/metiv-demos/shared/therapist';
 import { cn } from '@/lib/utils';
+import { V3_ROUTES } from '../meta';
 import { Band, CHIP_LINK, ExternalLink, FOCUS, PILL_OUTLINE, PILL_SOLID, SectionHeading, StatusPill, TEXT_LINK } from '../components/kit';
 
 // Two plain sentences about Metiv under its name. Facts only, no claims.
@@ -158,7 +159,7 @@ export default function Landing() {
         <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {METIV_SERVICES.map((s) => (
             <li key={s.slug}>
-              <DemoLink to={s.href} className={cn('group flex h-full gap-4 rounded-super bg-card border border-border p-5 shadow-card hover:shadow-card-hover hover:border-primary/50 transition-natural', FOCUS)}>
+              <DemoLink to={s.slug === 'release-journey' ? V3_ROUTES.releaseJourney : s.href} className={cn('group flex h-full gap-4 rounded-super bg-card border border-border p-5 shadow-card hover:shadow-card-hover hover:border-primary/50 transition-natural', FOCUS)}>
                 <span className="w-12 h-12 rounded-2xl bg-primary/10 text-accent flex items-center justify-center flex-shrink-0">
                   <NamedIcon name={s.icon} className="w-6 h-6" />
                 </span>

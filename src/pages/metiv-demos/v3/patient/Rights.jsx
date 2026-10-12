@@ -13,6 +13,7 @@ import { DemoLink } from '@/pages/metiv-demos/shared/DemoChrome';
 import { ROUTES } from '@/pages/metiv-demos/shared/routes';
 import { METIV_SERVICES } from '@/pages/metiv-demos/shared/patient/additions';
 import { ContactList } from '@/pages/metiv-demos/shared/patient/components';
+import { withReleaseJourneyPage } from '../data/releaseJourneyLinks';
 import { VersionLinks } from './PtsdIlRouting';
 
 // Metiv demo (V3): a copy of src/pages/Rights.jsx. Change only: two Metiv items,
@@ -27,9 +28,9 @@ const CATEGORIES = [
   { key: 'general', labelKey: 'rights_general', icon: HelpCircle },
 ];
 
-const SECURITY_FORCES_ADDITIONS = ['release-journey', 'free-treatments']
-  .map((id) => METIV_SERVICES.find((s) => s.id === id))
-  .filter(Boolean);
+const SECURITY_FORCES_ADDITIONS = withReleaseJourneyPage(
+  ['release-journey', 'free-treatments'].map((id) => METIV_SERVICES.find((s) => s.id === id)).filter(Boolean)
+);
 
 const ENTRY_FIELDS = [
   ['who', 'למי'],

@@ -58,6 +58,10 @@ const SECOND_CIRCLE_LINKS = [
   { labelKey: 'nav_community', path: '/community' },
 ];
 
+// Metiv demo: מסע שחרור has a page of its own in the patient area, and a tab on
+// every page that shows tabs. The name is the programme's, the same in every language.
+const RELEASE_JOURNEY_LINK = { label: 'מסע שחרור', path: '/release-journey' };
+
 const PATH_PICKER_ROUTES = ['/first-circle', '/second-circle', '/questionnaire'];
 
 // Choose which set of links the navbar should show. The home page gets nothing,
@@ -68,10 +72,10 @@ const PATH_PICKER_ROUTES = ['/first-circle', '/second-circle', '/questionnaire']
 // can identify themselves.
 function selectLinks(pathname, userType) {
   if (pathname === '/') return [];
-  if (PATH_PICKER_ROUTES.includes(pathname)) return PATH_LINKS;
-  if (userType === 'first_circle') return FIRST_CIRCLE_LINKS;
-  if (userType === 'second_circle') return SECOND_CIRCLE_LINKS;
-  return PATH_LINKS;
+  if (PATH_PICKER_ROUTES.includes(pathname)) return [...PATH_LINKS, RELEASE_JOURNEY_LINK];
+  if (userType === 'first_circle') return [...FIRST_CIRCLE_LINKS, RELEASE_JOURNEY_LINK];
+  if (userType === 'second_circle') return [...SECOND_CIRCLE_LINKS, RELEASE_JOURNEY_LINK];
+  return [...PATH_LINKS, RELEASE_JOURNEY_LINK];
 }
 
 export default function Navbar() {
@@ -116,7 +120,7 @@ export default function Navbar() {
                   : 'text-muted-foreground hover:text-foreground'
               }`}
             >
-              {t(lang, item.labelKey)}
+              {item.label || t(lang, item.labelKey)}
             </Link>
           ))}
         </div>
@@ -155,7 +159,7 @@ export default function Navbar() {
                     : 'text-muted-foreground hover:bg-muted'
                 }`}
               >
-                {t(lang, item.labelKey)}
+                {item.label || t(lang, item.labelKey)}
               </Link>
             ))}
           </div>

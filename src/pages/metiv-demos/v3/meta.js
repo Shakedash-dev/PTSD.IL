@@ -9,12 +9,31 @@ export const VERSION = 'v3';
 export const BASE = versionBase(VERSION);
 export const BRAND = 'מטיב';
 
+// Pages only V3 has (owner feedback): the "על מטיב" sub-pages and the two
+// מסע שחרור pages. Kept out of shared/routes.js, which lists the page set every
+// version implements.
+export const V3_ROUTES = {
+  aboutHistory: '/about/history',
+  aboutTeam: '/about/team',
+  aboutPartners: '/about/partners',
+  aboutCollaborations: '/about/collaborations',
+  releaseJourney: '/patient/release-journey',
+  releaseJourneyPro: '/therapist/release-journey',
+};
+
+/** Every route V3 serves: the shared page set plus the V3-only pages. @type {Record<string, string>} */
+export const ALL_ROUTES = { ...ROUTES, ...V3_ROUTES };
+
 /** @typedef {'metiv'|'patient'|'therapist'} Area */
 
 /** @type {Record<string, { label: string, area: Area, parent?: string }>} */
 export const ROUTE_META = {
   home: { label: 'דף הבית', area: 'metiv' },
-  about: { label: 'אודות מטיב', area: 'metiv', parent: 'home' },
+  about: { label: 'על מטיב', area: 'therapist', parent: 'therapist' },
+  aboutHistory: { label: 'הסיפור של מטיב', area: 'therapist', parent: 'about' },
+  aboutTeam: { label: 'הצוות', area: 'therapist', parent: 'about' },
+  aboutPartners: { label: 'השותפים שלנו', area: 'therapist', parent: 'about' },
+  aboutCollaborations: { label: 'שיתופי פעולה', area: 'therapist', parent: 'about' },
   donate: { label: 'תרומה', area: 'metiv', parent: 'home' },
   contact: { label: 'יצירת קשר', area: 'metiv', parent: 'home' },
   privacy: { label: 'מדיניות פרטיות', area: 'metiv', parent: 'home' },
@@ -35,6 +54,7 @@ export const ROUTE_META = {
   community: { label: 'קהילות תמיכה', area: 'patient', parent: 'patient' },
   children: { label: 'לדבר עם ילדים', area: 'patient', parent: 'patient' },
   sources: { label: 'מקורות', area: 'patient', parent: 'patient' },
+  releaseJourney: { label: 'מסע שחרור', area: 'patient', parent: 'patient' },
   calming: { label: 'תרגילי הרגעה', area: 'patient', parent: 'patient' },
   calmingBreathing: { label: 'נשימה', area: 'patient', parent: 'calming' },
   calmingGrounding: { label: 'קרקוע', area: 'patient', parent: 'calming' },
@@ -51,13 +71,14 @@ export const ROUTE_META = {
   articles: { label: 'מאמרים', area: 'therapist', parent: 'therapist' },
   article: { label: 'מאמר', area: 'therapist', parent: 'articles' },
   events: { label: 'אירועים ועדכונים', area: 'therapist', parent: 'therapist' },
+  releaseJourneyPro: { label: 'מסע שחרור', area: 'therapist', parent: 'therapist' },
 };
 
 // More specific patterns first so "/patient/calming/breathing" never matches "/patient".
-const ORDERED_KEYS = Object.keys(ROUTES).sort((a, b) => ROUTES[b].length - ROUTES[a].length);
+const ORDERED_KEYS = Object.keys(ALL_ROUTES).sort((a, b) => ALL_ROUTES[b].length - ALL_ROUTES[a].length);
 
 /**
- * Which ROUTES key a pathname (with or without the version base) belongs to.
+ * Which route key a pathname (with or without the version base) belongs to.
  * @param {string} pathname
  * @returns {{ key: string|null, params: Record<string, string|undefined> }}
  */
@@ -66,7 +87,7 @@ export function resolveRoute(pathname) {
   if (!rel) rel = '/';
   if (rel.length > 1) rel = rel.replace(/\/+$/, '');
   for (const key of ORDERED_KEYS) {
-    const m = matchPath({ path: ROUTES[key], end: true }, rel);
+    const m = matchPath({ path: ALL_ROUTES[key], end: true }, rel);
     if (m) return { key, params: m.params };
   }
   return { key: null, params: {} };
@@ -96,7 +117,7 @@ export function trailFor(key, params = {}) {
   const trail = [{ label: routeLabel(key, params), to: null }];
   let parent = ROUTE_META[key]?.parent;
   while (parent) {
-    trail.unshift({ label: parent === 'home' ? BRAND : ROUTE_META[parent].label, to: ROUTES[parent] });
+    trail.unshift({ label: parent === 'home' ? BRAND : ROUTE_META[parent].label, to: ALL_ROUTES[parent] });
     parent = ROUTE_META[parent]?.parent;
   }
   return trail;
