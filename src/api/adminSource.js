@@ -70,9 +70,9 @@ function requireCategoryId(taxonomy, slug) {
 }
 
 // Like requireCategoryId, but creates the category if the DB has never seen it.
-// Only site copy needs this: it is the one bucket introduced after the initial
-// migration, so a fresh database has no `site-copy` row and the first admin to
-// save a string would otherwise hit "Unknown category slug". Creating it needs
+// Only the edit log needs this: it is a bucket introduced after the initial
+// migration, so a fresh database has no `admin-log` row and the first save
+// would otherwise hit "Unknown category slug". Creating it needs
 // the same admin/moderator role the write itself needs. The taxonomy cache is
 // dropped afterwards so the new id is picked up by later calls.
 async function resolveOrCreateCategoryId(taxonomy, slug, name) {
@@ -160,7 +160,7 @@ async function writeArticle(draft, ctx, payload) {
   // content write succeeds; a sync failure surfaces as a ChatbotSyncError the
   // panel treats as a non-fatal warning (the content is already saved).
   // `ctx.skipReindex` is for rows that are UI chrome rather than answerable
-  // content - see saveSiteCopy.
+  // content - see appendEditLog.
   if (!ctx.skipReindex) await reindexItem(saved?.id ?? draft.id);
   return saved;
 }
@@ -171,142 +171,83 @@ async function removeArticle(id, { skipReindex = false } = {}) {
   return res;
 }
 
-// ─── siteCopy — article, category `site-copy`, per langId ──────────────────
-// Admin overrides for the UI strings shipped in src/lib/i18n.js: page
-// headings, subtitles, intros, questionnaire result text, footer, SEO
-// descriptions. One row per i18n key per language - `title` IS the key,
-// content JSON is `{ text }`.
+// ─── editLog - article, category `admin-log`, unpublished ───────────────────
+// Who saved what from /admin. One row per "save all" batch: `title` is the
+// timestamp, content JSON is `{ at, user, changes }` where every change is
+// `{ section, action, title, fields: [{ label, before, after }] }` with the
+// values already flattened to the plain text the review dialog showed.
 //
-// Two things make this bucket different from the rest:
-//   - It is sparse. A key with no row simply uses the string the site shipped
-//     with, so an untouched site has zero rows and behaves exactly as before.
-//     Clearing a field deletes the row rather than storing an empty string.
-//   - It is skipped by the chatbot reindex. These are button labels, nav items
-//     and meta descriptions; embedding "שמירה" or "טוען..." would only add
-//     noise to the bot's retrieval.
-const SITE_COPY_CATEGORY = 'site-copy';
-const SITE_COPY_CATEGORY_NAME = 'תוכן דפים';
+// Stored as an article because the backend has no audit endpoint, which has
+// two consequences worth knowing:
+//   - It is written by the editor's own browser after their batch lands, so it
+//     records what the panel did, not what the API received. A failed log
+//     write never undoes the content write.
+//   - It is NOT tamper-proof. Anyone with admin/moderator can PATCH or DELETE
+//     these rows through the API directly, exactly like any other article. A
+//     real audit trail needs a server-side log, which is outside this repo.
+//
+// Rows are created with isPublished: false, so the public /articles endpoint
+// never returns them, and they skip the chatbot reindex.
+const EDIT_LOG_CATEGORY = 'admin-log';
+const EDIT_LOG_CATEGORY_NAME = 'יומן עריכות';
+// A single rich-text field can be long; the log is for "who changed what",
+// not a version store, so each before/after value is capped.
+const EDIT_LOG_VALUE_MAX = 4000;
 
-/**
- * Every override stored for one language.
- * @param {{ lang?: string }} [ctx]
- * @returns {Promise<Record<string, { id: string, text: string }>>} keyed by i18n key
- */
-export async function loadSiteCopy(ctx = {}) {
-  const lang = ctx.lang || 'he';
-  const taxonomy = await getTaxonomy();
-  const categoryId = taxonomy.categoriesBySlug.get(SITE_COPY_CATEGORY);
-  /** @type {Record<string, { id: string, text: string }>} */
-  const map = {};
-  // Nothing has ever been overridden - the category itself does not exist yet.
-  if (!categoryId) return map;
-  const items = await fetchArticles({ type: 'article', langId: lang, categoryId });
-  for (const item of items) {
-    if (!item.title) continue;
-    map[item.title] = { id: item.id, text: parseContent(item).text ?? '' };
-  }
-  return map;
+function capLogValue(text) {
+  const s = text ?? '';
+  return s.length > EDIT_LOG_VALUE_MAX ? `${s.slice(0, EDIT_LOG_VALUE_MAX)}...` : s;
 }
 
 /**
- * Override one key in one language. Pass an empty `text` to drop the override
- * and fall back to the shipped string.
- * @param {{ id?: string, key: string, text: string }} draft
- * @param {{ lang?: string }} [ctx]
+ * @param {{ user: { id: string|null, email: string|null, name: string|null }, changes: Array<{ section: string, action: string, title: string, fields: Array<{ label: string, before: string, after: string }> }> }} entry
  */
-export async function saveSiteCopy(draft, ctx = {}) {
-  const lang = ctx.lang || 'he';
-  const text = (draft.text ?? '').trim();
-  if (!text) {
-    // Reverting to the shipped string. Nothing to delete if it was never saved.
-    return draft.id ? removeSiteCopy(draft.id) : null;
-  }
+export async function appendEditLog(entry) {
   const taxonomy = await getTaxonomy();
   const categoryId = await resolveOrCreateCategoryId(
-    taxonomy, SITE_COPY_CATEGORY, SITE_COPY_CATEGORY_NAME
+    taxonomy, EDIT_LOG_CATEGORY, EDIT_LOG_CATEGORY_NAME
   );
+  const at = new Date().toISOString();
+  const changes = entry.changes.map(c => ({
+    section: c.section,
+    action: c.action,
+    title: c.title,
+    fields: (c.fields || []).map(f => ({
+      label: f.label,
+      before: capLogValue(f.before),
+      after: capLogValue(f.after),
+    })),
+  }));
   const payload = {
     type: 'article',
-    langId: lang,
-    title: draft.key,
-    content: JSON.stringify({ text }),
+    langId: 'he',
+    title: at,
+    content: JSON.stringify({ at, user: entry.user, changes }),
     categoryIds: [categoryId],
   };
-  return writeArticle(draft, { ...ctx, skipReindex: true }, payload);
-}
-
-export function removeSiteCopy(id) {
-  return removeArticle(id, { skipReindex: true });
-}
-
-// ─── legalDoc — article, category `legal`, per langId ──────────────────────
-// The privacy policy and the terms of use. `title` is the document slug,
-// content JSON is `{ body, updated }` - body is raw Markdown (NOT the
-// html<->md round-trip the other panels use: a legal document should come back
-// out byte-for-byte as it was typed, and turndown is not the place to find out
-// otherwise), `updated` is the last-updated date shown in the page header.
-//
-// Like site copy this is an override layer: no row means the page renders the
-// Markdown it ships with (src/pages/PrivacyPolicy.jsx, TermsOfUse.jsx), which
-// is what keeps the legal text on screen when the API is unreachable.
-// Deleting a row reverts to that shipped text.
-//
-// Only the two documents below exist - this is a fixed pair, not a list an
-// editor adds to.
-const LEGAL_CATEGORY = 'legal';
-const LEGAL_CATEGORY_NAME = 'מסמכים משפטיים';
-export const LEGAL_DOC_SLUGS = ['privacy-policy', 'terms-of-use'];
-
-/**
- * @param {{ lang?: string }} [ctx]
- * @returns {Promise<Record<string, { id: string, body: string, updated: string }>>} keyed by slug
- */
-export async function loadLegalDocs(ctx = {}) {
-  const lang = ctx.lang || 'he';
-  const taxonomy = await getTaxonomy();
-  const categoryId = taxonomy.categoriesBySlug.get(LEGAL_CATEGORY);
-  /** @type {Record<string, { id: string, body: string, updated: string }>} */
-  const map = {};
-  if (!categoryId) return map; // nothing overridden yet
-  const items = await fetchArticles({ type: 'article', langId: lang, categoryId });
-  for (const item of items) {
-    if (!item.title) continue;
-    const c = parseContent(item);
-    map[item.title] = { id: item.id, body: c.body ?? '', updated: c.updated ?? '' };
-  }
-  return map;
+  return writeArticle({}, { isPublished: false, skipReindex: true }, payload);
 }
 
 /**
- * @param {{ id?: string, slug: string, body: string, updated?: string }} draft
- * @param {{ lang?: string }} [ctx]
+ * Every logged batch, newest first.
+ * @returns {Promise<Array<{ id: string, at: string, user: { id: string|null, email: string|null, name: string|null }, changes: any[] }>>}
  */
-export async function saveLegalDoc(draft, ctx = {}) {
-  const lang = ctx.lang || 'he';
-  const body = (draft.body ?? '').trim();
-  if (!body) {
-    // Emptying the editor means "go back to the text the site ships with".
-    return draft.id ? removeLegalDoc(draft.id) : null;
-  }
+export async function loadEditLog() {
   const taxonomy = await getTaxonomy();
-  const categoryId = await resolveOrCreateCategoryId(
-    taxonomy, LEGAL_CATEGORY, LEGAL_CATEGORY_NAME
-  );
-  const payload = {
-    type: 'article',
-    langId: lang,
-    title: draft.slug,
-    content: JSON.stringify({ body, updated: draft.updated ?? '' }),
-    categoryIds: [categoryId],
-  };
-  // Kept out of the chatbot index on purpose: the bot answers questions about
-  // trauma and rights, and a liability disclaimer retrieved as an "answer"
-  // would be worse than no answer.
-  return writeArticle(draft, { ...ctx, skipReindex: true }, payload);
-}
-
-export function removeLegalDoc(id) {
-  return removeArticle(id, { skipReindex: true });
+  const categoryId = taxonomy.categoriesBySlug.get(EDIT_LOG_CATEGORY);
+  if (!categoryId) return []; // nothing has been saved since the log existed
+  const items = await fetchArticles({ type: 'article', langId: 'he', categoryId });
+  return items
+    .map(item => {
+      const c = parseContent(item);
+      return {
+        id: item.id,
+        at: c.at || item.createdAt || '',
+        user: c.user || { id: null, email: null, name: null },
+        changes: Array.isArray(c.changes) ? c.changes : [],
+      };
+    })
+    .sort((a, b) => (a.at < b.at ? 1 : a.at > b.at ? -1 : 0));
 }
 
 // ─── ptsdFaq — faq, category `ptsd-info`, per langId ───────────────────────

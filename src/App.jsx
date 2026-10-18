@@ -1,4 +1,4 @@
-import React, { useState, useEffect, lazy, Suspense } from 'react';
+import React, { lazy, Suspense } from 'react';
 import { Toaster } from "@/components/ui/toaster"
 import { Toaster as SonnerToaster } from "@/components/ui/sonner"
 import { QueryClientProvider } from '@tanstack/react-query'
@@ -8,14 +8,11 @@ import { BASE_PATH } from '@/base-path';
 import PageNotFound from './lib/PageNotFound';
 import ScrollToTop from './components/ScrollToTop';
 import ContentPrefetcher from './components/ContentPrefetcher';
-import { LanguageProvider, useLang } from '@/lib/LanguageContext';
+import { LanguageProvider } from '@/lib/LanguageContext';
 import { ChatProvider } from '@/lib/ChatContext';
-import { t } from '@/lib/i18n';
 import { ValidationProvider } from '@/contexts/ValidationContext';
 import { UserTypeProvider } from '@/contexts/UserTypeContext';
 import Layout from '@/components/Layout';
-import { isAuthenticated, hasAdminAccess, hasUserManagementAccess, logout, AUTH_CHANGE_EVENT } from '@/lib/auth';
-import { ADMIN_PREVIEW } from '@/lib/adminPreview';
 
 import Home from '@/pages/Home';
 import FirstCircle from '@/pages/FirstCircle';
@@ -36,8 +33,7 @@ import CalmingMuscle from '@/pages/CalmingMuscle';
 import Sources from '@/pages/Sources';
 import PrivacyPolicy from '@/pages/PrivacyPolicy';
 import TermsOfUse from '@/pages/TermsOfUse';
-import Admin from '@/pages/Admin';
-import AdminLogin from '@/pages/AdminLogin';
+import AdminGate from '@/components/admin/AdminGate';
 
 // Metiv merged-site demos (see pages/metiv-demos/README.md). Lazy so none of the
 // demo code or its static content enters the main bundle; each version renders
@@ -47,73 +43,6 @@ const MetivDemoV1 = lazy(() => import('@/pages/metiv-demos/v1/Site'));
 const MetivDemoV2 = lazy(() => import('@/pages/metiv-demos/v2/Site'));
 const MetivDemoV3 = lazy(() => import('@/pages/metiv-demos/v3/Site'));
 const MetivDemoV4 = lazy(() => import('@/pages/metiv-demos/v4/Site'));
-
-// Route guard for /admin: not authenticated -> login page; authenticated but
-// without admin/moderator role AND without masteradmin role -> a short "no
-// access" message + logout button (the panel itself is never rendered in
-// that case); otherwise the panel. A pure masteradmin (no admin/moderator)
-// must still get in - Admin.jsx itself decides which tabs/panels that user
-// actually sees. Listens for AUTH_CHANGE_EVENT (fired by src/lib/auth.js on
-// login/logout, and by src/api/adminClient.js on a 401) so the view updates
-// reactively without a manual refresh.
-// Local design preview: the panel opens without signing in, backed by sample
-// data, with every write disabled. Only ever reachable on a dev server - see
-// src/lib/adminPreview.js for why it cannot exist in a production build.
-function AdminPreviewBanner() {
-  return (
-    <div
-      role="status"
-      className="fixed top-0 inset-x-0 z-[9999] bg-warning text-warning-foreground text-center text-sm font-semibold py-1.5 px-4"
-    >
-      תצוגה מקדימה לעיצוב · נתוני דוגמה, לא המסד האמיתי · שמירה ומחיקה מושבתות
-    </div>
-  );
-}
-
-function AdminGate() {
-  const { lang } = useLang();
-  const [authed, setAuthed] = useState(() => isAuthenticated());
-  const [allowed, setAllowed] = useState(() => hasAdminAccess() || hasUserManagementAccess());
-
-  useEffect(() => {
-    function sync() {
-      setAuthed(isAuthenticated());
-      setAllowed(hasAdminAccess() || hasUserManagementAccess());
-    }
-    window.addEventListener(AUTH_CHANGE_EVENT, sync);
-    return () => window.removeEventListener(AUTH_CHANGE_EVENT, sync);
-  }, []);
-
-  if (ADMIN_PREVIEW) {
-    return (
-      <>
-        <AdminPreviewBanner />
-        <Admin />
-      </>
-    );
-  }
-
-  if (!authed) return <AdminLogin />;
-
-  if (!allowed) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center pt-16 px-4">
-        <div className="text-center max-w-sm">
-          <p className="text-foreground font-medium mb-4">{t(lang, 'admin_no_access')}</p>
-          <button
-            type="button"
-            onClick={logout}
-            className="px-4 py-2 rounded-lg bg-muted text-foreground text-sm font-semibold hover:bg-border transition-natural"
-          >
-            {t(lang, 'admin_logout')}
-          </button>
-        </div>
-      </div>
-    );
-  }
-
-  return <Admin />;
-}
 
 // Provider order matters: QueryClientProvider must be outermost (hooks used inside all children).
 function App() {
@@ -147,8 +76,8 @@ function App() {
                   <Route path="/sources" element={<Sources />} />
                   <Route path="/privacy-policy" element={<PrivacyPolicy />} />
                   <Route path="/terms-of-use" element={<TermsOfUse />} />
-                  <Route path="/admin" element={<AdminGate />} />
                 </Route>
+                <Route path="/admin" element={<AdminGate />} />
                 <Route path="/metiv-site-demo" element={<Suspense fallback={null}><MetivDemoChooser /></Suspense>} />
                 <Route path="/metiv-site-demo-v1/*" element={<Suspense fallback={null}><MetivDemoV1 /></Suspense>} />
                 <Route path="/metiv-site-demo-v2/*" element={<Suspense fallback={null}><MetivDemoV2 /></Suspense>} />

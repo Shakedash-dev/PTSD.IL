@@ -1,15 +1,11 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { render, screen, waitFor, cleanup } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { screen, waitFor, cleanup, fireEvent } from '@testing-library/react';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { LanguageProvider } from '@/lib/LanguageContext';
-import { ValidationProvider } from '@/contexts/ValidationContext';
 import { adminApi, ReadOnlyPreviewError } from '@/api/adminClient';
 import { ADMIN_PREVIEW } from '@/lib/adminPreview';
-import Admin from '@/pages/Admin';
+import { renderAdmin } from './renderAdmin';
 
 const SRC = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
@@ -99,18 +95,8 @@ describe('admin preview: the panel itself', () => {
   afterEach(() => { errorSpy.mockRestore(); cleanup(); localStorage.clear(); });
 
   it('renders without a session and shows real sample content', async () => {
-    const client = new QueryClient({ defaultOptions: { queries: { retry: false, gcTime: 0 } } });
-    render(
-      <QueryClientProvider client={client}>
-        <LanguageProvider>
-          <ValidationProvider>
-            <MemoryRouter>
-              <Admin />
-            </MemoryRouter>
-          </ValidationProvider>
-        </LanguageProvider>
-      </QueryClientProvider>
-    );
+    renderAdmin();
+    fireEvent.click(screen.getByRole('button', { name: 'עריכת תוכן' }));
     // Sign-in is never reached: no token exists in this test.
     expect(sessionStorage.getItem('ptsd_admin_token')).toBeNull();
     await waitFor(

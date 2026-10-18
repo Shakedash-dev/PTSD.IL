@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { useLang } from '@/lib/LanguageContext';
 import { t } from '@/lib/i18n';
 import { loginWithGoogle } from '@/lib/auth';
 import { Lock } from 'lucide-react';
@@ -45,7 +44,8 @@ function loadGsiScript() {
 // swaps in the panel (or the "no access" view) without a manual refresh, so
 // this component does not need to navigate anywhere itself.
 export default function AdminLogin() {
-  const { lang } = useLang();
+  // /admin is Hebrew-only, whatever language the visitor last picked on the site.
+  const lang = 'he';
   const [error, setError] = useState(false);
   const buttonRef = useRef(null);
 
@@ -92,7 +92,7 @@ export default function AdminLogin() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center px-4 pt-16">
+    <div className="flex items-center justify-center px-4 py-16">
       <div className="w-full max-w-sm">
         <div className="text-center mb-6">
           <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-3">

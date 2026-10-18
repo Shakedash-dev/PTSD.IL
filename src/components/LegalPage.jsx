@@ -14,8 +14,9 @@ import Markdown from '@/components/Markdown';
 // shipped text (body and last-updated date together, so the date can never
 // describe the wrong version).
 //
-// Who can save one: `admin` only, not `moderator` - see hasLegalEditAccess()
-// in src/lib/auth.js, including what that gate does and does not guarantee.
+// /admin no longer offers an editor for these documents, so a stored row can
+// only come from before that change or from a direct API write. Deleting the
+// row (DELETE /api/admin/articles/:id) reverts to the shipped text.
 //
 // The map only carries Hebrew and English. The Hebrew version is the binding one;
 // every other UI language falls back (Arabic -> Hebrew, keeps RTL; Russian and

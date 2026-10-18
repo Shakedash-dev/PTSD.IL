@@ -9,16 +9,14 @@ claims about evidence, effectiveness or recommendations, and doesn't rank the me
 
 ## How to apply
 
-1. Deploy the current `master` (the methods editor and the panel's language picker are
-   not live until then).
-2. /admin → **שלבי טיפול** → pick the language in **שפה**.
-3. Hover step 3 → pencil → **שיטות טיפול** → paste each description below into the
-   **תיאור** field of the method with the matching name → **שמירה**.
-4. Repeat for step 4, then for the next language. That's 10 saves in total (2 steps × 5 languages).
+Use `scripts/apply-treatment-descriptions.mjs` (dry run by default; needs an admin JWT in
+`ADMIN_TOKEN` or `.env.admin`). It writes every language's rows and reindexes each one in
+the chatbot's vector DB.
 
-Each save writes the row to the DB and re-embeds it in the chatbot's vector DB (the
-panel calls the worker's `/reindex` for that row). If a yellow warning says the chatbot sync
-failed, the content is still saved. Save again, or run a full reindex.
+/admin is Hebrew-only and no longer has a language picker on **שלבי טיפול**, so only the
+Hebrew descriptions can be edited by hand there: pencil on the step → **שיטות טיפול** →
+**תיאור** → **אישור**, then **סקירה ושמירה** at the bottom of the screen. If a yellow
+warning says the chatbot sync failed, the content is still saved.
 
 Descriptions render as plain text, not Markdown. Paste them as they are.
 

@@ -1,32 +1,13 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen, waitFor, fireEvent, cleanup, within } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { LanguageProvider } from '@/lib/LanguageContext';
-import { ValidationProvider } from '@/contexts/ValidationContext';
 import { loadTreatment } from '@/api/adminSource';
-import Admin from '@/pages/Admin';
+import { renderAdmin } from './renderAdmin';
 
 // Treatment steps 3 and 4 on the live site carry a `methods[]` array - the
 // individual therapies (PE, CBT, EMDR, ...), each with its own title,
 // description, "how to start" rich text and links. That is the bulk of the
 // treatment page's text, and it was an opaque passthrough in adminSource with
 // no panel UI, so an admin could not edit it. These tests pin it as editable.
-
-function renderAdmin() {
-  const client = new QueryClient({ defaultOptions: { queries: { retry: false, gcTime: 0 } } });
-  return render(
-    <QueryClientProvider client={client}>
-      <LanguageProvider>
-        <ValidationProvider>
-          <MemoryRouter>
-            <Admin />
-          </MemoryRouter>
-        </ValidationProvider>
-      </LanguageProvider>
-    </QueryClientProvider>
-  );
-}
 
 describe('admin: treatment methods', () => {
   let errorSpy;
@@ -56,6 +37,7 @@ describe('admin: treatment methods', () => {
   it('renders an editor for every method field when a step is edited', async () => {
     renderAdmin();
 
+    fireEvent.click(screen.getByRole('button', { name: 'עריכת תוכן' }));
     fireEvent.click(await screen.findByText('שלבי טיפול', {}, { timeout: 4000 }));
 
     const steps = await loadTreatment();

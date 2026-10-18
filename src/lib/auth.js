@@ -107,27 +107,6 @@ export function hasAdminAccess() {
   return roles.some(r => ADMIN_PANEL_ROLES.includes(r));
 }
 
-// The legal pages (/privacy-policy, /terms-of-use) are editable only by
-// `admin`, never `moderator`. They carry liability and privacy undertakings,
-// not editorial content, so a smaller set of people should be able to reword
-// them than can edit a FAQ.
-//
-// HONEST LIMIT: this is a UI gate, exactly like hasAdminAccess(). The API
-// authorises article writes by role alone (admin OR moderator, docs/api.md) and
-// has no notion of "this category is admin-only", so a moderator holding a
-// valid token could still write the row by calling the API directly. What this
-// buys is that the panel does not offer it and an accidental edit cannot
-// happen - not that it is impossible. Enforcing it properly needs a backend
-// rule, which is outside this repo.
-const LEGAL_EDIT_ROLES = ['admin'];
-
-export function hasLegalEditAccess() {
-  if (ADMIN_PREVIEW) return true;
-  if (!isAuthenticated()) return false;
-  const roles = getClaims()?.roles || [];
-  return roles.some(r => LEGAL_EDIT_ROLES.includes(r));
-}
-
 // User management (/admin/users, docs/api.md §"Users") needs masteradmin -
 // per that doc, masteradmin is NOT implicitly granted admin/moderator CRUD
 // (and vice versa: an admin/moderator without masteradmin cannot manage
@@ -148,4 +127,13 @@ export function hasUserManagementAccess() {
 // your own account regardless of what this returns.
 export function getCurrentUserId() {
   return getClaims()?.sub ?? null;
+}
+
+// Who is signed in, for attributing /admin edits in the edit log. The JWT's
+// exact claim set is the backend's business; `sub` is guaranteed, the rest is
+// best effort and the log panel resolves `id` against the user list anyway.
+export function getCurrentUser() {
+  const c = getClaims() || {};
+  const name = c.name || [c.firstName, c.lastName].filter(n => n && n !== '-').join(' ') || null;
+  return { id: c.sub ?? null, email: c.email ?? null, name };
 }

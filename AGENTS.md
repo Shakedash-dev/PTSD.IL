@@ -27,8 +27,9 @@ npm run tokens     # regenerate docs/design-tokens.json from index.css
 from `src/`. All four of lint, typecheck, test and build must pass before a
 commit.
 
-Two caveats. `Admin.jsx` has no automated coverage at all, so a change there
-needs manual verification against the live API. Google sign-in does not work on
+Two caveats. `Admin.jsx` is covered only against the preview fixtures and a
+mocked client (`src/test/admin-*.test.jsx`), so a change there still needs
+manual verification against the live API. Google sign-in does not work on
 `npm run dev` (localhost is not an authorised OAuth origin), so the panel's real
 read/write behaviour can only be exercised on the deployed site - the local
 preview shows the UI against sample data, not the real thing.
@@ -75,7 +76,12 @@ The API returns generic "article" rows. Each row is **one content item in one la
 
 **Admin writes** (`/admin`, behind login):
 ```
-src/pages/Admin.jsx    <- 9 content panels (CRUD UI, react-quill editor)
+src/components/admin/AdminGate.jsx     <- /admin route guard; mounted OUTSIDE <Layout>
+src/components/admin/AdminShell.jsx    <- the whole frame: wordmark + logout, RTL, nothing else
+src/components/admin/PendingChanges.jsx <- staged edits, save-all review dialog, edit-log write
+src/components/admin/AdminGuide.jsx    <- /admin home page (how to use, no-revert, permissions)
+src/components/admin/EditLogPanel.jsx  <- edit log viewer (masteradmin)
+src/pages/Admin.jsx    <- 9 content panels (CRUD UI, react-quill editor) + users
 src/api/adminSource.js <- load/save/remove per entity; taxonomy resolution;
                           serializes the content JSON; md<->html conversion
 src/lib/markdownHtml.js <- mdToHtml (marked) / htmlToMd (turndown)
@@ -84,61 +90,48 @@ src/lib/auth.js         <- login/logout, JWT in sessionStorage, isAuthenticated/
 ```
 `Admin.jsx`'s panels edit HTML (react-quill); `adminSource` converts to/from the DB's Markdown on save/load.
 
+### /admin edit flow: staged, then saved together
+
+- **Nothing in a content panel writes on its own.** "אישור" on a card stages
+  the change in `PendingChangesProvider`; a delete is staged the same way. The
+  only write path is the bottom bar's **סקירה ושמירה** dialog, which lists every
+  change with before/after text, states that a save cannot be undone (the
+  backend keeps no versions) and needs a confirmation tick. New content panels
+  must render through `StagedList` (or stage by hand like the children
+  guidelines / questionnaire), never call `save*`/`remove*` directly.
+- The provider sits in `AdminGate`, above the login screen, so a session that
+  expires mid-edit keeps its staged changes; a 401 stops the batch and leaves
+  the rest staged.
+- **User management is the exception**: role/account changes write
+  immediately and are not logged.
+- **Edit log**: after a batch, one row per batch - `type: 'article'`, category
+  `admin-log` (created on first save), `isPublished: false`, skipped by the
+  reindex, content `{ at, user, changes: [{ section, action, title, fields:
+  [{label, before, after}] }] }`. Viewable by masteradmin; reading it needs
+  admin/moderator too (GET /admin/articles). **Not tamper-proof** - any
+  admin/moderator token can PATCH/DELETE the rows; a real audit trail needs a
+  backend log.
+- The panel is Hebrew-only. No language pickers.
+
 **Static layer is fully retired.** `src/data/static/*` and `src/data/db.js` have been deleted. The PCL-5 questionnaire, like every other content type, is now served from dedicated API endpoints (`/api/questionnaires`, `/api/admin/questionnaires`) and is fully editable in the admin panel. `src/data/questionnaireSections.js` remains, but it is a presentation-only overlay (Hebrew section grouping for the question list) - not a content source; do NOT add new content data under `src/data/`, new content goes through the API/admin.
 
-### Site copy: the strings that aren't articles
+### Site copy and legal documents: override rows, not editable from /admin
 
 Page headings, subtitles, intros, questionnaire result text, the footer and the
-SEO descriptions are **not** article rows - they ship in `src/lib/i18n.js`, five
-languages of them. They are still editable, through an override layer rather
-than a migration:
+SEO descriptions ship in `src/lib/i18n.js`; `/privacy-policy` and
+`/terms-of-use` ship their Markdown in `PrivacyPolicy.jsx` / `TermsOfUse.jsx`.
+/admin used to edit both through override rows and **no longer does** - there
+was no reason to let editors change them. The public read side is kept, so any
+row stored earlier still applies:
 
-- `translations` in `i18n.js` stays the shipped default and the only thing that
-  renders when the API is unreachable or has never been touched.
-- `COPY_SECTIONS` (same file) groups every `he` key into the sections /admin's
-  **תוכן דפים** tab shows. `src/test/site-copy.test.jsx` fails if a key is added
-  to `translations.he` without landing in exactly one section, which is what
-  keeps the panel exhaustive - do not add a key without placing it.
-- An admin override is one article row: `type: 'article'`, category `site-copy`,
-  `title` = the i18n key, `content` = `{ text }`, one row per key **per
-  language**. Sparse by design: no row means the shipped string, and clearing a
-  field deletes the row instead of storing `''`.
-- `fetchSiteCopy()` (`src/api/source.js`) reads them; `LanguageProvider`
-  installs them via `setCopyOverrides()` and bumps `copyVersion` so consumers
-  of `useLang()` re-render. `t()` then resolves
+- Site copy: `type: 'article'`, category `site-copy`, `title` = the i18n key,
+  `content` = `{ text }`, per language. `fetchSiteCopy()` reads them;
+  `LanguageProvider` installs them via `setCopyOverrides()`; `t()` resolves
   *lang override -> lang default -> Hebrew override -> Hebrew default -> key*.
-- The `site-copy` category is created on first save (`resolveOrCreateCategoryId`)
-  - a fresh DB has no such row. These writes skip the chatbot reindex: button
-  labels and meta descriptions are chrome, not answerable content.
-
-Two knock-on facts worth knowing. `src/lib/seo.js` calls `t()` from a plain Node
-script for the prerendered `<title>`/description, so it sees shipped defaults
-only - an override reaches the live page but not that script's output. And this
-is the one admin panel that is not Hebrew-only; it carries its own language
-picker because the rows are per language.
-
-### Legal documents
-
-`/privacy-policy` and `/terms-of-use` were previously code-only on purpose.
-They are now editable, but the two reasons behind that decision are kept:
-
-- **The shipped Markdown is still the source of truth.** `PrivacyPolicy.jsx`
-  and `TermsOfUse.jsx` export `*_CONTENT` / `*_UPDATED`, `LegalPage` renders
-  them, and a stored row only displaces them when one exists. The policy
-  therefore stays on screen when the content API is down. Clearing the editor
-  deletes the row and reverts.
-- **`admin` only, never `moderator`** - `hasLegalEditAccess()` in
-  `src/lib/auth.js`, its own tab outside `CONTENT_TABS`. Read the comment
-  there: like every other role check in this app it is a **UI gate**, and the
-  API authorises article writes by role alone with no per-category rule, so a
-  moderator with a token could still write the row directly. Closing that
-  needs a backend change.
-
-Stored as `type: 'article'`, category `legal`, `title` = the slug, content
-`{ body, updated }`. Raw Markdown, deliberately **not** the html<->md
-round-trip the other panels use - a legal document must come back out exactly
-as it was typed. Body and date are saved together so the date can never
-describe the wrong version. Skipped by the chatbot reindex.
+  `src/lib/seo.js` sees shipped defaults only.
+- Legal: category `legal`, `title` = the slug, content `{ body, updated }`, raw
+  Markdown. `LegalPage` renders the shipped text unless a row exists.
+- To revert either, DELETE the row (`/api/admin/articles/:id`).
 
 ## Auth & DB access
 
@@ -173,7 +166,7 @@ describe the wrong version. Skipped by the chatbot reindex.
 
 ```
 src/
-├── App.jsx              # router + providers + AdminGate + Toasters
+├── App.jsx              # router + providers + Toasters (/admin -> components/admin/AdminGate)
 ├── pages/               # one file per route (Admin.jsx = CRUD panels; AdminLogin.jsx)
 ├── components/
 │   ├── ui/              # Radix wrappers (shadcn) - rarely modify

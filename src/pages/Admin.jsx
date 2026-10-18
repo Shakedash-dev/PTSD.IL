@@ -1,16 +1,13 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { Settings, Users, UserCog, FileText, BookOpen, HelpCircle, Wrench, Heart, Baby, Shield, ClipboardList, Type, Scale, Pencil, Trash2, Plus, Check, X, RotateCcw, LogOut, ChevronUp, ChevronDown } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Users, UserCog, FileText, BookOpen, HelpCircle, Wrench, Heart, Baby, Shield, ClipboardList, Pencil, Trash2, Plus, Check, X, Undo2, ChevronUp, ChevronDown, Info, History } from 'lucide-react';
 import { toast } from 'sonner';
 import RichTextEditor from '@/components/RichTextEditor';
 import { Button } from '@/components/ui/button';
-import { ADMIN_PREVIEW } from '@/lib/adminPreview';
-import { COPY_SECTIONS, LANGUAGES, translations } from '@/lib/i18n';
-import { PRIVACY_CONTENT, PRIVACY_UPDATED } from '@/pages/PrivacyPolicy';
-import { TERMS_CONTENT, TERMS_UPDATED } from '@/pages/TermsOfUse';
 import ChoiceChip from '@/components/patterns/ChoiceChip';
-import { logout, hasAdminAccess, hasUserManagementAccess, hasLegalEditAccess, getCurrentUserId } from '@/lib/auth';
-import { ForbiddenError, UnauthorizedError } from '@/api/adminClient';
-import { ChatbotSyncError } from '@/api/reindex';
+import AdminGuide from '@/components/admin/AdminGuide';
+import EditLogPanel from '@/components/admin/EditLogPanel';
+import { SaveAllBar, fieldsDiff, runWrite, usePendingChanges } from '@/components/admin/PendingChanges';
+import { hasAdminAccess, hasUserManagementAccess, getCurrentUserId } from '@/lib/auth';
 import {
   loadPtsdFaq, savePtsdFaq, removePtsdFaq,
   loadRightsFaq, saveRightsFaq, removeRightsFaq,
@@ -21,46 +18,17 @@ import {
   loadCommunity, saveCommunity, removeCommunity,
   loadChildrenGuidelines, saveChildrenGuidelines,
   loadChildrenResource, saveChildrenResource, removeChildrenResource,
-  loadSiteCopy, saveSiteCopy,
-  loadLegalDocs, saveLegalDoc,
   loadQuestionnaires, loadQuestionnaireDetail,
   createQuestionnaire, updateQuestionnaire, removeQuestionnaire,
   addQuestion, updateQuestion, removeQuestion,
 } from '@/api/adminSource';
 import { listUsers, createUser, updateUserRoles, deleteUser } from '@/api/adminUsers';
 
-// Runs a create/update/delete call against adminSource, converting the admin
-// client's typed errors (src/api/adminClient.js) into a toast instead of
-// letting the panel crash. Returns true on success, false on a handled
-// failure (ForbiddenError or any other error) so callers can decide whether
-// to close the edit form / refresh the list. UnauthorizedError is re-thrown -
-// adminApi() has already dropped the session and fired AUTH_CHANGE_EVENT, so
-// the /admin route guard (src/App.jsx's AdminGate) swaps to the login screen
-// on its own; there's nothing else to do here besides not pretending the
-// write succeeded.
-async function runWrite(action) {
-  try {
-    await action();
-    return true;
-  } catch (err) {
-    if (err instanceof ForbiddenError) {
-      toast.error('אין לך הרשאה לבצע פעולה זו');
-      return false;
-    }
-    if (err instanceof UnauthorizedError) {
-      throw err;
-    }
-    // The content write succeeded but the chatbot vector-DB sync did not. Treat
-    // it as a warning (not a failed save) and let the panel refresh/close as
-    // usual - the content IS persisted; only the bot is temporarily stale.
-    if (err instanceof ChatbotSyncError) {
-      toast.warning(`${err.message}. נסו לשמור שוב או להריץ אינדוקס מלא.`);
-      return true;
-    }
-    toast.error(err?.message || 'אירעה שגיאה. נסו שוב.');
-    return false;
-  }
-}
+// /admin. Every content panel below edits through the staged-changes layer in
+// src/components/admin/PendingChanges.jsx: "אישור" stages, and the only write
+// path is the save-all review dialog. User management is the exception - role
+// and account changes write immediately (they are access control, not site
+// content, and are not part of the edit log).
 
 function LoadingRow() {
   return <p className="text-sm text-muted-foreground py-6 text-center">טוען...</p>;
@@ -175,7 +143,10 @@ function displayName(user) {
   return [user.firstName, user.lastName].filter(n => n && n !== '-').join(' ');
 }
 
-// Content CRUD tabs - shown to admin/moderator (hasAdminAccess()).
+// The editable site pages, in the order the panel shows them. Site copy (page
+// headings) and the legal documents are deliberately NOT here: they are not
+// editable from /admin. The public site still honours any override row stored
+// before that (src/api/source.js fetchSiteCopy/fetchLegalDoc).
 const CONTENT_TABS = [
   { key: 'ptsd_faqs',     label: 'שאלות PTSD',        icon: HelpCircle },
   { key: 'self_help',     label: 'כלים עצמיים',        icon: Wrench },
@@ -186,15 +157,11 @@ const CONTENT_TABS = [
   { key: 'second_circle', label: 'מעגל שני',           icon: Shield },
   { key: 'children',      label: 'ילדים',              icon: Baby },
   { key: 'questionnaire', label: 'שאלון PCL-5',        icon: ClipboardList },
-  { key: 'site_copy',     label: 'תוכן דפים',           icon: Type },
 ];
 
-// Legal-documents tab - shown ONLY to admin, never moderator
-// (hasLegalEditAccess()). Kept out of CONTENT_TABS for that reason.
-const LEGAL_TAB = { key: 'legal', label: 'מסמכים משפטיים', icon: Scale };
-
-// User-management tab - shown ONLY to masteradmin (hasUserManagementAccess()).
-const USERS_TAB = { key: 'users', label: 'ניהול משתמשים', icon: UserCog };
+// masteradmin-only sections (hasUserManagementAccess()).
+const USERS_VIEW = { key: 'users', label: 'ניהול משתמשים', icon: UserCog };
+const LOG_VIEW = { key: 'log', label: 'יומן עריכות', icon: History };
 
 function Badge({ children, color = 'bg-muted text-muted-foreground' }) {
   return (
@@ -486,35 +453,64 @@ function FieldInput({ field, value, onChange }) {
   }
 }
 
-// Generic view/edit card used by every content list below. `onSave` may be
-// async and return `false` to indicate a handled failure (e.g. a write that
-// was rejected) - in that case the card stays in edit mode with the user's
-// draft intact instead of silently closing as if the save had gone through.
-// `onDelete` omitted means the card can't be deleted (not used currently, but
-// supported).
+// What a card shows while it carries a staged change.
+const STATUS_BADGES = {
+  update: { label: 'נערך · ממתין לשמירה', color: 'bg-warning/20 text-foreground' },
+  create: { label: 'חדש · ממתין לשמירה', color: 'bg-warning/20 text-foreground' },
+  delete: { label: 'יימחק בשמירה', color: 'bg-destructive/10 text-destructive' },
+};
+
+function DiscardButton({ onClick }) {
+  return (
+    <Button type="button" variant="quiet" size="none" onClick={onClick} className="gap-1 text-xs">
+      <Undo2 className="w-3.5 h-3.5" /> ביטול השינוי
+    </Button>
+  );
+}
+
+// Generic view/edit card used by every content list below. "אישור" hands the
+// draft to `onSave`, which in a content panel only STAGES it (see
+// src/components/admin/PendingChanges.jsx) - nothing is written until the
+// editor saves everything from the review dialog. `onSave` may be async and
+// return `false` to keep the card open with the draft intact (the users panel,
+// which writes immediately, relies on that). `status` marks a card that
+// carries a staged change, and `onDiscard` drops it.
 /**
  * @param {Object} props
  * @param {any} props.item
  * @param {any[]} props.fields
- * @param {(draft: any) => Promise<boolean|void>} props.onSave
+ * @param {(draft: any) => Promise<boolean|void>|boolean|void} props.onSave
  * @param {() => void} [props.onCancel]
  * @param {() => void} [props.onDelete]
+ * @param {() => void} [props.onDiscard]
+ * @param {'create'|'update'|'delete'} [props.status]
  * @param {(item: any) => React.ReactNode} props.renderView
  * @param {boolean} [props.startInEdit]
+ * @param {string} [props.confirmLabel]
  */
-function EditableCard({ item, fields, onSave, onCancel, onDelete, renderView, startInEdit = false }) {
+function EditableCard({ item, fields, onSave, onCancel, onDelete, onDiscard, status, renderView, startInEdit = false, confirmLabel = 'אישור' }) {
   const [editing, setEditing] = useState(startInEdit);
   const [draft, setDraft] = useState(item);
   const [saving, setSaving] = useState(false);
+  const badge = status && STATUS_BADGES[status];
+  const staged = confirmLabel === 'אישור';
 
   if (!editing) {
     return (
-      <div className="relative group p-4 rounded-xl border border-border bg-background">
-        {renderView(item)}
-        <div className="absolute top-3 end-3 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-          <IconBtn icon={Pencil} title="עריכה" onClick={() => { setDraft(item); setEditing(true); }} />
-          {onDelete && <IconBtn icon={Trash2} title="מחיקה" tone="danger" onClick={onDelete} />}
-        </div>
+      <div className={`relative group p-4 rounded-xl border bg-background ${badge ? 'border-warning/60' : 'border-border'}`}>
+        {badge && (
+          <div className="flex items-center gap-2 mb-2 flex-wrap pe-16">
+            <Badge color={badge.color}>{badge.label}</Badge>
+            {onDiscard && <DiscardButton onClick={onDiscard} />}
+          </div>
+        )}
+        <div className={status === 'delete' ? 'opacity-50 line-through' : ''}>{renderView(item)}</div>
+        {status !== 'delete' && (
+          <div className="absolute top-3 end-3 flex gap-1">
+            <IconBtn icon={Pencil} title="עריכה" onClick={() => { setDraft(item); setEditing(true); }} />
+            {onDelete && <IconBtn icon={Trash2} title="מחיקה" tone="danger" onClick={onDelete} />}
+          </div>
+        )}
       </div>
     );
   }
@@ -534,7 +530,7 @@ function EditableCard({ item, fields, onSave, onCancel, onDelete, renderView, st
           <FieldInput field={f} value={draft[f.key]} onChange={val => setDraft(d => ({ ...d, [f.key]: val }))} />
         </div>
       ))}
-      <div className="flex gap-2 pt-1">
+      <div className="flex gap-2 pt-1 items-center flex-wrap">
         <Button
           type="button"
           variant="solid"
@@ -543,7 +539,7 @@ function EditableCard({ item, fields, onSave, onCancel, onDelete, renderView, st
           onClick={handleSave}
           className="gap-1.5 rounded-lg font-semibold disabled:opacity-60"
         >
-          <Check className="w-3.5 h-3.5" /> {saving ? 'שומר...' : 'שמירה'}
+          <Check className="w-3.5 h-3.5" /> {saving ? 'שומר...' : confirmLabel}
         </Button>
         <Button
           type="button"
@@ -555,30 +551,129 @@ function EditableCard({ item, fields, onSave, onCancel, onDelete, renderView, st
         >
           <X className="w-3.5 h-3.5" /> ביטול
         </Button>
+        {staged && (
+          <span className="text-xs text-muted-foreground">השינוי יעלה לאתר רק אחרי &quot;סקירה ושמירה&quot;</span>
+        )}
       </div>
     </div>
   );
 }
 
-function PTSDFaqsPanel() {
-  const lang = 'he'; // Hebrew-only: the admin panel manages Hebrew content only.
-  const [faqs, setFaqs] = useState([]);
+// Loads a panel's data, re-fetching whenever `deps` change and after every
+// "save all" batch (the pending-changes `version`), so a panel always shows
+// what the server holds once a save lands. A stale response from a previous
+// `deps` value (e.g. switching category quickly) is dropped.
+function useAdminData(load, deps, errorMessage, empty) {
+  const { version } = usePendingChanges();
+  const [data, setData] = useState(empty);
   const [loading, setLoading] = useState(true);
-  const [creating, setCreating] = useState(false);
-
-  async function reload() {
+  useEffect(() => {
+    let cancelled = false;
     setLoading(true);
-    try {
-      setFaqs(await loadPtsdFaq({ lang }));
-    } catch (err) {
-      toast.error(err?.message || 'שגיאה בטעינת השאלות');
-      setFaqs([]);
-    } finally {
-      setLoading(false);
-    }
+    load()
+      .then(d => { if (!cancelled) setData(d); })
+      .catch(err => {
+        if (cancelled) return;
+        toast.error(err?.message || errorMessage);
+        setData(empty);
+      })
+      .finally(() => { if (!cancelled) setLoading(false); });
+    return () => { cancelled = true; };
+  }, [version, ...deps]);
+  return [data, loading];
+}
+
+// A list of content items whose edits, additions and deletions are staged
+// rather than written. Every content panel renders through this: it overlays
+// the panel's staged changes on the server's rows (an edited row shows its
+// draft, a deleted one is struck through, a new one is appended), and turns
+// "אישור" / the trash icon into staged changes carrying the panel's own
+// save/remove call for the save-all batch to run.
+/**
+ * @param {Object} props
+ * @param {string} props.scope       which list; staged changes are matched on it
+ * @param {string} props.section     Hebrew name of the list, for review and log
+ * @param {any[]} props.items
+ * @param {any[]} props.fields
+ * @param {(item: any) => React.ReactNode} props.renderView
+ * @param {(item: any) => string} props.describe  an item's display name
+ * @param {any} props.blank          a new item's starting value
+ * @param {(draft: any) => Promise<any>} props.save
+ * @param {(id: string) => Promise<any>} [props.remove]
+ * @param {string} props.addLabel
+ */
+function StagedList({ scope, section, items, fields, renderView, describe, blank, save, remove, addLabel }) {
+  const { changes, stage, discard, newKey } = usePendingChanges();
+  const [creating, setCreating] = useState(false);
+  const pending = changes.filter(c => c.scope === scope);
+  const byItem = new Map(pending.filter(c => c.itemId).map(c => [c.itemId, c]));
+  const creates = pending.filter(c => c.action === 'create');
+
+  function stageUpdate(item, draft) {
+    const key = `${scope}:${item.id}`;
+    const diff = fieldsDiff(fields, item, draft);
+    if (!diff.length) { discard(key); return; } // edited back to what the server has
+    stage({ key, scope, section, action: 'update', itemId: item.id, title: describe(draft) || describe(item) || 'פריט', draft, diff, run: () => save(draft) });
   }
 
-  useEffect(() => { reload(); }, []);
+  function stageCreate(key, draft) {
+    stage({ key, scope, section, action: 'create', title: describe(draft) || 'פריט חדש', draft, diff: fieldsDiff(fields, {}, draft), run: () => save(draft) });
+  }
+
+  function stageDelete(item) {
+    stage({ key: `${scope}:${item.id}`, scope, section, action: 'delete', itemId: item.id, title: describe(item) || 'פריט', diff: [], run: () => remove(item.id) });
+  }
+
+  return (
+    <>
+      <div className="space-y-3">
+        {items.map(item => {
+          const p = byItem.get(item.id);
+          return (
+            <EditableCard
+              key={item.id}
+              item={p?.action === 'update' ? p.draft : item}
+              fields={fields}
+              renderView={renderView}
+              status={p?.action}
+              onDiscard={p ? () => discard(p.key) : undefined}
+              onSave={draft => stageUpdate(item, draft)}
+              onDelete={remove ? () => stageDelete(item) : undefined}
+            />
+          );
+        })}
+        {creates.map(c => (
+          <EditableCard
+            key={c.key}
+            item={c.draft}
+            fields={fields}
+            renderView={renderView}
+            status="create"
+            onDiscard={() => discard(c.key)}
+            onSave={draft => stageCreate(c.key, draft)}
+          />
+        ))}
+        {creating && (
+          <EditableCard
+            item={blank}
+            fields={fields}
+            startInEdit
+            renderView={renderView}
+            onSave={draft => { stageCreate(newKey(scope), draft); setCreating(false); }}
+            onCancel={() => setCreating(false)}
+          />
+        )}
+      </div>
+      <div className="mt-3">
+        <AddNewButton label={addLabel} onClick={() => setCreating(true)} />
+      </div>
+    </>
+  );
+}
+
+function PTSDFaqsPanel() {
+  const lang = 'he'; // Hebrew-only: the admin panel manages Hebrew content only.
+  const [faqs, loading] = useAdminData(() => loadPtsdFaq({ lang }), [], 'שגיאה בטעינת השאלות', []);
 
   const fields = [
     { key: 'q', label: 'שאלה', type: 'text' },
@@ -597,72 +692,26 @@ function PTSDFaqsPanel() {
   return (
     <div>
       <Section title="שאלות ותשובות על PTSD" count={faqs.length} />
-      {loading ? (
-        <LoadingRow />
-      ) : (
-        <div className="space-y-3">
-          {faqs.map(faq => (
-            <EditableCard
-              key={faq.id}
-              item={faq}
-              fields={fields}
-              renderView={renderView}
-              onSave={async draft => {
-                const ok = await runWrite(() => savePtsdFaq(draft, { lang }));
-                if (ok) await reload();
-                return ok;
-              }}
-              onDelete={async () => {
-                if (!window.confirm('למחוק שאלה זו?')) return;
-                const ok = await runWrite(() => removePtsdFaq(faq.id));
-                if (ok) await reload();
-              }}
-            />
-          ))}
-          {creating && (
-            <EditableCard
-              item={{ q: '', a: '' }}
-              fields={fields}
-              startInEdit
-              renderView={renderView}
-              onSave={async draft => {
-                const ok = await runWrite(() => savePtsdFaq(draft, { lang }));
-                if (ok) {
-                  setCreating(false);
-                  await reload();
-                }
-                return ok;
-              }}
-              onCancel={() => setCreating(false)}
-            />
-          )}
-        </div>
+      {loading ? <LoadingRow /> : (
+        <StagedList
+          scope="ptsd_faqs"
+          section="שאלות PTSD"
+          items={faqs}
+          fields={fields}
+          renderView={renderView}
+          describe={f => f.q}
+          blank={{ q: '', a: '' }}
+          save={draft => savePtsdFaq(draft, { lang })}
+          remove={removePtsdFaq}
+          addLabel="הוספת שאלה חדשה"
+        />
       )}
-      <div className="mt-3">
-        <AddNewButton label="הוספת שאלה חדשה" onClick={() => setCreating(true)} />
-      </div>
     </div>
   );
 }
 
 function SelfHelpPanel() {
-  const [tools, setTools] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [creating, setCreating] = useState(false);
-
-  async function reload() {
-    setLoading(true);
-    try {
-      setTools(await loadSelfHelp());
-    } catch (err) {
-      toast.error(err?.message || 'שגיאה בטעינת הכלים');
-      setTools([]);
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  useEffect(() => { reload(); }, []);
+  const [tools, loading] = useAdminData(() => loadSelfHelp(), [], 'שגיאה בטעינת הכלים', []);
 
   const fields = [
     { key: 'category', label: 'קטגוריה', type: 'select', options: toOptions(SELF_HELP_CATEGORY_LABELS) },
@@ -685,76 +734,27 @@ function SelfHelpPanel() {
   return (
     <div>
       <Section title="כלים לעזרה עצמית" count={tools.length} />
-      {loading ? (
-        <LoadingRow />
-      ) : (
-        <div className="space-y-3">
-          {tools.map(tool => (
-            <EditableCard
-              key={tool.id}
-              item={tool}
-              fields={fields}
-              renderView={renderView}
-              onSave={async draft => {
-                const ok = await runWrite(() => saveSelfHelp(draft));
-                if (ok) await reload();
-                return ok;
-              }}
-              onDelete={async () => {
-                if (!window.confirm('למחוק כלי זה?')) return;
-                const ok = await runWrite(() => removeSelfHelp(tool.id));
-                if (ok) await reload();
-              }}
-            />
-          ))}
-          {creating && (
-            <EditableCard
-              item={{ category: 'sleep', title_he: '', content_he: '' }}
-              fields={fields}
-              startInEdit
-              renderView={renderView}
-              onSave={async draft => {
-                const ok = await runWrite(() => saveSelfHelp(draft));
-                if (ok) {
-                  setCreating(false);
-                  await reload();
-                }
-                return ok;
-              }}
-              onCancel={() => setCreating(false)}
-            />
-          )}
-        </div>
+      {loading ? <LoadingRow /> : (
+        <StagedList
+          scope="self_help"
+          section="כלים עצמיים"
+          items={tools}
+          fields={fields}
+          renderView={renderView}
+          describe={t => t.title_he}
+          blank={{ category: 'sleep', title_he: '', content_he: '' }}
+          save={draft => saveSelfHelp(draft)}
+          remove={removeSelfHelp}
+          addLabel="הוספת כלי חדש"
+        />
       )}
-      <div className="mt-3">
-        <AddNewButton label="הוספת כלי חדש" onClick={() => setCreating(true)} />
-      </div>
     </div>
   );
 }
 
 function TreatmentPanel() {
-  // Unlike most panels this one is not Hebrew-only: every language has its own
-  // treatment rows, and the method descriptions have to be kept accurate in all
-  // of them, not just the Hebrew source.
-  const [lang, setLang] = useState('he');
-  const [steps, setSteps] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [creating, setCreating] = useState(false);
-
-  const reload = useCallback(async () => {
-    setLoading(true);
-    try {
-      setSteps(await loadTreatment({ lang }));
-    } catch (err) {
-      toast.error(err?.message || 'שגיאה בטעינת שלבי הטיפול');
-      setSteps([]);
-    } finally {
-      setLoading(false);
-    }
-  }, [lang]);
-
-  useEffect(() => { setCreating(false); reload(); }, [reload]);
+  const lang = 'he'; // Hebrew-only, like every other panel.
+  const [steps, loading] = useAdminData(() => loadTreatment({ lang }), [], 'שגיאה בטעינת שלבי הטיפול', []);
 
   const fields = [
     { key: 'step_number', label: 'מספר שלב', type: 'number' },
@@ -797,85 +797,26 @@ function TreatmentPanel() {
   return (
     <div>
       <Section title="שלבי טיפול" count={steps.length} />
-      <div className="mb-5">
-        <label htmlFor="treatment-lang" className="text-xs font-semibold text-muted-foreground block mb-1">שפה</label>
-        <select
-          id="treatment-lang"
-          value={lang}
-          onChange={e => setLang(e.target.value)}
-          className="px-3 py-2 rounded-lg border border-border bg-background text-sm text-foreground"
-        >
-          {LANGUAGES.map(l => (
-            <option key={l.code} value={l.code}>{l.label}</option>
-          ))}
-        </select>
-      </div>
-      {loading ? (
-        <LoadingRow />
-      ) : (
-        <div className="space-y-3">
-          {steps.map(step => (
-            <EditableCard
-              key={`${lang}:${step.id}`}
-              item={step}
-              fields={fields}
-              renderView={renderView}
-              onSave={async draft => {
-                const ok = await runWrite(() => saveTreatment(draft, { lang }));
-                if (ok) await reload();
-                return ok;
-              }}
-              onDelete={async () => {
-                if (!window.confirm('למחוק שלב זה?')) return;
-                const ok = await runWrite(() => removeTreatment(step.id));
-                if (ok) await reload();
-              }}
-            />
-          ))}
-          {creating && (
-            <EditableCard
-              item={{ step_number: steps.length + 1, title_he: '', description_he: '', how_to_start_he: '', methods: [], links: [] }}
-              fields={fields}
-              startInEdit
-              renderView={renderView}
-              onSave={async draft => {
-                const ok = await runWrite(() => saveTreatment(draft, { lang }));
-                if (ok) {
-                  setCreating(false);
-                  await reload();
-                }
-                return ok;
-              }}
-              onCancel={() => setCreating(false)}
-            />
-          )}
-        </div>
+      {loading ? <LoadingRow /> : (
+        <StagedList
+          scope="treatment"
+          section="שלבי טיפול"
+          items={steps}
+          fields={fields}
+          renderView={renderView}
+          describe={s => s.title_he}
+          blank={{ step_number: steps.length + 1, title_he: '', description_he: '', how_to_start_he: '', methods: [], links: [] }}
+          save={draft => saveTreatment(draft, { lang })}
+          remove={removeTreatment}
+          addLabel="הוספת שלב חדש"
+        />
       )}
-      <div className="mt-3">
-        <AddNewButton label="הוספת שלב חדש" onClick={() => setCreating(true)} />
-      </div>
     </div>
   );
 }
 
 function CommunitiesPanel() {
-  const [communities, setCommunities] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [creating, setCreating] = useState(false);
-
-  async function reload() {
-    setLoading(true);
-    try {
-      setCommunities(await loadCommunity());
-    } catch (err) {
-      toast.error(err?.message || 'שגיאה בטעינת הקהילות');
-      setCommunities([]);
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  useEffect(() => { reload(); }, []);
+  const [communities, loading] = useAdminData(() => loadCommunity(), [], 'שגיאה בטעינת הקהילות', []);
 
   const fields = [
     { key: 'name', label: 'שם הקהילה', type: 'text' },
@@ -914,73 +855,29 @@ function CommunitiesPanel() {
   return (
     <div>
       <Section title="קהילות תמיכה" count={communities.length} />
-      {loading ? (
-        <LoadingRow />
-      ) : (
-        <div className="space-y-3">
-          {communities.map(c => (
-            <EditableCard
-              key={c.id}
-              item={c}
-              fields={fields}
-              renderView={renderView}
-              onSave={async draft => {
-                const ok = await runWrite(() => saveCommunity(draft));
-                if (ok) await reload();
-                return ok;
-              }}
-              onDelete={async () => {
-                if (!window.confirm('למחוק קהילה זו?')) return;
-                const ok = await runWrite(() => removeCommunity(c.id));
-                if (ok) await reload();
-              }}
-            />
-          ))}
-          {creating && (
-            <EditableCard
-              item={{ name: '', organization: '', description_he: '', target_audience: [], location: 'center', meeting_type: 'frontal', contact_url: '' }}
-              fields={fields}
-              startInEdit
-              renderView={renderView}
-              onSave={async draft => {
-                const ok = await runWrite(() => saveCommunity(draft));
-                if (ok) {
-                  setCreating(false);
-                  await reload();
-                }
-                return ok;
-              }}
-              onCancel={() => setCreating(false)}
-            />
-          )}
-        </div>
+      {loading ? <LoadingRow /> : (
+        <StagedList
+          scope="communities"
+          section="קהילות"
+          items={communities}
+          fields={fields}
+          renderView={renderView}
+          describe={c => c.name}
+          blank={{ name: '', organization: '', description_he: '', target_audience: [], location: 'center', meeting_type: 'frontal', contact_url: '' }}
+          save={draft => saveCommunity(draft)}
+          remove={removeCommunity}
+          addLabel="הוספת קהילה חדשה"
+        />
       )}
-      <div className="mt-3">
-        <AddNewButton label="הוספת קהילה חדשה" onClick={() => setCreating(true)} />
-      </div>
     </div>
   );
 }
 
 function RightsPanel() {
   const [cat, setCat] = useState(RIGHTS_CATEGORIES[0]);
-  const [items, setItems] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [creating, setCreating] = useState(false);
-
-  async function reload(targetCat = cat) {
-    setLoading(true);
-    try {
-      setItems(await loadRightsFaq({ lang: 'he', audienceSlug: targetCat }));
-    } catch (err) {
-      toast.error(err?.message || 'שגיאה בטעינת הזכויות');
-      setItems([]);
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  useEffect(() => { reload(cat); }, [cat]);
+  const [items, loading] = useAdminData(
+    () => loadRightsFaq({ lang: 'he', audienceSlug: cat }), [cat], 'שגיאה בטעינת הזכויות', []
+  );
 
   const fields = [
     { key: 'q', label: 'שאלה', type: 'text' },
@@ -1013,65 +910,34 @@ function RightsPanel() {
       <div className="flex gap-2 mb-5 flex-wrap">
         {RIGHTS_CATEGORIES.map(c => (
           <ChoiceChip key={c} variant="plain" selected={cat === c}
-            onClick={() => { setCat(c); setCreating(false); }}
+            onClick={() => setCat(c)}
             className={`px-3 py-1 rounded-full text-sm ${cat === c ? '' : 'bg-muted hover:bg-border'}`}>
             {labelFor(RIGHTS_CATEGORY_LABELS, c)}
           </ChoiceChip>
         ))}
       </div>
       <Section title={`זכויות - ${labelFor(RIGHTS_CATEGORY_LABELS, cat)}`} count={items.length} />
-      {loading ? (
-        <LoadingRow />
-      ) : (
-        <div className="space-y-3">
-          {items.map(item => (
-            <EditableCard
-              key={item.id}
-              item={item}
-              fields={fields}
-              renderView={renderView}
-              onSave={async draft => {
-                const ok = await runWrite(() => saveRightsFaq(draft, { lang: 'he', audienceSlug: cat }));
-                if (ok) await reload(cat);
-                return ok;
-              }}
-              onDelete={async () => {
-                if (!window.confirm('למחוק פריט זה?')) return;
-                const ok = await runWrite(() => removeRightsFaq(item.id));
-                if (ok) await reload(cat);
-              }}
-            />
-          ))}
-          {creating && (
-            <EditableCard
-              item={{ q: '', a: '', steps: '', links: [] }}
-              fields={fields}
-              startInEdit
-              renderView={renderView}
-              onSave={async draft => {
-                const ok = await runWrite(() => saveRightsFaq(draft, { lang: 'he', audienceSlug: cat }));
-                if (ok) {
-                  setCreating(false);
-                  await reload(cat);
-                }
-                return ok;
-              }}
-              onCancel={() => setCreating(false)}
-            />
-          )}
-        </div>
+      {loading ? <LoadingRow /> : (
+        <StagedList
+          key={cat}
+          scope={`rights:${cat}`}
+          section={`זכויות - ${labelFor(RIGHTS_CATEGORY_LABELS, cat)}`}
+          items={items}
+          fields={fields}
+          renderView={renderView}
+          describe={i => i.q}
+          blank={{ q: '', a: '', steps: '', links: [] }}
+          save={draft => saveRightsFaq(draft, { lang: 'he', audienceSlug: cat })}
+          remove={removeRightsFaq}
+          addLabel="הוספת שאלה חדשה"
+        />
       )}
-      <div className="mt-3">
-        <AddNewButton label="הוספת שאלה חדשה" onClick={() => setCreating(true)} />
-      </div>
     </div>
   );
 }
 
 function SourcesPanel() {
-  const [sources, setSources] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [creating, setCreating] = useState(false);
+  const [sources, loading] = useAdminData(() => loadSource(), [], 'שגיאה בטעינת המקורות', []);
   const categoryColors = {
     research: 'bg-category-1/10 text-category-1',
     clinical: 'bg-category-2/10 text-category-2',
@@ -1079,20 +945,6 @@ function SourcesPanel() {
     international: 'bg-category-5/10 text-category-5',
     official: 'bg-category-3/10 text-category-3',
   };
-
-  async function reload() {
-    setLoading(true);
-    try {
-      setSources(await loadSource());
-    } catch (err) {
-      toast.error(err?.message || 'שגיאה בטעינת המקורות');
-      setSources([]);
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  useEffect(() => { reload(); }, []);
 
   const fields = [
     { key: 'title', label: 'כותרת', type: 'text' },
@@ -1126,73 +978,27 @@ function SourcesPanel() {
   return (
     <div>
       <Section title="מקורות ומידע" count={sources.length} />
-      {loading ? (
-        <LoadingRow />
-      ) : (
-        <div className="space-y-3">
-          {sources.map(s => (
-            <EditableCard
-              key={s.id}
-              item={s}
-              fields={fields}
-              renderView={renderView}
-              onSave={async draft => {
-                const ok = await runWrite(() => saveSource(draft));
-                if (ok) await reload();
-                return ok;
-              }}
-              onDelete={async () => {
-                if (!window.confirm('למחוק מקור זה?')) return;
-                const ok = await runWrite(() => removeSource(s.id));
-                if (ok) await reload();
-              }}
-            />
-          ))}
-          {creating && (
-            <EditableCard
-              item={{ title: '', authors: '', year: '', url: '', description_he: '', category: 'research' }}
-              fields={fields}
-              startInEdit
-              renderView={renderView}
-              onSave={async draft => {
-                const ok = await runWrite(() => saveSource(draft));
-                if (ok) {
-                  setCreating(false);
-                  await reload();
-                }
-                return ok;
-              }}
-              onCancel={() => setCreating(false)}
-            />
-          )}
-        </div>
+      {loading ? <LoadingRow /> : (
+        <StagedList
+          scope="sources"
+          section="מקורות"
+          items={sources}
+          fields={fields}
+          renderView={renderView}
+          describe={s => s.title}
+          blank={{ title: '', authors: '', year: '', url: '', description_he: '', category: 'research' }}
+          save={draft => saveSource(draft)}
+          remove={removeSource}
+          addLabel="הוספת מקור חדש"
+        />
       )}
-      <div className="mt-3">
-        <AddNewButton label="הוספת מקור חדש" onClick={() => setCreating(true)} />
-      </div>
     </div>
   );
 }
 
 function SecondCirclePanel() {
   const lang = 'he'; // Hebrew-only: the admin panel manages Hebrew content only.
-  const [tools, setTools] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [creating, setCreating] = useState(false);
-
-  async function reload() {
-    setLoading(true);
-    try {
-      setTools(await loadSecondCircle({ lang }));
-    } catch (err) {
-      toast.error(err?.message || 'שגיאה בטעינת התכנים');
-      setTools([]);
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  useEffect(() => { reload(); }, []);
+  const [tools, loading] = useAdminData(() => loadSecondCircle({ lang }), [], 'שגיאה בטעינת התכנים', []);
 
   const fields = [
     { key: 'q', label: 'שאלה', type: 'text' },
@@ -1217,84 +1023,50 @@ function SecondCirclePanel() {
   return (
     <div>
       <Section title="כלים למעגל השני" count={tools.length} />
-      {loading ? (
-        <LoadingRow />
-      ) : (
-        <div className="space-y-3">
-          {tools.map(tool => (
-            <EditableCard
-              key={tool.id}
-              item={tool}
-              fields={fields}
-              renderView={renderView}
-              onSave={async draft => {
-                const ok = await runWrite(() => saveSecondCircle(draft, { lang }));
-                if (ok) await reload();
-                return ok;
-              }}
-              onDelete={async () => {
-                if (!window.confirm('למחוק פריט זה?')) return;
-                const ok = await runWrite(() => removeSecondCircle(tool.id));
-                if (ok) await reload();
-              }}
-            />
-          ))}
-          {creating && (
-            <EditableCard
-              item={{ q: '', intro: '', sections: [], closing: '', callout: '' }}
-              fields={fields}
-              startInEdit
-              renderView={renderView}
-              onSave={async draft => {
-                const ok = await runWrite(() => saveSecondCircle(draft, { lang }));
-                if (ok) {
-                  setCreating(false);
-                  await reload();
-                }
-                return ok;
-              }}
-              onCancel={() => setCreating(false)}
-            />
-          )}
-        </div>
+      {loading ? <LoadingRow /> : (
+        <StagedList
+          scope="second_circle"
+          section="מעגל שני"
+          items={tools}
+          fields={fields}
+          renderView={renderView}
+          describe={t => t.q}
+          blank={{ q: '', intro: '', sections: [], closing: '', callout: '' }}
+          save={draft => saveSecondCircle(draft, { lang })}
+          remove={removeSecondCircle}
+          addLabel="הוספת פריט חדש"
+        />
       )}
-      <div className="mt-3">
-        <AddNewButton label="הוספת פריט חדש" onClick={() => setCreating(true)} />
-      </div>
     </div>
   );
 }
 
+const GUIDELINES_FIELDS = [{ key: 'guidelines', label: 'הנחיות', type: 'richtext' }];
+
 function ChildrenPanel() {
+  const { changes, stage, discard } = usePendingChanges();
   const [ageGroup, setAgeGroup] = useState(AGE_GROUPS[0]);
-  const [guidelinesItem, setGuidelinesItem] = useState(null);
-  const [resources, setResources] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [creating, setCreating] = useState(false);
+  const [data, loading] = useAdminData(
+    async () => {
+      const [guidelines, resources] = await Promise.all([
+        loadChildrenGuidelines({ ageGroupSlug: ageGroup }),
+        loadChildrenResource({ ageGroupSlug: ageGroup }),
+      ]);
+      return { guidelines, resources };
+    },
+    [ageGroup], 'שגיאה בטעינת התכנים לילדים', { guidelines: null, resources: [] }
+  );
   const [editingGuidelines, setEditingGuidelines] = useState(false);
   const [guidelinesDraft, setGuidelinesDraft] = useState('');
 
-  async function reload(targetAgeGroup = ageGroup) {
-    setLoading(true);
-    try {
-      const [guidelines, res] = await Promise.all([
-        loadChildrenGuidelines({ ageGroupSlug: targetAgeGroup }),
-        loadChildrenResource({ ageGroupSlug: targetAgeGroup }),
-      ]);
-      setGuidelinesItem(guidelines);
-      setGuidelinesDraft(guidelines?.guidelines || '');
-      setResources(res);
-    } catch (err) {
-      toast.error(err?.message || 'שגיאה בטעינת התכנים לילדים');
-      setGuidelinesItem(null);
-      setGuidelinesDraft('');
-      setResources([]);
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  useEffect(() => { reload(ageGroup); }, [ageGroup]);
+  const guidelinesItem = data.guidelines;
+  const resources = data.resources;
+  const section = `ילדים - גיל ${ageGroup}`;
+  // Its own scope (not `children:<age>`), so StagedList never mistakes a staged
+  // guidelines row for one of the resources.
+  const guidelinesKey = `children:guidelines:${ageGroup}`;
+  const guidelinesPending = changes.find(c => c.key === guidelinesKey);
+  const shownGuidelines = guidelinesPending ? guidelinesPending.draft.guidelines : (guidelinesItem?.guidelines || '');
 
   const fields = [
     { key: 'type', label: 'סוג', type: 'select', options: toOptions(RESOURCE_TYPE_LABELS) },
@@ -1317,13 +1089,26 @@ function ChildrenPanel() {
     );
   }
 
-  async function handleSaveGuidelines() {
+  function handleConfirmGuidelines() {
     const draft = { ...(guidelinesItem || {}), guidelines: guidelinesDraft };
-    const ok = await runWrite(() => saveChildrenGuidelines(draft, { ageGroupSlug: ageGroup }));
-    if (ok) {
-      setEditingGuidelines(false);
-      await reload(ageGroup);
+    const diff = fieldsDiff(GUIDELINES_FIELDS, guidelinesItem || {}, draft);
+    if (!diff.length) {
+      discard(guidelinesKey);
+    } else {
+      const slug = ageGroup;
+      stage({
+        key: guidelinesKey,
+        scope: `children:guidelines:${slug}`,
+        section,
+        action: guidelinesItem?.id ? 'update' : 'create',
+        itemId: guidelinesItem?.id,
+        title: `הנחיות לגיל ${slug}`,
+        draft,
+        diff,
+        run: () => saveChildrenGuidelines(draft, { ageGroupSlug: slug }),
+      });
     }
+    setEditingGuidelines(false);
   }
 
   return (
@@ -1331,7 +1116,7 @@ function ChildrenPanel() {
       <div className="flex gap-2 mb-5 flex-wrap">
         {AGE_GROUPS.map(ag => (
           <ChoiceChip key={ag} variant="plain" selected={ageGroup === ag}
-            onClick={() => { setAgeGroup(ag); setEditingGuidelines(false); setCreating(false); }}
+            onClick={() => { setAgeGroup(ag); setEditingGuidelines(false); }}
             className={`px-3 py-1 rounded-full text-sm ${ageGroup === ag ? '' : 'bg-muted hover:bg-border'}`}>
             {ag}
           </ChoiceChip>
@@ -1343,82 +1128,64 @@ function ChildrenPanel() {
         <LoadingRow />
       ) : (
         <>
-          <div className="relative group p-4 rounded-xl border border-primary/30 bg-primary/5 mb-3">
-            <p className="text-xs font-semibold text-primary mb-2">הנחיות</p>
+          <div className={`relative group p-4 rounded-xl border bg-primary/5 mb-3 ${guidelinesPending ? 'border-warning/60' : 'border-primary/30'}`}>
+            <div className="flex items-center gap-2 mb-2 flex-wrap pe-10">
+              <p className="text-xs font-semibold text-primary">הנחיות</p>
+              {guidelinesPending && !editingGuidelines && (
+                <>
+                  <Badge color={STATUS_BADGES.update.color}>{STATUS_BADGES.update.label}</Badge>
+                  <DiscardButton onClick={() => discard(guidelinesKey)} />
+                </>
+              )}
+            </div>
             {editingGuidelines ? (
               <div className="space-y-2">
                 <RichTextEditor value={guidelinesDraft} onChange={setGuidelinesDraft} />
-                <div className="flex gap-2">
+                <div className="flex gap-2 items-center flex-wrap">
                   <Button
                     type="button"
                     variant="solid"
                     size="xs"
-                    onClick={handleSaveGuidelines}
+                    onClick={handleConfirmGuidelines}
                     className="gap-1.5 rounded-lg font-semibold"
                   >
-                    <Check className="w-3.5 h-3.5" /> שמירה
+                    <Check className="w-3.5 h-3.5" /> אישור
                   </Button>
                   <Button
                     type="button"
                     variant="subtle"
                     size="xs"
-                    onClick={() => { setGuidelinesDraft(guidelinesItem?.guidelines || ''); setEditingGuidelines(false); }}
+                    onClick={() => setEditingGuidelines(false)}
                     className="gap-1.5 rounded-lg font-semibold hover:bg-border"
                   >
                     <X className="w-3.5 h-3.5" /> ביטול
                   </Button>
+                  <span className="text-xs text-muted-foreground">השינוי יעלה לאתר רק אחרי &quot;סקירה ושמירה&quot;</span>
                 </div>
               </div>
             ) : (
               <>
-                <div className="text-sm text-foreground pe-10" dangerouslySetInnerHTML={{ __html: guidelinesItem?.guidelines || '' }} />
-                <div className="absolute top-3 end-3 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <IconBtn icon={Pencil} title="עריכת הנחיות" onClick={() => { setGuidelinesDraft(guidelinesItem?.guidelines || ''); setEditingGuidelines(true); }} />
+                <div className="text-sm text-foreground pe-10" dangerouslySetInnerHTML={{ __html: shownGuidelines }} />
+                <div className="absolute top-3 end-3">
+                  <IconBtn icon={Pencil} title="עריכת הנחיות" onClick={() => { setGuidelinesDraft(shownGuidelines); setEditingGuidelines(true); }} />
                 </div>
               </>
             )}
           </div>
 
-          <div className="space-y-3">
-            {resources.map(r => (
-              <EditableCard
-                key={r.id}
-                item={r}
-                fields={fields}
-                renderView={renderView}
-                onSave={async draft => {
-                  const ok = await runWrite(() => saveChildrenResource(draft, { ageGroupSlug: ageGroup }));
-                  if (ok) await reload(ageGroup);
-                  return ok;
-                }}
-                onDelete={async () => {
-                  if (!window.confirm('למחוק פריט זה?')) return;
-                  const ok = await runWrite(() => removeChildrenResource(r.id));
-                  if (ok) await reload(ageGroup);
-                }}
-              />
-            ))}
-            {creating && (
-              <EditableCard
-                item={{ type: 'book', title_he: '', description_he: '', content_he: '', cta_label: '', cta_url: '' }}
-                fields={fields}
-                startInEdit
-                renderView={renderView}
-                onSave={async draft => {
-                  const ok = await runWrite(() => saveChildrenResource(draft, { ageGroupSlug: ageGroup }));
-                  if (ok) {
-                    setCreating(false);
-                    await reload(ageGroup);
-                  }
-                  return ok;
-                }}
-                onCancel={() => setCreating(false)}
-              />
-            )}
-          </div>
-          <div className="mt-3">
-            <AddNewButton label="הוספת תוכן חדש" onClick={() => setCreating(true)} />
-          </div>
+          <StagedList
+            key={ageGroup}
+            scope={`children:${ageGroup}`}
+            section={section}
+            items={resources}
+            fields={fields}
+            renderView={renderView}
+            describe={r => r.title_he}
+            blank={{ type: 'book', title_he: '', description_he: '', content_he: '', cta_label: '', cta_url: '' }}
+            save={draft => saveChildrenResource(draft, { ageGroupSlug: ageGroup })}
+            remove={removeChildrenResource}
+            addLabel="הוספת תוכן חדש"
+          />
         </>
       )}
     </div>
@@ -1590,6 +1357,7 @@ function UsersPanel() {
               item={{ name: '', email: '', roles: ['admin'] }}
               fields={createFields}
               startInEdit
+              confirmLabel="יצירת משתמש"
               renderView={() => null}
               onSave={handleCreateUser}
               onCancel={() => setCreating(false)}
@@ -1605,29 +1373,62 @@ function UsersPanel() {
 }
 
 // Full CRUD for the questionnaires resource (dedicated API, not /admin/articles).
-// Lists every (slug x language) row; edit metadata; expand to edit questions +
-// options; create/delete questionnaires and questions. totalQuestions is
-// server-managed (read-only). Deletes are admin-only server-side - a moderator
-// gets a 403 toast via runWrite.
+// Lists the Hebrew rows; edit metadata; expand to edit questions + options;
+// create/delete questionnaires and questions - every one of those staged, like
+// the article panels. totalQuestions is server-managed (read-only). Deletes
+// are admin-only server-side - a moderator's staged delete fails at save time
+// with a 403 toast and stays staged.
+//
+// A questionnaire staged for creation has no id yet, so its questions can only
+// be edited once it has been saved.
+const QUESTIONNAIRE_SECTION = 'שאלון PCL-5';
+
+const QUESTIONNAIRE_FIELDS = [
+  { key: 'slug', label: 'slug' },
+  { key: 'name', label: 'שם' },
+  { key: 'description', label: 'תיאור' },
+  { key: 'maxScore', label: 'ציון מקסימלי' },
+  { key: 'cutoffScore', label: 'סף קליני' },
+  { key: 'sortOrder', label: 'סדר תצוגה' },
+  { key: 'isActive', label: 'פעיל', type: 'checkbox' },
+];
+
+const QUESTION_FIELDS = [
+  { key: 'text', label: 'טקסט השאלה' },
+  { key: 'sortOrder', label: 'סדר' },
+  { key: 'options', label: 'תשובות' },
+];
+
+// A question as diffable flat text - options become one line each.
+function flatQuestion(q) {
+  return {
+    text: q.text ?? '',
+    sortOrder: q.sortOrder ?? '',
+    options: (q.options ?? []).map(o => `${o.answer} = ${o.score} (סדר ${o.order})`).join('\n'),
+  };
+}
+
 function QuestionnairePanel() {
-  const [items, setItems] = useState(null);
+  const { changes, stage, discard, newKey } = usePendingChanges();
   const [creating, setCreating] = useState(false);
+  // Hebrew-only for now: the questionnaire is managed in Hebrew from this
+  // panel. Other-language rows still exist in the DB but are hidden here so
+  // the admin never sees language sections or non-Hebrew items.
+  const [items, loading] = useAdminData(
+    async () => (await loadQuestionnaires()).filter(q => q.langId === 'he'),
+    [], 'שגיאה בטעינת השאלונים', []
+  );
 
-  async function reload() {
-    try {
-      // Hebrew-only for now: the questionnaire is managed in Hebrew from this
-      // panel. Other-language rows still exist in the DB but are hidden here so
-      // the admin never sees language sections or non-Hebrew items.
-      const all = await loadQuestionnaires();
-      setItems(all.filter(q => q.langId === 'he'));
-    } catch (err) {
-      toast.error(err?.message || 'שגיאה בטעינת השאלונים');
-      setItems([]);
-    }
+  const scope = 'questionnaire';
+  const pending = changes.filter(c => c.scope === scope);
+  const byItem = new Map(pending.filter(c => c.itemId).map(c => [c.itemId, c]));
+  const creates = pending.filter(c => c.action === 'create');
+
+  function stageCreate(key, draft) {
+    stage({ key, scope, section: QUESTIONNAIRE_SECTION, action: 'create', title: draft.name || 'שאלון חדש', draft, diff: fieldsDiff(QUESTIONNAIRE_FIELDS, {}, draft), run: () => createQuestionnaire(draft) });
   }
-  useEffect(() => { reload(); }, []);
 
-  if (items === null) return <LoadingRow />;
+  if (loading) return <LoadingRow />;
 
   return (
     <div>
@@ -1636,81 +1437,115 @@ function QuestionnairePanel() {
         השאלון נערך בעברית בלבד. totalQuestions מנוהל בשרת ומתעדכן אוטומטית עם הוספת/מחיקת שאלות.
       </p>
 
-      {creating && (
-        <QuestionnaireMetaForm
-          initial={{ langId: 'he', slug: 'pcl-5', name: '', description: '', maxScore: 80, cutoffScore: 33, isActive: true, sortOrder: 0 }}
-          onCancel={() => setCreating(false)}
-          onSave={async draft => {
-            const ok = await runWrite(() => createQuestionnaire(draft));
-            if (ok) { setCreating(false); await reload(); }
-          }}
-        />
-      )}
-
       <div className="space-y-3 mt-3">
-        {items.map(q => (
-          <QuestionnaireRow key={q.id} q={q} onChanged={reload} />
+        {items.map(q => {
+          const p = byItem.get(q.id);
+          return (
+            <QuestionnaireRow
+              key={q.id}
+              q={p?.action === 'update' ? { ...q, ...p.draft } : q}
+              status={p?.action}
+              onDiscard={p ? () => discard(p.key) : undefined}
+              onStage={draft => {
+                const key = `${scope}:${q.id}`;
+                const diff = fieldsDiff(QUESTIONNAIRE_FIELDS, q, draft);
+                if (!diff.length) { discard(key); return; }
+                stage({ key, scope, section: QUESTIONNAIRE_SECTION, action: 'update', itemId: q.id, title: draft.name || q.name, draft, diff, run: () => updateQuestionnaire(q.id, draft) });
+              }}
+              onDelete={() => stage({
+                key: `${scope}:${q.id}`, scope, section: QUESTIONNAIRE_SECTION, action: 'delete', itemId: q.id,
+                title: `${q.name} (כולל כל השאלות שלו)`, diff: [], run: () => removeQuestionnaire(q.id),
+              })}
+            />
+          );
+        })}
+        {creates.map(c => (
+          <QuestionnaireRow
+            key={c.key}
+            q={c.draft}
+            status="create"
+            onDiscard={() => discard(c.key)}
+            onStage={draft => stageCreate(c.key, draft)}
+          />
         ))}
+        {creating && (
+          <div className="rounded-xl border border-primary/40 bg-background p-4">
+            <QuestionnaireMetaForm
+              initial={{ langId: 'he', slug: 'pcl-5', name: '', description: '', maxScore: 80, cutoffScore: 33, isActive: true, sortOrder: 0 }}
+              onCancel={() => setCreating(false)}
+              onSave={draft => { stageCreate(newKey(scope), draft); setCreating(false); }}
+            />
+          </div>
+        )}
       </div>
 
-      <AddNewButton label="הוספת שאלון חדש" onClick={() => setCreating(true)} />
+      <div className="mt-3">
+        <AddNewButton label="הוספת שאלון חדש" onClick={() => setCreating(true)} />
+      </div>
     </div>
   );
 }
 
 // One questionnaire row: metadata view/edit + expandable questions editor.
-function QuestionnaireRow({ q, onChanged }) {
+/**
+ * @param {Object} props
+ * @param {any} props.q
+ * @param {'create'|'update'|'delete'} [props.status]
+ * @param {(draft: any) => void} props.onStage
+ * @param {() => void} [props.onDelete]
+ * @param {() => void} [props.onDiscard]
+ */
+function QuestionnaireRow({ q, status, onStage, onDelete, onDiscard }) {
   const [editing, setEditing] = useState(false);
   const [expanded, setExpanded] = useState(false);
+  const badge = status && STATUS_BADGES[status];
 
   return (
-    <div className="rounded-xl border border-border bg-background">
+    <div className={`rounded-xl border bg-background ${badge ? 'border-warning/60' : 'border-border'}`}>
       <div className="p-4">
         {editing ? (
           <QuestionnaireMetaForm
             initial={q}
             onCancel={() => setEditing(false)}
-            onSave={async draft => {
-              const ok = await runWrite(() => updateQuestionnaire(q.id, draft));
-              if (ok) { setEditing(false); await onChanged(); }
-            }}
+            onSave={draft => { onStage(draft); setEditing(false); }}
           />
         ) : (
           <div className="flex items-start justify-between gap-3">
             <div>
-              <p className="font-semibold text-foreground">{q.name}</p>
-              <p className="text-xs text-muted-foreground mt-1">
-                slug: {q.slug} · שאלות: {q.totalQuestions} · max: {q.maxScore} · סף: {q.cutoffScore ?? '-'} · {q.isActive ? 'פעיל' : 'לא פעיל'}
-              </p>
+              {badge && <div className="mb-2"><Badge color={badge.color}>{badge.label}</Badge></div>}
+              <div className={status === 'delete' ? 'opacity-50 line-through' : ''}>
+                <p className="font-semibold text-foreground">{q.name}</p>
+                <p className="text-xs text-muted-foreground mt-1">
+                  slug: {q.slug} · שאלות: {q.totalQuestions ?? 0} · max: {q.maxScore} · סף: {q.cutoffScore ?? '-'} · {q.isActive ? 'פעיל' : 'לא פעיל'}
+                </p>
+              </div>
             </div>
-            <div className="flex gap-2 flex-shrink-0">
-              <Button variant="outline-subtle" size="none" onClick={() => setEditing(true)} className="p-2 rounded-lg" title="עריכה"><Pencil className="w-4 h-4" /></Button>
-              <Button
-                variant="outline-subtle"
-                size="none"
-                onClick={async () => {
-                  if (!window.confirm(`למחוק את השאלון "${q.name}"? פעולה זו מוחקת גם את כל שאלותיו.`)) return;
-                  const ok = await runWrite(() => removeQuestionnaire(q.id));
-                  if (ok) await onChanged();
-                }}
-                className="p-2 rounded-lg text-destructive" title="מחיקה"
-              ><Trash2 className="w-4 h-4" /></Button>
+            <div className="flex gap-2 flex-shrink-0 items-center">
+              {onDiscard && <DiscardButton onClick={onDiscard} />}
+              {status !== 'delete' && (
+                <Button variant="outline-subtle" size="none" onClick={() => setEditing(true)} className="p-2 rounded-lg" title="עריכה"><Pencil className="w-4 h-4" /></Button>
+              )}
+              {onDelete && status !== 'delete' && (
+                <Button variant="outline-subtle" size="none" onClick={onDelete} className="p-2 rounded-lg text-destructive" title="מחיקה"><Trash2 className="w-4 h-4" /></Button>
+              )}
             </div>
           </div>
         )}
       </div>
 
-      <div className="border-t border-border">
-        <Button
-          variant="quiet"
-          size="none"
-          onClick={() => setExpanded(v => !v)}
-          className="w-full justify-start text-start px-4 py-2 text-sm font-medium hover:bg-muted"
-        >
-          {expanded ? '▾' : '▸'} שאלות ({q.totalQuestions})
-        </Button>
-        {expanded && <QuestionsEditor questionnaireId={q.id} onChanged={onChanged} />}
-      </div>
+      {q.id && status !== 'delete' && (
+        <div className="border-t border-border">
+          <Button
+            variant="quiet"
+            size="none"
+            onClick={() => setExpanded(v => !v)}
+            className="w-full justify-start text-start px-4 py-2 text-sm font-medium hover:bg-muted"
+          >
+            {expanded ? '▾' : '▸'} שאלות ({q.totalQuestions ?? 0})
+          </Button>
+          {expanded && <QuestionsEditor questionnaireId={q.id} questionnaireName={q.name} />}
+        </div>
+      )}
     </div>
   );
 }
@@ -1764,64 +1599,79 @@ function QuestionnaireMetaForm({ initial, onSave, onCancel }) {
           פעיל
         </label>
       </div>
-      <div className="flex gap-2">
-        <Button variant="solid" size="none" onClick={() => onSave(draft)} className="px-4 py-2 rounded-lg text-sm gap-1"><Check className="w-4 h-4" /> שמירה</Button>
+      <div className="flex gap-2 items-center flex-wrap">
+        <Button variant="solid" size="none" onClick={() => onSave(draft)} className="px-4 py-2 rounded-lg text-sm gap-1"><Check className="w-4 h-4" /> אישור</Button>
         <Button variant="outline-subtle" size="none" onClick={onCancel} className="px-4 py-2 rounded-lg text-sm gap-1"><X className="w-4 h-4" /> ביטול</Button>
+        <span className="text-xs text-muted-foreground">השינוי יעלה לאתר רק אחרי &quot;סקירה ושמירה&quot;</span>
       </div>
     </div>
   );
 }
 
 // Questions editor: lazy-loads the questionnaire detail, lists questions with
-// inline option editing, add/delete.
-function QuestionsEditor({ questionnaireId, onChanged }) {
-  const [detail, setDetail] = useState(null);
+// inline option editing, add/delete - all staged.
+function QuestionsEditor({ questionnaireId, questionnaireName }) {
+  const { changes, stage, discard, newKey } = usePendingChanges();
+  const [detail, loading] = useAdminData(
+    () => loadQuestionnaireDetail(questionnaireId), [questionnaireId], 'שגיאה בטעינת השאלות', null
+  );
   const [addingNew, setAddingNew] = useState(false);
 
-  async function reload() {
-    try {
-      setDetail(await loadQuestionnaireDetail(questionnaireId));
-    } catch (err) {
-      toast.error(err?.message || 'שגיאה בטעינת השאלות');
-    }
-  }
-  useEffect(() => { reload(); }, [questionnaireId]);
-
-  if (detail === null) return <div className="p-4"><LoadingRow /></div>;
+  if (loading || detail === null) return <div className="p-4"><LoadingRow /></div>;
   const questions = [...(detail.questions ?? [])].sort((a, b) => a.sortOrder - b.sortOrder);
+
+  const scope = `questionnaire:${questionnaireId}`;
+  const section = `${QUESTIONNAIRE_SECTION} - ${questionnaireName}`;
+  const pending = changes.filter(c => c.scope === scope);
+  const byItem = new Map(pending.filter(c => c.itemId).map(c => [c.itemId, c]));
+  const creates = pending.filter(c => c.action === 'create');
 
   const blankOptions = () => [0, 1, 2, 3, 4].map(n => ({ answer: '', score: n, order: n }));
 
+  function stageCreate(key, draft) {
+    stage({ key, scope, section, action: 'create', title: draft.text || 'שאלה חדשה', draft, diff: fieldsDiff(QUESTION_FIELDS, {}, flatQuestion(draft)), run: () => addQuestion(questionnaireId, draft) });
+  }
+
   return (
     <div className="p-4 space-y-3 bg-muted/30">
-      {questions.map((qn, i) => (
+      {questions.map((qn, i) => {
+        const p = byItem.get(qn.id);
+        const key = `${scope}:${qn.id}`;
+        return (
+          <QuestionRow
+            key={qn.id}
+            index={i}
+            question={p?.action === 'update' ? { ...qn, ...p.draft } : qn}
+            status={p?.action}
+            onDiscard={p ? () => discard(p.key) : undefined}
+            onSave={draft => {
+              const diff = fieldsDiff(QUESTION_FIELDS, flatQuestion(qn), flatQuestion(draft));
+              if (!diff.length) { discard(key); return; }
+              stage({ key, scope, section, action: 'update', itemId: qn.id, title: draft.text || qn.text, draft, diff, run: () => updateQuestion(questionnaireId, qn.id, draft) });
+            }}
+            onDelete={() => stage({ key, scope, section, action: 'delete', itemId: qn.id, title: qn.text, diff: [], run: () => removeQuestion(questionnaireId, qn.id) })}
+          />
+        );
+      })}
+
+      {creates.map((c, i) => (
         <QuestionRow
-          key={qn.id}
-          index={i}
-          question={qn}
-          onSave={async draft => {
-            const ok = await runWrite(() => updateQuestion(questionnaireId, qn.id, draft));
-            if (ok) { await reload(); await onChanged(); }
-            return ok;
-          }}
-          onDelete={async () => {
-            if (!window.confirm('למחוק שאלה זו?')) return;
-            const ok = await runWrite(() => removeQuestion(questionnaireId, qn.id));
-            if (ok) { await reload(); await onChanged(); }
-          }}
+          key={c.key}
+          index={questions.length + i}
+          question={c.draft}
+          status="create"
+          onDiscard={() => discard(c.key)}
+          onSave={draft => stageCreate(c.key, draft)}
         />
       ))}
 
       {addingNew ? (
         <QuestionRow
-          index={questions.length}
-          question={{ text: '', sortOrder: questions.length, options: blankOptions() }}
+          index={questions.length + creates.length}
+          question={{ text: '', sortOrder: questions.length + creates.length, options: blankOptions() }}
           startInEdit
-          onSave={async draft => {
-            const ok = await runWrite(() => addQuestion(questionnaireId, draft));
-            if (ok) { setAddingNew(false); await reload(); await onChanged(); }
-          }}
-          onDelete={() => setAddingNew(false)}
+          onSave={draft => { stageCreate(newKey(scope), draft); setAddingNew(false); }}
+          onCancel={() => setAddingNew(false)}
         />
       ) : (
         <AddNewButton label="הוספת שאלה" onClick={() => setAddingNew(true)} />
@@ -1831,27 +1681,55 @@ function QuestionsEditor({ questionnaireId, onChanged }) {
 }
 
 // One question: text + 5-ish options (answer/score/order), view or edit.
-function QuestionRow({ index, question, onSave, onDelete, startInEdit = false }) {
+/**
+ * @param {Object} props
+ * @param {number} props.index
+ * @param {any} props.question
+ * @param {(draft: any) => void} props.onSave
+ * @param {() => void} [props.onDelete]
+ * @param {() => void} [props.onCancel]
+ * @param {() => void} [props.onDiscard]
+ * @param {'create'|'update'|'delete'} [props.status]
+ * @param {boolean} [props.startInEdit]
+ */
+function QuestionRow({ index, question, onSave, onDelete, onCancel, onDiscard, status, startInEdit = false }) {
   const [editing, setEditing] = useState(startInEdit);
+  const seed = q => (q.options ?? []).map(o => ({ answer: o.answer ?? '', score: o.score ?? 0, order: o.order ?? 0 }));
   const [text, setText] = useState(question.text ?? '');
   const [sortOrder, setSortOrder] = useState(question.sortOrder ?? index);
-  const [options, setOptions] = useState(
-    (question.options ?? []).map(o => ({ answer: o.answer ?? '', score: o.score ?? 0, order: o.order ?? 0 }))
-  );
+  const [options, setOptions] = useState(seed(question));
   const inputCls = 'px-2 py-1.5 rounded-lg border border-border bg-background text-sm';
+  const badge = status && STATUS_BADGES[status];
 
   const setOpt = (i, k, v) => setOptions(os => os.map((o, j) => (j === i ? { ...o, [k]: v } : o)));
 
+  // Re-seed from what is currently shown (server row or staged draft) every
+  // time editing starts, so a discarded change does not linger in the form.
+  function startEdit() {
+    setText(question.text ?? '');
+    setSortOrder(question.sortOrder ?? index);
+    setOptions(seed(question));
+    setEditing(true);
+  }
+
   if (!editing) {
     return (
-      <div className="p-3 rounded-lg border border-border bg-background flex items-start justify-between gap-3">
+      <div className={`p-3 rounded-lg border bg-background flex items-start justify-between gap-3 ${badge ? 'border-warning/60' : 'border-border'}`}>
         <div>
-          <p className="text-sm text-foreground"><span className="text-muted-foreground/60">{index + 1}. </span>{question.text}</p>
-          <p className="text-xs text-muted-foreground mt-1">{(question.options ?? []).map(o => `${o.answer}=${o.score}`).join(' · ')}</p>
+          {badge && <div className="mb-1"><Badge color={badge.color}>{badge.label}</Badge></div>}
+          <div className={status === 'delete' ? 'opacity-50 line-through' : ''}>
+            <p className="text-sm text-foreground"><span className="text-muted-foreground/60">{index + 1}. </span>{question.text}</p>
+            <p className="text-xs text-muted-foreground mt-1">{(question.options ?? []).map(o => `${o.answer}=${o.score}`).join(' · ')}</p>
+          </div>
         </div>
-        <div className="flex gap-2 flex-shrink-0">
-          <Button variant="outline-subtle" size="none" onClick={() => setEditing(true)} className="p-2 rounded-lg"><Pencil className="w-4 h-4" /></Button>
-          <Button variant="outline-subtle" size="none" onClick={onDelete} className="p-2 rounded-lg text-destructive"><Trash2 className="w-4 h-4" /></Button>
+        <div className="flex gap-2 flex-shrink-0 items-center">
+          {onDiscard && <DiscardButton onClick={onDiscard} />}
+          {status !== 'delete' && (
+            <Button variant="outline-subtle" size="none" onClick={startEdit} className="p-2 rounded-lg" title="עריכה"><Pencil className="w-4 h-4" /></Button>
+          )}
+          {onDelete && status !== 'delete' && (
+            <Button variant="outline-subtle" size="none" onClick={onDelete} className="p-2 rounded-lg text-destructive" title="מחיקה"><Trash2 className="w-4 h-4" /></Button>
+          )}
         </div>
       </div>
     );
@@ -1875,389 +1753,9 @@ function QuestionRow({ index, question, onSave, onDelete, startInEdit = false })
         <Button variant="link" size="none" onClick={() => setOptions(os => [...os, { answer: '', score: os.length, order: os.length }])} className="text-xs gap-1 mt-1"><Plus className="w-3 h-3" /> הוספת תשובה</Button>
       </div>
       <div className="flex gap-2">
-        <Button variant="solid" size="none" onClick={async () => { const ok = await onSave({ text, sortOrder, options }); if (ok && !startInEdit) setEditing(false); }} className="px-3 py-1.5 rounded-lg text-sm gap-1"><Check className="w-4 h-4" /> שמירה</Button>
-        <Button variant="outline-subtle" size="none" onClick={() => { if (startInEdit) { onDelete(); } else { setEditing(false); } }} className="px-3 py-1.5 rounded-lg text-sm gap-1"><X className="w-4 h-4" /> ביטול</Button>
+        <Button variant="solid" size="none" onClick={() => { onSave({ text, sortOrder, options }); if (!startInEdit) setEditing(false); }} className="px-3 py-1.5 rounded-lg text-sm gap-1"><Check className="w-4 h-4" /> אישור</Button>
+        <Button variant="outline-subtle" size="none" onClick={() => { if (startInEdit) { onCancel?.(); } else { setEditing(false); } }} className="px-3 py-1.5 rounded-lg text-sm gap-1"><X className="w-4 h-4" /> ביטול</Button>
       </div>
-    </div>
-  );
-}
-
-// ─── Site copy ──────────────────────────────────────────────────────────────
-// The one panel that is NOT list-of-items CRUD. It edits the fixed set of UI
-// strings the site ships with (src/lib/i18n.js) - page headings, subtitles,
-// intros, questionnaire result text, footer, SEO descriptions - by storing a
-// per-language override row for the keys an editor changes. A key with no row
-// keeps the shipped wording, and clearing a field deletes the row rather than
-// saving an empty string, so "revert to default" is a real operation.
-//
-// It is also the only panel that is not Hebrew-only: overrides are per
-// language, so it carries its own language picker.
-
-// A one-line key gets an input, a paragraph gets a textarea. Purely about how
-// much room the string needs on screen.
-function isLongCopy(text) {
-  return (text || '').length > 70;
-}
-
-function CopyRow({ copyKey, shipped, override, lang, onSaved }) {
-  const stored = override?.text ?? '';
-  const [draft, setDraft] = useState(stored || shipped);
-  const [saving, setSaving] = useState(false);
-
-  // A language switch or a reload swaps the whole row's meaning - re-seed.
-  useEffect(() => { setDraft(stored || shipped); }, [stored, shipped, lang]);
-
-  const isOverridden = Boolean(override);
-  const dirty = draft !== (stored || shipped);
-
-  async function save() {
-    setSaving(true);
-    // Saving the shipped wording verbatim is a revert, not an override - let
-    // saveSiteCopy drop the row so the key keeps following the shipped string.
-    const text = draft.trim() === shipped.trim() ? '' : draft;
-    const ok = await runWrite(() => saveSiteCopy({ id: override?.id, key: copyKey, text }, { lang }));
-    setSaving(false);
-    if (ok) await onSaved();
-  }
-
-  async function revert() {
-    if (!override) { setDraft(shipped); return; }
-    setSaving(true);
-    const ok = await runWrite(() => saveSiteCopy({ id: override.id, key: copyKey, text: '' }, { lang }));
-    setSaving(false);
-    if (ok) await onSaved();
-  }
-
-  return (
-    <div className="p-3 rounded-xl border border-border bg-background space-y-2">
-      <div className="flex items-center justify-between gap-2">
-        <code className="text-xs text-muted-foreground" dir="ltr">{copyKey}</code>
-        {isOverridden && <Badge color="bg-info/10 text-info">נערך</Badge>}
-      </div>
-      {isLongCopy(shipped) || isLongCopy(draft) ? (
-        <textarea
-          value={draft}
-          onChange={e => setDraft(e.target.value)}
-          rows={3}
-          className="w-full px-3 py-2 rounded-lg border border-border bg-background text-sm leading-relaxed"
-        />
-      ) : (
-        <input
-          type="text"
-          value={draft}
-          onChange={e => setDraft(e.target.value)}
-          className="w-full px-3 py-2 rounded-lg border border-border bg-background text-sm"
-        />
-      )}
-      {isOverridden && (
-        <p className="text-xs text-muted-foreground">
-          ברירת מחדל: <span className="text-muted-foreground/80">{shipped}</span>
-        </p>
-      )}
-      <div className="flex gap-2">
-        <Button
-          type="button"
-          variant="solid"
-          size="xs"
-          disabled={saving || !dirty}
-          onClick={save}
-          className="gap-1.5 rounded-lg font-semibold disabled:opacity-40"
-        >
-          <Check className="w-3.5 h-3.5" /> {saving ? 'שומר...' : 'שמירה'}
-        </Button>
-        {isOverridden && (
-          <Button
-            type="button"
-            variant="subtle"
-            size="xs"
-            disabled={saving}
-            onClick={revert}
-            className="gap-1.5 rounded-lg font-semibold hover:bg-border disabled:opacity-40"
-          >
-            <RotateCcw className="w-3.5 h-3.5" /> חזרה לברירת מחדל
-          </Button>
-        )}
-      </div>
-    </div>
-  );
-}
-
-function SiteCopyPanel() {
-  const [lang, setLang] = useState('he');
-  const [sectionId, setSectionId] = useState(COPY_SECTIONS[0].id);
-  const [overrides, setOverrides] = useState({});
-  const [loading, setLoading] = useState(true);
-
-  const reload = useCallback(async () => {
-    setLoading(true);
-    try {
-      setOverrides(await loadSiteCopy({ lang }));
-    } catch (err) {
-      toast.error(err?.message || 'שגיאה בטעינת תוכן הדפים');
-      setOverrides({});
-    } finally {
-      setLoading(false);
-    }
-  }, [lang]);
-
-  useEffect(() => { reload(); }, [reload]);
-
-  const section = COPY_SECTIONS.find(s => s.id === sectionId) || COPY_SECTIONS[0];
-  // What the site would show for this key in this language with no override:
-  // the language's own string, else the Hebrew one. Mirrors t()'s fallback.
-  function shippedFor(key) {
-    return translations[lang]?.[key] ?? translations.he?.[key] ?? key;
-  }
-  const overriddenCount = Object.keys(overrides).length;
-
-  return (
-    <div>
-      <Section title="תוכן דפים" count={section.keys.length} />
-      <p className="text-sm text-muted-foreground -mt-3 mb-5">
-        כותרות, כותרות משנה וטקסטים קבועים בדפי האתר. מה שלא נערך כאן מוצג בנוסח שהאתר מגיע איתו.
-        {overriddenCount > 0 && ` ${overriddenCount} טקסטים נערכו בשפה זו.`}
-      </p>
-
-      <div className="flex flex-wrap gap-4 mb-5">
-        <div>
-          <label htmlFor="site-copy-lang" className="text-xs font-semibold text-muted-foreground block mb-1">שפה</label>
-          <select
-            id="site-copy-lang"
-            value={lang}
-            onChange={e => setLang(e.target.value)}
-            className="px-3 py-2 rounded-lg border border-border bg-background text-sm text-foreground"
-          >
-            {LANGUAGES.map(l => (
-              <option key={l.code} value={l.code}>{l.label}</option>
-            ))}
-          </select>
-        </div>
-        <div className="flex-1 min-w-[14rem]">
-          <label htmlFor="site-copy-section" className="text-xs font-semibold text-muted-foreground block mb-1">אזור באתר</label>
-          <select
-            id="site-copy-section"
-            value={sectionId}
-            onChange={e => setSectionId(e.target.value)}
-            className="w-full px-3 py-2 rounded-lg border border-border bg-background text-sm text-foreground"
-          >
-            {COPY_SECTIONS.map(s => (
-              <option key={s.id} value={s.id}>{s.label}</option>
-            ))}
-          </select>
-        </div>
-      </div>
-
-      {loading ? (
-        <LoadingRow />
-      ) : (
-        <div className="space-y-3">
-          {section.keys.map(key => (
-            <CopyRow
-              key={`${lang}:${key}`}
-              copyKey={key}
-              lang={lang}
-              shipped={shippedFor(key)}
-              override={overrides[key]}
-              onSaved={reload}
-            />
-          ))}
-        </div>
-      )}
-    </div>
-  );
-}
-
-// ─── Legal documents ────────────────────────────────────────────────────────
-// The privacy policy and the terms of use. Three things make this panel unlike
-// the others, all of them deliberate:
-//
-//  1. `admin` only, never `moderator` (hasLegalEditAccess) - these carry
-//     liability and privacy undertakings, not editorial content.
-//  2. Raw Markdown in a plain textarea, not the rich-text editor. Every other
-//     panel round-trips through html<->markdown; a legal document should come
-//     back out exactly as it was typed.
-//  3. Empty means "use the text the site ships with". Saving an empty editor
-//     deletes the override, which is how an admin undoes a change - and why
-//     the pages keep rendering if the API is unreachable.
-const LEGAL_DOC_META = [
-  {
-    slug: 'privacy-policy',
-    label: 'מדיניות פרטיות',
-    shipped: PRIVACY_CONTENT,
-    shippedUpdated: PRIVACY_UPDATED,
-  },
-  {
-    slug: 'terms-of-use',
-    label: 'תנאי שימוש',
-    shipped: TERMS_CONTENT,
-    shippedUpdated: TERMS_UPDATED,
-  },
-];
-
-// Only he/en exist: LegalPage maps ar->he and ru/fr->en, so those are the only
-// two documents that ever render.
-const LEGAL_LANGS = [
-  { code: 'he', label: 'עברית' },
-  { code: 'en', label: 'English' },
-];
-
-function LegalDocEditor({ doc, lang, override, onSaved }) {
-  const shippedBody = doc.shipped[lang] ?? '';
-  const shippedUpdated = doc.shippedUpdated[lang] ?? '';
-  const [body, setBody] = useState(override?.body ?? shippedBody);
-  const [updated, setUpdated] = useState(override?.updated ?? shippedUpdated);
-  const [saving, setSaving] = useState(false);
-
-  useEffect(() => {
-    setBody(override?.body ?? shippedBody);
-    setUpdated(override?.updated ?? shippedUpdated);
-  }, [override, shippedBody, shippedUpdated, lang]);
-
-  const isOverridden = Boolean(override);
-  const dirty = body !== (override?.body ?? shippedBody) || updated !== (override?.updated ?? shippedUpdated);
-
-  async function save() {
-    if (!window.confirm(`לשמור שינוי ב"${doc.label}"? זהו מסמך משפטי המחייב את האתר.`)) return;
-    setSaving(true);
-    // Re-saving the shipped text unchanged is a revert, not an override.
-    const next = body.trim() === shippedBody.trim() ? '' : body;
-    const ok = await runWrite(() => saveLegalDoc(
-      { id: override?.id, slug: doc.slug, body: next, updated }, { lang }
-    ));
-    setSaving(false);
-    if (ok) await onSaved();
-  }
-
-  async function revert() {
-    if (!override) { setBody(shippedBody); setUpdated(shippedUpdated); return; }
-    if (!window.confirm(`לחזור לנוסח שהאתר מגיע איתו עבור "${doc.label}"?`)) return;
-    setSaving(true);
-    const ok = await runWrite(() => saveLegalDoc(
-      { id: override.id, slug: doc.slug, body: '', updated: '' }, { lang }
-    ));
-    setSaving(false);
-    if (ok) await onSaved();
-  }
-
-  return (
-    <div className="p-4 rounded-xl border border-border bg-background space-y-3">
-      <div className="flex items-center justify-between gap-2">
-        <h3 className="font-heading font-semibold text-foreground">{doc.label}</h3>
-        {isOverridden
-          ? <Badge color="bg-info/10 text-info">נערך</Badge>
-          : <Badge>נוסח מקורי</Badge>}
-      </div>
-
-      <div>
-        <label className="text-xs font-semibold text-muted-foreground block mb-1">תאריך עדכון אחרון</label>
-        <input
-          type="text"
-          value={updated}
-          onChange={e => setUpdated(e.target.value)}
-          className="w-full px-3 py-2 rounded-lg border border-border bg-background text-sm"
-        />
-      </div>
-
-      <div>
-        <label className="text-xs font-semibold text-muted-foreground block mb-1">
-          תוכן המסמך (Markdown)
-        </label>
-        <textarea
-          value={body}
-          onChange={e => setBody(e.target.value)}
-          rows={20}
-          dir={lang === 'he' ? 'rtl' : 'ltr'}
-          className="w-full px-3 py-2 rounded-lg border border-border bg-background text-sm leading-relaxed font-mono"
-        />
-        <p className="text-xs text-muted-foreground mt-1">
-          ‎## לכותרת, ‎**מודגש**, ‎[טקסט](כתובת) לקישור. ריקון השדה מחזיר את הנוסח שהאתר מגיע איתו.
-        </p>
-      </div>
-
-      <div className="flex gap-2">
-        <Button
-          type="button"
-          variant="solid"
-          size="xs"
-          disabled={saving || !dirty}
-          onClick={save}
-          className="gap-1.5 rounded-lg font-semibold disabled:opacity-40"
-        >
-          <Check className="w-3.5 h-3.5" /> {saving ? 'שומר...' : 'שמירה'}
-        </Button>
-        {isOverridden && (
-          <Button
-            type="button"
-            variant="subtle"
-            size="xs"
-            disabled={saving}
-            onClick={revert}
-            className="gap-1.5 rounded-lg font-semibold hover:bg-border disabled:opacity-40"
-          >
-            <RotateCcw className="w-3.5 h-3.5" /> חזרה לנוסח המקורי
-          </Button>
-        )}
-      </div>
-    </div>
-  );
-}
-
-function LegalPanel() {
-  const [lang, setLang] = useState('he');
-  const [overrides, setOverrides] = useState({});
-  const [loading, setLoading] = useState(true);
-
-  const reload = useCallback(async () => {
-    setLoading(true);
-    try {
-      setOverrides(await loadLegalDocs({ lang }));
-    } catch (err) {
-      toast.error(err?.message || 'שגיאה בטעינת המסמכים המשפטיים');
-      setOverrides({});
-    } finally {
-      setLoading(false);
-    }
-  }, [lang]);
-
-  useEffect(() => { reload(); }, [reload]);
-
-  return (
-    <div>
-      <Section title="מסמכים משפטיים" count={LEGAL_DOC_META.length} />
-      <p className="text-sm text-muted-foreground -mt-3 mb-5">
-        מדיניות הפרטיות ותנאי השימוש. הנוסח העברי הוא המחייב; דוברי ערבית רואים אותו, ודוברי
-        רוסית וצרפתית רואים את הנוסח האנגלי. עריכה כאן משנה את מה שמוצג בפועל באתר.
-      </p>
-
-      <div className="mb-5">
-        <label htmlFor="legal-lang" className="text-xs font-semibold text-muted-foreground block mb-1">שפת המסמך</label>
-        <select
-          id="legal-lang"
-          value={lang}
-          onChange={e => setLang(e.target.value)}
-          className="px-3 py-2 rounded-lg border border-border bg-background text-sm text-foreground"
-        >
-          {LEGAL_LANGS.map(l => (
-            <option key={l.code} value={l.code}>{l.label}</option>
-          ))}
-        </select>
-      </div>
-
-      {loading ? (
-        <LoadingRow />
-      ) : (
-        <div className="space-y-4">
-          {LEGAL_DOC_META.map(doc => (
-            <LegalDocEditor
-              key={`${lang}:${doc.slug}`}
-              doc={doc}
-              lang={lang}
-              override={overrides[doc.slug]}
-              onSaved={reload}
-            />
-          ))}
-        </div>
-      )}
     </div>
   );
 }
@@ -2272,87 +1770,101 @@ const PANELS = {
   second_circle: <SecondCirclePanel />,
   children:      <ChildrenPanel />,
   questionnaire: <QuestionnairePanel />,
-  site_copy:     <SiteCopyPanel />,
-  legal:         <LegalPanel />,
-  users:         <UsersPanel />,
 };
 
+// Staged changes carry their list's scope (`rights:general`,
+// `children:guidelines:0-4`, `questionnaire:<id>` ...); the part before the
+// first colon is always the content tab they belong to.
+function tabOfScope(scope) {
+  return scope.split(':')[0];
+}
+
+// The panel's two main sections - the guide (home) and the editable pages -
+// plus, for masteradmin, user management and the edit log. Visibility mirrors
+// the exact-match role checks in src/lib/auth.js: content needs
+// admin/moderator, users and the log need masteradmin. AdminGate
+// (src/App.jsx) guarantees at least one of them for anyone who gets here.
 export default function Admin() {
-  // Tab visibility mirrors the two independent, exact-match role checks in
-  // src/lib/auth.js: content tabs need admin/moderator, the Users tab needs
-  // masteradmin. AdminGate (src/App.jsx) already guarantees at least one of
-  // these is true for anyone who reaches this component, so `tabs` below is
-  // never empty.
   const showContent = hasAdminAccess();
-  const showLegal = hasLegalEditAccess();
   const showUsers = hasUserManagementAccess();
-  const tabs = [
-    ...(showContent ? CONTENT_TABS : []),
-    ...(showLegal ? [LEGAL_TAB] : []),
-    ...(showUsers ? [USERS_TAB] : []),
+  const { changes } = usePendingChanges();
+  const views = [
+    { key: 'guide', label: 'מדריך שימוש', icon: Info },
+    ...(showContent ? [{ key: 'content', label: 'עריכת תוכן', icon: Pencil }] : []),
+    ...(showUsers ? [USERS_VIEW, LOG_VIEW] : []),
   ];
+  const [view, setView] = useState('guide');
+  const [activeTab, setActiveTab] = useState(CONTENT_TABS[0].key);
 
-  const [activeTab, setActiveTab] = useState(() => tabs[0]?.key);
-
-  // Defensive guard: if activeTab ever points at a tab this user can't see
-  // (e.g. role claims changed underneath us), fall back to the first visible
-  // tab instead of rendering nothing / a hidden panel.
-  useEffect(() => {
-    if (tabs.length && !tabs.some(tab => tab.key === activeTab)) {
-      setActiveTab(tabs[0].key);
-    }
-  }, [tabs, activeTab]);
+  const pendingByTab = {};
+  for (const c of changes) {
+    const tab = tabOfScope(c.scope);
+    pendingByTab[tab] = (pendingByTab[tab] || 0) + 1;
+  }
 
   return (
-    <div className="min-h-screen bg-background pt-16">
-      <div className="border-b border-border bg-card">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8">
-          <div className="flex items-center justify-between gap-3 mb-1">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                <Settings className="w-5 h-5 text-primary" />
-              </div>
-              <h1 className="text-2xl font-heading font-semibold text-foreground">ממשק ניהול</h1>
-            </div>
-            <Button
-              type="button"
-              variant="subtle"
-              size="none"
-              onClick={logout}
-              className="gap-1.5 px-3 py-1.5 rounded-lg text-sm font-semibold hover:bg-border"
+    <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8 pb-28">
+      <nav aria-label="אזורי ממשק הניהול" className="flex flex-wrap gap-2 mb-8 border-b border-border pb-4">
+        {views.map(v => {
+          const Icon = v.icon;
+          return (
+            <ChoiceChip
+              key={v.key}
+              variant="plain"
+              selected={view === v.key}
+              onClick={() => setView(v.key)}
+              className="gap-2 px-4 py-2 rounded-super-sm text-sm"
             >
-              <LogOut className="w-3.5 h-3.5" /> התנתקות
-            </Button>
+              <Icon className="w-4 h-4" />
+              {v.label}
+              {v.key === 'content' && changes.length > 0 && (
+                <Badge color="bg-warning/20 text-foreground">{changes.length}</Badge>
+              )}
+            </ChoiceChip>
+          );
+        })}
+      </nav>
+
+      {view === 'guide' && <AdminGuide canEdit={showContent} onStart={() => setView('content')} />}
+
+      {view === 'content' && showContent && (
+        <>
+          <h2 className="text-xs font-semibold text-muted-foreground mb-2">עמודי האתר הניתנים לעריכה</h2>
+          <div className="flex flex-wrap gap-2 mb-6">
+            {CONTENT_TABS.map(tab => {
+              const Icon = tab.icon;
+              return (
+                <ChoiceChip
+                  key={tab.key}
+                  variant="plain"
+                  selected={activeTab === tab.key}
+                  onClick={() => setActiveTab(tab.key)}
+                  className="gap-2 px-4 py-2 rounded-super-sm text-sm"
+                >
+                  <Icon className="w-4 h-4" />
+                  {tab.label}
+                  {pendingByTab[tab.key] > 0 && (
+                    <Badge color="bg-warning/20 text-foreground">{pendingByTab[tab.key]}</Badge>
+                  )}
+                </ChoiceChip>
+              );
+            })}
           </div>
-          <p className="text-muted-foreground text-sm">{ADMIN_PREVIEW
-            ? 'תצוגה מקדימה לעיצוב · נתוני דוגמה · שמירה, הוספה ומחיקה מושבתות'
-            : 'עריכה, הוספה ומחיקה של תוכן · השינויים נשמרים ישירות מול השרת (למעט שאלון ה-PCL-5, שעריכתו אינה זמינה עדיין)'}</p>
-        </div>
-      </div>
+          <div className="bg-card rounded-super border border-border p-6 shadow-card">
+            {PANELS[activeTab]}
+          </div>
+        </>
+      )}
 
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8">
-        <div className="flex flex-wrap gap-2 mb-8 border-b border-border pb-4">
-          {tabs.map(tab => {
-            const Icon = tab.icon;
-            return (
-              <ChoiceChip
-                key={tab.key}
-                variant="plain"
-                selected={activeTab === tab.key}
-                onClick={() => setActiveTab(tab.key)}
-                className="gap-2 px-4 py-2 rounded-super-sm text-sm"
-              >
-                <Icon className="w-4 h-4" />
-                {tab.label}
-              </ChoiceChip>
-            );
-          })}
-        </div>
+      {view === 'users' && showUsers && (
+        <div className="bg-card rounded-super border border-border p-6 shadow-card"><UsersPanel /></div>
+      )}
 
-        <div className="bg-card rounded-super border border-border p-6 shadow-card">
-          {PANELS[activeTab]}
-        </div>
-      </div>
+      {view === 'log' && showUsers && (
+        <div className="bg-card rounded-super border border-border p-6 shadow-card"><EditLogPanel /></div>
+      )}
+
+      <SaveAllBar />
     </div>
   );
 }

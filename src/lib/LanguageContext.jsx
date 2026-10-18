@@ -22,7 +22,7 @@ export function LanguageProvider({ children }) {
     document.documentElement.setAttribute('lang', lang);
   }, [lang]);
 
-  // Site-copy overrides (/admin's "תוכן דפים" tab). Fetched directly rather
+  // Site-copy override rows (see i18n.js "Admin overrides"). Fetched directly rather
   // than through React Query so this provider stays usable outside a
   // QueryClientProvider. A failure here is not an error state: the site simply
   // keeps the strings it shipped with, which is the correct rendering.
