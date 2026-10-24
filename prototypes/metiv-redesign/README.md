@@ -4,6 +4,33 @@ A standalone design prototype, served on its own local address. It is **not**
 part of the app: nothing here is imported by `src/`, and the v3 demo at
 `/metiv-site-demo-v3` is untouched by anything in this folder.
 
+## Where it lives, and where it is published
+
+Everything the redesign is - the 41 pages, the stylesheet, the shared chrome,
+every photograph, the generator and the step that publishes it - is inside
+this one folder. Nothing here imports from `src/`, and nothing in the app
+imports from here. The folder can be deleted and the site is unaffected.
+
+One line of it has to sit elsewhere: `"postbuild"` in `src/package.json`,
+which runs `tools/copy-into-site.mjs` after the site's own build. That step
+copies this folder (without `tools/`) into the built site at
+**`/metiv-site-demo-v3/redesign-v1/`**, so the published address is
+
+    https://ptsd-il.site/metiv-site-demo-v3/redesign-v1/
+
+The path sits under the v3 demo's route because it is a redesign *of* that
+demo. `/metiv-site-demo-v3` itself stays a client route of the React app -
+only the `redesign-v1` folder below it exists on disk, so a request for the
+demo still falls through to the app, which is why publishing this changes
+nothing about the demo.
+
+Every page carries `<meta name="robots" content="noindex, nofollow">`, so the
+address is shareable but not indexed. Remove that line from the generator if
+it ever stops being a prototype.
+
+To stop publishing it, delete the `postbuild` line. Nothing else in the repo
+knows this folder exists.
+
 ## Run it
 
 ```bash

@@ -25,4 +25,9 @@ Ofri reviews every change in the browser himself. After making a change, start t
 
 "ship it", "publish", "תפבלש" or anything of that shape means: commit to `master` and `git push origin master`. Render auto-deploys from `master`, so it goes live at `https://ptsd-il.site/metiv-site-demo-v3`.
 
+Since 2026-10-24 that same deploy also publishes the redesign prototype at
+`https://ptsd-il.site/metiv-site-demo-v3/redesign-v1/`. It rides along through
+one `postbuild` line in `src/package.json`; everything else about it lives in
+`prototypes/metiv-redesign/`, and the demo is untouched by it.
+
 Preview first and wait for his go-ahead - shipping is never the first step.
