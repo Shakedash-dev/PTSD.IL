@@ -1,0 +1,339 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>מטיב - המרכז הישראלי לטיפול בפסיכוטראומה</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="styles.css">
+<script src="site.js" defer></script>
+</head>
+<body>
+
+<!-- header, menus and drawer are injected from partials/chrome.html -->
+<div id="site-chrome" style="min-height:112px"></div>
+
+<main id="top">
+
+  <!-- 1. hero: full frame photograph -->
+  <section class="hero on-media">
+    <div class="hero__media">
+      <img src="img/hero.webp" alt="" fetchpriority="high">
+    </div>
+    <div class="wrap hero__inner">
+      <div class="hero__text">
+        <h1 class="hero__brand">מטיב<span>המרכז הישראלי לטיפול בפסיכוטראומה</span></h1>
+        <p>מאז 1989 אנחנו מלווים אנשים שחוו טראומה, את בני המשפחה שלהם ואת המטפלים שעובדים לצידם. מידע ודרכים לקבל עזרה, לצד הכשרות, הדרכה ומחקר בתחום הטראומה.</p>
+        <div class="hero__cta">
+          <a class="btn btn--lg btn--primary" href="patient.html">
+            <svg class="icon-sm" aria-hidden="true"><use href="#i-compass"/></svg>
+            לעזרה ולתמיכה
+          </a>
+          <a class="btn btn--lg btn--secondary" href="therapists.html">
+            <svg class="icon-sm" aria-hidden="true"><use href="#i-cap"/></svg>
+            לאזור המטפלים
+          </a>
+        </div>
+        <a class="hero__crisis link link--sm" href="tel:1201">
+          <svg class="icon-xs" aria-hidden="true"><use href="#i-phone"/></svg>
+          צריך לדבר עכשיו? ער"ן, עזרה ראשונה נפשית, 1201
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. what PTSD is: one large panel, the photograph is the section -->
+  <section class="band" id="ptsd">
+    <div class="wrap">
+      <div class="showcase on-media">
+        <img src="img/alone.webp" alt="אדם עומד מול חלון מואר בחדר חשוך" loading="lazy">
+        <div class="showcase__text">
+          <h2>מה זה פוסט טראומה?</h2>
+          <p>תגובה נפשית לאירוע טראומטי שהמוח והגוף ממשיכים לעבד זמן רב אחרי שהסכנה חלפה. היא יכולה להופיע אחרי אירוע אחד או אחרי תקופה ארוכה, ולהיראות אחרת אצל כל אדם.</p>
+          <div class="showcase__links">
+            <a class="link" href="ptsd.html">
+              לקריאה בשפה פשוטה
+              <svg class="icon-sm" aria-hidden="true"><use href="#i-arrow"/></svg>
+            </a>
+            <a class="link" href="questionnaire.html">
+              לשאלון האנונימי
+              <svg class="icon-sm" aria-hidden="true"><use href="#i-arrow"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. who Metiv is: text on the reading side, then the figures at size -->
+  <section class="band band--sea" id="about">
+    <div class="wrap">
+      <div style="max-width:640px">
+        <p class="eyebrow">מי אנחנו</p>
+        <h2 class="h1">אנשים זקוקים לאנשים</h2>
+        <p class="muted" style="margin-top:var(--s3)">במטיב, אנחנו מבינים שההתמודדות עם טראומה בעת מלחמה וטרור היא מסע מורכב. זהו מסע שיכול להשפיע על כל תחומי החיים, ולכן אנו כאן כדי ללוות אתכם. אנו מציעים מרחב בטוח ורגיש, שבו תוכלו לקבל תמיכה מקצועית וליצור יחד איתנו את הדרך להתמודדות והתחזקות. כי אתם לא לבד.</p>
+        <p class="muted" style="margin-top:var(--s2)"><strong style="color:var(--ink)">החזון שלנו:</strong> חברה שנותנת מקום לטראומה נפשית, דואגת לסובלים ממנה ומחויבת להעצמתם.</p>
+        <a class="btn btn--secondary" style="margin-top:var(--s5)" href="about.html">
+          עוד על מטיב, הצוות וההיסטוריה
+          <svg class="icon-sm" aria-hidden="true"><use href="#i-arrow"/></svg>
+        </a>
+      </div>
+
+      <div class="stats" style="margin-top:var(--s12)">
+        <div class="stat"><b data-to="1989" data-plain="true">1989</b><span>שנת ההקמה</span></div>
+        <div class="stat"><b data-to="2000" data-suffix="+">0</b><span>מטפלים שהוכשרו ברחבי הארץ</span></div>
+        <div class="stat"><b data-to="5000" data-suffix="+">0</b><span>מורים שהוכשרו בתוכנית החוסן לבתי ספר</span></div>
+        <div class="stat"><b data-to="300" data-prefix="~">0</b><span>מטופלים בשנה במרפאות מטיב</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. what Metiv does. One shape for every card: same photo ratio, same body. -->
+  <section class="band" id="services">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">מה אנחנו עושים</p>
+        <h2 class="h1">מרפאות, תוכניות והכשרות</h2>
+      </div>
+
+      <div class="cards">
+        <a class="card" href="where-to-get-help.html#adults-clinic">
+          <div class="card__media"><img src="img/clinic.webp" alt="איש מקצוע ממלא טופס מול פונה" loading="lazy"></div>
+          <div class="card__body">
+            <h3 class="h4">מרפאת המבוגרים</h3>
+            <p class="card__desc">מרפאה בירושלים לפונים בני 17 ומעלה שחוו טראומה או אובדן.</p>
+            <span class="card__foot link">פרטים ופנייה <svg class="icon-sm" aria-hidden="true"><use href="#i-arrow"/></svg></span>
+          </div>
+        </a>
+
+        <a class="card" href="where-to-get-help.html#kids-clinic">
+          <div class="card__media"><img src="img/kids.webp" alt="הורה מרים ילד באוויר ביער" loading="lazy"></div>
+          <div class="card__body">
+            <h3 class="h4">מטיב ילדים</h3>
+            <p class="card__desc">מרכז לוויסות רגשות לילדים עד גיל 18 ולהורים.</p>
+            <span class="card__foot link">פרטים ופנייה <svg class="icon-sm" aria-hidden="true"><use href="#i-arrow"/></svg></span>
+          </div>
+        </a>
+
+        <a class="card" href="where-to-get-help.html#migdalor">
+          <div class="card__media"><img src="img/support.webp" alt="שתי ידיים אוחזות זו בזו על שולחן" loading="lazy"></div>
+          <div class="card__body">
+            <h3 class="h4">מרפאת מגדלור</h3>
+            <p class="card__desc">מרפאה במרכז הרפואי הרצוג למטופלים המוכרים באגף השיקום של משרד הביטחון, בהפניה מהאגף.</p>
+            <span class="card__foot link">פרטים ופנייה <svg class="icon-sm" aria-hidden="true"><use href="#i-arrow"/></svg></span>
+          </div>
+        </a>
+
+        <a class="card" href="release-journey.html">
+          <div class="card__media"><img src="img/road.webp" alt="אדם הולך בדרך ערפילית" loading="lazy"></div>
+          <div class="card__body">
+            <h3 class="h4">מסע שחרור</h3>
+            <p class="card__desc">מענה לחיילים משוחררים ולמילואימניקים, בשיתוף Peace of Mind, בארץ ובחו"ל.</p>
+            <span class="card__foot link">פרטים ופנייה <svg class="icon-sm" aria-hidden="true"><use href="#i-arrow"/></svg></span>
+          </div>
+        </a>
+
+        <a class="card" href="courses.html">
+          <div class="card__media"><img src="img/papers.webp" alt="דפים וטפסים על שולחן" loading="lazy"></div>
+          <div class="card__body">
+            <h3 class="h4">יחידת ההכשרות</h3>
+            <p class="card__desc">קורסים, סדנאות והדרכה למטפלים, לצוותי חינוך ולצוותים בארגונים.</p>
+            <span class="card__foot link">פרטים ופנייה <svg class="icon-sm" aria-hidden="true"><use href="#i-arrow"/></svg></span>
+          </div>
+        </a>
+
+        <a class="card" href="research.html">
+          <div class="card__media"><img src="img/calm.webp" alt="מחברת, נר וכוס קפה" loading="lazy"></div>
+          <div class="card__body">
+            <h3 class="h4">יחידת המחקר</h3>
+            <p class="card__desc">מחקר קליני שמלווה את העשייה במטיב, כולל מחקרים שמגייסים משתתפים.</p>
+            <span class="card__foot link">פרטים ופנייה <svg class="icon-sm" aria-hidden="true"><use href="#i-arrow"/></svg></span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4b. who Metiv works with: one marquee, edge to edge, no chips -->
+  <section class="band band--grad-soft" id="partners">
+    <div class="wrap">
+      <div class="section-head" style="margin-bottom:var(--s5)">
+        <p class="eyebrow">עם מי אנחנו עובדים</p>
+        <h2 class="h2">שותפים, ארגונים וגופים ציבוריים</h2>
+        <p class="muted">מטיב פועל בקמפוס המרכז הרפואי הרצוג ומשתף פעולה עם משרדי ממשלה, קופות חולים, רשויות מקומיות ועמותות.</p>
+      </div>
+    </div>
+
+    <div class="marquee" role="group" aria-label="שותפים וארגונים שעובדים עם מטיב">
+      <div class="marquee__track" dir="ltr">
+        <ul class="marquee__row">
+          <li>המרכז הרפואי הרצוג</li>
+          <li>משרד הביטחון</li>
+          <li>משרד החינוך</li>
+          <li>משרד ראש הממשלה</li>
+          <li>משרד האוצר</li>
+          <li>כללית</li>
+          <li>לאומית</li>
+          <li>שערי צדק</li>
+          <li>מכון פוירשטיין</li>
+          <li>משעולים</li>
+          <li>אנוש</li>
+          <li>קידום נוער</li>
+        </ul>
+        <ul class="marquee__row" aria-hidden="true">
+          <li>המרכז הרפואי הרצוג</li>
+          <li>משרד הביטחון</li>
+          <li>משרד החינוך</li>
+          <li>משרד ראש הממשלה</li>
+          <li>משרד האוצר</li>
+          <li>כללית</li>
+          <li>לאומית</li>
+          <li>שערי צדק</li>
+          <li>מכון פוירשטיין</li>
+          <li>משעולים</li>
+          <li>אנוש</li>
+          <li>קידום נוער</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="wrap" style="margin-top:var(--s4)">
+      <a class="link" href="collaborations.html">לכל שיתופי הפעולה <svg class="icon-sm" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+    </div>
+  </section>
+
+  <!-- 5. what is happening at Metiv -->
+  <section class="band" id="news">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">מה קורה במטיב</p>
+        <h2 class="h1">אירועים, הכשרות ועדכונים</h2>
+      </div>
+
+      <div class="cards">
+        <a class="card" href="courses.html">
+          <div class="card__media"><img src="img/journal.webp" alt="מחברת פתוחה וספר על מיטה" loading="lazy"></div>
+          <div class="card__body">
+            <span class="tag"><svg class="icon-sm" aria-hidden="true"><use href="#i-calendar"/></svg> 14.10.2026 · מחזור קורס</span>
+            <h3 class="h4">פתיחת מחזור הכשרת CBT בטראומה</h3>
+            <p class="card__desc">פתיחת התכנית הדו-שנתית בטיפול קוגניטיבי-התנהגותי בטראומה, בימי שני 13:00-17:30.</p>
+            <span class="card__foot link">לפרטים <svg class="icon-sm" aria-hidden="true"><use href="#i-arrow"/></svg></span>
+          </div>
+        </a>
+
+        <a class="card" href="courses.html">
+          <div class="card__media"><img src="img/sky.webp" alt="שמי שקיעה מעל קו מים" loading="lazy"></div>
+          <div class="card__body">
+            <span class="tag"><svg class="icon-sm" aria-hidden="true"><use href="#i-calendar"/></svg> 29.10.2026 · מחזור קורס</span>
+            <h3 class="h4">מפת הדרכים לטיפול בטראומה - מחזור פרונטלי</h3>
+            <p class="card__desc">ארבעה מפגשים: 29 באוקטובר ו-5, 12, 19 בנובמבר 2026, בין השעות 9:00-15:00.</p>
+            <span class="card__foot link">לפרטים <svg class="icon-sm" aria-hidden="true"><use href="#i-arrow"/></svg></span>
+          </div>
+        </a>
+
+        <a class="card" href="article-dancing-with-protocol.html">
+          <div class="card__media"><img src="img/rest.webp" alt="ספר פתוח וכוס קפה על מיטה" loading="lazy"></div>
+          <div class="card__body">
+            <span class="tag"><svg class="icon-sm" aria-hidden="true"><use href="#i-book"/></svg> מאמר · 18 בדצמבר 2025</span>
+            <h3 class="h4">לרקוד עם פרוטוקול</h3>
+            <p class="card__desc">מאמר דעה של מיכל זמורה ושיר אליאס על היתרונות והחסרונות של עבודה לפי פרוטוקול בטיפול בטראומה.</p>
+            <span class="card__foot link">לקריאה <svg class="icon-sm" aria-hidden="true"><use href="#i-arrow"/></svg></span>
+          </div>
+        </a>
+      </div>
+
+      <div class="row" style="margin-top:var(--s4)">
+        <a class="link" href="events.html">לכל האירועים והעדכונים <svg class="icon-sm" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5b. gallery: a bento grid, no controls to operate -->
+  <section class="band band--tint" id="gallery">
+    <div class="wrap">
+      <div class="section-head" style="margin-bottom:var(--s5)">
+        <h2 class="h2">רגעים ממטיב</h2>
+        <p class="muted">מפגשים, קבוצות והכשרות. גלריה שמתעדכנת לאורך השנה.</p>
+      </div>
+
+      <div class="bento">
+        <figure><img src="img/support.webp" alt="שתי ידיים אוחזות זו בזו" loading="lazy"><figcaption>ליווי אישי במרפאה</figcaption></figure>
+        <figure><img src="img/group.webp" alt="קבוצה יושבת במעגל על הדשא" loading="lazy"><figcaption>מפגש קבוצתי בחוץ</figcaption></figure>
+        <figure><img src="img/clinic.webp" alt="פגישה טיפולית" loading="lazy"><figcaption>פגישת אינטייק במרפאת המבוגרים</figcaption></figure>
+        <figure><img src="img/calm.webp" alt="פינת שקט עם נר ומחברת" loading="lazy"><figcaption>פינת שקט בסדנת כלים</figcaption></figure>
+        <figure><img src="img/rest.webp" alt="ספר פתוח וכוס קפה" loading="lazy"><figcaption>הפסקה בין מפגשים</figcaption></figure>
+        <figure><img src="img/kids.webp" alt="הורה מרים ילד באוויר" loading="lazy"><figcaption>קבוצת הורים וילדים</figcaption></figure>
+        <figure><img src="img/journal.webp" alt="מחברת פתוחה וחומרי לימוד" loading="lazy"><figcaption>חומרי לימוד בקורס הכשרה</figcaption></figure>
+      </div>
+
+      <a class="link" style="margin-top:var(--s4)" href="#">לכל הגלריה <svg class="icon-sm" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+    </div>
+  </section>
+
+  <!-- 6. support and donate: full bleed gradient, photograph to the page edge -->
+  <section class="sb donate on-media" id="donate">
+    <div class="sb__text">
+      <div>
+        <p class="eyebrow">תמיכה ותרומה</p>
+        <h2 class="h1">כל תרומה היא עוד אדם שמקבל ליווי</h2>
+        <p>תרומה למטיב מממנת טיפולים לפונים שאין באפשרותם לשלם, הכשרות למטפלים בפריפריה, וקבוצות להורים ולילדים. מטיב הוא ע"ר 580313926, והתרומות מוכרות לצורכי מס.</p>
+        <div class="row" style="margin-top:var(--s5)">
+          <a class="btn btn--lg btn--primary" href="https://www.jgive.com/new/en/ils/charity-organizations/1179">
+            <svg class="icon-sm" aria-hidden="true"><use href="#i-heart"/></svg>
+            לתרומה מאובטחת
+          </a>
+          <a class="btn btn--lg btn--secondary" href="donate.html">דרכים נוספות לתרום</a>
+        </div>
+      </div>
+    </div>
+    <div class="sb__media">
+      <img src="img/kids.webp" alt="רגע של שמחה בין הורה לילד" loading="lazy">
+    </div>
+  </section>
+
+  <!-- 7. contact -->
+  <section class="band band--grad-soft" id="contact">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">יצירת קשר</p>
+        <h2 class="h1">אפשר לפנות אלינו</h2>
+        <p class="lead">לא בטוח/ה לאן לפנות? אפשר להתחיל בשיחת התייעצות קצרה, בלי התחייבות.</p>
+      </div>
+      <div class="contact">
+        <div class="contact__item">
+          <span class="contact__mark"><svg class="icon-sm" aria-hidden="true"><use href="#i-pin"/></svg></span>
+          <div><strong>כתובת</strong><p class="muted">גבעת שאול, המרכז הרפואי הרצוג, ירושלים</p></div>
+        </div>
+        <div class="contact__item">
+          <span class="contact__mark"><svg class="icon-sm" aria-hidden="true"><use href="#i-phone"/></svg></span>
+          <div><strong>טלפון</strong><p class="muted" dir="ltr" style="text-align:start">02-5316900</p></div>
+        </div>
+        <div class="contact__item">
+          <span class="contact__mark"><svg class="icon-sm" aria-hidden="true"><use href="#i-mail"/></svg></span>
+          <div><strong>מייל</strong><p class="muted" dir="ltr" style="text-align:start">info@metiv.org.il</p></div>
+        </div>
+        <div class="contact__item">
+          <span class="contact__mark"><svg class="icon-sm" aria-hidden="true"><use href="#i-building"/></svg></span>
+          <div><strong>פנייה מארגון</strong><p class="muted"><a class="link" href="https://docs.google.com/forms/d/e/1FAIpQLScc90IWpEglRpTtKqwmeBToTCGXeZpZXwvcjE6UHaLR4YKxuw/viewform" target="_blank" rel="noopener">טופס פנייה להכשרה או הדרכה</a></p></div>
+        </div>
+      </div>
+      <div class="row" style="margin-top:var(--s5)">
+        <a class="btn btn--primary" href="where-to-get-help.html#consultation">
+          <svg class="icon-sm" aria-hidden="true"><use href="#i-phone"/></svg>
+          לשיחת התייעצות
+        </a>
+        <a class="btn btn--secondary" href="contact.html">למי לפנות בכל נושא</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- injected from partials/footer.html -->
+<div id="site-footer"></div>
+
+</body>
+</html>

@@ -1,0 +1,896 @@
+/* ===========================================================================
+   Metiv redesign prototype. Standalone: does not touch the v3 demo or the
+   live design system.
+
+   The rules Ofri set, encoded as tokens:
+   - white page background, gradients only as soft accents
+   - Google Sans, base 16px, every size an even number
+   - 8px spacing scale
+   - one radius for every button regardless of size (pill)
+   - purple #8337EE, blue #3B85FE, ink a touch darker than #0D2141
+   - icons only where they do work: in buttons and tags, never as decoration
+   - photographs bleed to the page edge rather than sitting in rounded boxes
+   =========================================================================== */
+
+:root {
+  /* ---- color ---- */
+  --white: #FFFFFF;
+  --ink: #09182F;          /* a step darker than #0D2141 */
+  --ink-2: #41506A;        /* secondary text */
+  --ink-3: #5E6B82;        /* captions; dark enough to clear 4.5:1 on white */
+
+  /* Two families built off the two base colours, plus the pale aqua at the
+     end of the blue ramp. The light steps are what the washes are made of. */
+  --purple: #8337EE;
+  --purple-700: #6B21D6;
+  --purple-300: #BFA0F7;
+  --purple-100: #EADCFD;
+  --purple-50: #F5EFFE;
+  --blue: #3B85FE;
+  --blue-700: #1F66DC;
+  --blue-300: #93BCFF;
+  --blue-100: #D7E7FF;
+  --blue-50: #ECF3FF;
+  --sea: #7FD4E6;
+  --sea-100: #CFEFF6;
+  --sea-50: #ECFAFD;
+
+  --line: #E6E6F0;
+  --line-strong: #D5D3E8;
+  --tint: #FAFBFE;         /* the softest band fill */
+
+  /* ---- gradients ----
+     Washes, not bands: overlapping soft blooms on white, so the page reads
+     like light on water rather than a coloured rectangle. */
+  --grad: linear-gradient(118deg, #8337EE 0%, #5A6DF6 42%, #3B85FE 74%, #58C2E4 100%);
+  /* the same ramp one step deeper, for the donate button's hover */
+  --grad-deep: linear-gradient(118deg, #6B21D6 0%, #4A58E2 42%, #1F66DC 74%, #3FA8CE 100%);
+  /* the same ramp at the dark end, for a calm band that still carries colour */
+  --grad-ink: linear-gradient(118deg, #1B1040 0%, #241A52 38%, #10294F 72%, #11384F 100%);
+  /* `--melt` goes on top of every wash: it whitens the first and last tenth of
+     the band so the colour dissolves into the page instead of stopping on a
+     seam. The page is white, so the join becomes invisible. */
+  --melt: linear-gradient(to bottom,
+    var(--white) 0%, rgba(255,255,255,0) 14%,
+    rgba(255,255,255,0) 86%, var(--white) 100%);
+  --wash-light:
+    var(--melt),
+    radial-gradient(110% 90% at 100% 0%, color-mix(in srgb, var(--purple) 10%, transparent), transparent 58%),
+    radial-gradient(100% 110% at 0% 35%, color-mix(in srgb, var(--blue) 12%, transparent), transparent 60%),
+    radial-gradient(90% 80% at 45% 110%, color-mix(in srgb, var(--sea) 32%, transparent), transparent 62%),
+    var(--white);
+  --wash-sea:
+    var(--melt),
+    radial-gradient(80% 70% at 18% 18%, color-mix(in srgb, var(--sea) 38%, transparent), transparent 62%),
+    radial-gradient(75% 75% at 92% 38%, color-mix(in srgb, var(--blue-300) 34%, transparent), transparent 64%),
+    radial-gradient(95% 85% at 52% 112%, color-mix(in srgb, var(--purple-300) 26%, transparent), transparent 62%),
+    var(--white);
+  --grad-soft: var(--wash-light);
+  --grad-line: linear-gradient(90deg, var(--purple), var(--blue));
+  --scrim: linear-gradient(282deg, rgba(9, 24, 47, .10) 0%, rgba(9, 24, 47, .55) 46%, rgba(9, 24, 47, .88) 100%);
+  /* for a panel whose text sits on the inline-start (right) side */
+  --scrim-start: linear-gradient(270deg, rgba(9, 24, 47, .88) 0%, rgba(9, 24, 47, .62) 34%, rgba(9, 24, 47, .18) 66%, rgba(9, 24, 47, .05) 100%);
+
+  /* ---- type: base 16, every step even ---- */
+  --font: "Google Sans", "Noto Sans Hebrew", "Segoe UI", system-ui, sans-serif;
+  --fs-caption: 12px;
+  --fs-small: 14px;
+  --fs-body: 16px;
+  --fs-body-lg: 18px;
+  --fs-lead: 20px;
+  --fs-h4: 24px;
+  --fs-h3: 28px;
+  --fs-h2: 32px;
+  --fs-h1: 40px;
+  --fs-display: 48px;
+  --fs-display-lg: 56px;
+
+  /* ---- spacing: multiples of 8 ---- */
+  --s05: 4px;  /* the only half step the 8px scale allows */
+  --s1: 8px; --s2: 16px; --s3: 24px; --s4: 32px; --s5: 40px;
+  --s6: 48px; --s8: 64px; --s10: 80px; --s12: 96px; --s15: 120px;
+
+  /* ---- radius: one pill for every button, a small radius for surfaces ---- */
+  --r-pill: 999px;
+  --r-panel: 40px;
+  --r-card: 20px;
+  --r-small: 12px;
+
+  --shadow-1: 0 2px 8px rgba(9, 24, 47, .06);
+  --shadow-2: 0 8px 24px rgba(9, 24, 47, .08);
+  --shadow-3: 0 16px 48px rgba(9, 24, 47, .12);
+
+  --max: 1200px;
+  --header-h: 72px;
+  /* distance from the viewport edge to the content column, so a bleeding
+     section can still line its text up with the rest of the page */
+  --edge: max(var(--s3), calc((100vw - var(--max)) / 2 + var(--s3)));
+  color-scheme: light;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+/* The browser's own `[hidden] { display: none }` is a user-agent rule, so any
+   author `display` beats it. Every container here sets one, so hiding a
+   section with the attribute did nothing until this rule existed. */
+[hidden] { display: none !important; }
+
+html { font-size: 16px; }
+
+body {
+  margin: 0;
+  background: var(--white);
+  color: var(--ink);
+  font-family: var(--font);
+  font-size: var(--fs-body);
+  line-height: 1.6;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4 { margin: 0; line-height: 1.2; font-weight: 600; text-wrap: balance; letter-spacing: -0.01em; }
+p { margin: 0; }
+ul, ol { margin: 0; padding: 0; list-style: none; }
+img { max-width: 100%; display: block; }
+a { color: inherit; text-decoration: none; }
+:focus-visible { outline: 2px solid var(--purple); outline-offset: 2px; border-radius: 4px; }
+
+.icon-sm { width: 20px; height: 20px; flex: none; }
+.icon-xs { width: 16px; height: 16px; flex: none; }
+
+.wrap { width: min(var(--max), 100%); margin-inline: auto; padding-inline: var(--s3); }
+.band { padding-block: var(--s12); }
+.band--tint { background: var(--tint); }
+.band--grad-soft { background: var(--wash-light); }
+/* A band that sits closer to its neighbours: used where a short block (the
+   consultation note, the crisis line) follows a full section and a second
+   full stride of air would read as a gap rather than a break. */
+.band--flush { padding-block: var(--s10); }
+.band--sea { background: var(--wash-sea); }
+
+.eyebrow {
+  display: inline-flex; align-items: center; gap: var(--s1);
+  font-size: var(--fs-small); font-weight: 600; color: var(--purple);
+  margin-bottom: var(--s2);
+}
+.eyebrow::before { content: ""; width: 24px; height: 2px; border-radius: 2px; background: var(--grad-line); }
+
+.h1 { font-size: clamp(32px, 5vw, var(--fs-h1)); }
+.h2 { font-size: clamp(28px, 4vw, var(--fs-h2)); }
+.h4 { font-size: var(--fs-h4); }
+.lead { font-size: var(--fs-lead); line-height: 1.5; color: var(--ink-2); }
+.muted { color: var(--ink-2); }
+.caption { font-size: var(--fs-small); color: var(--ink-3); }
+
+/* ---- buttons -----------------------------------------------------------
+   Four roles, two contexts, one behaviour.
+
+   Roles      donate     the one gradient in the system, only ever for תרומה
+              primary    the main action of a view
+              secondary  the alternative standing beside a primary
+              quiet      chrome controls: the burger, the drawer close
+
+   Context    the default is a light surface. Inside `.on-media` - a photograph
+              or the saturated gradient band - primary turns solid white and
+              secondary turns glass. Nothing else changes.
+
+   Behaviour  identical for every role, and nothing moves on hover: the colour
+              deepens, that is all. Tap presses in by 2%, focus draws one ring,
+              every change eases over 200ms. Filled buttons carry a shadow that
+              never changes; outlined and glass buttons never carry one. One
+              radius and a 1px rim at every size.
+   --------------------------------------------------------------------- */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: var(--s1);
+  height: 48px; padding-inline: var(--s3);
+  border-radius: var(--r-pill); border: 1px solid transparent;
+  font: inherit; font-size: var(--fs-body); font-weight: 600;
+  cursor: pointer; white-space: nowrap;
+  transition: background-color .2s ease, border-color .2s ease, color .2s ease,
+              box-shadow .2s ease, transform .2s ease;
+}
+.btn--sm { height: 40px; padding-inline: var(--s2); font-size: var(--fs-small); }
+.btn--lg { height: 56px; padding-inline: var(--s4); font-size: var(--fs-body-lg); }
+
+.btn:active { transform: scale(.98); }
+.btn:focus-visible { outline: 2px solid var(--purple); outline-offset: 3px; }
+
+/* filled roles */
+.btn--donate {
+  /* background-origin must follow the shorthand, which resets it, or the two
+     transparent border pixels show the gradient's end colours stretched out */
+  background: var(--grad); background-origin: border-box;
+  color: var(--white); box-shadow: var(--shadow-1);
+}
+.btn--donate:hover { background-image: var(--grad-deep); }
+.btn--primary { background: var(--purple); color: var(--white); box-shadow: var(--shadow-1); }
+.btn--primary:hover { background: var(--purple-700); }
+
+/* outlined role: no shadow, ever */
+.btn--secondary { background: var(--white); color: var(--ink); border-color: var(--line-strong); }
+.btn--secondary:hover { border-color: var(--purple); color: var(--purple); }
+
+/* chrome role */
+.btn--quiet { background: transparent; color: var(--ink); }
+.btn--quiet:hover { background: var(--purple-50); color: var(--purple); }
+
+/* the one context switch */
+.on-media .btn--primary { background: var(--white); color: var(--ink); box-shadow: var(--shadow-2); }
+.on-media .btn--primary:hover { background: var(--purple-50); color: var(--purple-700); }
+.on-media .btn--secondary {
+  background: rgba(255,255,255,.16); color: var(--white); border-color: rgba(255,255,255,.7);
+  -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+}
+.on-media .btn--secondary:hover { background: rgba(255,255,255,.3); border-color: var(--white); color: var(--white); }
+.on-media .btn:focus-visible { outline-color: var(--white); }
+
+/* ---- links: one style, the same two contexts ---- */
+.link {
+  display: inline-flex; align-items: center; gap: var(--s1);
+  font-weight: 600; color: var(--purple);
+  text-decoration: underline; text-underline-offset: 5px; text-decoration-thickness: 1px;
+  transition: color .2s ease, text-decoration-thickness .2s ease;
+}
+.link:hover { color: var(--purple-700); text-decoration-thickness: 2px; }
+.link svg { transition: transform .2s ease; }
+.link:hover svg { transform: translateX(-4px); }
+.link--sm { font-size: var(--fs-small); font-weight: 500; }
+.on-media .link { color: var(--white); }
+.on-media .link:hover { color: var(--white); }
+.on-media .link--sm { color: rgba(255,255,255,.82); }
+.on-media .link--sm:hover { color: var(--white); }
+/* inside a whole-card link the card owns the hover */
+.card:hover .link { color: var(--purple-700); text-decoration-thickness: 2px; }
+.card:hover .link svg { transform: translateX(-4px); }
+
+/* a label that carries an icon because the icon says something */
+.tag { display: inline-flex; align-items: center; gap: var(--s05); font-size: var(--fs-small); font-weight: 600; color: var(--purple); }
+
+/* =========================== header =========================== */
+/* Solid white. The bar sits over photographs all the way down the page and
+   anything translucent made the logo and the labels harder to read. Glass is
+   kept for controls that sit on top of an image, where there is nothing behind
+   them to read. */
+.header {
+  position: sticky; top: 0; z-index: 50;
+  background: var(--white);
+  border-bottom: 1px solid var(--line);
+}
+.header__bar { display: flex; align-items: center; gap: var(--s2); height: var(--header-h); }
+.header__logo img { height: 40px; width: auto; }
+.nav { display: flex; align-items: center; gap: var(--s05); margin-inline-start: var(--s2); }
+.nav__btn {
+  display: inline-flex; align-items: center; gap: var(--s05);
+  height: 40px; padding-inline: var(--s2);
+  border: 0; background: none;
+  font: inherit; font-weight: 600; color: var(--ink); cursor: pointer;
+}
+/* Hover and open are marked by one weight step, not by a coloured chip. The
+   label is sized to its own bold width by a hidden copy of itself, so going
+   from 600 to 700 does not nudge the items beside it. */
+.nav__label { display: inline-grid; }
+.nav__label > span, .nav__label::after { grid-area: 1 / 1; }
+.nav__label::after {
+  content: attr(data-label); font-weight: 700;
+  height: 0; overflow: hidden; visibility: hidden; pointer-events: none;
+}
+.nav__btn:hover .nav__label > span,
+.nav__btn[aria-expanded="true"] .nav__label > span { font-weight: 700; }
+.nav__btn .icon-sm { transition: transform .2s; }
+.nav__btn[aria-expanded="true"] .icon-sm { transform: rotate(180deg); }
+.header__actions { margin-inline-start: auto; display: flex; align-items: center; gap: var(--s1); }
+
+/* The header bar can be glass because nothing has to be read through it. The
+   panel holds the whole menu, so it is opaque: at 88% the page behind it showed
+   through the links and they stopped being readable. */
+.mega {
+  position: absolute; inset-inline: 0; top: 100%;
+  background: var(--white);
+  border-bottom: 1px solid var(--line);
+  box-shadow: var(--shadow-3);
+}
+.mega[hidden] { display: none; }
+.mega__inner {
+  display: grid; gap: var(--s5);
+  grid-template-columns: repeat(3, minmax(0, 1fr)) minmax(0, 0.9fr);
+  padding-block: var(--s5);
+}
+.mega__col h3 { font-size: var(--fs-small); color: var(--purple); margin-bottom: var(--s1); padding-inline-start: var(--s2); }
+/* One row style for the mega panel and the drawer alike: the same padding, the
+   same pill the buttons use, and a hover tint that is actually visible on
+   white - the old one was #FAFBFE, a shade off the panel it sat on. */
+.mega__col a, .acc__panel a { display: block; padding: var(--s1) var(--s2); border-radius: var(--r-pill); color: var(--ink-2); }
+/* Hover is the text itself: purple, one weight heavier. No pill behind it.
+   The rows are block level and full width, so the heavier text cannot push
+   anything around. */
+.mega__col a:hover, .acc__panel a:hover { color: var(--purple-700); font-weight: 700; }
+.mega__promo { border-radius: var(--r-card); overflow: hidden; background: var(--grad-soft); display: flex; flex-direction: column; }
+.mega__promo img { height: 112px; width: 100%; object-fit: cover; }
+.mega__promo div { padding: var(--s2); display: flex; flex-direction: column; gap: var(--s1); }
+
+.drawer { position: fixed; inset: 0; z-index: 60; }
+.drawer[hidden] { display: none; }
+.drawer__scrim { position: absolute; inset: 0; background: rgba(9,24,47,.5); }
+.drawer__panel {
+  position: absolute; inset-block: 0; inset-inline-end: 0;
+  width: min(400px, 92vw); background: var(--white);
+  padding: var(--s3); overflow-y: auto;
+  display: flex; flex-direction: column; gap: var(--s2);
+}
+.drawer__head { display: flex; align-items: center; justify-content: space-between; }
+.acc { border: 1px solid var(--line); border-radius: var(--r-card); overflow: hidden; }
+.acc__btn { width: 100%; display: flex; align-items: center; gap: var(--s1); padding: var(--s2); border: 0; background: none; font: inherit; font-weight: 600; color: var(--ink); cursor: pointer; text-align: start; }
+.acc__btn .icon-sm { margin-inline-start: auto; transition: transform .2s; }
+.acc__btn[aria-expanded="true"] { color: var(--purple-700); font-weight: 700; }
+.acc__btn[aria-expanded="true"] .icon-sm { transform: rotate(180deg); }
+.acc__panel { padding: var(--s1) var(--s2) var(--s2); }
+.acc__panel h3 { font-size: var(--fs-small); color: var(--purple); margin-block: var(--s1); }
+
+/* =========================== hero =========================== */
+.hero { position: relative; min-height: min(680px, calc(100vh - var(--header-h))); display: flex; align-items: flex-end; }
+.hero__media { position: absolute; inset: 0; overflow: hidden; }
+.hero__media img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 42%; }
+.hero__media::after { content: ""; position: absolute; inset: 0; background: var(--scrim); }
+/* No width here: this element also carries .wrap, and a `width: 100%` declared
+   later at the same specificity beat `.wrap`'s `min(var(--max), 100%)`, so the
+   hero text ran the full width of the viewport while every other section kept
+   to the 1200px column. */
+.hero__inner { position: relative; padding-block: var(--s12); }
+.hero__text { max-width: 640px; color: var(--white); }
+.hero__brand { font-size: clamp(40px, 7vw, var(--fs-display-lg)); font-weight: 700; line-height: 1.1; }
+.hero__brand span { display: block; font-size: clamp(20px, 3vw, var(--fs-h4)); font-weight: 500; opacity: .92; margin-top: var(--s1); }
+.hero__text p { margin-top: var(--s3); font-size: var(--fs-body-lg); line-height: 1.6; color: rgba(255,255,255,.92); }
+.hero__cta { display: flex; flex-wrap: wrap; gap: var(--s2); margin-top: var(--s5); }
+/* A quiet line, not a third button: the two buttons above already carry the
+   hero. Its look comes from .link--sm; this only places it. */
+.hero__crisis { margin-top: var(--s4); }
+
+/* ============= split with a bleeding photograph (half frame) ============= */
+/* The photo runs to the viewport edge and the full height of the section.
+   No frame, no radius. The text column still lines up with the page gutter. */
+.sb { display: grid; }
+.sb__media { position: relative; min-height: clamp(280px, 46vw, 560px); }
+.sb__media img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.sb__text { display: flex; align-items: center; padding-block: var(--s10); padding-inline: var(--s3); }
+.sb__text > div { width: min(560px, 100%); }
+
+@media (min-width: 900px) {
+  .sb { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: stretch; }
+  /* media second: it bleeds off the inline-end (left in RTL) */
+  .sb__text { padding-inline-start: var(--edge); padding-inline-end: var(--s8); }
+}
+
+
+/* =========================== generic blocks =========================== */
+.stack-2 { display: flex; flex-direction: column; gap: var(--s2); }
+.row { display: flex; flex-wrap: wrap; gap: var(--s2); }
+.section-head { max-width: 720px; margin-bottom: var(--s6); }
+/* Heading on the reading side, the section's one action opposite it. The
+   action lines up with the heading itself, not with the heading plus its
+   eyebrow, so flex-end puts the button's bottom on the h2's bottom; the two
+   boxes are near enough in height that their centres meet. */
+.section-head--split { max-width: none; display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: var(--s3); }
+.section-head p { margin-top: var(--s2); }
+
+/* =========================== showcase panel =========================== */
+/* One large rounded frame holding a photograph, with the text set over it on
+   the reading side. The panel is the section; nothing else competes with it. */
+.showcase {
+  position: relative; overflow: hidden; border-radius: var(--r-panel);
+  min-height: clamp(420px, 50vw, 620px);
+  display: flex; align-items: center;
+  background: var(--ink);
+}
+.showcase > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.showcase::after { content: ""; position: absolute; inset: 0; background: var(--scrim-start); }
+.showcase__text {
+  position: relative; z-index: 1; color: var(--white);
+  width: min(520px, 100%);
+  margin-inline-start: clamp(var(--s3), 5vw, var(--s10));
+  padding-block: var(--s8); padding-inline-end: var(--s3);
+}
+.showcase__text h2 { font-size: clamp(32px, 4.4vw, var(--fs-display-lg)); font-weight: 500; }
+.showcase__text p { margin-top: var(--s3); color: rgba(255,255,255,.88); font-size: var(--fs-body-lg); line-height: 1.6; }
+.showcase__links { margin-top: var(--s5); display: flex; flex-wrap: wrap; gap: var(--s3) var(--s5); align-items: center; }
+
+/* =========================== big numbers =========================== */
+/* No cards. The figure carries itself, the label sits quietly underneath, and
+   each one counts up once when it first comes into view. */
+.stats { display: grid; gap: var(--s6) var(--s4); grid-template-columns: repeat(2, minmax(0, 1fr)); }
+@media (min-width: 900px) { .stats { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--s5); } }
+/* Visible at rest. Only once the script is running, and only when the viewer
+   has not asked for less motion, do the figures start hidden and fade in - so
+   if the script never runs the numbers are still on the page. */
+.stat { opacity: 1; }
+@media (prefers-reduced-motion: no-preference) {
+  .js .stat { opacity: 0; transform: translateY(16px); transition: opacity .7s ease, transform .7s ease; }
+  .js .stat.is-in { opacity: 1; transform: none; }
+}
+.stat b {
+  display: block; font-weight: 500; line-height: .95; letter-spacing: -0.04em;
+  font-size: clamp(44px, 7vw, 88px); font-variant-numeric: tabular-nums;
+}
+.stat span { display: block; margin-top: var(--s2); color: var(--ink-2); max-width: 220px; }
+
+/* =========================== cards =========================== */
+/* Every card in a grid is the same shape: same media ratio, same body, and a
+   description clamped to two lines so no card grows taller than its neighbour. */
+.cards { display: grid; gap: var(--s3); grid-template-columns: repeat(1, minmax(0, 1fr)); }
+@media (min-width: 640px) { .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (min-width: 1000px) { .cards { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+
+.card {
+  display: flex; flex-direction: column; height: 100%;
+  background: var(--white); border: 1px solid var(--line); border-radius: var(--r-card);
+  overflow: hidden; box-shadow: var(--shadow-1);
+  transition: border-color .2s ease;
+}
+/* the same rule as the buttons: on hover the colour changes, nothing moves */
+.card:hover { border-color: var(--purple); }
+.card__media { aspect-ratio: 3 / 2; background: var(--tint); overflow: hidden; }
+.card__media img { width: 100%; height: 100%; object-fit: cover; }
+.card__body { padding: var(--s3); display: flex; flex-direction: column; gap: var(--s1); flex: 1 1 auto; }
+.card__body h3 { min-height: calc(var(--fs-h4) * 1.2); }
+.card__desc {
+  color: var(--ink-2);
+  display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2;
+  overflow: hidden; min-height: calc(var(--fs-body) * 1.6 * 2);
+}
+.card__foot { margin-top: auto; padding-top: var(--s2); }
+
+/* =========================== marquee =========================== */
+/* Edge to edge, both directions seamless. Real logo files drop straight in:
+   each item is a slot sized for one. */
+/* direction: ltr so the max-content track starts at the left edge and scrolls
+   leftward. In an RTL container it would be pinned to the right edge and the
+   animation would carry it straight off the page. Hebrew inside each item
+   still resolves right-to-left on its own. */
+.marquee { position: relative; overflow: hidden; padding-block: var(--s4); direction: ltr;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 96px, #000 calc(100% - 96px), transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 96px, #000 calc(100% - 96px), transparent);
+}
+.marquee__track { display: flex; width: max-content; animation: marquee 48s linear infinite; }
+.marquee:hover .marquee__track, .marquee:focus-within .marquee__track { animation-play-state: paused; }
+.marquee__row { display: flex; align-items: center; gap: var(--s8); padding-inline-end: var(--s8); }
+.marquee__row li {
+  display: flex; align-items: center; justify-content: center;
+  height: 64px; white-space: nowrap;
+  font-size: var(--fs-lead); font-weight: 600; color: var(--ink-3);
+  filter: grayscale(1); opacity: .85; transition: color .2s, opacity .2s;
+}
+.marquee__row li:hover { color: var(--ink); opacity: 1; }
+@keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+/* =========================== bento gallery =========================== */
+/* Mixed spans instead of one hero image: the grid itself gives the rhythm,
+   and nothing needs a control to operate. */
+.bento { display: grid; gap: var(--s2); grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-rows: clamp(140px, 30vw, 200px); }
+.bento figure { margin: 0; border-radius: var(--r-card); overflow: hidden; background: var(--tint); position: relative; }
+.bento img { width: 100%; height: 100%; object-fit: cover; }
+.bento figcaption {
+  position: absolute; inset-block-end: 0; inset-inline: 0;
+  padding: var(--s6) var(--s2) var(--s2);
+  background: linear-gradient(to top, rgba(9,24,47,.72), transparent);
+  color: var(--white); font-size: var(--fs-small); font-weight: 500;
+  opacity: 0; transition: opacity .3s ease;
+}
+.bento figure:hover figcaption, .bento figure:focus-within figcaption { opacity: 1; }
+.bento > figure:first-child { grid-column: span 2; }
+
+@media (min-width: 900px) {
+  .bento { grid-template-columns: repeat(5, minmax(0, 1fr)); grid-auto-rows: clamp(180px, 19vw, 260px); gap: var(--s3); }
+  .bento > figure:first-child { grid-column: span 1; }
+  .bento > figure:nth-child(2) { grid-column: span 3; }
+  .bento > figure:nth-child(6) { grid-column: span 2; }
+}
+
+/* =========================== donate =========================== */
+.donate { color: var(--white); background: var(--grad); }
+.donate .sb__text { padding-block: var(--s12); }
+.donate h2 { color: var(--white); }
+.donate p { color: rgba(255,255,255,.92); margin-top: var(--s2); }
+.donate .eyebrow { color: rgba(255,255,255,.9); }
+.donate .eyebrow::before { background: rgba(255,255,255,.75); }
+
+/* =========================== contact =========================== */
+/* No cards here: four details do not need four containers. The icon marks the
+   row, the label sits above the value, and the wash shows through. */
+.contact { display: grid; gap: var(--s5) var(--s4); grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+.contact__item { display: flex; gap: var(--s2); align-items: flex-start; }
+.contact__item strong { display: block; font-weight: 600; }
+.contact__item p { margin-top: var(--s05); }
+.contact__mark { width: 40px; height: 40px; border-radius: var(--r-small); background: var(--purple-50); color: var(--purple); display: flex; align-items: center; justify-content: center; flex: none; }
+
+/* =========================== footer =========================== */
+.footer { background: var(--ink); color: rgba(255,255,255,.76); padding-block: var(--s8) var(--s5); }
+.footer a { color: rgba(255,255,255,.88); }
+.footer a:hover { color: var(--white); }
+.footer__top { display: grid; gap: var(--s6); grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+.footer__logo { height: 48px; width: auto; filter: brightness(0) invert(1); }
+.footer h3 { font-size: var(--fs-small); color: var(--white); margin-bottom: var(--s2); }
+.footer li { margin-bottom: var(--s1); }
+.footer__eran { border: 1px solid rgba(255,255,255,.2); border-radius: var(--r-card); padding: var(--s3); }
+.footer__eran strong { display: block; color: var(--white); font-size: var(--fs-h3); margin-top: var(--s1); }
+.footer__bottom { margin-top: var(--s6); padding-top: var(--s3); border-top: 1px solid rgba(255,255,255,.16); font-size: var(--fs-small); display: flex; flex-wrap: wrap; gap: var(--s2) var(--s3); justify-content: space-between; }
+
+/* =========================== prototype marker =========================== */
+.protobar { background: var(--ink); color: var(--white); font-size: var(--fs-small); }
+.protobar .wrap { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s1); padding-block: var(--s1); }
+.protobar b { font-weight: 600; opacity: .7; }
+
+@media (max-width: 1023px) {
+  .nav { display: none; }
+  .mega { display: none !important; }
+}
+@media (min-width: 1024px) { .header__burger { display: none; } }
+@media (max-width: 719px) {
+  :root { --header-h: 64px; }
+  .band { padding-block: var(--s8); }
+  .btn--lg { height: 48px; font-size: var(--fs-body); }
+  .hero__cta .btn { flex: 1 1 100%; }
+  .header__actions .btn span { display: none; }
+  .showcase { border-radius: var(--r-card); min-height: 0; }
+  .showcase__text { padding-block: var(--s6); }
+}
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; }
+  .marquee__track { animation: none; }
+  .marquee { overflow-x: auto; }
+}
+
+/* =========================== inner pages =========================== */
+
+/* The page header. One wash behind it, the trail above the title, and room for
+   a photograph beside it. `--sea` for the patient area, the lighter wash for
+   everything else, so the two sides of the site feel different without
+   needing a different layout. */
+.pagehead { position: relative; overflow: hidden; background: var(--wash-light); padding-block: var(--s8) var(--s10); }
+.pagehead--sea { background: var(--wash-sea); }
+.pagehead__grid { display: grid; gap: var(--s6); align-items: center; }
+.pagehead h1 { font-size: clamp(32px, 5vw, var(--fs-display)); font-weight: 500; margin-top: var(--s2); }
+.pagehead .lead { margin-top: var(--s3); max-width: 44rem; }
+.pagehead__actions { display: flex; flex-wrap: wrap; gap: var(--s2); margin-top: var(--s5); }
+.pagehead__media { border-radius: var(--r-panel); overflow: hidden; aspect-ratio: 4 / 3; background: var(--white); }
+.pagehead__media img { width: 100%; height: 100%; object-fit: cover; }
+
+/* From `lg` the photograph stops being a framed box beside the text: it takes
+   the far half of the header, runs to the edge top, bottom and side, and is
+   masked so it dissolves into the wash instead of ending on a hard line. The
+   text keeps the near half and never runs under it.
+   The mask is written in physical directions because the image is always on
+   the physical left here: the text column comes first in an RTL document. */
+@media (min-width: 900px) {
+  .pagehead { min-height: clamp(360px, 36vw, 460px); display: flex; align-items: center; }
+  /* The grid stays unpositioned so the absolutely placed photograph measures
+     itself against the header, not against the grid, which is shorter by the
+     header's padding. The text column carries the stacking instead. */
+  /* No `width` here. This element also carries .wrap, and a width declared
+     later at the same specificity beats .wrap's own `min(var(--max), 100%)`,
+     which drops the page gutter and runs the text to the viewport edge. The
+     same mistake cost the home page hero its margin earlier. */
+  .pagehead__grid { grid-template-columns: minmax(0, 1fr); }
+  .pagehead__grid > :first-child { position: relative; z-index: 1; width: min(50%, 40rem); }
+  .pagehead__media {
+    position: absolute; inset-block: 0; inset-inline-end: 0;
+    width: 54%; aspect-ratio: auto; border-radius: 0; background: none; z-index: 0;
+    /* Two mask layers intersected: the photo fades toward the text, and along
+       the bottom so it melts into the page. The top stays solid - the photo
+       meets the header bar square, which is where the eye expects an edge. */
+    -webkit-mask-image:
+      linear-gradient(to right, #000 0%, #000 38%, rgba(0,0,0,0) 94%),
+      linear-gradient(to bottom, #000 0%, #000 68%, rgba(0,0,0,0) 100%);
+    mask-image:
+      linear-gradient(to right, #000 0%, #000 38%, rgba(0,0,0,0) 94%),
+      linear-gradient(to bottom, #000 0%, #000 68%, rgba(0,0,0,0) 100%);
+    -webkit-mask-composite: source-in;
+    mask-composite: intersect;
+  }
+}
+/* Below that it goes back to a framed photograph under the text, where a
+   half-width bleed would leave the headline nowhere to sit. */
+@media (max-width: 899px) {
+  .pagehead__media { max-width: 32rem; }
+}
+
+/* trail */
+.crumbs { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s1); font-size: var(--fs-small); color: var(--ink-3); }
+.crumbs a { text-decoration: underline; text-underline-offset: 4px; }
+.crumbs a:hover { color: var(--purple-700); }
+.crumbs svg { width: 14px; height: 14px; opacity: .5; }
+.crumbs [aria-current] { color: var(--ink); font-weight: 600; }
+
+/* a column of question-and-answer panels */
+.qa { display: flex; flex-direction: column; gap: var(--s2); max-width: 52rem; }
+.qa .acc { border-radius: var(--r-card); }
+.qa .acc__btn { font-size: var(--fs-body-lg); padding: var(--s3) var(--s4); }
+/* the answer needs air above it as well as below, and it lines up with the
+   question rather than starting hard against the edge */
+.qa .acc__panel { padding: var(--s1) var(--s4) var(--s4); color: var(--ink-2); }
+.qa .acc__panel > :first-child { margin-top: 0; }
+.qa .acc__panel p + p { margin-top: var(--s2); }
+
+/* a directory entry: one framework, always the same four facts */
+.entries { display: flex; flex-direction: column; gap: var(--s3); }
+.entry { border: 1px solid var(--line); border-radius: var(--r-card); background: var(--white); overflow: hidden; display: grid; }
+/* Two rows: the photograph beside the reading column, then one strip running
+   the full width of the card under both. Every entry is built the same way
+   whatever the length of its text, which is what makes a column of them look
+   like one set rather than thirteen different cards. */
+@media (min-width: 760px) {
+  .entry {
+    grid-template-columns: minmax(0, 1fr) 20rem;
+    grid-template-areas: "content media" "foot foot";
+  }
+  .entry__content { grid-area: content; }
+  .entry__media { grid-area: media; }
+  .entry__foot { grid-area: foot; }
+  /* no photograph, so one column - the areas must be restated or they would
+     still describe a two-column card and the items would fall out of them */
+  .entry--plain { grid-template-columns: minmax(0, 1fr); grid-template-areas: "content" "foot"; }
+}
+/* One size for every photograph: a 256px square, inset 32px on all four
+   sides, sitting at the top of its column. It does not grow with the card -
+   an entry with more text simply leaves white below the frame. That is what
+   makes a column of entries scan as one set: the eye follows a single line of
+   identically sized pictures down the page, and the text length stops being
+   something you notice. */
+.entry__media { padding: var(--s4); }
+.entry__media img {
+  display: block; width: 100%; aspect-ratio: 1; height: auto; object-fit: cover;
+  border-radius: var(--r-card); background: var(--tint);
+}
+@media (max-width: 759px) { .entry__media img { aspect-ratio: 16 / 9; } }
+.entry__content { display: flex; flex-direction: column; min-width: 0; }
+.entry__head { padding: var(--s4); }
+.entry__head h2 { font-size: var(--fs-h4); }
+.entry__head p { margin-top: var(--s1); color: var(--ink-2); }
+/* `margin: 0` first: a <dl> carries a 1em block margin from the browser, and
+   its bottom half was the unexplained white strip under the facts. A flat blue
+   tint rather than a wash - a wash needs room to bloom, and in a strip this
+   shallow it only muddied the edge. */
+.entry__facts { margin: 0; margin-top: auto; border-top: 1px solid var(--blue-100); background: var(--blue-50); padding: var(--s3) var(--s4); display: grid; gap: var(--s3); }
+/* One strip for the short facts and the entry's actions together, across the
+   whole card. Both children drop their own background, border and padding and
+   take the strip's: inside it they are rows, not panels of their own. */
+.entry__foot {
+  background: var(--blue-50); border-top: 1px solid var(--blue-100);
+  padding: var(--s3) var(--s4);
+  display: flex; flex-wrap: wrap; align-items: center;
+  justify-content: space-between; gap: var(--s3) var(--s4);
+}
+.entry__foot .entry__facts,
+.entry__foot .entry__actions { background: none; border-top: 0; padding: 0; margin-top: 0; }
+.entry__foot .entry__facts { flex: 1 1 24rem; }
+.entry__foot .entry__actions { flex: 0 0 auto; }
+/* auto-fit, because the demo does not hold the same fields for every entry:
+   some have five facts, some have two. A fixed four-column grid forced me to
+   invent values to fill it, which is exactly what must not happen. */
+@media (min-width: 760px) { .entry__facts { grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); } }
+.entry__facts dt { font-size: var(--fs-small); font-weight: 600; color: var(--blue-700); }
+.entry__facts dd { margin: var(--s05) 0 0; color: var(--ink-2); }
+.entry__actions { display: flex; flex-wrap: wrap; gap: var(--s1); padding: var(--s3) var(--s4); border-top: 1px solid var(--line); }
+.entry__head h3 { font-size: var(--fs-h4); }
+/* Paragraph-length fields live here, stacked and measured for reading. Short
+   values live in the facts strip below. The split is by length, not by field
+   name, because the demo's text varies per entry: one framework's "עלות" is
+   two words and another's is three sentences. Mixing them in one grid was
+   what made the cards look lopsided. */
+.entry__detail { margin-top: var(--s3); max-width: 60ch; }
+.entry__detail dt { font-size: var(--fs-small); font-weight: 600; color: var(--blue-700); margin-top: var(--s3); }
+.entry__detail dt:first-of-type { margin-top: 0; }
+.entry__detail dd { margin: var(--s05) 0 0; color: var(--ink-2); }
+/* The "how to apply" cell holds the one action of the entry, so it is a button
+   rather than a link in a row of plain facts, and it sits on the cell's
+   baseline rather than floating above it. */
+.entry__facts dd .btn { margin-top: var(--s05); }
+
+/* a grid of topics: icon, name, one line */
+.topics { display: grid; gap: var(--s2); grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr)); }
+/* Two wide rows per line instead of four narrow columns: the description gets
+   room to sit on one or two lines instead of four. */
+@media (min-width: 900px) { .topics--two { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.topic {
+  display: flex; gap: var(--s2); align-items: flex-start;
+  border: 1px solid var(--line); border-radius: var(--r-card);
+  background: var(--white); padding: var(--s3);
+  transition: border-color .2s ease;
+}
+.topic:hover { border-color: var(--purple); }
+.topic__mark { width: 40px; height: 40px; border-radius: var(--r-small); background: var(--purple-50); color: var(--purple); display: flex; align-items: center; justify-content: center; flex: none; }
+.topic b { display: block; font-weight: 600; }
+.topic:hover b { color: var(--purple-700); }
+.topic small { display: block; margin-top: var(--s05); color: var(--ink-2); font-size: var(--fs-small); line-height: 1.5; }
+
+/* three big ways in, at the top of an area */
+.paths { display: grid; gap: var(--s3); grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr)); }
+/* four cards read better as two pairs than as a row of narrow columns */
+@media (min-width: 760px) { .paths--pairs { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.path { display: flex; flex-direction: column; border: 1px solid var(--line); border-radius: var(--r-card); background: var(--white); overflow: hidden; transition: border-color .2s ease; }
+.path:hover { border-color: var(--purple); }
+/* `flex: none` and `overflow: hidden` are not optional here. Without them the
+   media is a flex item whose height the image can push around, and four cards
+   in a stretched grid row ended up with four different image heights. This is
+   exactly what `.card__media` does, so the two behave the same. */
+.path__media { flex: none; overflow: hidden; aspect-ratio: 3 / 2; background: var(--tint); }
+.path__media img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.path__body { padding: var(--s3); display: flex; flex-direction: column; gap: var(--s1); flex: 1 1 auto; }
+.path__body h2 { font-size: var(--fs-h4); }
+.path__body p { color: var(--ink-2); flex: 1 1 auto; }
+
+/* the crisis strip that closes a patient-area page */
+.crisis { background: var(--grad-ink); color: rgba(255,255,255,.84); border-radius: var(--r-card); padding: var(--s4); display: grid; gap: var(--s2) var(--s4); }
+@media (min-width: 760px) { .crisis { grid-template-columns: minmax(0, 1fr) auto; align-items: center; } }
+.crisis strong { display: block; color: var(--white); font-size: var(--fs-h4); font-weight: 500; }
+.crisis a.btn { white-space: nowrap; }
+
+/* what to read next */
+.next { display: grid; gap: var(--s2); grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); }
+/* Blue is the wayfinding accent: it marks a link that carries you on to the
+   next page rather than an action you take here. White on a near-white band
+   had almost no contrast, and the arrow was purple while the label was ink. */
+.next a {
+  display: flex; align-items: center; justify-content: space-between; gap: var(--s2);
+  border: 1px solid var(--blue-100); border-radius: var(--r-pill);
+  padding: var(--s2) var(--s3); background: var(--blue-50); color: var(--blue-700);
+  font-weight: 600; transition: border-color .2s ease, background-color .2s ease;
+}
+.next a:hover { border-color: var(--blue); background: var(--blue-100); }
+.next a svg { color: var(--blue-700); }
+
+/* a section the reader opens for themselves */
+.toggle { margin-bottom: var(--s4); }
+.toggle svg { transition: transform .2s ease; }
+.toggle[aria-expanded="true"] svg { transform: rotate(180deg); }
+
+/* =========================== filters =========================== */
+/* A catalogue the visitor narrows themselves. The chosen filter is filled, the
+   rest are outlined, and the count below says what happened. */
+.filters { display: flex; flex-wrap: wrap; gap: var(--s1); }
+.filter {
+  font: inherit; font-weight: 600; cursor: pointer;
+  border: 1px solid var(--line-strong); border-radius: var(--r-pill);
+  background: var(--white); color: var(--ink);
+  padding: var(--s1) var(--s3); height: 40px;
+  display: inline-flex; align-items: center; gap: var(--s1);
+  transition: background-color .2s ease, border-color .2s ease, color .2s ease;
+}
+.filter:hover { border-color: var(--purple); color: var(--purple); }
+.filter[aria-pressed="true"] { background: var(--purple); border-color: var(--purple); color: var(--white); }
+.filter[aria-pressed="true"]:hover { background: var(--purple-700); color: var(--white); }
+.filter__count { font-size: var(--fs-small); opacity: .75; font-variant-numeric: tabular-nums; }
+.result-count { margin-top: var(--s3); color: var(--ink-2); font-size: var(--fs-small); }
+
+/* =========================== course cards =========================== */
+.courses { display: grid; gap: var(--s3); grid-template-columns: repeat(auto-fill, minmax(21rem, 1fr)); margin-top: var(--s5); }
+.course {
+  display: flex; flex-direction: column; gap: var(--s1);
+  border: 1px solid var(--line); border-radius: var(--r-card);
+  background: var(--white); padding: var(--s4);
+  transition: border-color .2s ease;
+}
+.course:hover { border-color: var(--purple); }
+.course[hidden] { display: none !important; }
+.course h3 { font-size: var(--fs-h4); }
+.course > p { color: var(--ink-2); flex: 1 1 auto; }
+.course__tags { display: flex; flex-wrap: wrap; gap: var(--s05); margin-top: var(--s2); }
+.course__tags span {
+  font-size: var(--fs-caption); color: var(--ink-3);
+  border: 1px solid var(--line); border-radius: var(--r-pill);
+  padding: 2px var(--s1);
+}
+.course .link { margin-top: var(--s2); }
+
+/* =========================== team =========================== */
+/* Names, roles and what each person does - no avatar and no initials circle.
+   The demo has no photographs of the team, and a circle of initials is a
+   placeholder pretending to be a portrait. A name set properly needs none. */
+.team { display: grid; gap: var(--s3); grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr)); }
+.person {
+  border: 1px solid var(--line); border-radius: var(--r-card);
+  background: var(--white); padding: var(--s3);
+}
+.person h3 { font-size: var(--fs-body-lg); font-weight: 600; }
+.person .caption { margin-top: var(--s05); color: var(--blue-700); font-weight: 600; }
+.person p:not(.caption) { margin-top: var(--s2); color: var(--ink-2); font-size: var(--fs-small); line-height: 1.6; }
+
+/* =========================== prose =========================== */
+.prose { max-width: 42rem; color: var(--ink-2); font-size: var(--fs-body-lg); line-height: 1.7; }
+.prose p + p { margin-top: var(--s3); }
+.prose strong { color: var(--ink); font-weight: 600; }
+/* The accordion panels carry generated text now, so the prose rules have to
+   cover everything the demo's markdown can produce, not only paragraphs. */
+.prose h2, .prose h3, .prose h4 { color: var(--ink); font-weight: 600; margin-top: var(--s4); }
+.prose h2 { font-size: var(--fs-h4); }
+.prose h3, .prose h4 { font-size: var(--fs-body-lg); }
+.prose > :first-child { margin-top: 0; }
+.prose ul, .prose ol { margin: var(--s2) 0 0; padding-inline-start: var(--s3); display: grid; gap: var(--s1); }
+.prose li { padding-inline-start: var(--s05); }
+.prose a { color: var(--purple); text-decoration: underline; text-underline-offset: 3px; }
+
+/* The same, inside an accordion panel: the panel is a reading column too. */
+.acc__panel h3, .acc__panel h4 { color: var(--ink); font-weight: 600; font-size: var(--fs-body); margin-top: var(--s3); }
+.acc__panel ul, .acc__panel ol { margin: var(--s2) 0 0; padding-inline-start: var(--s3); display: grid; gap: var(--s1); }
+.acc__panel li { color: var(--ink-2); }
+.acc__panel > :first-child { margin-top: 0; }
+
+/* =========================== numbered steps =========================== */
+/* A journey down the page: the number is the anchor, the text sits beside it
+   and an optional photograph closes the row. One line connects the numbers,
+   drawn behind them, so the eye follows the sequence without a card per step.
+   Used by the treatment map and by the calming exercises. */
+.steps { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--s5); position: relative; }
+.step { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--s3); align-items: start; position: relative; }
+@media (min-width: 900px) { .step { grid-template-columns: auto minmax(0, 1fr) 16rem; } }
+.step__no {
+  width: 48px; height: 48px; border-radius: var(--r-pill);
+  display: grid; place-items: center; font-weight: 600; font-size: var(--fs-body-lg);
+  background: var(--purple); color: var(--white); box-shadow: var(--shadow-1);
+  position: relative; z-index: 1;
+}
+/* the line between the numbers, not under the text */
+.step:not(:last-child)::before {
+  content: ""; position: absolute; top: 48px; bottom: calc(var(--s5) * -1);
+  inset-inline-start: 23px; width: 2px; background: var(--purple-100);
+}
+.step__body h3 { font-size: var(--fs-h4); }
+.step__body p { margin-top: var(--s1); color: var(--ink-2); max-width: 60ch; }
+.step__body .caption { margin-top: var(--s3); color: var(--blue-700); font-weight: 600; }
+.step__media { grid-column: 2; }
+@media (min-width: 900px) { .step__media { grid-column: 3; } }
+.step__media img {
+  width: 100%; aspect-ratio: 4 / 3; object-fit: cover;
+  border-radius: var(--r-card); background: var(--tint);
+}
+
+/* =========================== reference rows =========================== */
+/* A long list that is read by scanning, not by browsing: sources, papers,
+   events. A card around each one would make sixty boxes; a rule between them
+   is enough, and the row stays one line tall when the title is short. */
+.rows { list-style: none; margin: 0; padding: 0; display: grid; }
+.row-item {
+  display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between;
+  gap: var(--s1) var(--s3); padding: var(--s3) 0; border-bottom: 1px solid var(--line);
+}
+.row-item:first-child { border-top: 1px solid var(--line); }
+.row-item b { font-weight: 600; color: var(--ink); }
+.row-item small { display: block; margin-top: var(--s05); color: var(--ink-2); font-size: var(--fs-small); max-width: 70ch; }
+.row-item__aside { color: var(--blue-700); font-size: var(--fs-small); font-weight: 600; white-space: nowrap; }
+
+/* =========================== the questionnaire =========================== */
+/* Twenty questions on one page rather than one per screen: the whole thing is
+   three minutes, and a visitor who can see how much is left is likelier to
+   finish it than one clicking "next" twenty times. The options are a row of
+   radio pills, lightest to heaviest, in reading order. */
+.quiz { display: grid; gap: var(--s4); }
+.quiz__q { border: 0; margin: 0; padding: var(--s3) 0; border-bottom: 1px solid var(--line); }
+.quiz__q legend { display: flex; gap: var(--s2); align-items: baseline; font-weight: 600; color: var(--ink); padding: 0; }
+.quiz__no {
+  flex: none; width: 28px; height: 28px; border-radius: var(--r-pill);
+  display: inline-grid; place-items: center; font-size: var(--fs-small);
+  background: var(--purple-50); color: var(--purple-700);
+}
+.quiz__options { display: flex; flex-wrap: wrap; gap: var(--s1); margin-top: var(--s2); padding-inline-start: calc(28px + var(--s2)); }
+.quiz__option { position: relative; }
+.quiz__option input { position: absolute; opacity: 0; inset: 0; width: 100%; height: 100%; margin: 0; cursor: pointer; }
+.quiz__option span {
+  display: block; padding: var(--s1) var(--s3); border-radius: var(--r-pill);
+  border: 1px solid var(--line-strong); background: var(--white); color: var(--ink-2);
+  font-size: var(--fs-small); font-weight: 600;
+  transition: background-color .2s ease, border-color .2s ease, color .2s ease;
+}
+.quiz__option input:hover + span { border-color: var(--purple); color: var(--purple); }
+.quiz__option input:focus-visible + span { outline: 2px solid var(--purple); outline-offset: 3px; }
+.quiz__option input:checked + span { background: var(--purple); border-color: var(--purple); color: var(--white); }
+.quiz__q[data-missing="true"] legend { color: var(--purple-700); }
+.quiz__foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--s3); }
+.quiz__left { color: var(--ink-2); font-size: var(--fs-small); }
+.quiz__result {
+  display: block; border: 1px solid var(--blue-100); background: var(--blue-50);
+  border-radius: var(--r-card); padding: var(--s4);
+}
+.quiz__result h3 { font-size: var(--fs-h4); }
+.quiz__result p { margin-top: var(--s2); color: var(--ink-2); max-width: 60ch; }
+.quiz__score { font-size: var(--fs-h2); font-weight: 600; color: var(--purple); font-variant-numeric: tabular-nums; }
+
+/* a contact written out in the entry's strip, beside the buttons */
+.entry__contact { font-size: var(--fs-small); align-self: center; }

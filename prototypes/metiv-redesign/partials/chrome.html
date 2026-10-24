@@ -1,0 +1,217 @@
+<!-- The site chrome: icon sprite, prototype bar, header with its three menu
+     panels, and the mobile drawer. Injected into every page by site.js so a
+     change to the menu is made once. -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <symbol id="i-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></symbol>
+  <symbol id="i-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16"/><path d="M4 12h16"/><path d="M4 18h16"/></symbol>
+  <symbol id="i-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></symbol>
+  <symbol id="i-heart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></symbol>
+  <symbol id="i-lifebuoy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/><path d="m4.9 4.9 4.2 4.2"/><path d="m14.9 14.9 4.2 4.2"/><path d="m14.9 9.1 4.2-4.2"/><path d="m4.9 19.1 4.2-4.2"/></symbol>
+  <symbol id="i-phone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2Z"/></symbol>
+  <symbol id="i-mail" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.9"/><path d="M16 3.1a4 4 0 0 1 0 7.8"/></symbol>
+  <symbol id="i-cap" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10 12 5 2 10l10 5 10-5Z"/><path d="M6 12v5c0 1.5 3 3 6 3s6-1.5 6-3v-5"/></symbol>
+  <symbol id="i-calendar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4"/><path d="M8 2v4"/><path d="M3 10h18"/></symbol>
+  <symbol id="i-building" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 22v-4h6v4"/><path d="M9 6h.01"/><path d="M15 6h.01"/><path d="M9 11h.01"/><path d="M15 11h.01"/></symbol>
+  <symbol id="i-book" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z"/></symbol>
+  <symbol id="i-compass" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m16.2 7.8-2.9 6.4-6.4 2.9 2.9-6.4 6.4-2.9Z"/></symbol>
+  <symbol id="i-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></symbol>
+  <symbol id="i-smile" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9 10h.01"/><path d="M15 10h.01"/><path d="M9 15c.8.7 1.8 1 3 1s2.2-.3 3-1"/></symbol>
+  <symbol id="i-wind" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.8 19.6A2 2 0 1 0 14 16H2"/><path d="M17.5 8a2.5 2.5 0 1 1 2 4H2"/><path d="M9.8 4.4A2 2 0 1 1 11 8H2"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.7 9a1 1 0 0 1-.7 0C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.2-2.7a1.2 1.2 0 0 1 1.5 0C14.5 3.8 17 5 19 5a1 1 0 0 1 1 1Z"/></symbol>
+  <symbol id="i-file" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6"/><path d="M8 13h8"/><path d="M8 17h5"/></symbol>
+  <symbol id="i-clipboard" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/></symbol>
+  <symbol id="i-route" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="19" r="3"/><path d="M9 19h6a4 4 0 0 0 0-8H9a4 4 0 0 1 0-8h6"/><circle cx="18" cy="5" r="3"/></symbol>
+</svg>
+
+<div class="protobar">
+  <div class="wrap">
+    <b>אבטיפוס</b>
+    <span>עיצוב חדש למטיב, מריץ מקומית. לא נוגע בדמו v3 ולא בדיזיין סיסטם הקיים.</span>
+  </div>
+</div>
+
+<header class="header" id="header">
+  <div class="wrap header__bar">
+    <a class="header__logo" href="#top" aria-label="מטיב, לדף הבית"><img src="img/logo.png" alt="מטיב"></a>
+
+    <nav class="nav" aria-label="ניווט ראשי">
+      <button class="nav__btn" type="button" aria-expanded="false" data-mega="mega-help">
+        <span class="nav__label" data-label="למטופלים ולמשפחות"><span>למטופלים ולמשפחות</span></span> <svg class="icon-sm" aria-hidden="true"><use href="#i-chevron"/></svg>
+      </button>
+      <button class="nav__btn" type="button" aria-expanded="false" data-mega="mega-pro">
+        <span class="nav__label" data-label="למטפלים"><span>למטפלים</span></span> <svg class="icon-sm" aria-hidden="true"><use href="#i-chevron"/></svg>
+      </button>
+      <button class="nav__btn" type="button" aria-expanded="false" data-mega="mega-about">
+        <span class="nav__label" data-label="על מטיב"><span>על מטיב</span></span> <svg class="icon-sm" aria-hidden="true"><use href="#i-chevron"/></svg>
+      </button>
+    </nav>
+
+    <div class="header__actions">
+      <a class="btn btn--secondary btn--sm" href="tel:1201">
+        <svg class="icon-sm" aria-hidden="true"><use href="#i-lifebuoy"/></svg><span>עזרה עכשיו</span>
+      </a>
+      <a class="btn btn--donate btn--sm" href="index.html#donate">
+        <svg class="icon-sm" aria-hidden="true"><use href="#i-heart"/></svg><span>תרומה</span>
+      </a>
+      <button class="btn btn--quiet btn--sm header__burger" type="button" id="burger" aria-expanded="false" aria-controls="drawer">
+        <svg class="icon-sm" aria-hidden="true"><use href="#i-menu"/></svg><span>תפריט</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="mega" id="mega-help" hidden>
+    <div class="wrap mega__inner">
+      <div class="mega__col">
+        <h3>מאיפה מתחילים</h3>
+        <a href="patient.html">כל הנושאים</a>
+        <a href="first-circle.html">חוויתי אירוע קשה</a>
+        <a href="second-circle.html">מישהו קרוב אליי מתמודד</a>
+        <a href="questionnaire.html">שאלון אנונימי</a>
+        <a href="calming.html">תרגילי הרגעה</a>
+      </div>
+      <div class="mega__col">
+        <h3>להבין מה קורה</h3>
+        <a href="ptsd.html">מה זה פוסט טראומה</a>
+        <a href="self-help.html">עזרה עצמית</a>
+        <a href="second-circle-tools.html">כלים לבני משפחה</a>
+        <a href="children.html">לדבר עם ילדים</a>
+        <a href="sources.html">מקורות</a>
+      </div>
+      <div class="mega__col">
+        <h3>טיפול, זכויות וקהילה</h3>
+        <a href="where-to-get-help.html">איפה מקבלים טיפול</a>
+        <a href="free-treatment.html">טיפולים ללא עלות ומחקרים</a>
+        <a href="treatment.html">המסע הטיפולי</a>
+        <a href="rights.html">זכויות</a>
+        <a href="community.html">קהילות תמיכה</a>
+        <a href="release-journey.html">מסע שחרור</a>
+      </div>
+      <div class="mega__promo">
+        <img src="img/support.webp" alt="">
+        <div>
+          <strong>לא בטוח/ה מאיפה להתחיל?</strong>
+          <span class="caption">שאלון אנונימי קצר, בערך שלוש דקות. הוא אינו אבחון.</span>
+          <a class="link" href="questionnaire.html">לשאלון <svg class="icon-sm" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mega" id="mega-pro" hidden>
+    <div class="wrap mega__inner">
+      <div class="mega__col">
+        <h3>הכשרה והדרכה</h3>
+        <a href="therapists.html">ראשי</a>
+        <a href="courses.html">קורסים והכשרות</a>
+        <a href="supervision.html">הדרכה למטפלים</a>
+        <a href="children-family.html">ילדים ומשפחה</a>
+        <a href="release-journey.html">מסע שחרור</a>
+      </div>
+      <div class="mega__col">
+        <h3>מחקר וידע</h3>
+        <a href="research.html">מחקר</a>
+        <a href="publications.html">פרסומים</a>
+        <a href="articles.html">מאמרים</a>
+      </div>
+      <div class="mega__col">
+        <h3>ארגונים ועדכונים</h3>
+        <a href="organizations.html">תוכניות לארגונים</a>
+        <a href="events.html">אירועים ועדכונים</a>
+      </div>
+      <div class="mega__promo">
+        <img src="img/clinic.webp" alt="">
+        <div>
+          <strong>הכשרה לצוות שלך?</strong>
+          <span class="caption">תוכניות וליווי לצוותים, לארגונים ולקהילות.</span>
+          <a class="link" href="organizations.html">לפרטים ולפנייה <svg class="icon-sm" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mega" id="mega-about" hidden>
+    <div class="wrap mega__inner">
+      <div class="mega__col">
+        <h3>הארגון</h3>
+        <a href="about.html">מי אנחנו</a>
+        <a href="history.html">הסיפור של מטיב</a>
+        <a href="team.html">הצוות</a>
+      </div>
+      <div class="mega__col">
+        <h3>שותפים ותמיכה</h3>
+        <a href="index.html#partners">השותפים שלנו</a>
+        <a href="collaborations.html">שיתופי פעולה</a>
+        <a href="index.html#donate">תרומה</a>
+      </div>
+      <div class="mega__col">
+        <h3>קשר ומידע</h3>
+        <a href="index.html#contact">יצירת קשר</a>
+        <a href="accessibility.html">הצהרת נגישות</a>
+        <a href="privacy.html">מדיניות פרטיות</a>
+        <a href="terms.html">תנאי שימוש</a>
+      </div>
+      <div class="mega__promo">
+        <img src="img/group.webp" alt="">
+        <div>
+          <strong>לתמוך בפעילות של מטיב</strong>
+          <span class="caption">תרומה מאפשרת להמשיך ללוות מטופלים, משפחות ומטפלים.</span>
+          <a class="link" href="index.html#donate">לדרכי התרומה <svg class="icon-sm" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="drawer" id="drawer" hidden>
+  <div class="drawer__scrim" data-close></div>
+  <div class="drawer__panel" role="dialog" aria-modal="true" aria-label="תפריט האתר">
+    <div class="drawer__head">
+      <img src="img/logo.png" alt="מטיב" style="height:40px">
+      <button class="btn btn--quiet btn--sm" type="button" data-close aria-label="סגירת התפריט">
+        <svg class="icon-sm" aria-hidden="true"><use href="#i-close"/></svg>
+      </button>
+    </div>
+
+    <nav aria-label="ניווט בתפריט" style="display:contents">
+    <div class="acc">
+      <button class="acc__btn" type="button" aria-expanded="true" aria-controls="acc-1">למטופלים ולמשפחות <svg class="icon-sm" aria-hidden="true"><use href="#i-chevron"/></svg></button>
+      <div class="acc__panel" id="acc-1">
+        <h3>מאיפה מתחילים</h3>
+        <a href="patient.html">כל הנושאים</a>
+        <a href="first-circle.html">חוויתי אירוע קשה</a><a href="second-circle.html">מישהו קרוב אליי מתמודד</a><a href="questionnaire.html">שאלון אנונימי</a><a href="calming.html">תרגילי הרגעה</a>
+        <h3>להבין מה קורה</h3>
+        <a href="ptsd.html">מה זה פוסט טראומה</a><a href="self-help.html">עזרה עצמית</a><a href="second-circle-tools.html">כלים לבני משפחה</a><a href="children.html">לדבר עם ילדים</a>
+        <h3>טיפול, זכויות וקהילה</h3>
+        <a href="where-to-get-help.html">איפה מקבלים טיפול</a><a href="rights.html">זכויות</a><a href="community.html">קהילות תמיכה</a><a href="release-journey.html">מסע שחרור</a>
+      </div>
+    </div>
+
+    <div class="acc">
+      <button class="acc__btn" type="button" aria-expanded="false" aria-controls="acc-2">למטפלים <svg class="icon-sm" aria-hidden="true"><use href="#i-chevron"/></svg></button>
+      <div class="acc__panel" id="acc-2" hidden>
+        <h3>הכשרה והדרכה</h3>
+        <a href="therapists.html">ראשי</a>
+        <a href="courses.html">קורסים והכשרות</a><a href="supervision.html">הדרכה למטפלים</a><a href="children-family.html">ילדים ומשפחה</a>
+        <h3>מחקר וידע</h3>
+        <a href="research.html">מחקר</a><a href="publications.html">פרסומים</a><a href="articles.html">מאמרים</a>
+        <h3>ארגונים ועדכונים</h3>
+        <a href="organizations.html">תוכניות לארגונים</a><a href="events.html">אירועים ועדכונים</a>
+      </div>
+    </div>
+
+    <div class="acc">
+      <button class="acc__btn" type="button" aria-expanded="false" aria-controls="acc-3">על מטיב <svg class="icon-sm" aria-hidden="true"><use href="#i-chevron"/></svg></button>
+      <div class="acc__panel" id="acc-3" hidden>
+        <a href="about.html">מי אנחנו</a><a href="history.html">הסיפור של מטיב</a><a href="team.html">הצוות</a><a href="index.html#partners">השותפים שלנו</a><a href="index.html#contact">יצירת קשר</a>
+      </div>
+    </div>
+
+    </nav>
+
+    <a class="btn btn--donate" href="index.html#donate"><svg class="icon-sm" aria-hidden="true"><use href="#i-heart"/></svg> תרומה</a>
+    <a class="btn btn--secondary" href="tel:1201"><svg class="icon-sm" aria-hidden="true"><use href="#i-lifebuoy"/></svg> עזרה עכשיו, ער"ן 1201</a>
+  </div>
+</div>

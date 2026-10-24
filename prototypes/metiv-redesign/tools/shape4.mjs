@@ -1,0 +1,13 @@
+import * as D from './data.mjs';
+const s=(v,d=0)=>Array.isArray(v)?`Array(${v.length}) of `+(v.length?s(v[0],d+1):'?'):(v&&typeof v==='object')?(d>2?'{'+Object.keys(v).join(', ')+'}':'{\n'+Object.entries(v).map(([k,x])=>'  '.repeat(d+1)+k+': '+s(x,d+1)).join('\n')+'\n'+'  '.repeat(d)+'}'):typeof v==='string'?`str(${v.length}) ${JSON.stringify(v.slice(0,70))}`:typeof v;
+console.log('PARTNER_GROUPS', s(D.aboutMetiv.PARTNER_GROUPS));
+console.log('COLLABORATION_GROUPS', s(D.aboutMetiv.COLLABORATION_GROUPS));
+console.log('SUPERVISION.options', s(D.programs.SUPERVISION.options));
+console.log('CHILDREN_FAMILY_INTRO.models', s(D.programs.CHILDREN_FAMILY_INTRO.models));
+console.log('ABOUT.timeline', s(D.org.ABOUT.timeline));
+console.log('DONATE.ways', s(D.org.DONATE.ways));
+console.log('LEGAL.accessibility.sections', s(D.org.LEGAL.accessibility.sections));
+console.log('LEGAL.accessibility.coordinator', s(D.org.LEGAL.accessibility.coordinator));
+console.log('THERAPIST_HUB.sections', s(D.org.THERAPIST_HUB.sections));
+console.log('rjPro contacts', s(D.releaseJourney.RELEASE_JOURNEY_CONTACTS));
+console.log('JOURNEY_MODELS[0].workshops', s(D.releaseJourney.JOURNEY_MODELS[0].workshops));
