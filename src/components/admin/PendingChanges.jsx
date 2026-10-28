@@ -1,10 +1,11 @@
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
-import { AlertTriangle, Save, Undo2 } from 'lucide-react';
+import { AlertTriangle, Languages, RotateCw, Save, Undo2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { ForbiddenError, UnauthorizedError } from '@/api/adminClient';
 import { ChatbotSyncError } from '@/api/reindex';
+import { LANG_BY_ID } from '@/api/adminTranslate';
 import { appendEditLog } from '@/api/adminSource';
 import { getCurrentUser } from '@/lib/auth';
 import { htmlToMd } from '@/lib/markdownHtml';
@@ -32,10 +33,25 @@ import { htmlToMd } from '@/lib/markdownHtml';
 //   draft   the staged value (create/update), rendered in place of the row
 //   diff    [{ label, before, after }] as plain text - what the dialog shows
 //   run     () => Promise, the actual write
+//
+// A Hebrew edit of article-backed content also stages one change per other
+// language (src/components/admin/translationStaging.js): the AI translation of
+// the sibling row, or its deletion. Those carry
+//   linkedTo     the Hebrew change's key - discarding it discards them too, and
+//                they are skipped when it fails to save
+//   lang         the sibling's language
+//   translation  { state: 'pending'|'done'|'error', status?, notes?, error?,
+//                humanEdited? } - nothing can be saved while one is pending; a
+//                failed one stays staged with a retry and does not block the rest
+//   retranslate  false once the editor unticks "translate again" on a language
+//                edited by hand; the change is then dropped instead of written
+//   retry        () => void, re-runs a failed translation
+//   rev          which staging round a translation answers (stale ones are ignored)
 
 /**
  * @typedef {{ label: string, before: string, after: string }} FieldDiff
- * @typedef {{ key: string, scope: string, section: string, action: 'create'|'update'|'delete', itemId?: string, title: string, draft?: any, diff: FieldDiff[], run: () => Promise<any> }} PendingChange
+ * @typedef {{ state: 'pending'|'done'|'error', status?: 'pass'|'fixed'|'flagged', notes?: string[], error?: string, humanEdited?: boolean }} TranslationState
+ * @typedef {{ key: string, scope: string, section: string, action: 'create'|'update'|'delete', itemId?: string, title: string, draft?: any, diff: FieldDiff[], run: () => Promise<any>, linkedTo?: string, lang?: string, translation?: TranslationState, retranslate?: boolean, retry?: () => void, rev?: number }} PendingChange
  */
 
 // Runs one write, converting the admin client's typed errors
@@ -185,8 +201,19 @@ export function PendingChangesProvider({ children }) {
     });
   }, []);
 
+  // Discarding a change drops the translations and sibling deletes linked to it.
   const discard = useCallback((/** @type {string} */ key) => {
-    setChanges(cs => cs.filter(c => c.key !== key));
+    setChanges(cs => cs.filter(c => c.key !== key && c.linkedTo !== key));
+  }, []);
+
+  // Rewrites one staged change in place (no-op if it is gone): `fn` returns
+  // the new change, undefined to leave it, or null to drop it.
+  const patch = useCallback((/** @type {string} */ key, /** @type {(c: PendingChange) => PendingChange|null|undefined} */ fn) => {
+    setChanges(cs => cs.flatMap(c => {
+      if (c.key !== key) return [c];
+      const next = fn(c);
+      return next === null ? [] : [next ?? c];
+    }));
   }, []);
 
   const clear = useCallback(() => setChanges([]), []);
@@ -205,24 +232,32 @@ export function PendingChangesProvider({ children }) {
   }, [changes.length]);
 
   // Writes every staged change in the order it was staged. A failed change
-  // stays staged (its toast says why); the rest still go through. A dead
-  // session stops the batch - the remaining changes stay staged for after the
-  // editor signs back in.
+  // stays staged (its toast says why); the rest still go through, except the
+  // translations linked to a Hebrew change that failed. A dead session stops
+  // the batch - the remaining changes stay staged for after the editor signs
+  // back in. Translations that failed stay staged (with their retry) and are
+  // not written; ones the editor declined are dropped.
   const saveAll = useCallback(async (/** @type {(done: number, total: number) => void} */ onProgress) => {
-    const batch = changes;
+    const declined = changes.filter(c => c.retranslate === false);
+    const left = changes.filter(c => c.translation && c.translation.state !== 'done' && c.retranslate !== false);
+    const batch = changes.filter(c => !declined.includes(c) && !left.includes(c));
+    const batchKeys = new Set(batch.map(c => c.key));
     const saved = [];
+    const savedKeys = new Set();
     let authLost = false;
     for (let i = 0; i < batch.length; i++) {
       onProgress?.(i + 1, batch.length);
+      const c = batch[i];
+      if (c.linkedTo && batchKeys.has(c.linkedTo) && !savedKeys.has(c.linkedTo)) continue;
       try {
-        if (await runWrite(batch[i].run)) saved.push(batch[i]);
+        if (await runWrite(c.run)) { saved.push(c); savedKeys.add(c.key); }
       } catch (err) {
         if (err instanceof UnauthorizedError) { authLost = true; break; }
         throw err;
       }
     }
-    const savedKeys = new Set(saved.map(c => c.key));
-    setChanges(cs => cs.filter(c => !savedKeys.has(c.key)));
+    const declinedKeys = new Set(declined.map(c => c.key));
+    setChanges(cs => cs.filter(c => !savedKeys.has(c.key) && !declinedKeys.has(c.key)));
     if (saved.length) {
       try {
         await appendEditLog({
@@ -234,12 +269,12 @@ export function PendingChangesProvider({ children }) {
       }
       setVersion(v => v + 1);
     }
-    return { saved: saved.length, failed: batch.length - saved.length, authLost };
+    return { saved: saved.length, failed: batch.length - saved.length, authLost, untranslated: left.length };
   }, [changes]);
 
   const value = useMemo(
-    () => ({ changes, version, stage, discard, clear, newKey, saveAll }),
-    [changes, version, stage, discard, clear, newKey, saveAll]
+    () => ({ changes, version, stage, discard, patch, clear, newKey, saveAll }),
+    [changes, version, stage, discard, patch, clear, newKey, saveAll]
   );
   return <PendingChangesContext.Provider value={value}>{children}</PendingChangesContext.Provider>;
 }
@@ -269,23 +304,91 @@ function ValueBox({ text, tone }) {
   );
 }
 
+// The result of an AI translation, as the review dialog and the panels show it.
+export const TRANSLATION_BADGES = {
+  pending: { label: 'מתרגם...', color: 'bg-info/10 text-info' },
+  error: { label: 'התרגום נכשל', color: 'bg-destructive/10 text-destructive' },
+  pass: { label: 'תרגום תקין', color: 'bg-success/10 text-success' },
+  fixed: { label: 'תרגום תוקן בבדיקה', color: 'bg-info/10 text-info' },
+  flagged: { label: 'תרגום דורש בדיקה', color: 'bg-warning/20 text-foreground' },
+};
+
+/** @param {{ change: PendingChange }} props */
+function TranslationInfo({ change }) {
+  const { patch } = usePendingChanges();
+  const t = change.translation;
+  if (!t) return null;
+  const langLabel = LANG_BY_ID[change.lang]?.label || change.lang;
+  if (t.state === 'pending') return <p className="text-xs text-muted-foreground">התרגום ל{langLabel} רץ ברקע...</p>;
+  if (t.state === 'error') {
+    return (
+      <div className="flex items-start justify-between gap-2 rounded-lg border border-destructive/30 bg-destructive/5 p-2">
+        <p className="text-xs text-destructive break-words">
+          <span className="font-semibold">{langLabel}: התרגום נכשל.</span> {t.error}
+          <span className="block text-muted-foreground mt-0.5">אפשר לשמור את העברית בלי התרגום הזה, ולנסות שוב אחר כך.</span>
+        </p>
+        <Button type="button" variant="outline-subtle" size="xs" onClick={() => change.retry?.()} className="gap-1 rounded-lg flex-shrink-0">
+          <RotateCw className="w-3.5 h-3.5" /> ניסיון חוזר
+        </Button>
+      </div>
+    );
+  }
+  return (
+    <>
+      {t.status === 'flagged' && t.notes?.length > 0 && (
+        <ul className="rounded-lg border border-warning/40 bg-warning/10 p-2 text-xs text-foreground list-disc ps-6 space-y-0.5">
+          {t.notes.map((n, i) => <li key={i}>{n}</li>)}
+        </ul>
+      )}
+      {t.humanEdited && (
+        <label className="flex items-start gap-2 text-xs text-foreground cursor-pointer rounded-lg border border-warning/40 bg-warning/10 p-2">
+          <input
+            type="checkbox"
+            checked={change.retranslate !== false}
+            onChange={e => {
+              const retranslate = e.target.checked;
+              patch(change.key, c => ({ ...c, retranslate }));
+            }}
+            className="mt-0.5"
+          />
+          <span>
+            <span className="font-semibold">{langLabel} נערך ידנית - לתרגם מחדש?</span>{' '}
+            {change.retranslate === false ? 'התרגום לא יישמר והנוסח הידני יישאר.' : 'הנוסח הידני יוחלף בתרגום.'}
+          </span>
+        </label>
+      )}
+    </>
+  );
+}
+
+/** @param {{ change: PendingChange, onDiscard: () => void, disabled: boolean }} props */
 function ChangeItem({ change, onDiscard, disabled }) {
   const action = ACTION_LABELS[change.action];
+  const t = change.translation;
+  const badge = t && (t.state === 'done' ? t.status && TRANSLATION_BADGES[t.status] : TRANSLATION_BADGES[t.state]);
+  const declined = change.retranslate === false;
   return (
-    <li className="rounded-xl border border-border bg-background p-3 space-y-2">
+    <li className={`rounded-xl border bg-background p-3 space-y-2 ${change.linkedTo ? 'ms-4 border-dashed border-border' : 'border-border'}`}>
       <div className="flex items-start justify-between gap-2">
         <div className="flex items-center gap-2 flex-wrap min-w-0">
           <span className={`inline-block px-2 py-0.5 rounded-full text-xs font-medium ${action.color}`}>{action.label}</span>
+          {change.lang && (
+            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-muted text-foreground">
+              <Languages className="w-3 h-3" /> {LANG_BY_ID[change.lang]?.label || change.lang}
+            </span>
+          )}
+          {badge && <span className={`inline-block px-2 py-0.5 rounded-full text-xs font-medium ${badge.color}`}>{badge.label}</span>}
           <span className="font-medium text-sm text-foreground break-words">{change.title}</span>
         </div>
         <Button type="button" variant="quiet" size="none" disabled={disabled} onClick={onDiscard} className="gap-1 text-xs flex-shrink-0">
           <Undo2 className="w-3.5 h-3.5" /> ביטול השינוי
         </Button>
       </div>
+      <TranslationInfo change={change} />
       {change.action === 'delete' ? (
         <p className="text-xs text-destructive">הפריט יימחק מהאתר לצמיתות.</p>
-      ) : (
-        <div className="space-y-2">
+      ) : t && t.state !== 'done' ? null : (
+        <div className={`space-y-2 ${declined ? 'opacity-50' : ''}`}>
           {change.diff.map(d => (
             <div key={d.label}>
               <p className="text-xs font-semibold text-muted-foreground mb-1">{d.label}</p>
@@ -311,8 +414,18 @@ function ChangeItem({ change, onDiscard, disabled }) {
   );
 }
 
+function barText(primary, linked) {
+  if (primary === 0) return linked === 1 ? 'שינוי אחד בשפה אחרת ממתין לשמירה' : `${linked} שינויים בשפות אחרות ממתינים לשמירה`;
+  return primary === 1 ? 'שינוי אחד ממתין לשמירה' : `${primary} שינויים ממתינים לשמירה`;
+}
+
 export function SaveAllBar() {
   const { changes, discard, saveAll } = usePendingChanges();
+  const translating = changes.filter(c => c.translation?.state === 'pending').length;
+  // Translations and sibling deletes ride along with the Hebrew change that
+  // caused them, so the bar counts the editor's own changes.
+  const linked = changes.filter(c => c.linkedTo).length;
+  const primary = changes.length - linked;
   const [open, setOpen] = useState(false);
   const [checked, setChecked] = useState(false);
   const [progress, setProgress] = useState(/** @type {null | { done: number, total: number }} */ (null));
@@ -342,6 +455,7 @@ export function SaveAllBar() {
     }
     if (result.failed === 0) {
       toast.success(result.saved === 1 ? 'השינוי נשמר ומופיע באתר' : `${result.saved} שינויים נשמרו ומופיעים באתר`);
+      if (result.untranslated) toast.warning(`${result.untranslated} תרגומים שנכשלו לא נשמרו ונשארו ברשימה לניסיון חוזר`);
       setOpen(false);
     } else {
       toast.error(`${result.saved} שינויים נשמרו, ${result.failed} נכשלו ונשארו ברשימה`);
@@ -354,12 +468,18 @@ export function SaveAllBar() {
         <div className="fixed bottom-0 inset-x-0 z-40 border-t border-warning/40 bg-card shadow-card">
           <div className="max-w-5xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-3 flex-wrap">
             <p className="text-sm text-foreground">
-              <span className="font-semibold">{changes.length === 1 ? 'שינוי אחד ממתין לשמירה' : `${changes.length} שינויים ממתינים לשמירה`}</span>
+              <span className="font-semibold">{barText(primary, linked)}</span>
+              {primary > 0 && linked > 0 && <span className="text-muted-foreground"> · ועוד {linked} בשפות אחרות</span>}
               <span className="text-muted-foreground"> · עדיין לא מופיעים באתר</span>
             </p>
-            <Button type="button" variant="solid" size="xs" onClick={() => setOpen(true)} className="gap-1.5 rounded-lg font-semibold">
-              <Save className="w-3.5 h-3.5" /> סקירה ושמירה
-            </Button>
+            <div className="flex items-center gap-2 flex-wrap">
+              {translating > 0 && (
+                <span className="text-xs text-muted-foreground">מתרגם {translating === 1 ? 'שפה אחת' : `${translating} שפות`}...</span>
+              )}
+              <Button type="button" variant="solid" size="xs" onClick={() => setOpen(true)} className="gap-1.5 rounded-lg font-semibold">
+                <Save className="w-3.5 h-3.5" /> סקירה ושמירה
+              </Button>
+            </div>
           </div>
         </div>
       )}
@@ -410,12 +530,14 @@ export function SaveAllBar() {
               type="button"
               variant="solid"
               size="xs"
-              disabled={!checked || saving}
+              disabled={!checked || saving || translating > 0}
               onClick={handleSave}
               className="gap-1.5 rounded-lg font-semibold"
             >
               <Save className="w-3.5 h-3.5" />
-              {saving ? `שומר ${progress.done} מתוך ${progress.total}...` : 'שמירה סופית'}
+              {saving
+                ? `שומר ${progress.done} מתוך ${progress.total}...`
+                : translating > 0 ? `ממתין לתרגומים (${translating})...` : 'שמירה סופית'}
             </Button>
             <Button
               type="button"

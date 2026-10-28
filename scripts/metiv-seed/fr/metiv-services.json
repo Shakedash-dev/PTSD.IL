@@ -1,0 +1,161 @@
+{
+  "key": "METIV_SERVICES",
+  "slug": "metiv-services",
+  "kind": "list",
+  "rows": [
+    {
+      "_key": "adults-clinic",
+      "title": "La clinique pour adultes de Metiv",
+      "sortOrder": 0,
+      "content": {
+        "_key": "adults-clinic",
+        "_col": "metiv-services",
+        "id": "adults-clinic",
+        "title": "La clinique pour adultes de Metiv",
+        "provider": "Metiv",
+        "icon": "HeartHandshake",
+        "who": "Les personnes confrontées à des événements difficiles : crises du cycle de vie, comme un licenciement ou un divorce, traumatismes médicaux et accidents, deuil traumatique, agression sexuelle, expériences de combat et attentats. La clinique propose aussi un accompagnement et une orientation pour les membres de la famille.",
+        "ages": "17 ans et plus",
+        "location": "Jérusalem. Des thérapies en ligne sur Zoom sont aussi proposées.",
+        "cost": "Le traitement est payant, sauf s'il existe un organisme financeur. Parmi les organismes financeurs : le ministère de la Défense, l'Institut national d'assurance (Bituach Leumi), des organismes de santé et d'aide sociale. Les traitements ne sont pas financés par les caisses de maladie.",
+        "process": "Après votre demande, vous êtes invité à un entretien d'évaluation pour faire connaissance, comprendre vos besoins et choisir un thérapeute et un plan de traitement adaptés. L'équipe s'efforce de répondre aux demandes dans les 24 heures.",
+        "contacts": [
+          {
+            "kind": "phone",
+            "label": "Téléphone",
+            "value": "02-6449666"
+          },
+          {
+            "kind": "link",
+            "label": "Formulaire de demande à la clinique pour adultes",
+            "href": "https://docs.google.com/forms/d/e/1FAIpQLSfz5ougCVnY1LFHJhyrBFrlICf2gQivumOzstI3YHor8_y0yg/viewform"
+          }
+        ],
+        "source": "https://metiv.org/מרפאת-מבוגרים/",
+        "shortTitle": "Clinique pour adultes",
+        "summary": "Une clinique à Jérusalem pour les personnes de 17 ans et plus ayant vécu un traumatisme ou une perte. Une thérapie en ligne sur Zoom est aussi proposée."
+      }
+    },
+    {
+      "_key": "kids-clinic",
+      "title": "Metiv Enfants - Centre de régulation émotionnelle",
+      "sortOrder": 1,
+      "content": {
+        "_key": "kids-clinic",
+        "_col": "metiv-services",
+        "id": "kids-clinic",
+        "title": "Metiv Enfants - Centre de régulation émotionnelle",
+        "provider": "Metiv",
+        "icon": "Baby",
+        "who": "Les enfants qui ont des difficultés de régulation émotionnelle ou qui ont vécu un traumatisme, et leurs parents. Thérapie individuelle, dyadique et familiale, et groupes PANDA et NAMAL pour les enfants, les parents et les familles.",
+        "ages": "Jusqu'à 18 ans, et parents",
+        "location": "Givat Shaul, bâtiment des consultations du Centre médical Herzog, Jérusalem",
+        "contacts": [
+          {
+            "kind": "phone",
+            "label": "Téléphone",
+            "value": "02-6449666"
+          },
+          {
+            "kind": "email",
+            "label": "E-mail",
+            "value": "Kids@metiv.org"
+          },
+          {
+            "kind": "link",
+            "label": "Formulaire de demande à Metiv Enfants",
+            "href": "https://docs.google.com/forms/d/e/1FAIpQLSfiUHfJ4UDrpSUPQxtPKWmQuZGKg7lfL1c21D_JAsmwxlYLJA/viewform"
+          }
+        ],
+        "source": "https://metiv.org/מטיב-ילדים-טראומה/",
+        "shortTitle": "Metiv Enfants",
+        "summary": "Un centre de régulation émotionnelle pour les enfants jusqu'à 18 ans et les parents : thérapie individuelle, dyadique et familiale, et groupes PANDA et NAMAL."
+      }
+    },
+    {
+      "_key": "migdalor",
+      "title": "Clinique Migdalor",
+      "sortOrder": 2,
+      "content": {
+        "_key": "migdalor",
+        "_col": "metiv-services",
+        "id": "migdalor",
+        "title": "Clinique Migdalor",
+        "provider": "Metiv et le Centre médical Herzog, pour le Département de réadaptation du ministère de la Défense - district de Jérusalem",
+        "icon": "Shield",
+        "who": "Membres des forces de sécurité reconnus par le Département de réadaptation et confrontés à une détresse psychologique, à un TSPT, à l'anxiété ou à la dépression. La clinique accueille aussi des patients déjà suivis en thérapie individuelle en ville.",
+        "location": "Bâtiment des consultations, Centre médical Herzog, Givat Shaul, Jérusalem",
+        "cost": "Dans le cadre des forfaits de soins du Département de réadaptation (suivi psychiatrique, de base, intensif).",
+        "process": "Vous vous adressez au Département de réadaptation du ministère de la Défense, qui vous oriente vers la clinique. L'admission comprend un entretien d'accueil avec un travailleur social et une évaluation psychiatrique. Il est possible qu'à l'issue de cette étape, la personne ne soit pas admise ; l'évaluation sert alors à l'orienter vers un autre traitement en ville.",
+        "contacts": [
+          {
+            "kind": "link",
+            "label": "Contacter le Département de réadaptation",
+            "href": "https://shikum.mod.gov.il/recognition/request/apply"
+          }
+        ],
+        "source": "https://metiv.org/מגדלור/",
+        "shortTitle": "Clinique Migdalor",
+        "summary": "Une clinique au Centre médical Herzog pour les patients reconnus par le Département de réadaptation du ministère de la Défense, sur orientation du Département."
+      }
+    },
+    {
+      "_key": "release-journey",
+      "title": "Peace of Mind",
+      "sortOrder": 3,
+      "content": {
+        "_key": "release-journey",
+        "_col": "metiv-services",
+        "id": "release-journey",
+        "title": "Peace of Mind",
+        "provider": "Metiv",
+        "icon": "Compass",
+        "who": "Soldats démobilisés exposés à des combats pendant leur service militaire. Voyages de groupe pour des unités constituées et thérapies individuelles.",
+        "what": "Trois modèles : voyage complet à l'étranger (4 ateliers sur environ neuf mois, dont l'atelier principal d'une semaine à l'étranger), voyage complet en Israël (4 ateliers sur environ neuf mois) et voyage court en Israël (3 ateliers sur environ deux mois). Les ateliers sont animés par des travailleurs sociaux cliniciens et des psychologues.",
+        "location": "En Israël et à l'étranger, selon le modèle",
+        "contacts": [
+          {
+            "kind": "link",
+            "label": "S'inscrire à Peace of Mind",
+            "href": "https://wkf.ms/4i9R9bO"
+          }
+        ],
+        "source": "https://metiv.org/מסע-שחרור/",
+        "shortTitle": "Peace of Mind",
+        "summary": "Un programme de groupe et individuel pour les soldats démobilisés exposés à des combats, avec des voyages en Israël et à l'étranger."
+      }
+    },
+    {
+      "_key": "free-treatments",
+      "title": "Traitements gratuits via Metiv",
+      "sortOrder": 4,
+      "content": {
+        "_key": "free-treatments",
+        "_col": "metiv-services",
+        "id": "free-treatments",
+        "title": "Traitements gratuits via Metiv",
+        "provider": "Metiv",
+        "icon": "HandHeart",
+        "who": "Principalement les soldats démobilisés et les réservistes souffrant de TSPT, et leurs familles.",
+        "what": "Des dispositifs de traitement gratuits, des études qui recrutent des participants et des groupes pour les familles de réservistes. Le détail complet figure sur une page dédiée.",
+        "location": "Selon le dispositif : dans tout le pays ou à Jérusalem",
+        "cost": "Gratuit",
+        "contacts": [
+          {
+            "kind": "internal",
+            "label": "Voir le détail des dispositifs",
+            "href": "/patient/free-treatment-and-research"
+          },
+          {
+            "kind": "phone",
+            "label": "Téléphone",
+            "value": "02-6449666"
+          }
+        ],
+        "source": "https://metiv.org/טיפולים-ללא-עלות-דרך-מטיב/",
+        "shortTitle": "Traitements gratuits",
+        "summary": "Des dispositifs de traitement et de recherche gratuits, principalement pour les soldats démobilisés souffrant de TSPT, les réservistes et leurs familles."
+      }
+    }
+  ]
+}

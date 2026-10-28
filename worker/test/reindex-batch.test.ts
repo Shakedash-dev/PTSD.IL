@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, afterEach } from "vitest";
 import { reindexAll } from "../src/lib/ingest";
+import { fakeKV } from "./kv";
 
 afterEach(() => vi.restoreAllMocks());
 
@@ -19,7 +20,7 @@ describe("reindexAll (batched bulk path)", () => {
     vi.spyOn(globalThis, "fetch").mockImplementation(async (url: any) =>
       new Response(JSON.stringify(String(url).endsWith("/communities") ? [] : items), { status: 200 })
     );
-    const env = { API_BASE: "https://api/x", AI: { run: aiRun }, VECTORIZE: { upsert } } as any;
+    const env = { API_BASE: "https://api/x", AI: { run: aiRun }, VECTORIZE: { upsert, deleteByIds: vi.fn() }, RL: fakeKV() } as any;
 
     const out = await reindexAll(env);
 
@@ -55,7 +56,7 @@ describe("reindexAll (batched bulk path)", () => {
     vi.spyOn(globalThis, "fetch").mockImplementation(async (url: any) =>
       new Response(JSON.stringify(String(url).endsWith("/communities") ? communities : articles), { status: 200 })
     );
-    const env = { API_BASE: "https://api/x", AI: { run: aiRun }, VECTORIZE: { upsert } } as any;
+    const env = { API_BASE: "https://api/x", AI: { run: aiRun }, VECTORIZE: { upsert, deleteByIds: vi.fn() }, RL: fakeKV() } as any;
 
     const out = await reindexAll(env);
 
@@ -72,10 +73,10 @@ describe("reindexAll (batched bulk path)", () => {
   it("returns upserted:0 and makes no AI/upsert calls when there are no items", async () => {
     const aiRun = vi.fn();
     const upsert = vi.fn();
-    // fresh Response per call — reindexAll now fetches two endpoints and a single
+    // fresh Response per call - reindexAll now fetches two endpoints and a single
     // Response body can only be read once.
     vi.spyOn(globalThis, "fetch").mockImplementation(async () => new Response(JSON.stringify([]), { status: 200 }));
-    const env = { API_BASE: "https://api/x", AI: { run: aiRun }, VECTORIZE: { upsert } } as any;
+    const env = { API_BASE: "https://api/x", AI: { run: aiRun }, VECTORIZE: { upsert, deleteByIds: vi.fn() }, RL: fakeKV() } as any;
 
     const out = await reindexAll(env);
     expect(out.upserted).toBe(0);

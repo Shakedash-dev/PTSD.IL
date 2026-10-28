@@ -1,0 +1,25 @@
+{
+  "key": "PAPER_TOPICS",
+  "slug": "metiv-paper-topics",
+  "kind": "single",
+  "rows": [
+    {
+      "_key": "PAPER_TOPICS",
+      "title": "PAPER_TOPICS",
+      "sortOrder": 0,
+      "content": {
+        "_key": "PAPER_TOPICS",
+        "_col": "metiv-paper-topics",
+        "veterans": "Combattants, réservistes et soldats démobilisés",
+        "children-family": "Enfants et familles",
+        "adolescents": "Adolescents",
+        "schools-resilience": "Résilience et écoles",
+        "growth": "Croissance post-traumatique",
+        "terror-war": "Terrorisme et guerre",
+        "treatment": "Méthodes de traitement",
+        "policy": "Politiques et financement",
+        "other": "Autre"
+      }
+    }
+  ]
+}

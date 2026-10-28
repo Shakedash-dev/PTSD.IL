@@ -1,0 +1,74 @@
+{
+  "key": "FREE_TREATMENTS",
+  "slug": "metiv-free-treatments",
+  "kind": "list",
+  "rows": [
+    {
+      "_key": "military-ptsd-treatment",
+      "title": "Un traitement gratuit pour les personnes souffrant de TSPT lié au service militaire",
+      "sortOrder": 0,
+      "content": {
+        "_key": "military-ptsd-treatment",
+        "_col": "metiv-free-treatments",
+        "id": "military-ptsd-treatment",
+        "title": "Un traitement gratuit pour les personnes souffrant de TSPT lié au service militaire",
+        "provider": "Metiv",
+        "icon": "HandHeart",
+        "who": "Soldats démobilisés (hors service actif) souffrant de TSPT lié au service militaire.",
+        "what": "Un traitement selon l'une de deux méthodes, le Somatic Experiencing (SE) ou la thérapie d'exposition prolongée (PE), par des thérapeutes certifiés. Le dispositif comprend des questionnaires, des évaluations cliniques et un accompagnement par Metiv, et les données sont utilisées pour une étude clinique.",
+        "location": "Dans tout le pays",
+        "cost": "Gratuit",
+        "contacts": [
+          {
+            "kind": "email",
+            "label": "E-mail",
+            "value": "shir@metiv.org"
+          },
+          {
+            "kind": "text",
+            "label": "WhatsApp",
+            "value": "02-5952240"
+          }
+        ],
+        "source": "https://metiv.org/טיפולים-ללא-עלות-דרך-מטיב/"
+      }
+    },
+    {
+      "_key": "kids-space",
+      "title": "Espace Metiv pour enfants",
+      "sortOrder": 1,
+      "content": {
+        "_key": "kids-space",
+        "_col": "metiv-free-treatments",
+        "id": "kids-space",
+        "title": "Espace Metiv pour enfants",
+        "provider": "Metiv Enfants",
+        "icon": "Sparkles",
+        "who": "Les parents qui se demandent si leur enfant a besoin d'un suivi, qui attendent un rendez-vous de traitement ou qui ont des questions sur leur enfant.",
+        "ages": "Parents d'enfants de 0 à 9 ans",
+        "what": "Une séance de jeu unique parent-enfant, avec des professionnels du traumatisme chez l'enfant à qui vous pouvez poser vos questions. Ce n'est ni un traitement ni une évaluation diagnostique.",
+        "location": "Metiv Enfants, Givat Shaul, Centre médical Herzog, niveau -1, Jérusalem. Le mardi après-midi et le mercredi matin, sur inscription préalable.",
+        "cost": "Gratuit",
+        "process": "Vous remplissez un court questionnaire, puis un entretien ou une rencontre de présentation vous est proposé.",
+        "contacts": [
+          {
+            "kind": "link",
+            "label": "S'inscrire aux prochaines dates",
+            "href": "https://www.surveyhero.com/c/merhav1"
+          },
+          {
+            "kind": "email",
+            "label": "E-mail",
+            "value": "panda@metiv.org"
+          },
+          {
+            "kind": "phone",
+            "label": "Téléphone",
+            "value": "02-6294858"
+          }
+        ],
+        "source": "https://metiv.org/מרחב-מטיב-ילדים/"
+      }
+    }
+  ]
+}

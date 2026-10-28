@@ -1,0 +1,253 @@
+{
+  "key": "PATIENT_HUB",
+  "slug": "metiv-patient-hub",
+  "kind": "single",
+  "rows": [
+    {
+      "_key": "PATIENT_HUB",
+      "title": "PATIENT_HUB",
+      "sortOrder": 0,
+      "content": {
+        "_key": "PATIENT_HUB",
+        "_col": "metiv-patient-hub",
+        "hero": {
+          "brand": "Метив - Израильский центр психотравмы",
+          "eyebrow": "ПТСР",
+          "headline": "Вы не одни",
+          "subtitle": "Информация, инструменты и поддержка - всё в одном месте, понятным языком.",
+          "ctaLabel": "Что привело вас сюда?",
+          "image": "/images/set1/home_hero.webp",
+          "about": "Посттравматическое стрессовое расстройство (ПТСР) - это психическая реакция на травмирующее событие, которое мозг и тело продолжают перерабатывать ещё долго после того, как опасность миновала.",
+          "aboutLinkLabel": "Подробнее",
+          "aboutRoute": "/patient/ptsd-info"
+        },
+        "paths": [
+          {
+            "key": "firstCircle",
+            "route": "/patient/first-circle",
+            "title": "Я живу с ПТСР",
+            "subtitle": "Всё, что нужно, чтобы понять своё состояние, начать терапию и узнать свои права - в вашем темпе, не теряя себя.",
+            "image": "/images/illustrations/ptsd_sufferer.webp",
+            "ctaLabel": "Продолжить"
+          },
+          {
+            "key": "secondCircle",
+            "route": "/patient/second-circle",
+            "title": "Мой близкий живёт с ПТСР",
+            "subtitle": "Для партнёра, родителя, друга человека, который живёт с ПТСР: как поддержать, понять и не забывать о себе на этом пути.",
+            "image": "/images/illustrations/supporter.webp",
+            "ctaLabel": "Продолжить"
+          },
+          {
+            "key": "questionnaire",
+            "route": "/patient/questionnaire",
+            "title": "Я сомневаюсь",
+            "subtitle": "Короткий анонимный опросник (около 3 минут), который поможет понять, стоит ли дополнительно проверить ваши симптомы.",
+            "image": "/images/illustrations/wondering.webp",
+            "ctaLabel": "Продолжить"
+          }
+        ],
+        "quickLinks": [
+          {
+            "key": "ptsdInfo",
+            "label": "О ПТСР",
+            "route": "/patient/ptsd-info",
+            "icon": "Brain",
+            "description": "Вопросы и ответы о ПТСР."
+          },
+          {
+            "key": "selfHelp",
+            "label": "Инструменты самопомощи",
+            "route": "/patient/self-help",
+            "icon": "Wind",
+            "description": "Инструменты, которые можно попробовать самостоятельно, приложения и видеолекции."
+          },
+          {
+            "key": "treatment",
+            "label": "Виды терапии",
+            "route": "/patient/treatment",
+            "icon": "Heart",
+            "description": "Дорожная карта терапии, шаг за шагом."
+          },
+          {
+            "key": "whereToGetHelp",
+            "label": "Где можно получить терапию",
+            "route": "/patient/where-to-get-help",
+            "icon": "MapPin",
+            "description": "Учреждения, оказывающие терапевтическую помощь, и контакты для обращения - в едином формате."
+          },
+          {
+            "key": "freeTreatment",
+            "label": "Бесплатная терапия и исследования",
+            "route": "/patient/free-treatment-and-research",
+            "icon": "HandHeart",
+            "description": "Бесплатные программы и исследования, набирающие участников."
+          },
+          {
+            "key": "rights",
+            "label": "Права и бюрократия",
+            "route": "/patient/rights",
+            "icon": "FileText",
+            "description": "Права в зависимости от вида травмы и как подать заявление."
+          },
+          {
+            "key": "community",
+            "label": "Сообщества и встречи",
+            "route": "/patient/community",
+            "icon": "Users",
+            "description": "Группы поддержки и встречи по всей стране."
+          },
+          {
+            "key": "secondCircleTools",
+            "label": "Инструменты совладания",
+            "route": "/patient/second-circle-tools",
+            "icon": "Shield",
+            "description": "Инструменты для родных и близких."
+          },
+          {
+            "key": "children",
+            "label": "Материалы для детей",
+            "route": "/patient/children",
+            "icon": "Baby",
+            "description": "Как говорить с детьми разного возраста."
+          },
+          {
+            "key": "calming",
+            "label": "Упражнения для успокоения",
+            "route": "/patient/calming",
+            "icon": "Wind",
+            "description": "Дыхание, заземление и мышечная релаксация."
+          },
+          {
+            "key": "questionnaire",
+            "label": "Опросник для самопроверки",
+            "route": "/patient/questionnaire",
+            "icon": "ClipboardList",
+            "description": "Анонимный опросник для самопроверки. Не является диагнозом."
+          },
+          {
+            "key": "sources",
+            "label": "Источники",
+            "route": "/patient/sources",
+            "icon": "Library",
+            "description": "Источники, на которых основана информация."
+          }
+        ],
+        "additions": [
+          {
+            "key": "whereToGetHelp",
+            "label": "Где можно получить терапию",
+            "route": "/patient/where-to-get-help",
+            "icon": "MapPin",
+            "description": "Государственные службы, некоммерческие организации и клиники Метива с контактами для обращения."
+          },
+          {
+            "key": "freeTreatment",
+            "label": "Бесплатная терапия и участие в исследованиях",
+            "route": "/patient/free-treatment-and-research",
+            "icon": "HandHeart",
+            "description": "Кому подходит, что включает и как обратиться."
+          },
+          {
+            "key": "veterans",
+            "label": "Демобилизованные военнослужащие и резервисты",
+            "route": "/patient/community#veterans",
+            "icon": "Compass",
+            "description": "Peace of Mind, группы для семей резервистов и группы для родителей и детей."
+          },
+          {
+            "key": "parentChildGroups",
+            "label": "Группы для родителей и детей",
+            "route": "/patient/children#parent-child-groups",
+            "icon": "Baby",
+            "description": "ПАНДА, НАМАЛЬ и бесплатная игровая встреча."
+          },
+          {
+            "key": "reservistFamilies",
+            "label": "Для семей резервистов",
+            "route": "/patient/second-circle-tools#reservist-families",
+            "icon": "Users",
+            "description": "ПАНДА для семьи и НАМАЛЬ для семьи."
+          },
+          {
+            "key": "metivBooks",
+            "label": "Книги сотрудников Метива",
+            "route": "/patient/sources#metiv-books",
+            "icon": "Library",
+            "description": "Книги, написанные или изданные под редакцией сотрудников Метива."
+          },
+          {
+            "key": "videoLectures",
+            "label": "Видеолекции",
+            "route": "/patient/self-help#video-lectures",
+            "icon": "Youtube",
+            "description": "YouTube-канал Метива."
+          },
+          {
+            "key": "consultation",
+            "label": "Сомневаетесь, стоит ли обращаться?",
+            "route": "/patient/where-to-get-help#consultation",
+            "icon": "MessageCircle",
+            "description": "Не знаете, стоит ли обращаться за терапией и когда? Вы можете позвонить в Метив и проконсультироваться о возможностях."
+          }
+        ],
+        "crisisLines": [
+          {
+            "key": "eranPhone",
+            "label": "Экстренная линия - ЭРАН",
+            "value": "1201",
+            "href": "tel:1201",
+            "icon": "Phone"
+          },
+          {
+            "key": "eranWhatsapp",
+            "label": "ЭРАН в WhatsApp",
+            "value": "WhatsApp",
+            "href": "https://api.whatsapp.com/send?phone=9720528451201",
+            "icon": "MessageCircle"
+          }
+        ],
+        "consultation": {
+          "title": "Сомневаетесь, стоит ли обращаться?",
+          "text": "Не знаете, стоит ли обращаться за терапией и когда? Вы можете позвонить в Метив и проконсультироваться о возможностях.",
+          "phone": "02-6449666",
+          "route": "/patient/where-to-get-help#consultation",
+          "linkLabel": "Консультация в Метиве"
+        },
+        "metivServices": [
+          {
+            "id": "adults-clinic",
+            "title": "Клиника для взрослых Метива",
+            "icon": "HeartHandshake",
+            "route": "/patient/where-to-get-help#adults-clinic"
+          },
+          {
+            "id": "kids-clinic",
+            "title": "«Метив - дети» - центр регуляции эмоций",
+            "icon": "Baby",
+            "route": "/patient/where-to-get-help#kids-clinic"
+          },
+          {
+            "id": "migdalor",
+            "title": "Клиника «Мигдалор»",
+            "icon": "Shield",
+            "route": "/patient/where-to-get-help#migdalor"
+          },
+          {
+            "id": "release-journey",
+            "title": "Peace of Mind",
+            "icon": "Compass",
+            "route": "/patient/where-to-get-help#release-journey"
+          },
+          {
+            "id": "free-treatments",
+            "title": "Бесплатная терапия через Метив",
+            "icon": "HandHeart",
+            "route": "/patient/where-to-get-help#free-treatments"
+          }
+        ],
+        "disclaimer": "Сайт не предоставляет медицинских консультаций. В экстренной ситуации обратитесь к врачу или позвоните в ЭРАН: 1201"
+      }
+    }
+  ]
+}

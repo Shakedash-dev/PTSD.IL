@@ -1,0 +1,67 @@
+{
+  "key": "METIV_BOOKS",
+  "slug": "metiv-patient-books",
+  "kind": "list",
+  "rows": [
+    {
+      "_key": "Helping Children Cope With Trauma: Individual, Family, and Community Perspectives",
+      "title": "Helping Children Cope With Trauma: Individual, Family, and Community Perspectives",
+      "sortOrder": 0,
+      "content": {
+        "_key": "Helping Children Cope With Trauma: Individual, Family, and Community Perspectives",
+        "_col": "metiv-patient-books",
+        "title": "Helping Children Cope With Trauma: Individual, Family, and Community Perspectives",
+        "authors": "Ruth Pat-Horenczyk, Danny Brom, Juliet M. Vogel (eds.)",
+        "year": "2013",
+        "publisher": "Routledge",
+        "language": "English",
+        "url": "http://www.amazon.com/gp/product/0415504562/"
+      }
+    },
+    {
+      "_key": "Treating Traumatized Children: Risk, Resilience and Recovery",
+      "title": "Treating Traumatized Children: Risk, Resilience and Recovery",
+      "sortOrder": 1,
+      "content": {
+        "_key": "Treating Traumatized Children: Risk, Resilience and Recovery",
+        "_col": "metiv-patient-books",
+        "title": "Treating Traumatized Children: Risk, Resilience and Recovery",
+        "authors": "Danny Brom, Ruth Pat-Horenczyk, Julian Ford (eds.)",
+        "year": "2008",
+        "publisher": "Routledge",
+        "language": "English",
+        "url": "http://www.amazon.com/gp/product/B001OLRO08/"
+      }
+    },
+    {
+      "_key": "The Trauma of Terrorism: Sharing Knowledge and Shared Care, An International Handbook",
+      "title": "The Trauma of Terrorism: Sharing Knowledge and Shared Care, An International Handbook",
+      "sortOrder": 2,
+      "content": {
+        "_key": "The Trauma of Terrorism: Sharing Knowledge and Shared Care, An International Handbook",
+        "_col": "metiv-patient-books",
+        "title": "The Trauma of Terrorism: Sharing Knowledge and Shared Care, An International Handbook",
+        "authors": "Yael Danieli, Danny Brom, Joe Sills (eds.)",
+        "year": "2005",
+        "publisher": "Routledge",
+        "language": "English",
+        "url": "http://www.amazon.com/gp/product/0789027739/"
+      }
+    },
+    {
+      "_key": "Coping with Trauma: Theory, Prevention and Treatment",
+      "title": "Coping with Trauma: Theory, Prevention and Treatment",
+      "sortOrder": 3,
+      "content": {
+        "_key": "Coping with Trauma: Theory, Prevention and Treatment",
+        "_col": "metiv-patient-books",
+        "title": "Coping with Trauma: Theory, Prevention and Treatment",
+        "authors": "Rolf J. Kleber, Danny Brom, Peter B. Defares",
+        "year": "2003",
+        "publisher": "Routledge",
+        "language": "English",
+        "url": "http://www.amazon.com/gp/product/B00ZLVJDII/"
+      }
+    }
+  ]
+}

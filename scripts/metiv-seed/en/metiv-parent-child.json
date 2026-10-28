@@ -1,0 +1,83 @@
+{
+  "key": "PARENT_CHILD_GROUPS",
+  "slug": "metiv-parent-child",
+  "kind": "list",
+  "rows": [
+    {
+      "_key": "panda-groups",
+      "title": "PANDA - \"Here We Learn Ways of Coping\"",
+      "sortOrder": 0,
+      "content": {
+        "_key": "panda-groups",
+        "_col": "metiv-parent-child",
+        "id": "panda-groups",
+        "title": "PANDA - \"Here We Learn Ways of Coping\"",
+        "provider": "Metiv Children",
+        "icon": "Users",
+        "who": "PANDA for Children: children in grades 2-6 who have difficulty regulating their emotions because of emotional overload, attention difficulties, anxiety or social difficulties. PANDA for Parents (DBT skills): parents of children of all ages. PANDA in the Family: families with at least 2 children.",
+        "ages": "Children aged 7-12, and parents",
+        "what": "A group program for strengthening emotion regulation and developing coping skills, combining mindfulness and cognitive-behavioral techniques with play. PANDA for Children: 8 sessions for children and 3 sessions for parents. PANDA for Parents: 8 sessions (or 6). PANDA in the Family: usually 6 family sessions and 6 parent guidance sessions.",
+        "location": "Metiv Children, Jerusalem",
+        "process": "You fill out a questionnaire and a participation request, have an introductory conversation with a facilitator, and are placed in a group according to age.",
+        "contacts": [
+          {
+            "kind": "link",
+            "label": "Metiv Children intake form",
+            "href": "https://docs.google.com/forms/d/e/1FAIpQLSfiUHfJ4UDrpSUPQxtPKWmQuZGKg7lfL1c21D_JAsmwxlYLJA/viewform"
+          },
+          {
+            "kind": "email",
+            "label": "Email",
+            "value": "Kids@metiv.org"
+          }
+        ],
+        "source": "https://metiv.org/תכנית-פנדה-לילדים/"
+      }
+    },
+    {
+      "_key": "namal-groups",
+      "title": "NAMAL - Let's Make Room for Play",
+      "sortOrder": 1,
+      "content": {
+        "_key": "namal-groups",
+        "_col": "metiv-parent-child",
+        "id": "namal-groups",
+        "title": "NAMAL - Let's Make Room for Play",
+        "provider": "Metiv Children",
+        "icon": "Baby",
+        "who": "Parent-toddler pairs exposed to stress, crisis or trauma, as well as pairs dealing with difficulties typical of this age.",
+        "ages": "Toddlers aged 2-5 and their parents",
+        "what": "A play group for parents and toddlers with play, music, art, drama and movement activities, plus parent-only sessions. 8 sessions, once a week, 16:30-18:00.",
+        "location": "Metiv Children, Givat Shaul, Herzog Medical Center Clinics Building, Jerusalem",
+        "contacts": [
+          {
+            "kind": "link",
+            "label": "Registration form",
+            "href": "https://www.surveyhero.com/c/kybdaa97"
+          },
+          {
+            "kind": "phone",
+            "label": "Efrat, program coordinator",
+            "value": "054-2189188"
+          },
+          {
+            "kind": "email",
+            "label": "Email",
+            "value": "efrath@metiv.org"
+          }
+        ],
+        "source": "https://metiv.org/תוכנית-נמל/"
+      }
+    },
+    {
+      "_key": "kids-space",
+      "title": "Metiv Space for Children",
+      "sortOrder": 2,
+      "content": {
+        "_key": "kids-space",
+        "_col": "metiv-parent-child",
+        "$ref": "FREE_TREATMENTS#kids-space"
+      }
+    }
+  ]
+}

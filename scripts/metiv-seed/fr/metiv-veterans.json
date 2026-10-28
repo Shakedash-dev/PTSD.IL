@@ -1,0 +1,60 @@
+{
+  "key": "VETERANS_PROGRAMS",
+  "slug": "metiv-veterans",
+  "kind": "list",
+  "rows": [
+    {
+      "_key": "release-journey",
+      "title": "Peace of Mind",
+      "sortOrder": 0,
+      "content": {
+        "_key": "release-journey",
+        "_col": "metiv-veterans",
+        "$ref": "METIV_SERVICES#release-journey"
+      }
+    },
+    {
+      "_key": "panda-family",
+      "title": "PANDA en famille",
+      "sortOrder": 1,
+      "content": {
+        "_key": "panda-family",
+        "_col": "metiv-veterans",
+        "$ref": "RESERVIST_FAMILY_PROGRAMS#panda-family"
+      }
+    },
+    {
+      "_key": "namal-family",
+      "title": "NAMAL en famille - Faisons place au jeu",
+      "sortOrder": 2,
+      "content": {
+        "_key": "namal-family",
+        "_col": "metiv-veterans",
+        "$ref": "RESERVIST_FAMILY_PROGRAMS#namal-family"
+      }
+    },
+    {
+      "_key": "reservist-fathers",
+      "title": "Groupe dyadique pour les réservistes et leurs enfants",
+      "sortOrder": 3,
+      "content": {
+        "_key": "reservist-fathers",
+        "_col": "metiv-veterans",
+        "id": "reservist-fathers",
+        "title": "Groupe dyadique pour les réservistes et leurs enfants",
+        "provider": "Metiv",
+        "icon": "Users",
+        "who": "Réservistes avec leurs enfants.",
+        "process": "L'inscription se fait via un formulaire sur le site de Metiv ; elle est limitée à 8 participants et comprend une étape de paiement.",
+        "contacts": [
+          {
+            "kind": "link",
+            "label": "Accéder au formulaire d'inscription",
+            "href": "https://metiv.org/אבות-וילדים-מילואים/"
+          }
+        ],
+        "source": "https://metiv.org/אבות-וילדים-מילואים/"
+      }
+    }
+  ]
+}

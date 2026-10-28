@@ -1,0 +1,8 @@
+{
+  "_area": "patient",
+  "_label": "אזור המטופלים: מקורות",
+  "booksTitle": "Books by Metiv staff",
+  "booksIntro": "Books written or edited by Metiv staff. {note}",
+  "bookLanguage": "Book · {language}",
+  "bookLink": "Book page"
+}

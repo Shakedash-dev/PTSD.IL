@@ -1,0 +1,11 @@
+{
+  "_area": "general",
+  "_label": "תרומה",
+  "eyebrow": "الدعم",
+  "short1": "طريقتان: تبرّع عبر الإنترنت، أو محادثة حول شراكة.",
+  "short2": "الجمعية مسجّلة: {legalEntity}.",
+  "placeholderTag": "[نص مؤقت]",
+  "placeholderNote": "النصوص في هذه الصفحة بانتظار صياغة ميتيف.",
+  "way": "الطريقة {n}",
+  "emailCta": "{cta}: {email}"
+}

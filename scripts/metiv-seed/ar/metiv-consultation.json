@@ -1,0 +1,22 @@
+{
+  "key": "CONSULTATION",
+  "slug": "metiv-consultation",
+  "kind": "single",
+  "rows": [
+    {
+      "_key": "CONSULTATION",
+      "title": "CONSULTATION",
+      "sortOrder": 0,
+      "content": {
+        "_key": "CONSULTATION",
+        "_col": "metiv-consultation",
+        "id": "consultation",
+        "title": "لستم متأكدين إن كان عليكم التوجّه؟",
+        "text": "تتردّدون في التوجّه إلى العلاج أو في توقيته؟ يمكنكم الاتصال بميتيف واستشارتنا حول الإمكانيات المتاحة.",
+        "phone": "02-6449666",
+        "route": "/patient/where-to-get-help#consultation",
+        "linkLabel": "للاستشارة مع ميتيف"
+      }
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "_area": "patient",
+  "_label": "אזור המטופלים: דף הבית",
+  "logoAlt": "מטיב",
+  "whereToGetHelpChip": "איפה אפשר לקבל טיפול",
+  "freeTreatmentChip": "טיפולים ללא עלות והשתתפות במחקרים",
+  "validateHeroTagline": "כותרת ראשית - הום",
+  "validateHeroSubtitle": "כותרת משנה - הום",
+  "validatePathTitle": "כרטיס נתיב {n} - כותרת",
+  "validatePathSubtitle": "כרטיס נתיב {n} - תת-כותרת",
+  "validateAbout": "תיאור קצר על PTSD"
+}

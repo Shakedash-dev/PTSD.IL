@@ -1,0 +1,92 @@
+{
+  "key": "LEGAL",
+  "slug": "metiv-legal",
+  "kind": "single",
+  "rows": [
+    {
+      "_key": "LEGAL",
+      "title": "LEGAL",
+      "sortOrder": 0,
+      "content": {
+        "_key": "LEGAL",
+        "_col": "metiv-legal",
+        "accessibility": {
+          "title": "Déclaration d'accessibilité",
+          "updated": "17.12.2025",
+          "demoNote": "Ce texte s'inspire de la déclaration d'accessibilité de metiv.org. Le site de démonstration ne comporte pas le module d'accessibilité décrit ; avant publication, la déclaration doit donc être mise à jour selon ce qui sera effectivement mis en place.",
+          "sections": [
+            {
+              "title": "Introduction",
+              "body": "Pour certaines personnes, la navigation sur les sites web peut être difficile, voire impossible, en raison de divers handicaps. L'accessibilité d'un site web est un élément essentiel pour garantir à chacun une utilisation égale, y compris aux personnes en situation de handicap. Un site accessible permet à chaque utilisateur de comprendre le contenu, d'y naviguer et de l'utiliser, indépendamment de toute limitation physique, sensorielle ou cognitive. L'association Metiv s'engage à offrir à l'ensemble du public un environnement d'utilisation équitable, clair et accessible."
+            },
+            {
+              "title": "L'accessibilité du site",
+              "body": "Un système d'accessibilité de la société Osim Shivyon a été installé sur le site metiv.org, et des adaptations d'accessibilité ont été réalisées conformément à la norme israélienne 5568, niveau AA, et au référentiel international WCAG 2.0."
+            },
+            {
+              "title": "Navigation au clavier sur le site metiv.org",
+              "body": "Après avoir activé la « navigation au clavier » dans le menu d'accessibilité : B pour naviguer entre les boutons, F entre les formulaires, H entre les titres, M entre les menus, G entre les images. Pour la lecture d'écran, le logiciel NVDA est recommandé."
+            },
+            {
+              "title": "Vous avez rencontré un problème ?",
+              "body": "Si vous n'avez pas trouvé le contenu que vous cherchiez ou si vous avez besoin d'aide, vous pouvez contacter le coordinateur de l'accessibilité de l'association par téléphone au 02-595-2236 ou par e-mail à info@metiv.org, adresse : Givat Shaul, Centre médical Herzog, Jérusalem."
+            },
+            {
+              "title": "Responsable de l'accessibilité du site (fournisseur du module)",
+              "body": "Tavor Avrahami, Osim Shivyon. Téléphone : 1-700-015-107. E-mail : info@equality.co.il"
+            }
+          ],
+          "coordinator": {
+            "phone": "02-595-2236",
+            "email": "info@metiv.org",
+            "address": "Givat Shaul, Centre médical Herzog, Jérusalem"
+          },
+          "sourceUrl": "https://metiv.org/הצהרת-נגישות/"
+        },
+        "privacy": {
+          "title": "Politique de confidentialité - association Metiv",
+          "intro": "L'association Metiv - Centre israélien de psychotraumatologie (association enregistrée n° 580313926) s'est fixé pour objectif de protéger la vie privée des visiteurs du site et de respecter leurs droits. Cette politique fait partie intégrante des conditions d'utilisation du site de l'association.",
+          "sections": [
+            {
+              "title": "Collecte d'informations",
+              "body": "Lorsque vous remplissez des formulaires sur le site (par exemple pour nous contacter, vous inscrire à un programme, faire un don ou recevoir des informations), il vous sera demandé de fournir des informations telles que votre nom complet, votre adresse e-mail, votre numéro de téléphone et toute autre information que vous communiquerez de votre propre initiative. L'association peut conserver ces informations dans sa base de données."
+            },
+            {
+              "title": "Informations de paiement",
+              "body": "Les dons et les paiements passent par des prestataires tiers (par exemple des sociétés de paiement sécurisé). L'association ne conserve pas les données de carte bancaire ni aucune autre information sur les moyens de paiement."
+            },
+            {
+              "title": "Utilisation des informations",
+              "body": "Fourniture de services et d'assistance ; gestion des programmes thérapeutiques, des formations et des événements ; prise de contact ; envoi d'actualités et de newsletters (avec votre accord) ; analyses statistiques et amélioration de l'expérience utilisateur ; respect des obligations légales."
+            },
+            {
+              "title": "Newsletters et actualités",
+              "body": "Vous pouvez vous désinscrire de la liste de diffusion à tout moment grâce au lien de désinscription présent dans chaque envoi, ou en écrivant à info@metiv.org."
+            },
+            {
+              "title": "Partage des informations",
+              "body": "L'association ne transmettra pas d'informations personnelles à des tiers, sauf à des prestataires externes qui lui fournissent des services (comme l'envoi de newsletters et l'hébergement), en cas d'obligation légale ou de procédure judiciaire, ou pour protéger les droits, les biens ou la sécurité personnelle de l'association ou des utilisateurs."
+            },
+            {
+              "title": "Sécurité des informations",
+              "body": "L'association prend des mesures raisonnables et usuelles pour sécuriser les informations personnelles, notamment la limitation de l'accès aux employés autorisés, le chiffrement et des serveurs sécurisés. Une sécurité totale ne peut pas être garantie."
+            },
+            {
+              "title": "Cookies",
+              "body": "Le site utilise des cookies pour son fonctionnement, l'amélioration de l'expérience utilisateur, l'analyse du trafic et l'adaptation des contenus. Vous pouvez les bloquer ou les supprimer dans les paramètres de votre navigateur, mais cela peut nuire à certains services."
+            },
+            {
+              "title": "Réseaux sociaux",
+              "body": "Le site peut intégrer des outils de réseaux sociaux. Leur utilisation est soumise à la politique de confidentialité de ces plateformes."
+            },
+            {
+              "title": "Modifications et contact",
+              "body": "L'association peut mettre à jour cette politique de temps à autre. Pour toute question : info@metiv.org"
+            }
+          ],
+          "sourceUrl": "https://metiv.org/מדיניות-פרטיות/"
+        }
+      }
+    }
+  ]
+}

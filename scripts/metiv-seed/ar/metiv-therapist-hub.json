@@ -1,0 +1,80 @@
+{
+  "key": "THERAPIST_HUB",
+  "slug": "metiv-therapist-hub",
+  "kind": "single",
+  "rows": [
+    {
+      "_key": "THERAPIST_HUB",
+      "title": "THERAPIST_HUB",
+      "sortOrder": 0,
+      "content": {
+        "_key": "THERAPIST_HUB",
+        "_col": "metiv-therapist-hub",
+        "title": "للعاملين في العلاج والمهنيين",
+        "intro": "دورات وتأهيلات وإشراف مهني وأبحاث في مجال علاج الصدمة، من ميتيف - المركز الإسرائيلي للصدمات النفسية. هنا يمكن إيجاد الأفواج الدراسية القادمة، والتأهيلات في مجال الأطفال والعائلة، والإشراف المهني الفردي والجماعي، والبرامج للمنظمات، والأبحاث والمنشورات للعاملين في ميتيف.",
+        "sections": [
+          {
+            "key": "courses",
+            "title": "الدورات والتأهيلات",
+            "description": "CBT في علاج الصدمة، وخارطة الطريق، والصدمة المركّبة، وأيام الاستكمال، والدورة الصيفية.",
+            "route": "/therapist/courses",
+            "icon": "GraduationCap"
+          },
+          {
+            "key": "childrenFamily",
+            "title": "الأطفال والعائلة",
+            "description": "أسس علاج الصدمة لدى الأطفال، وتأهيلات لميسّري باندا ونامال.",
+            "route": "/therapist/children-and-family",
+            "icon": "Baby"
+          },
+          {
+            "key": "supervision",
+            "title": "الإشراف المهني",
+            "description": "إشراف مهني فردي، ومجموعات إشراف، وإشراف للطواقم في المنظمات.",
+            "route": "/therapist/supervision",
+            "icon": "Users"
+          },
+          {
+            "key": "organizations",
+            "title": "للمنظمات",
+            "description": "مساحة ميتيف، وبناء منظمة مراعية للصدمة، وورشات وتأهيلات حسب الطلب.",
+            "route": "/therapist/organizations",
+            "icon": "Building2"
+          },
+          {
+            "key": "research",
+            "title": "البحث",
+            "description": "الأبحاث الجارية حاليًا في وحدة الأبحاث، بما فيها أبحاث تستقطب مشاركين.",
+            "route": "/therapist/research",
+            "icon": "Microscope"
+          },
+          {
+            "key": "publications",
+            "title": "المنشورات",
+            "description": "كتب ومقالات وفصول نشرها العاملون في ميتيف.",
+            "route": "/therapist/publications",
+            "icon": "Library"
+          },
+          {
+            "key": "articles",
+            "title": "المقالات",
+            "description": "مقالات وكتابات مهنية لطاقم ميتيف.",
+            "route": "/therapist/articles",
+            "icon": "FileText"
+          },
+          {
+            "key": "events",
+            "title": "الفعاليات والمستجدات",
+            "description": "أفواج الدورات والورشات والمؤتمرات، القادمة والسابقة.",
+            "route": "/therapist/events",
+            "icon": "CalendarDays"
+          }
+        ],
+        "cta": {
+          "label": "نموذج التوجّه للتأهيل أو الإشراف المهني",
+          "url": "https://docs.google.com/forms/d/e/1FAIpQLScc90IWpEglRpTtKqwmeBToTCGXeZpZXwvcjE6UHaLR4YKxuw/viewform"
+        }
+      }
+    }
+  ]
+}

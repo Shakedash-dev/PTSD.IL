@@ -1,4 +1,4 @@
-# Chatbot — Mobile App Integration Guide
+# Chatbot - Mobile App Integration Guide
 
 How to add the site chatbot to the mobile app.
 
@@ -6,14 +6,14 @@ Companion to [`mobile-data-guide.md`](./mobile-data-guide.md): that doc is about
 rendering content, this one is about the chatbot.
 
 **The whole thing is one endpoint.** You POST the conversation to `POST /chat` and
-read the answer back as a stream. The app runs no AI — everything heavy already
+read the answer back as a stream. The app runs no AI - everything heavy already
 lives on the server. You send messages, read the stream, render it.
 
 Worker URL (production): `https://ptsd-chatbot-worker.ptsd-il.workers.dev`
 
 ---
 
-## 0. Prerequisite — CORS must be opened first ⚠️
+## 0. Prerequisite - CORS must be opened first ⚠️
 
 Right now the chatbot server only accepts requests from the website's origin. **It
 must be changed to allow all origins before the app can call it.** This is a
@@ -22,7 +22,7 @@ until it's done:
 
 - In [`worker/src/index.ts`](../worker/src/index.ts) the CORS `origin` is set to the
   single site origin (`c.env.SITE_ORIGIN`).
-- Change it to allow everyone — `origin: "*"`. `/chat` uses no cookies or auth, so
+- Change it to allow everyone - `origin: "*"`. `/chat` uses no cookies or auth, so
   `*` is safe here.
 - Redeploy the Worker (`wrangler deploy`).
 
@@ -44,7 +44,7 @@ UI:
 - **Answers carry sources.** Each answer comes with the passages behind it, which
   you turn into tappable links ([§4](#4-citations--in-app-source-links)).
 - **It can signal a crisis.** On distress, the stream emits a `crisis` signal and
-  you must show the ERAN helpline banner ([§5](#5-crisis--safety--required)).
+  you must show the ERAN helpline banner ([§5](#5-crisis--safety---required)).
 
 You don't need to know how retrieval or generation works to integrate it.
 
@@ -52,7 +52,7 @@ You don't need to know how retrieval or generation works to integrate it.
 
 ## 2. The endpoint: `POST /chat`
 
-**Request** — JSON body:
+**Request** - JSON body:
 
 ```json
 {
@@ -68,11 +68,11 @@ You don't need to know how retrieval or generation works to integrate it.
 
 | Field | Type | Meaning |
 |-------|------|---------|
-| `messages` | array of `{ role, content }` | The full conversation so far. `role` is `"user"` or `"assistant"`. Send the whole history each turn (the server keeps no state) — but **not** the empty assistant turn you're about to fill. |
+| `messages` | array of `{ role, content }` | The full conversation so far. `role` is `"user"` or `"assistant"`. Send the whole history each turn (the server keeps no state) - but **not** the empty assistant turn you're about to fill. |
 | `lang` | `"he" \| "ar" \| "en" \| "ru" \| "fr"` | The user's current UI language. The bot answers in this language. |
 | `sessionId` | string (UUID) | Client-generated, kept in memory. Used for rate limiting. One per app session ([§6](#6-rate-limiting--sessions)). |
 
-**Response** — a stream (`text/event-stream`). Status codes:
+**Response** - a stream (`text/event-stream`). Status codes:
 
 | Status | Meaning | App does |
 |--------|---------|----------|
@@ -98,8 +98,8 @@ event: error     data: { "message": "..." }                        (on failure)
 
 | Event | Payload | What to do |
 |-------|---------|------------|
-| `crisis` | `{ lang }` | Show the **ERAN banner** ([§5](#5-crisis--safety--required)). Fires before any token. |
-| `token` | `{ text }` | A chunk of the answer. **Append** it to the current assistant message and render live. Contains inline `[[n]]` markers — strip them ([§4](#4-citations--in-app-source-links)). |
+| `crisis` | `{ lang }` | Show the **ERAN banner** ([§5](#5-crisis--safety---required)). Fires before any token. |
+| `token` | `{ text }` | A chunk of the answer. **Append** it to the current assistant message and render live. Contains inline `[[n]]` markers - strip them ([§4](#4-citations--in-app-source-links)). |
 | `sources` | array of source objects | The passages behind the answer. Store them on the message to build links. Shape below. |
 | `done` | `{}` | Finished cleanly. Stop the "thinking" indicator. |
 | `error` | `{ message }` | Failed mid-stream. Show an error; stop the indicator. |
@@ -115,16 +115,21 @@ event: error     data: { "message": "..." }                        (on failure)
   "langId": "he",               // language of the passage (MAY differ from `lang`)
   "title": "זכויות נפגעי פעולות איבה",
   "text": "the exact passage the answer drew from",
-  "categorySlug": "rights"      // primary category, used to route the link
+  "categorySlug": "rights",     // primary category, used to route the link
+  "categorySlugs": ["rights"]   // every category of the item (Metiv rows: ["metiv", "metiv-veterans"])
 }
 ```
+
+`categorySlug` is the first category that is not the `metiv` parent, so a Metiv
+row routes by its collection. `categorySlugs` is absent on vectors indexed before
+it existed (until the next full reindex); fall back to `categorySlug`.
 
 ---
 
 ## 4. Citations → in-app source links
 
 Answer text contains inline markers like `[[1]]` or `[[2]][[3]]` after sentences
-that used a source. These are **internal** — the user never sees the raw markers.
+that used a source. These are **internal** - the user never sees the raw markers.
 
 1. **Collect** cited numbers: regex `/\[\[(\d+)\]\]/g` over the full answer text.
 2. **Strip** them from what you display:
@@ -133,10 +138,18 @@ that used a source. These are **internal** — the user never sees the raw marke
    `(destination, title)` so the same source doesn't repeat.
 
 Each source links to the screen for that content type. Map `type` (+ `categorySlug`
-for `faq`) to **your in-app navigation**. Reference logic (from the website):
+for `faq`, + `categorySlugs` for Metiv rows) to **your in-app navigation**.
+Reference logic (from the website, [`src/lib/citations.jsx`](../src/lib/citations.jsx)):
 
 ```js
-function destinationFor(type, categorySlug) {
+function destinationFor(type, categorySlug, categorySlugs = []) {
+  // Metiv rows route by collection first (v3 demo pages):
+  //   metiv-services / -public-options / -nonprofit-options / -consultation -> where-to-get-help
+  //   metiv-free-treatments / -research-studies -> free-treatment-and-research
+  //   metiv-veterans -> community, metiv-parent-child -> children,
+  //   metiv-reservist-family -> second-circle-tools, metiv-patient-books -> sources,
+  //   metiv-video-lectures -> self-help, metiv-release-journey / metiv-rj-* -> release-journey,
+  //   metiv-org / metiv-contacts -> contact, any other metiv slug -> patient hub
   if (type === "faq") {
     if (categorySlug === "ptsd-info")     return "ptsd-info screen";
     if (categorySlug === "second-circle") return "second-circle-tools screen";
@@ -154,11 +167,11 @@ function destinationFor(type, categorySlug) {
 You already fetch items by `itemId` (mobile-data-guide §1), so a link can deep-link
 straight to that item's screen instead if you prefer.
 
-**Render answers as Markdown** — the bot formats with bold, lists, and paragraphs.
+**Render answers as Markdown** - the bot formats with bold, lists, and paragraphs.
 
 ---
 
-## 5. Crisis & safety — required
+## 5. Crisis & safety - required
 
 Not optional. If you ship the chatbot, you ship the crisis banner.
 
@@ -177,7 +190,7 @@ Not optional. If you ship the chatbot, you ship the crisis banner.
   `429`. Show a friendly "reached the limit, try again shortly".
 - `sessionId` is a **client-generated UUID** you create once and keep in memory.
   Generate one per app launch (or per chat session). It doesn't need to survive a
-  restart — a fresh id just resets the limit.
+  restart - a fresh id just resets the limit.
 
 ---
 
@@ -187,14 +200,14 @@ Not optional. If you ship the chatbot, you ship the crisis banner.
   bot answers in it.
 - Most content exists only in **Hebrew**; for other languages the answer is
   translated at generation time. So `sources[].langId` can be `he` even when the
-  answer is English — **don't filter sources by language.**
-- `he` and `ar` are **RTL** — render the panel, bubbles, and banner RTL for those.
+  answer is English - **don't filter sources by language.**
+- `he` and `ar` are **RTL** - render the panel, bubbles, and banner RTL for those.
 
 ---
 
 ## 8. Privacy
 
-**Nothing is stored** server-side — no questions, answers, or transcripts. Keep it
+**Nothing is stored** server-side - no questions, answers, or transcripts. Keep it
 that way in the app: don't log conversation content to any backend.
 
 ---
@@ -236,7 +249,7 @@ eran_phone:            "1201",
 ## 10. Reference client + mobile streaming caveat
 
 The website's parser is [`src/lib/chatClient.js`](../src/lib/chatClient.js). The core
-loop — POST, then split the stream into frames on the blank line:
+loop - POST, then split the stream into frames on the blank line:
 
 ```js
 async function streamChat({ base, messages, lang, sessionId }, handlers = {}) {
@@ -272,18 +285,18 @@ async function streamChat({ base, messages, lang, sessionId }, handlers = {}) {
 
 ### ⚠️ React Native doesn't stream `fetch` bodies
 
-The line above — `res.body.getReader()` — is the one thing that differs on mobile.
+The line above - `res.body.getReader()` - is the one thing that differs on mobile.
 **React Native's default `fetch` returns `res.body === null`**, so you can't read the
 stream that way. Pick one:
 
-- **`expo/fetch`** (`import { fetch } from "expo/fetch"`) — supports streaming
+- **`expo/fetch`** (`import { fetch } from "expo/fetch"`) - supports streaming
   bodies and gives you the exact `getReader()` code above. Easiest if you're on Expo.
-- **`react-native-sse`** — an EventSource that supports `method: "POST"` + `body`.
+- **`react-native-sse`** - an EventSource that supports `method: "POST"` + `body`.
   Handle its `message`/named events instead of the manual split.
-- **`XMLHttpRequest` + `onprogress`** — RN's XHR exposes partial `responseText` as it
+- **`XMLHttpRequest` + `onprogress`** - RN's XHR exposes partial `responseText` as it
   arrives; on each `onprogress`, take the new tail and run the same `\n\n` frame
   split. No extra dependency.
-- **No-streaming fallback** — await the full response text, then split and replay the
+- **No-streaming fallback** - await the full response text, then split and replay the
   frames. You lose the live typewriter effect, but the answer, sources, and crisis
   banner all still work. Fine for a first version.
 
@@ -293,23 +306,23 @@ The frame format and event names are identical to the web either way.
 
 ## 11. App config
 
-One value: the Worker base URL —
+One value: the Worker base URL -
 `https://ptsd-chatbot-worker.ptsd-il.workers.dev`. (The website reads it from
 `VITE_CHATBOT_URL`; the app just needs the same URL.)
 
-Reminder: CORS must be opened first ([§0](#0-prerequisite--cors-must-be-opened-first-️)).
+Reminder: CORS must be opened first ([§0](#0-prerequisite---cors-must-be-opened-first-️)).
 
 ---
 
 ## 12. Integration checklist
 
-- [ ] Confirm the Worker CORS is opened to all origins ([§0](#0-prerequisite--cors-must-be-opened-first-️)).
+- [ ] Confirm the Worker CORS is opened to all origins ([§0](#0-prerequisite---cors-must-be-opened-first-️)).
 - [ ] Add the Worker base URL to app config.
 - [ ] Generate a `sessionId` (UUID) per session; keep it in memory.
 - [ ] Build the chat UI: message list, input, send, "thinking" indicator.
 - [ ] POST `{ messages, lang, sessionId }` on send (history minus the empty
       assistant placeholder).
-- [ ] Parse the SSE stream — pick a mobile approach ([§10](#10-reference-client--mobile-streaming-caveat)).
+- [ ] Parse the SSE stream - pick a mobile approach ([§10](#10-reference-client--mobile-streaming-caveat)).
 - [ ] Handle events: `crisis` → banner, `token` → append, `sources` → attach,
       `done`/`error` → stop indicator.
 - [ ] Strip `[[n]]` markers from display; build source links from cited `sources`.
@@ -319,4 +332,229 @@ Reminder: CORS must be opened first ([§0](#0-prerequisite--cors-must-be-opened-
 - [ ] Handle `429` gracefully.
 - [ ] RTL for `he`/`ar`.
 - [ ] Copy the `chat_*` / `eran_*` strings for all 5 languages.
-- [ ] Store nothing — no conversation logging.
+- [ ] Store nothing - no conversation logging.
+
+---
+
+# Part 2 - Server side (Worker owners)
+
+Everything below is about the Worker itself, not the app.
+
+## 13. Endpoints
+
+| Method | Path | Auth | Purpose |
+|--------|------|------|---------|
+| `GET` | `/health` | none | `{ "ok": true }` |
+| `POST` | `/chat` | none (20/hour per `sessionId`) | The chat stream (sections 2-3) |
+| `POST` | `/reindex` | `Authorization: Bearer <admin JWT>` | `{ "scope": "all" }` or `{ "scope": "item", "itemId": "..." }` |
+| `POST` | `/translate` | `Authorization: Bearer <admin JWT>` (240/hour per token) | Hebrew to ar/en/ru/fr for the admin (section 16) |
+
+Admin auth: the Worker forwards the header to `ADMIN_VERIFY_URL`; a 2xx means
+admin. `/translate` caches a success in the `RL` KV namespace under
+`auth:<sha256 of the token>` for 300 seconds (the raw token is never stored), so a
+revoked token can keep translating for up to 5 minutes.
+
+`/reindex` responses: `scope: "all"` returns `{ ok, upserted, excluded, qa }`
+(vectors written, rows skipped by the exclusions below, Q&A rows in the playbook
+index). `scope: "item"` returns `{ ok, upserted }`, plus `qa` when the item was
+(or used to be) a Q&A row.
+
+## 14. What gets indexed
+
+The general Vectorize index holds every published article and active community
+**except** rows in these categories:
+
+- `admin-log`, `site-copy`, `legal`, `chatbot-qa`, `metiv-copy`;
+- `metiv` (or any `metiv-*` child) unless one of the row's categories is in
+  `METIV_CHATBOT_SLUGS` ([`worker/src/lib/api.ts`](../worker/src/lib/api.ts)),
+  which must equal the `chatbot: true` collections of
+  [`registry.js`](../src/pages/metiv-demos/v3/content/registry.js)
+  (`worker/test/exclusions.test.ts` fails when they drift).
+
+Content keys starting with `_` (`_key`, `_tr`, `_area`, `_label`) are never
+indexed as text.
+
+**Indexed text** ([`worker/src/lib/content.ts`](../worker/src/lib/content.ts)
+`extractText`) is the title, then a header line per relation the row has, then
+the string leaves of `content`:
+
+- `ageGroups` / `audiences` names, labelled in the row's language
+  (`קבוצת גיל: 4-6`, `קהל יעד: נפגעי פעולות איבה`), so same-titled rows (the
+  children "הנחיות" rows) differ in the index.
+- PTSD-IL rows: bare string leaves; URL leaves and the keys `url`, `link`,
+  `links`, `id`, `slug`, `year`, `image`, `icon` (and similar) are skipped.
+- Metiv rows: values that do not describe themselves (no letters, emails,
+  URLs and numbers) keep the nearest meaningful key: `phones.fax: 02-644-9777`,
+  `ERAN_WHATSAPP: https://api.whatsapp.com/...`, and a `{ label, value }` /
+  `{ label, href }` pair becomes `label: value`. URL leaves are kept (only id and
+  media keys are skipped). Prose leaves stay bare.
+- Metiv `{ "$ref": "KEY#_key" }` (or `"KEY"` for a singleton) is replaced by the
+  referenced item's text, looked up among the Metiv rows of the same language,
+  else Hebrew; a ref to a ref resolves to nothing, like the v3 provider. A full
+  reindex resolves against the rows it already fetched. An item reindex of a row
+  with refs fetches `GET /articles?categorySlug=metiv&langId=<lang>` once, and the
+  Hebrew list only if a ref is missing there (at most 2 extra subrequests).
+  Editing a referenced item (e.g. a TEAM member) does not reindex the rows that
+  point to it: run a full reindex, or an item reindex of the referencing row.
+  The collection of a row is `content._col`, mapped to its registry key by
+  `METIV_COLLECTION_KEYS` in `api.ts` (tested against `registry.js`).
+
+Excluded rows lose their vectors: an item reindex of an excluded id deletes them,
+and a full reindex deletes the chunk ids every excluded row could hold.
+
+## 15. Curated Q&A playbooks
+
+Rows in the top-level category `chatbot-qa`, `type: 'article'`, one row per
+question per language, siblings sharing a `groupId`. `content`:
+
+```json
+{
+  "question": "איך מתחילים טיפול במטיב?",
+  "paraphrases": ["איך פונים למטיב", "רוצה טיפול, מה עושים"],
+  "guidance": "1. ... 2. ... Take phone numbers and addresses from SOURCES.",
+  "answer": "optional reference answer",
+  "crisis": false
+}
+```
+
+**Index.** Not in Vectorize. A full reindex, an item reindex of a Q&A row, and an
+item reindex of an id that was a Q&A row (deleted or unpublished) rebuild one KV
+value, `qa:index:v1` in the `RL` namespace: every `question` and `paraphrase` of
+every published Q&A row embedded with `@cf/baai/bge-m3` (the retrieval model),
+stored as L2-normalized base64 Float32 vectors, plus each row's text. About 5.5KB
+per embedded text; the KV value limit is 25MB (roughly 4,000 texts). A chat
+request reads it once (in-isolate cache 60s, KV edge cache 60s, so an edit can
+take up to ~2 minutes to reach chat).
+
+**At chat time** the query embedding already computed for retrieval is scored
+(cosine) against every Q&A vector; each `groupId` keeps its best score. The row
+used is the user's language row of the group, else the Hebrew row.
+
+| Best score | Effect |
+|------------|--------|
+| `>= QA_STRONG` (0.80) | `PLAYBOOK` block before `SOURCES`, system rule: follow its guidance in order, adapt wording, take changeable facts from SOURCES, never contradict it. The bot answers even with zero retrieval hits. |
+| `>= QA_WEAK` (0.72) | `POSSIBLY RELEVANT PLAYBOOK` block: use only if it fits. Zero hits still refuses. |
+| lower | nothing |
+
+When `detectCrisis` fires, the best `crisis: true` group (any score) is always
+injected as a `CRISIS PLAYBOOK` first, in addition to the `crisis` SSE event.
+`detectCrisis` ([`worker/src/lib/crisis.ts`](../worker/src/lib/crisis.ts)) is a
+substring phrase list in all 5 languages (suicide, self-harm, overdose wording,
+including the phrasings of the crisis rows' paraphrases), checked over the last
+3 user messages; the crisis playbook is picked by the message that fired. Words
+that also appear in everyday questions (bare "חתכתי", "פגיעה", "פלאשבק") are
+left out on purpose. The list still needs a clinician's review before launch.
+
+**Follow-ups.** A row that ends with a scoping question ("how old is the
+child?") would lose its playbook on the short reply ("5"), since that reply is
+matched alone. So when the latest message has no strong match, the user message
+directly before it is matched too, but only when an assistant turn came after
+it. A strong match there is injected as `PLAYBOOK` (strong) for this turn, and it
+counts as a strong match for the zero-hits refusal; a weak match of the latest
+message stays alongside as `POSSIBLY RELEVANT PLAYBOOK`. Weak matches of the
+previous message are not carried, and older messages are never used. Both
+messages go in the same embedding call. Retrieval (SOURCES) still uses only the
+latest message.
+If the KV value can't be read, chat carries on without playbooks.
+
+**Tuning.** Every chat writes one Worker log line (not part of the stream):
+
+```
+qa-match {"best":{"groupId":"...","score":0.8312},"used":{"groupId":"...","strength":"strong"},"crisis":null}
+```
+
+`carried` (`{ groupId, score }`) is added when the previous message's playbook
+was used.
+
+Watch it with `npx wrangler tail` while asking real questions and their near
+misses. Raise `QA_STRONG` if unrelated questions get a strong playbook; lower it
+(or add paraphrases to the row, which is usually better) if the intended
+questions land in the weak band. Keep `QA_WEAK` a few points under `QA_STRONG`.
+Change the values in `wrangler.toml` `[vars]` and redeploy.
+
+## 16. `POST /translate`
+
+Used by the admin when a Hebrew row is saved (one call per target language).
+
+Request:
+
+```json
+{ "source": "he", "target": "ar",
+  "items": { "title": "...", "sections.0.body": "..." },
+  "context": "metiv / courses: <item title>" }
+```
+
+- `source` must be `"he"`; `target` one of `ar`, `en`, `ru`, `fr`.
+- `items`: object of string values (flat `path -> text`), at most 500 keys and
+  40,000 characters (keys + values) in total, else `413 { "error": "too_large" }`.
+- `context`: optional string (first 500 characters used); it tells the model the
+  audience (therapist-area content gets a professional register).
+
+Response `200`:
+
+```json
+{ "target": "ar", "items": { "title": "...", "sections.0.body": "..." },
+  "status": "pass", "notes": [], "model": "gemini-4-argon" }
+```
+
+- `pass`: the validator found nothing.
+- `fixed`: validator fixes or the one retranslate were applied and all checks pass.
+- `flagged`: checks still fail after the retranslate, a serious validator issue
+  had no fix (retranslated but not re-reviewed), or the validator was unavailable.
+  A path the model never returned is **left out** of `items` (keep the sibling's
+  current text) and listed in `notes`.
+- `notes`: `"<path>: <problem>"` lines, at most 50.
+
+Errors: `400` (`invalid_json`, `unsupported_source`, `unsupported_target`,
+`invalid_items`, `invalid_context`), `401`, `413`, `429` (`rate_limited`),
+`502` (`translate_failed`: the translator call failed).
+
+Pipeline: translator call, then deterministic checks (same keys; URLs, emails,
+phone numbers, digit runs and `{placeholders}` preserved; same count of Markdown
+links, list items, headings and `**`; en/em dashes are replaced by `-` before
+checking), then a separate validator call that gets source, translation and the
+check findings and returns `{ issues: [{ path, problem, severity, fix }] }` with
+`fix` the full corrected string, then fixes applied and checks re-run, then one
+retranslate of the failing paths with their problems in the prompt.
+
+Both calls use Gemini `generateContent` (non-streaming) with
+`responseMimeType: application/json` + `responseSchema`, temperature 0.2
+(translator) / 0.1 (validator), `thinkingConfig.thinkingLevel` `low` / `medium`,
+and the key in the `x-goog-api-key` header. The glossary of names and terms is
+[`worker/src/lib/glossary.ts`](../worker/src/lib/glossary.ts); edit it there.
+
+## 17. Configuration
+
+`wrangler.toml` `[vars]`:
+
+| Var | Default | Meaning |
+|-----|---------|---------|
+| `SITE_ORIGIN` | site origins | CORS allow-list (comma-separated) |
+| `API_BASE` | backend `/api` | Content source |
+| `ADMIN_VERIFY_URL` | admin articles URL | Admin token check |
+| `GEMINI_MODEL` | `gemini-flash-latest` | Chat model |
+| `TRANSLATE_MODEL` | `gemini-4-argon` | `/translate` model. Must accept `thinkingLevel` |
+| `QA_STRONG` | `0.80` | Playbook "follow it" threshold |
+| `QA_WEAK` | `0.72` | Playbook "possibly relevant" threshold |
+
+Secret: `GEMINI_API_KEY` (`npx wrangler secret put GEMINI_API_KEY`), used by chat
+and `/translate`. Bindings: `AI`, `VECTORIZE` (`ptsd-chatbot`), `RL` (KV: rate
+limits `rl:*`, auth cache `auth:*`, playbook index `qa:index:v1`).
+
+## 18. Deploy
+
+```bash
+cd worker
+npx vitest run && npx tsc --noEmit
+npx wrangler deploy
+# Then ONE full reindex, required after this deploy: it drops the vectors of
+# newly excluded rows, adds categorySlugs to every vector, and builds the
+# playbook index (chat has no playbooks until it runs).
+curl -X POST https://ptsd-chatbot-worker.ptsd-il.workers.dev/reindex \
+  -H "Authorization: Bearer $ADMIN_JWT" -H "content-type: application/json" \
+  -d '{"scope":"all"}'
+```
+
+A full reindex makes about `2 + ceil(chunks / 50) + ceil(vectors / 500) +
+ceil(excluded ids / 500) + ceil(QA texts / 50) + 1` subrequests; on the free plan
+(50 per invocation) a large corpus can hit that cap.

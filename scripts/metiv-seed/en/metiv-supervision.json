@@ -1,0 +1,104 @@
+{
+  "key": "SUPERVISION",
+  "slug": "metiv-supervision",
+  "kind": "single",
+  "rows": [
+    {
+      "_key": "SUPERVISION",
+      "title": "SUPERVISION",
+      "sortOrder": 0,
+      "content": {
+        "_key": "SUPERVISION",
+        "_col": "metiv-supervision",
+        "title": "Supervision for Therapists and Organizations",
+        "intro": "Trauma therapy is complex, and therapists sometimes face a host of difficulties and dilemmas. In these situations, professional support and supervision are especially important; it is important not to deal with them alone. We offer therapists who work with trauma survivors individual supervision, group supervision in small groups, or supervision for intact teams in organizations.",
+        "challenges": [
+          "How do you navigate between states of flooding and disconnection?",
+          "How do you deal with dissociative states?",
+          "Lack of cooperation and lack of engagement in therapy",
+          "Feeling stuck and despairing",
+          "Compassion fatigue and secondary traumatization of the therapist"
+        ],
+        "options": [
+          {
+            "key": "individual",
+            "title": "Individual supervision",
+            "format": "Individual",
+            "price": "NIS 450 per hour",
+            "description": "Individual supervision for therapists who work with trauma survivors.",
+            "contact": {
+              "email": "gil@metiv.org"
+            },
+            "sourceUrl": "https://metiv.org/הדרכות/"
+          },
+          {
+            "key": "organizations",
+            "title": "Supervision for organizations",
+            "format": "Group, for teams in organizations",
+            "price": "NIS 250 per therapist, in a group of 3-5 therapists",
+            "description": "Supervision for intact teams in organizations, in a group of 3 to 5 therapists.",
+            "contact": {
+              "email": "shimrit@metiv.org"
+            },
+            "sourceUrl": "https://metiv.org/הדרכות/"
+          },
+          {
+            "key": "supervision-group",
+            "title": "Supervision group",
+            "format": "Group, on Zoom",
+            "price": "About NIS 1,200 per participant",
+            "facilitator": "Uri Birnbaum",
+            "description": "Trauma brings up feelings of isolation, difficulty telling one's story, and states of being stuck and helpless. In a parallel process, the trauma therapist experiences many of these same qualities in the work with trauma survivors. A supervision group makes it possible to draw on the experienced professional eye of a facilitator and of peers: to create movement where things are stuck, to bring language where there is misunderstanding, and to broaden the perspective beyond one's own professional experience and clinical sessions. A supervision group offers a deep look, sharing and resonance, peer support, encounters with a range of therapeutic stances, and professional and personal connections.",
+            "details": [
+              "Group supervision in an intimate group of about 5 therapists",
+              "Six sessions of an hour and a quarter each",
+              "Once a week, on Zoom, starting May 14, 2025",
+              "Wednesdays at 14:00"
+            ],
+            "suitableFor": [
+              "Beginning therapists",
+              "Experienced therapists who are new to trauma therapy"
+            ],
+            "notSuitableFor": [
+              "Those who want supervision on complex trauma cases"
+            ],
+            "startDate": "14.5.2025",
+            "isPast": true,
+            "registrationUrl": "https://pay.sumit.co.il/1i0fvg/a99vjw/a99vam/payment/",
+            "sourceUrl": "https://metiv.org/jet-popup/קבוצת-הדרכה/"
+          },
+          {
+            "key": "after-roadmap",
+            "title": "Supervision group for Roadmap graduates",
+            "format": "Group",
+            "price": "Additional fee; subject to the number of participants",
+            "description": "After The Roadmap course, you can join a 5-session supervision group in which participants bring cases from their practice for consultation and work planning, and learn from other participants' cases.",
+            "sourceUrl": "https://metiv.org/יסודות-הטיפול-בטראומה/"
+          },
+          {
+            "key": "kids-clinic",
+            "title": "Supervision in work with children (Metiv Children)",
+            "format": "Individual or long-term support, in Jerusalem or on Zoom",
+            "description": "Metiv Children offers professional supervision from psychologists and social workers who specialize in trauma. You can request focused supervision or long-term support.",
+            "contact": {
+              "email": "kids@metiv.org"
+            },
+            "sourceUrl": "https://metiv.org/מטיב-ילדים-טראומה/"
+          }
+        ],
+        "clientList": [
+          "Ministry of Defense",
+          "Ministry of Finance",
+          "Prime Minister's Office",
+          "Clalit Health Services",
+          "Shaare Zedek Medical Center",
+          "Leumit Health Services"
+        ],
+        "contact": {
+          "email": "gil@metiv.org"
+        },
+        "sourceUrl": "https://metiv.org/הדרכות/"
+      }
+    }
+  ]
+}

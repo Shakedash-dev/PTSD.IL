@@ -9,8 +9,8 @@ import { Baby, BookOpen, Video, Download, Star, ChevronDown, ExternalLink } from
 import { IMAGES } from '@/lib/images';
 import ValidatableContent from '@/components/ValidatableContent';
 import Markdown from '@/components/Markdown';
-import { EntrySection } from '@/pages/metiv-demos/shared/patient/components';
-import { PARENT_CHILD_GROUPS, ADDITION_ANCHORS } from '@/pages/metiv-demos/shared/patient/additions';
+import { fmt, useCopy, useMetiv } from '../content/MetivContent';
+import { EntrySection, PATIENT_ANCHORS } from './PatientKit';
 import { VersionLinks } from './PtsdIlRouting';
 
 // Metiv demo (V3): a copy of src/pages/Children.jsx. Change only: the approved
@@ -35,6 +35,8 @@ const RESOURCE_ICONS = {
 
 export default function Children() {
   const { lang } = useLang();
+  const { PARENT_CHILD_GROUPS } = useMetiv();
+  const c = useCopy('patientChildren');
   const [activeAge, setActiveAge] = useState('0-4');
   const [openResource, setOpenResource] = useState(null);
   const { data: allContent = {}, isLoading, error } = useChildrenContent({ lang });
@@ -78,7 +80,7 @@ export default function Children() {
         {/* Content - stacked: guidelines on top, library below at full width */}
         <div className="space-y-6">
           {/* Guidelines */}
-          <ValidatableContent contentId={`children.guidelines.${activeAge}`} label={`הנחיות גיל ${activeAge}`}>
+          <ValidatableContent contentId={`children.guidelines.${activeAge}`} label={fmt(c.validateGuidelines, { age: activeAge })}>
           <div className="bg-card rounded-super border border-border p-6 shadow-card">
             <h3 className="font-heading font-semibold text-foreground mb-4">{t(lang, 'children_guidelines')}</h3>
             <Markdown className="rich-content text-foreground/80">{guidelines}</Markdown>
@@ -189,9 +191,9 @@ export default function Children() {
       <VersionLinks>
         <div className="max-w-5xl mx-auto px-4 sm:px-6 pb-16">
           <EntrySection
-            id={ADDITION_ANCHORS.parentChildGroups}
-            title="קבוצות להורים וילדים"
-            intro="מסגרות קבוצתיות של מטיב ילדים שהורים יכולים לפנות אליהן: פנד״ה, נמ״ל ומפגש משחק ללא עלות."
+            id={PATIENT_ANCHORS.parentChildGroups}
+            title={c.groupsTitle}
+            intro={c.groupsIntro}
             entries={PARENT_CHILD_GROUPS}
           />
         </div>

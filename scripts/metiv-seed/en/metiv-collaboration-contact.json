@@ -1,0 +1,19 @@
+{
+  "key": "COLLABORATION_CONTACT",
+  "slug": "metiv-collaboration-contact",
+  "kind": "single",
+  "rows": [
+    {
+      "_key": "COLLABORATION_CONTACT",
+      "title": "COLLABORATION_CONTACT",
+      "sortOrder": 0,
+      "content": {
+        "_key": "COLLABORATION_CONTACT",
+        "_col": "metiv-collaboration-contact",
+        "name": "Haim Landau",
+        "role": "Head of Development and Partnerships",
+        "email": "Chaim@metiv.org"
+      }
+    }
+  ]
+}

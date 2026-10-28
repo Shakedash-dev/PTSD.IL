@@ -1,0 +1,72 @@
+{
+  "key": "FACTS",
+  "slug": "metiv-facts",
+  "kind": "list",
+  "rows": [
+    {
+      "_key": "metiv-facts-0",
+      "title": "Année de création",
+      "sortOrder": 0,
+      "content": {
+        "_key": "metiv-facts-0",
+        "_col": "metiv-facts",
+        "value": "1989",
+        "label": "Année de création",
+        "source": "עמוד אודות",
+        "sourceUrl": "https://metiv.org/אודות/"
+      }
+    },
+    {
+      "_key": "metiv-facts-1",
+      "title": "Thérapeutes formés dans tout le pays",
+      "sortOrder": 1,
+      "content": {
+        "_key": "metiv-facts-1",
+        "_col": "metiv-facts",
+        "value": "+2,000",
+        "label": "Thérapeutes formés dans tout le pays",
+        "source": "דף הבית ועמוד ההכשרות",
+        "sourceUrl": "https://metiv.org/"
+      }
+    },
+    {
+      "_key": "metiv-facts-2",
+      "title": "Enseignants formés dans le cadre du Programme national de résilience pour les écoles",
+      "sortOrder": 2,
+      "content": {
+        "_key": "metiv-facts-2",
+        "_col": "metiv-facts",
+        "value": "+5,000",
+        "label": "Enseignants formés dans le cadre du Programme national de résilience pour les écoles",
+        "source": "עמוד אודות",
+        "sourceUrl": "https://metiv.org/אודות/"
+      }
+    },
+    {
+      "_key": "metiv-facts-3",
+      "title": "Patients par an à la clinique pour adultes",
+      "sortOrder": 3,
+      "content": {
+        "_key": "metiv-facts-3",
+        "_col": "metiv-facts",
+        "value": "~300",
+        "label": "Patients par an à la clinique pour adultes",
+        "source": "עמוד מרפאת המבוגרים",
+        "sourceUrl": "https://metiv.org/מרפאת-מבוגרים/"
+      }
+    },
+    {
+      "_key": "metiv-facts-4",
+      "title": "Thérapeutes dans l'équipe de la clinique pour adultes",
+      "sortOrder": 4,
+      "content": {
+        "_key": "metiv-facts-4",
+        "_col": "metiv-facts",
+        "value": "~20",
+        "label": "Thérapeutes dans l'équipe de la clinique pour adultes",
+        "source": "עמוד מרפאת המבוגרים",
+        "sourceUrl": "https://metiv.org/מרפאת-מבוגרים/"
+      }
+    }
+  ]
+}

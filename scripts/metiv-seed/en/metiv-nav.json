@@ -1,0 +1,115 @@
+{
+  "key": "NAV",
+  "slug": "metiv-nav",
+  "kind": "list",
+  "rows": [
+    {
+      "_key": "therapist",
+      "title": "Home",
+      "sortOrder": 0,
+      "content": {
+        "_key": "therapist",
+        "_col": "metiv-nav",
+        "key": "therapist",
+        "label": "Home",
+        "route": "/therapist"
+      }
+    },
+    {
+      "_key": "courses",
+      "title": "Courses",
+      "sortOrder": 1,
+      "content": {
+        "_key": "courses",
+        "_col": "metiv-nav",
+        "key": "courses",
+        "label": "Courses",
+        "route": "/therapist/courses"
+      }
+    },
+    {
+      "_key": "childrenFamily",
+      "title": "Children and family",
+      "sortOrder": 2,
+      "content": {
+        "_key": "childrenFamily",
+        "_col": "metiv-nav",
+        "key": "childrenFamily",
+        "label": "Children and family",
+        "route": "/therapist/children-and-family"
+      }
+    },
+    {
+      "_key": "supervision",
+      "title": "Supervision",
+      "sortOrder": 3,
+      "content": {
+        "_key": "supervision",
+        "_col": "metiv-nav",
+        "key": "supervision",
+        "label": "Supervision",
+        "route": "/therapist/supervision"
+      }
+    },
+    {
+      "_key": "organizations",
+      "title": "For organizations",
+      "sortOrder": 4,
+      "content": {
+        "_key": "organizations",
+        "_col": "metiv-nav",
+        "key": "organizations",
+        "label": "For organizations",
+        "route": "/therapist/organizations"
+      }
+    },
+    {
+      "_key": "research",
+      "title": "Research",
+      "sortOrder": 5,
+      "content": {
+        "_key": "research",
+        "_col": "metiv-nav",
+        "key": "research",
+        "label": "Research",
+        "route": "/therapist/research"
+      }
+    },
+    {
+      "_key": "publications",
+      "title": "Publications",
+      "sortOrder": 6,
+      "content": {
+        "_key": "publications",
+        "_col": "metiv-nav",
+        "key": "publications",
+        "label": "Publications",
+        "route": "/therapist/publications"
+      }
+    },
+    {
+      "_key": "articles",
+      "title": "Articles",
+      "sortOrder": 7,
+      "content": {
+        "_key": "articles",
+        "_col": "metiv-nav",
+        "key": "articles",
+        "label": "Articles",
+        "route": "/therapist/articles"
+      }
+    },
+    {
+      "_key": "events",
+      "title": "Events",
+      "sortOrder": 8,
+      "content": {
+        "_key": "events",
+        "_col": "metiv-nav",
+        "key": "events",
+        "label": "Events",
+        "route": "/therapist/events"
+      }
+    }
+  ]
+}

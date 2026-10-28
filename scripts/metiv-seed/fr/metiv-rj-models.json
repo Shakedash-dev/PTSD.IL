@@ -1,0 +1,99 @@
+{
+  "key": "JOURNEY_MODELS",
+  "slug": "metiv-rj-models",
+  "kind": "list",
+  "rows": [
+    {
+      "_key": "abroad",
+      "title": "Voyage complet à l'étranger",
+      "sortOrder": 0,
+      "content": {
+        "_key": "abroad",
+        "_col": "metiv-rj-models",
+        "key": "abroad",
+        "label": "Voyage complet à l'étranger",
+        "title": "Voyage complet à l'étranger",
+        "summary": "4 ateliers sur environ neuf mois. L'atelier principal se déroule pendant une semaine à l'étranger, les autres en Israël.",
+        "duration": "Environ neuf mois",
+        "workshops": [
+          {
+            "title": "Atelier d'ouverture",
+            "text": "Une journée et demie, avec nuitée : du jeudi vers 17 h 30 au vendredi 14 h."
+          },
+          {
+            "title": "L'atelier principal",
+            "text": "Une semaine à l'étranger, accueillis par une communauté juive. Hébergement chez des familles d'accueil."
+          },
+          {
+            "title": "Atelier de clôture",
+            "text": "Environ un mois et demi après l'atelier principal. Un vendredi, de 8 h à 14 h, le plus souvent dans une forêt de la région de Jérusalem."
+          },
+          {
+            "title": "Atelier de suivi",
+            "text": "Environ 6 mois après l'atelier de clôture. Environ six heures, en soirée."
+          }
+        ]
+      }
+    },
+    {
+      "_key": "israel",
+      "title": "Voyage complet en Israël",
+      "sortOrder": 1,
+      "content": {
+        "_key": "israel",
+        "_col": "metiv-rj-models",
+        "key": "israel",
+        "label": "Voyage complet en Israël",
+        "title": "Voyage complet en Israël",
+        "summary": "4 ateliers sur environ neuf mois. L'atelier principal dure cinq jours dans un lieu isolé en Israël.",
+        "duration": "Environ neuf mois",
+        "workshops": [
+          {
+            "title": "Atelier d'ouverture",
+            "text": "Une journée : un vendredi, du matin jusqu'à l'après-midi."
+          },
+          {
+            "title": "L'atelier principal",
+            "text": "Cinq jours dans un lieu isolé en Israël, avec un travail en salle et en extérieur."
+          },
+          {
+            "title": "Atelier de clôture",
+            "text": "Environ un mois après l'atelier principal. Un vendredi, de 8 h à 14 h, le plus souvent dans une forêt de la région de Jérusalem."
+          },
+          {
+            "title": "Atelier de suivi",
+            "text": "Environ 6 mois après l'atelier de clôture. Environ six heures, en soirée."
+          }
+        ]
+      }
+    },
+    {
+      "_key": "short",
+      "title": "Voyage court en Israël",
+      "sortOrder": 2,
+      "content": {
+        "_key": "short",
+        "_col": "metiv-rj-models",
+        "key": "short",
+        "label": "Voyage court en Israël",
+        "title": "Voyage court en Israël",
+        "summary": "3 ateliers sur environ deux mois. L'atelier principal dure trois jours dans un lieu isolé en Israël.",
+        "duration": "Environ deux mois",
+        "workshops": [
+          {
+            "title": "Atelier d'ouverture",
+            "text": "Une journée : un vendredi, du matin jusqu'à l'après-midi."
+          },
+          {
+            "title": "L'atelier principal",
+            "text": "Trois jours (du mardi au jeudi) dans un lieu isolé en Israël, avec un travail en salle et en extérieur."
+          },
+          {
+            "title": "Atelier de clôture",
+            "text": "Environ un mois après l'atelier principal. Un vendredi, de 8 h à 14 h, le plus souvent dans une forêt de la région de Jérusalem."
+          }
+        ]
+      }
+    }
+  ]
+}

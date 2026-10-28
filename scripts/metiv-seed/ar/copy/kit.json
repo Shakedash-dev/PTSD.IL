@@ -1,0 +1,18 @@
+{
+  "_area": "general",
+  "_label": "רכיבים משותפים (כפתורים, קישורים, \"האם זה עזר?\")",
+  "newTab": "(يُفتح في تبويب جديد)",
+  "shortVersion": "باختصار",
+  "continue": "متابعة",
+  "details": "للتفاصيل",
+  "toPage": "إلى الصفحة",
+  "whatsapp": "واتساب",
+  "helpfulQuestion": "هل ساعدتك هذه الصفحة؟",
+  "helpfulYes": "نعم، شكرًا",
+  "helpfulNo": "ليس تمامًا",
+  "helpfulThanks": "شكرًا لمشاركتك. في موقع العرض التجريبي لا يُحفظ أي شيء.",
+  "helpfulSorry": "نأسف لذلك. يمكنك تجربة {consultation} أو العودة إلى {topics}.",
+  "helpfulConsultation": "محادثة استشارية",
+  "helpfulTopics": "جميع المواضيع",
+  "nextStep": "الخطوة التالية، إن كانت مناسبة"
+}

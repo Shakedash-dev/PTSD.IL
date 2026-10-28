@@ -1,0 +1,146 @@
+{
+  "key": "PUBLIC_OPTIONS",
+  "slug": "metiv-public-options",
+  "kind": "list",
+  "rows": [
+    {
+      "_key": "health-funds",
+      "title": "Health Funds",
+      "sortOrder": 0,
+      "content": {
+        "_key": "health-funds",
+        "_col": "metiv-public-options",
+        "id": "health-funds",
+        "title": "Health Funds",
+        "provider": "Maccabi, Clalit, Meuhedet, Leumit",
+        "icon": "Stethoscope",
+        "what": "The health funds provide psychological and psychiatric services.",
+        "process": "See your primary care doctor at your health fund and ask for a referral to a psychologist or psychiatrist.",
+        "contacts": [
+          {
+            "kind": "text",
+            "label": "Maccabi",
+            "value": "3555"
+          },
+          {
+            "kind": "text",
+            "label": "Clalit (mental health hotline)",
+            "value": "8703*"
+          },
+          {
+            "kind": "text",
+            "label": "Meuhedet",
+            "value": "3833"
+          },
+          {
+            "kind": "text",
+            "label": "Leumit",
+            "value": "507"
+          }
+        ]
+      }
+    },
+    {
+      "_key": "resilience-centers",
+      "title": "Resilience Centers",
+      "sortOrder": 1,
+      "content": {
+        "_key": "resilience-centers",
+        "_col": "metiv-public-options",
+        "id": "resilience-centers",
+        "title": "Resilience Centers",
+        "provider": "Ministry of Health",
+        "icon": "Building2",
+        "who": "Victims of hostile acts (terror victims).",
+        "process": "Contact the resilience center nearest to where you live, from the list of centers.",
+        "contacts": [
+          {
+            "kind": "link",
+            "label": "List of resilience centers - gov.il",
+            "href": "https://www.gov.il/he/Departments/DynamicCollectors/resilience-centers-list?skip=0"
+          },
+          {
+            "kind": "link",
+            "label": "Resilience centers - Ministry of Health",
+            "href": "https://me.health.gov.il/mental-health/therapy-rehabilitation/public-care/community-treatment/resilience-center/"
+          }
+        ]
+      }
+    },
+    {
+      "_key": "mod-rehabilitation",
+      "title": "Rehabilitation Department",
+      "sortOrder": 2,
+      "content": {
+        "_key": "mod-rehabilitation",
+        "_col": "metiv-public-options",
+        "id": "mod-rehabilitation",
+        "title": "Rehabilitation Department",
+        "provider": "Ministry of Defense",
+        "icon": "Shield",
+        "who": "Soldiers and security forces personnel who suffered psychological injury as a result of their service.",
+        "cost": "Assistance is determined according to recognition and disability percentage. You can get approval for medical and mental health treatment while your application is still being reviewed.",
+        "process": "Submit an application for disability recognition using a digital form. The Rehabilitation Department's \"Biyadayim Tovot\" (In Good Hands) center helps with filling out the application.",
+        "contacts": [
+          {
+            "kind": "link",
+            "label": "Digital form - application for disability recognition",
+            "href": "https://shikum.mod.gov.il/recognition/request/apply"
+          },
+          {
+            "kind": "link",
+            "label": "Medical treatment during the recognition process",
+            "href": "https://shikum.mod.gov.il/recognition/request/medical-care"
+          },
+          {
+            "kind": "link",
+            "label": "Biyadayim Tovot - help with submitting the application",
+            "href": "https://shikum.mod.gov.il/ContactUs/goodhands"
+          },
+          {
+            "kind": "internal",
+            "label": "Rights in detail",
+            "href": "/patient/rights"
+          }
+        ]
+      }
+    },
+    {
+      "_key": "national-insurance",
+      "title": "National Insurance Institute (Bituach Leumi)",
+      "sortOrder": 3,
+      "content": {
+        "_key": "national-insurance",
+        "_col": "metiv-public-options",
+        "id": "national-insurance",
+        "title": "National Insurance Institute (Bituach Leumi)",
+        "provider": "National Insurance Institute",
+        "icon": "Landmark",
+        "who": "Victims of hostile acts (terror victims), people injured at work, and people who have been assessed with a psychiatric disability.",
+        "what": "Benefits and recognition, vocational rehabilitation, and the Ministry of Health's rehabilitation basket for people assessed with a psychiatric disability of at least 40%.",
+        "contacts": [
+          {
+            "kind": "text",
+            "label": "Help filing a general disability claim",
+            "value": "3928*"
+          },
+          {
+            "kind": "link",
+            "label": "National Insurance - psychiatric disability and general disability",
+            "href": "https://www.btl.gov.il/ZcuyotAsdience/MitmoddiNefesh/Pages/NecotNafsitNecotKlalit.aspx"
+          },
+          {
+            "kind": "link",
+            "label": "Victims of hostile acts - National Insurance",
+            "href": "https://www.btl.gov.il/benefits/Victims_of_Hostilities/Pages/default.aspx"
+          },
+          {
+            "kind": "internal",
+            "label": "Rights in detail",
+            "href": "/patient/rights"
+          }
+        ]
+      }
+    }
+  ]
+}

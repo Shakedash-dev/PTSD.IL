@@ -1,0 +1,11 @@
+{
+  "_area": "general",
+  "_label": "תרומה",
+  "eyebrow": "Soutien",
+  "short1": "Deux possibilités : un don en ligne, ou un échange sur un partenariat.",
+  "short2": "L'association est enregistrée : {legalEntity}.",
+  "placeholderTag": "[Texte provisoire]",
+  "placeholderNote": "Les textes de cette page attendent la formulation de Metiv.",
+  "way": "Option {n}",
+  "emailCta": "{cta}: {email}"
+}

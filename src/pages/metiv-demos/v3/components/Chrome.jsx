@@ -2,78 +2,112 @@ import React, { useEffect, useId, useState } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import { ArrowRight, GraduationCap, HeartHandshake, LifeBuoy, LogOut, Menu, MessageCircle, Phone } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import LanguageSwitcher from '@/components/LanguageSwitcher';
 import { DemoLink } from '@/pages/metiv-demos/shared/DemoChrome';
 import { ROUTES } from '@/pages/metiv-demos/shared/routes';
-import { PATIENT_HUB, PATIENT_NAV } from '@/pages/metiv-demos/shared/patient';
-import { NAV as THERAPIST_NAV, ORG } from '@/pages/metiv-demos/shared/therapist';
+import { useLang } from '@/lib/LanguageContext';
+import { getDir } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
-import { resolveRoute, routeLabel, ALL_ROUTES, ROUTE_META, NEXT_STEPS, BRAND, V3_ROUTES } from '../meta';
-import { Band, FOCUS, TEXT_LINK, WasThisHelpful } from './kit';
+import { fmt, useCopy, useMetiv } from '../content/MetivContent';
+import { resolveRoute, routeLabel, ALL_ROUTES, V3_ROUTES } from '../meta';
+import { Band, FOCUS, fmtNodes, NewTabHint, TEXT_LINK, WasThisHelpful } from './kit';
 import { Popover, PopoverContent, PopoverTrigger } from './Popover';
 import { Sheet, SheetContent, SheetDescription, SheetTitle, SheetTrigger } from './Sheet';
 
 const LOGO = `${import.meta.env.BASE_URL || '/'}images/metiv-demo/metiv-logo.png`;
 const EXIT_URL = 'https://www.google.com/search?q=weather';
-const ERAN = PATIENT_HUB.crisisLines.find((l) => l.key === 'eranPhone');
-const ERAN_WA = PATIENT_HUB.crisisLines.find((l) => l.key === 'eranWhatsapp');
-
-const AREAS = [
-  { key: 'patient', label: 'למטופלים ולמשפחות', short: 'מטופלים ומשפחות', to: ROUTES.patient, icon: HeartHandshake },
-  { key: 'therapist', label: 'לאנשי טיפול ומקצוע', short: 'אנשי מקצוע', to: ROUTES.therapist, icon: GraduationCap },
-];
 
 /** @typedef {'metiv'|'patient'|'therapist'} Area */
+/** @typedef {{ key: string, label: string, route: string, children?: { key: string, label: string, route: string }[] }} NavItem */
 
-// The kit's path titles are split headline fragments ("מתמודד/ת עם"); use full labels in navigation.
-/** @type {Record<string, string>} */
-const NAV_LABELS = { firstCircle: ROUTE_META.firstCircle.label, secondCircle: ROUTE_META.secondCircle.label, questionnaire: ROUTE_META.questionnaire.label };
+const AREAS = [
+  { key: 'patient', to: ROUTES.patient, icon: HeartHandshake },
+  { key: 'therapist', to: ROUTES.therapist, icon: GraduationCap },
+];
 
-/** @type {typeof PATIENT_NAV[number]} */
-const RELEASE_JOURNEY_ITEM = { key: 'releaseJourney', label: 'מסע שחרור', route: V3_ROUTES.releaseJourney };
-
-// The full menu's patient list: the kit nav with מסע שחרור right above "איפה מקבלים טיפול".
-const MENU_PATIENT_NAV = PATIENT_NAV.flatMap((item) => (item.key === 'whereToGetHelp' ? [RELEASE_JOURNEY_ITEM, item] : [item]));
-
-// The professional area's tabs: the shared nav, with "על מטיב" right after the
-// area home and מסע שחרור at the end (owner feedback).
 const ABOUT_CHILDREN = ['aboutHistory', 'aboutTeam', 'aboutPartners', 'aboutCollaborations'];
 
-const PRO_NAV = [
-  THERAPIST_NAV[0],
-  { key: 'about', label: ROUTE_META.about.label, route: ROUTES.about },
-  ...THERAPIST_NAV.slice(1),
-  { key: 'releaseJourneyPro', label: ROUTE_META.releaseJourneyPro.label, route: V3_ROUTES.releaseJourneyPro },
-];
+/**
+ * Text direction and language of the current language: rtl for he/ar, ltr
+ * otherwise. The shells set both on their root; portaled panels (menu, help-now)
+ * set the direction themselves.
+ * @returns {{ lang: string, dir: 'rtl'|'ltr' }}
+ */
+export function useLangDir() {
+  const { lang } = useLang();
+  return { lang, dir: getDir(lang) };
+}
+
+/** The crisis lines from the patient hub, by key. */
+function useCrisisLines() {
+  const { PATIENT_HUB } = useMetiv();
+  const lines = /** @type {{ key: string, href: string }[]} */ (PATIENT_HUB?.crisisLines ?? []);
+  return { eran: lines.find((l) => l.key === 'eranPhone'), eranWa: lines.find((l) => l.key === 'eranWhatsapp') };
+}
+
+/**
+ * The navigation lists, built from the content.
+ * - navLabels: the kit's path titles are split headline fragments, so the
+ *   navigation uses the full route labels for these three.
+ * - menuPatientNav: the kit nav with מסע שחרור right above "איפה מקבלים טיפול".
+ * - proNav: the professional area's tabs: the shared nav, with "על מטיב" right
+ *   after the area home and מסע שחרור at the end (owner feedback).
+ */
+function useNav() {
+  const { PATIENT_NAV, NAV, ROUTE_META } = useMetiv();
+  const meta = ROUTE_META ?? {};
+  /** @type {NavItem[]} */
+  const patientNav = PATIENT_NAV ?? [];
+  /** @type {NavItem[]} */
+  const therapistNav = NAV ?? [];
+  /** @type {Record<string, string>} */
+  const navLabels = { firstCircle: meta.firstCircle?.label, secondCircle: meta.secondCircle?.label, questionnaire: meta.questionnaire?.label };
+  /** @type {NavItem} */
+  const releaseJourneyItem = { key: 'releaseJourney', label: meta.releaseJourney?.label, route: V3_ROUTES.releaseJourney };
+  const menuPatientNav = patientNav.flatMap((item) => (item.key === 'whereToGetHelp' ? [releaseJourneyItem, item] : [item]));
+  /** @type {NavItem[]} */
+  const proNav = [
+    ...therapistNav.slice(0, 1),
+    { key: 'about', label: meta.about?.label, route: ROUTES.about },
+    ...therapistNav.slice(1),
+    { key: 'releaseJourneyPro', label: meta.releaseJourneyPro?.label, route: V3_ROUTES.releaseJourneyPro },
+  ];
+  return { meta, patientNav, navLabels, menuPatientNav, proNav };
+}
 
 // ── Help now: the crisis line lives in the header button, on every page ─────
 
 function HelpNowContent() {
+  const c = useCopy('chrome');
+  const { dir } = useLangDir();
+  const { PATIENT_HUB } = useMetiv();
+  const { eran: ERAN, eranWa: ERAN_WA } = useCrisisLines();
   return (
-    <div dir="rtl" className="space-y-3 text-start">
-      <p className="font-heading font-semibold text-foreground">עזרה עכשיו</p>
-      <p className="text-sm text-muted-foreground">אפשר לבחור את הדרך שהכי נוחה לך.</p>
+    <div dir={dir} className="space-y-3 text-start">
+      <p className="font-heading font-semibold text-foreground">{c.helpNow}</p>
+      <p className="text-sm text-muted-foreground">{c.helpNowIntro}</p>
       <a href={ERAN?.href || 'tel:1201'} className={cn('flex items-center gap-3 rounded-2xl bg-muted p-3 hover:bg-primary/10 transition-natural', FOCUS)}>
         <Phone className="w-5 h-5 text-accent" aria-hidden="true" />
         <span>
-          <span className="block font-semibold text-foreground">שיחה עם ער"ן: 1201</span>
-          <span className="block text-xs text-muted-foreground">עזרה ראשונה נפשית בטלפון</span>
+          <span className="block font-semibold text-foreground">{c.eranCall}</span>
+          <span className="block text-xs text-muted-foreground">{c.eranCallNote}</span>
         </span>
       </a>
       <a href={ERAN_WA?.href} target="_blank" rel="noopener noreferrer" className={cn('flex items-center gap-3 rounded-2xl bg-muted p-3 hover:bg-primary/10 transition-natural', FOCUS)}>
         <MessageCircle className="w-5 h-5 text-accent" aria-hidden="true" />
         <span>
-          <span className="block font-semibold text-foreground">ער"ן בוואטסאפ</span>
-          <span className="block text-xs text-muted-foreground">כתיבה במקום שיחה (נפתח בלשונית חדשה)</span>
+          <span className="block font-semibold text-foreground">{c.eranWhatsapp}</span>
+          <span className="block text-xs text-muted-foreground">{c.eranWhatsappNote}</span>
         </span>
       </a>
-      <DemoLink to={PATIENT_HUB.consultation.route} className={cn('flex items-center gap-3 rounded-2xl bg-muted p-3 hover:bg-primary/10 transition-natural', FOCUS)}>
+      <DemoLink to={PATIENT_HUB?.consultation?.route} className={cn('flex items-center gap-3 rounded-2xl bg-muted p-3 hover:bg-primary/10 transition-natural', FOCUS)}>
         <LifeBuoy className="w-5 h-5 text-accent" aria-hidden="true" />
         <span>
-          <span className="block font-semibold text-foreground">{PATIENT_HUB.consultation.title}</span>
-          <span className="block text-xs text-muted-foreground">שיחת התייעצות עם מטיב</span>
+          <span className="block font-semibold text-foreground">{PATIENT_HUB?.consultation?.title}</span>
+          <span className="block text-xs text-muted-foreground">{c.consultationNote}</span>
         </span>
       </DemoLink>
-      <p className="text-xs text-muted-foreground">במצב חירום רפואי: מד"א 101.</p>
+      <p className="text-xs text-muted-foreground">{c.emergency}</p>
     </div>
   );
 }
@@ -85,13 +119,14 @@ function HelpNowContent() {
 export function HelpNow({ compact = false }) {
   const [open, setOpen] = useState(false);
   const { pathname } = useLocation();
+  const c = useCopy('chrome');
   useEffect(() => setOpen(false), [pathname]);
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button variant="pill-outline" size="pill" className={cn('h-10 gap-1.5 border-secondary/60', compact ? 'px-3 sm:px-4' : 'px-4')}>
           <LifeBuoy className="w-4 h-4 text-secondary" aria-hidden="true" />
-          <span className={compact ? 'sr-only sm:not-sr-only' : undefined}>עזרה עכשיו</span>
+          <span className={compact ? 'sr-only sm:not-sr-only' : undefined}>{c.helpNow}</span>
         </Button>
       </PopoverTrigger>
       <PopoverContent align="end" className="w-80 rounded-super-sm p-5">
@@ -110,6 +145,7 @@ function exitNow() {
 /** GOV.UK "exit this page": a visible button plus Shift pressed 3 times. */
 export function QuickExit({ className = '' }) {
   const hintId = useId();
+  const c = useCopy('chrome');
   useEffect(() => {
     /** @type {number[]} */
     let presses = [];
@@ -125,10 +161,10 @@ export function QuickExit({ className = '' }) {
   }, []);
   return (
     <div className={cn('flex items-center gap-2', className)}>
-      <span id={hintId} className="sr-only">יוצא מיד לאתר אחר. אפשר גם ללחוץ Shift שלוש פעמים.</span>
+      <span id={hintId} className="sr-only">{c.quickExitHint}</span>
       <Button variant="subtle" size="sm" radius="full" onClick={exitNow} aria-describedby={hintId} className="h-9 px-3.5 gap-1.5 border border-border">
         <LogOut className="w-4 h-4" aria-hidden="true" />
-        יציאה מהירה
+        {c.quickExit}
       </Button>
     </div>
   );
@@ -140,30 +176,37 @@ export function QuickExit({ className = '' }) {
 function MenuSheet({ area }) {
   const [open, setOpen] = useState(false);
   const { pathname } = useLocation();
+  const c = useCopy('chrome');
+  const { dir } = useLangDir();
+  const { meta, navLabels, menuPatientNav, proNav } = useNav();
   useEffect(() => setOpen(false), [pathname]);
   const link = cn('block rounded-xl px-3 py-2 text-foreground hover:bg-muted transition-natural', FOCUS);
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
-        <Button variant="ghost" size="pill" className="h-10 px-3 gap-1.5 text-foreground hover:bg-muted hover:text-foreground" aria-label="תפריט מלא">
+        <Button variant="ghost" size="pill" className="h-10 px-3 gap-1.5 text-foreground hover:bg-muted hover:text-foreground" aria-label={c.menuLabel}>
           <Menu className="w-5 h-5" aria-hidden="true" />
-          <span className="hidden sm:inline">תפריט</span>
+          <span className="hidden sm:inline">{c.menu}</span>
         </Button>
       </SheetTrigger>
-      <SheetContent side="right" className="w-full sm:max-w-md overflow-y-auto bg-background p-0">
-        <div dir="rtl" className="p-6 pt-12 text-start">
-          <SheetTitle className="font-heading text-2xl">לאן תרצה/י להגיע?</SheetTitle>
-          <SheetDescription className="mt-1">כל העמודים באתר, במקום אחד.</SheetDescription>
+      <SheetContent
+        side="right"
+        dir={dir}
+        className="w-full sm:max-w-md overflow-y-auto bg-background p-0"
+      >
+        <div dir={dir} className="p-6 pt-12 text-start">
+          <SheetTitle className="font-heading text-2xl">{c.menuTitle}</SheetTitle>
+          <SheetDescription className="mt-1">{c.menuDescription}</SheetDescription>
 
-          <nav aria-label="תפריט מלא" className="mt-6 space-y-6">
+          <nav aria-label={c.menuLabel} className="mt-6 space-y-6">
             <section>
               <h2 className="flex items-center gap-2 font-heading font-semibold text-accent mb-2">
-                <HeartHandshake className="w-4 h-4" aria-hidden="true" /> למטופלים ולמשפחות
+                <HeartHandshake className="w-4 h-4" aria-hidden="true" /> {meta.patient?.label}
               </h2>
               <ul className="space-y-0.5">
-                {MENU_PATIENT_NAV.map((item) => (
+                {menuPatientNav.map((item) => (
                   <li key={item.key}>
-                    <DemoLink to={item.route} className={cn(link, 'font-medium')}>{item.key === 'patient' ? 'כל הנושאים' : NAV_LABELS[item.key] || item.label}</DemoLink>
+                    <DemoLink to={item.route} className={cn(link, 'font-medium')}>{item.key === 'patient' ? c.allTopics : navLabels[item.key] || item.label}</DemoLink>
                     {item.children && (
                       <ul className="ms-4 border-s-2 border-dashed border-primary/30 ps-2">
                         {item.children.map((c) => (
@@ -177,16 +220,16 @@ function MenuSheet({ area }) {
             </section>
             <section>
               <h2 className="flex items-center gap-2 font-heading font-semibold text-accent mb-2">
-                <GraduationCap className="w-4 h-4" aria-hidden="true" /> לאנשי טיפול ומקצוע
+                <GraduationCap className="w-4 h-4" aria-hidden="true" /> {meta.therapist?.label}
               </h2>
               <ul className="space-y-0.5">
-                {PRO_NAV.map((item) => (
+                {proNav.map((item) => (
                   <li key={item.key}>
-                    <DemoLink to={item.route} className={cn(link, 'font-medium')}>{item.key === 'therapist' ? 'ראשי' : item.label}</DemoLink>
+                    <DemoLink to={item.route} className={cn(link, 'font-medium')}>{item.key === 'therapist' ? c.proHome : item.label}</DemoLink>
                     {item.key === 'about' && (
                       <ul className="ms-4 border-s-2 border-dashed border-primary/30 ps-2">
                         {ABOUT_CHILDREN.map((k) => (
-                          <li key={k}><DemoLink to={ALL_ROUTES[k]} className={cn(link, 'text-sm py-1.5')}>{ROUTE_META[k].label}</DemoLink></li>
+                          <li key={k}><DemoLink to={ALL_ROUTES[k]} className={cn(link, 'text-sm py-1.5')}>{meta[k]?.label}</DemoLink></li>
                         ))}
                       </ul>
                     )}
@@ -195,10 +238,10 @@ function MenuSheet({ area }) {
               </ul>
             </section>
             <section>
-              <h2 className="font-heading font-semibold text-accent mb-2">מטיב</h2>
+              <h2 className="font-heading font-semibold text-accent mb-2">{c.brand}</h2>
               <ul className="space-y-0.5">
                 {['home', 'donate', 'contact', 'accessibility', 'privacy', 'terms'].map((k) => (
-                  <li key={k}><DemoLink to={ROUTES[k]} className={cn(link, 'font-medium')}>{ROUTE_META[k].label}</DemoLink></li>
+                  <li key={k}><DemoLink to={ROUTES[k]} className={cn(link, 'font-medium')}>{meta[k]?.label}</DemoLink></li>
                 ))}
               </ul>
             </section>
@@ -212,14 +255,16 @@ function MenuSheet({ area }) {
 
 /** @param {{ area: Area }} props */
 function Header({ area }) {
+  const c = useCopy('chrome');
   return (
     <div className="bg-background/95 backdrop-blur border-b border-border">
       <div className="max-w-6xl mx-auto px-4 sm:px-8 h-16 flex items-center gap-3">
-        <DemoLink to={ROUTES.home} className={cn('flex-shrink-0 rounded-lg', FOCUS)} aria-label="מטיב, לדף הבית">
-          <img src={LOGO} alt="מטיב - המרכז הישראלי לטיפול בפסיכוטראומה" className="h-10 sm:h-11 w-auto" />
+        <DemoLink to={ROUTES.home} className={cn('flex-shrink-0 rounded-lg', FOCUS)} aria-label={c.logoLink}>
+          <img src={LOGO} alt={c.logoAlt} className="h-10 sm:h-11 w-auto" />
         </DemoLink>
 
         <div className="ms-auto flex items-center gap-1.5 sm:gap-2">
+          <LanguageSwitcher />
           <HelpNow />
           <MenuSheet area={area} />
         </div>
@@ -232,25 +277,28 @@ function Header({ area }) {
 function AreaNav({ area }) {
   const { pathname } = useLocation();
   const { key } = resolveRoute(pathname);
+  const c = useCopy('chrome');
+  const { meta: routeMeta, patientNav, navLabels, proNav } = useNav();
   const isPatient = area === 'patient';
-  const meta = AREAS.find((a) => a.key === area);
-  const Icon = meta?.icon || HeartHandshake;
+  const areaInfo = AREAS.find((a) => a.key === area);
+  const areaLabel = routeMeta[area]?.label;
+  const Icon = areaInfo?.icon || HeartHandshake;
   const items = isPatient
-    ? PATIENT_NAV.map((i) => ({ key: i.key, label: i.key === 'patient' ? 'כל הנושאים' : NAV_LABELS[i.key] || i.label, route: i.route, childKeys: (i.children || []).map((c) => c.key) }))
-    : PRO_NAV.map((i) => ({ key: i.key, label: i.key === 'therapist' ? 'ראשי' : i.label, route: i.route, childKeys: [] }));
-  const parentKey = key ? ROUTE_META[key]?.parent : undefined;
+    ? patientNav.map((i) => ({ key: i.key, label: i.key === 'patient' ? c.allTopics : navLabels[i.key] || i.label, route: i.route, childKeys: (i.children || []).map((ch) => ch.key) }))
+    : proNav.map((i) => ({ key: i.key, label: i.key === 'therapist' ? c.proHome : i.label, route: i.route, childKeys: /** @type {string[]} */ ([]) }));
+  const parentKey = key ? routeMeta[key]?.parent : undefined;
   const isActive = (/** @type {{ key: string, childKeys: string[] }} */ i) => i.key === key || (i.key !== area && i.key === parentKey);
 
   return (
     <div className="bg-card border-b border-border">
       <div className="max-w-6xl mx-auto px-4 sm:px-8 py-2 flex items-center gap-3">
-        <DemoLink to={meta?.to || '/'} className={cn('inline-flex items-center gap-2 font-heading font-semibold text-foreground whitespace-nowrap rounded-lg', FOCUS)}>
+        <DemoLink to={areaInfo?.to || '/'} className={cn('inline-flex items-center gap-2 font-heading font-semibold text-foreground whitespace-nowrap rounded-lg', FOCUS)}>
           <span className="w-7 h-7 rounded-full bg-primary/10 text-accent flex items-center justify-center">
             <Icon className="w-4 h-4" aria-hidden="true" />
           </span>
-          <span className="lg:sr-only">{meta?.label}</span>
+          <span className="lg:sr-only">{areaLabel}</span>
         </DemoLink>
-        <nav aria-label={`ניווט ב${meta?.label || 'אזור'}`} className="hidden lg:block min-w-0 flex-1">
+        <nav aria-label={fmt(c.areaNavLabel, { area: areaLabel || c.areaFallback })} className="hidden lg:block min-w-0 flex-1">
           <ul className="flex flex-wrap items-center gap-0.5">
             {items.map((i) => (
               <li key={i.key}>
@@ -272,7 +320,7 @@ function AreaNav({ area }) {
         {isPatient && <QuickExit className="ms-auto" />}
         {!isPatient && (
           <DemoLink to={ROUTES.patient} className={cn('ms-auto hidden sm:inline-flex lg:hidden xl:inline-flex text-sm whitespace-nowrap', TEXT_LINK)}>
-            לאזור המטופלים
+            {c.toPatientArea}
           </DemoLink>
         )}
       </div>
@@ -284,31 +332,36 @@ function AreaNav({ area }) {
 
 /** The site footer, used by every part of V3 (Metiv pages, patient area, therapist area). */
 export function Footer() {
+  const c = useCopy('chrome');
+  const { ORG, PATIENT_HUB, ROUTE_META } = useMetiv();
+  const { eran: ERAN, eranWa: ERAN_WA } = useCrisisLines();
   return (
     <footer className="bg-muted text-foreground border-t border-border">
       <div>
         <div className="max-w-6xl mx-auto px-5 sm:px-8 pt-8 pb-10 grid gap-8 md:grid-cols-[minmax(0,1fr)_auto]">
           <div className="space-y-3">
-            <img src={LOGO} alt="מטיב" className="h-12 w-auto" />
-            <p className="text-sm text-muted-foreground">{ORG.name}, {ORG.legalEntity}. {ORG.address}.</p>
+            <img src={LOGO} alt={c.brand} className="h-12 w-auto" />
+            <p className="text-sm text-muted-foreground">{fmt(c.footerOrg, { name: ORG.name, legalEntity: ORG.legalEntity, address: ORG.address })}</p>
             <p className="text-sm text-muted-foreground">
-              טלפון: <a href={`tel:${ORG.phones.main.replace(/\D/g, '')}`} className={TEXT_LINK} dir="ltr">{ORG.phones.main}</a>
-              {' · '}מייל: <a href={`mailto:${ORG.emails.general}`} className={TEXT_LINK} dir="ltr">{ORG.emails.general}</a>
+              {fmtNodes(c.footerContact, {
+                phone: <a href={`tel:${ORG.phones.main.replace(/\D/g, '')}`} className={TEXT_LINK} dir="ltr">{ORG.phones.main}</a>,
+                email: <a href={`mailto:${ORG.emails.general}`} className={TEXT_LINK} dir="ltr">{ORG.emails.general}</a>,
+              })}
             </p>
             <ul className="flex flex-wrap gap-x-4 gap-y-1 text-sm">
               {['about', 'donate', 'contact', 'sources', 'accessibility', 'privacy', 'terms'].map((k) => (
-                <li key={k}><DemoLink to={ROUTES[k]} className={cn('text-foreground hover:text-accent underline-offset-4 hover:underline rounded-sm', FOCUS)}>{ROUTE_META[k].label}</DemoLink></li>
+                <li key={k}><DemoLink to={ROUTES[k]} className={cn('text-foreground hover:text-accent underline-offset-4 hover:underline rounded-sm', FOCUS)}>{ROUTE_META?.[k]?.label}</DemoLink></li>
               ))}
             </ul>
-            <p className="text-xs text-muted-foreground">{PATIENT_HUB.disclaimer} · אתר הדגמה בלבד, לא לפרסום.</p>
+            <p className="text-xs text-muted-foreground">{fmt(c.footerDisclaimer, { disclaimer: PATIENT_HUB?.disclaimer ?? '' })}</p>
           </div>
           <div className="rounded-super bg-card border border-border p-5 self-start md:w-72">
-            <p className="font-heading font-semibold">ער"ן, עזרה ראשונה נפשית</p>
+            <p className="font-heading font-semibold">{c.eranCardTitle}</p>
             <a href={ERAN?.href || 'tel:1201'} className={cn('mt-2 flex items-center gap-2 text-2xl font-heading font-semibold text-accent rounded-sm', FOCUS)}>
-              <Phone className="w-5 h-5" aria-hidden="true" /> ער"ן 1201
+              <Phone className="w-5 h-5" aria-hidden="true" /> {c.eran1201}
             </a>
             <a href={ERAN_WA?.href} target="_blank" rel="noopener noreferrer" className={cn('mt-1 inline-block text-sm', TEXT_LINK)}>
-              או בוואטסאפ<span className="sr-only"> (נפתח בלשונית חדשה)</span>
+              {c.eranCardWhatsapp} <NewTabHint />
             </a>
           </div>
         </div>
@@ -318,9 +371,10 @@ export function Footer() {
 }
 
 function SkipLink() {
+  const c = useCopy('chrome');
   return (
     <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:start-2 focus:z-50 focus:rounded-full focus:bg-primary focus:text-primary-foreground focus:px-4 focus:py-2">
-      דילוג לתוכן
+      {c.skipLink}
     </a>
   );
 }
@@ -331,9 +385,11 @@ function SkipLink() {
 export function SiteShell({ area }) {
   const { pathname } = useLocation();
   const { key } = resolveRoute(pathname);
-  const next = area === 'patient' && key ? NEXT_STEPS[key] : undefined;
+  const { NEXT_STEPS } = useMetiv();
+  const { lang, dir } = useLangDir();
+  const next = area === 'patient' && key ? NEXT_STEPS?.[key] : undefined;
   return (
-    <div dir="rtl" lang="he" className="min-h-screen flex flex-col bg-background">
+    <div dir={dir} lang={lang} className="min-h-screen flex flex-col bg-background">
       <SkipLink />
       <div className="sticky top-0 z-40">
         <Header area={area} />
@@ -356,6 +412,8 @@ export function SiteShell({ area }) {
 export function SanctuaryShell() {
   const { pathname } = useLocation();
   const { key } = resolveRoute(pathname);
+  const c = useCopy('chrome');
+  const { eran: ERAN } = useCrisisLines();
   const backTo = key === 'calming' ? ROUTES.patient : ROUTES.calming;
   return (
     <div className="min-h-screen flex flex-col bg-background">
@@ -363,11 +421,11 @@ export function SanctuaryShell() {
       <header className="sticky top-0 z-40 bg-background/95 backdrop-blur border-b border-border">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center gap-3">
           <DemoLink to={backTo} className={cn('inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground rounded-full px-2 py-1', FOCUS)}>
-            <ArrowRight className="w-4 h-4" aria-hidden="true" />
-            <span className="whitespace-nowrap">{key === 'calming' ? 'לכל הנושאים' : 'לתרגילים'}</span>
+            <ArrowRight className="w-4 h-4 ltr:-scale-x-100" aria-hidden="true" />
+            <span className="whitespace-nowrap">{key === 'calming' ? c.backToTopics : c.backToExercises}</span>
           </DemoLink>
           <div className="ms-auto flex items-center gap-3">
-            <a href={ERAN?.href || 'tel:1201'} className={cn('text-sm whitespace-nowrap text-muted-foreground hover:text-foreground rounded-sm', FOCUS)}>ער"ן 1201</a>
+            <a href={ERAN?.href || 'tel:1201'} className={cn('text-sm whitespace-nowrap text-muted-foreground hover:text-foreground rounded-sm', FOCUS)}>{c.eran1201}</a>
             <QuickExit />
           </div>
         </div>
@@ -414,6 +472,7 @@ export function ScrollManager() {
 /** Document title per route and a noindex robots meta while the demo is mounted. */
 export function DocumentMeta() {
   const { pathname } = useLocation();
+  const c = useCopy('chrome');
   useEffect(() => {
     const meta = document.createElement('meta');
     meta.name = 'robots';
@@ -424,7 +483,7 @@ export function DocumentMeta() {
   useEffect(() => {
     const { key, params } = resolveRoute(pathname);
     const label = routeLabel(key, params);
-    document.title = key && key !== 'home' ? `${label} | ${BRAND} (הדגמה v3)` : `${BRAND} - המרכז הישראלי לטיפול בפסיכוטראומה (הדגמה v3)`;
-  }, [pathname]);
+    document.title = key && key !== 'home' ? fmt(c.docTitle, { label, brand: c.brand }) : fmt(c.docTitleHome, { brand: c.brand });
+  }, [pathname, c]);
   return null;
 }

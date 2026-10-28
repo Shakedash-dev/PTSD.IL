@@ -1,0 +1,58 @@
+{
+  "key": "RESERVIST_FAMILY_PROGRAMS",
+  "slug": "metiv-reservist-family",
+  "kind": "list",
+  "rows": [
+    {
+      "_key": "panda-family",
+      "title": "פנד\"ה למשפחה",
+      "sortOrder": 0,
+      "content": {
+        "_key": "panda-family",
+        "_col": "metiv-reservist-family",
+        "id": "panda-family",
+        "title": "פנד\"ה למשפחה",
+        "provider": "מטיב ילדים",
+        "icon": "Users",
+        "who": "מילואימניקים ובני משפחותיהם.",
+        "ages": "ילדים בגילאי 0-14",
+        "what": "פעילויות משפחתיות לפיתוח דרכי התמודדות ויכולות ויסות: 6 מפגשי הדרכה להורים ו-6 מפגשים משפחתיים.",
+        "location": "בבית או במטיב",
+        "cost": "ללא עלות",
+        "contacts": [
+          {
+            "kind": "link",
+            "label": "טופס פנייה לתכניות למשפחות",
+            "href": "https://tinyurl.com/metivkids"
+          }
+        ],
+        "source": "https://metiv.org/טיפולים-ללא-עלות-דרך-מטיב/"
+      }
+    },
+    {
+      "_key": "namal-family",
+      "title": "נמ\"ל למשפחה - נעשה מקום למשחק",
+      "sortOrder": 1,
+      "content": {
+        "_key": "namal-family",
+        "_col": "metiv-reservist-family",
+        "id": "namal-family",
+        "title": "נמ\"ל למשפחה - נעשה מקום למשחק",
+        "provider": "מטיב ילדים",
+        "icon": "Baby",
+        "who": "מילואימניקים ובני משפחותיהם. בין הקבוצות: קבוצה להורים שחזרו מהמילואים יחד עם ילדם, במימון משרד הביטחון.",
+        "ages": "הורים לילדים בגילאי 2-4",
+        "what": "מפגשים קבוצתיים עם פעילויות משותפות להורים ולילדים.",
+        "cost": "ללא עלות",
+        "contacts": [
+          {
+            "kind": "link",
+            "label": "טופס פנייה לתכניות למשפחות",
+            "href": "https://tinyurl.com/metivkids"
+          }
+        ],
+        "source": "https://metiv.org/טיפולים-ללא-עלות-דרך-מטיב/"
+      }
+    }
+  ]
+}

@@ -11,9 +11,8 @@ import ValidatableContent from '@/components/ValidatableContent';
 import Markdown from '@/components/Markdown';
 import { DemoLink } from '@/pages/metiv-demos/shared/DemoChrome';
 import { ROUTES } from '@/pages/metiv-demos/shared/routes';
-import { METIV_SERVICES } from '@/pages/metiv-demos/shared/patient/additions';
-import { ContactList } from '@/pages/metiv-demos/shared/patient/components';
-import { withReleaseJourneyPage } from '../data/releaseJourneyLinks';
+import { useCopy, useMetiv } from '../content/MetivContent';
+import { ContactList, useWithReleaseJourneyPage } from './PatientKit';
 import { VersionLinks } from './PtsdIlRouting';
 
 // Metiv demo (V3): a copy of src/pages/Rights.jsx. Change only: two Metiv items,
@@ -28,17 +27,16 @@ const CATEGORIES = [
   { key: 'general', labelKey: 'rights_general', icon: HelpCircle },
 ];
 
-const SECURITY_FORCES_ADDITIONS = withReleaseJourneyPage(
-  ['release-journey', 'free-treatments'].map((id) => METIV_SERVICES.find((s) => s.id === id)).filter(Boolean)
-);
+const SECURITY_FORCES_ADDITION_IDS = ['release-journey', 'free-treatments'];
 
+/** Entry fields in display order, with their `patientRights` label keys. */
 const ENTRY_FIELDS = [
-  ['who', 'למי'],
-  ['ages', 'גילאים'],
-  ['what', 'מה כולל'],
-  ['location', 'איפה'],
-  ['cost', 'עלות'],
-  ['process', 'איך פונים'],
+  ['who', 'fieldWho'],
+  ['ages', 'fieldAges'],
+  ['what', 'fieldWhat'],
+  ['location', 'fieldLocation'],
+  ['cost', 'fieldCost'],
+  ['process', 'fieldProcess'],
 ];
 
 
@@ -82,6 +80,7 @@ function FAQAccordion({ q, a, steps, links, lang }) {
 
 /** A Metiv programme, shown as one more item in the accordion list. */
 function MetivEntryAccordion({ entry }) {
+  const c = useCopy('patientRights');
   return (
     <Disclosure
       label={entry.title}
@@ -93,9 +92,9 @@ function MetivEntryAccordion({ entry }) {
       <>
         {entry.summary && <p className="text-foreground leading-relaxed">{entry.summary}</p>}
         <dl className="space-y-2">
-          {ENTRY_FIELDS.filter(([field]) => entry[field]).map(([field, label]) => (
+          {ENTRY_FIELDS.filter(([field]) => entry[field]).map(([field, labelKey]) => (
             <div key={field}>
-              <dt className="text-xs font-semibold text-primary">{label}</dt>
+              <dt className="text-xs font-semibold text-primary">{c[labelKey]}</dt>
               <dd className="text-foreground leading-relaxed">{entry[field]}</dd>
             </div>
           ))}
@@ -105,7 +104,7 @@ function MetivEntryAccordion({ entry }) {
           to={`${ROUTES.whereToGetHelp}#${entry.id}`}
           className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-primary/10 text-foreground rounded-full text-sm hover:bg-primary/20 transition-natural"
         >
-          לפרטים המלאים
+          {c.fullDetails}
         </DemoLink>
       </>
     </Disclosure>
@@ -115,6 +114,11 @@ function MetivEntryAccordion({ entry }) {
 export default function Rights() {
   const { lang } = useLang();
   const [activeCategory, setActiveCategory] = useState('security_forces');
+  const { METIV_SERVICES } = useMetiv();
+  const withReleaseJourneyPage = useWithReleaseJourneyPage();
+  const securityForcesAdditions = withReleaseJourneyPage(
+    SECURITY_FORCES_ADDITION_IDS.map((id) => METIV_SERVICES.find((s) => s.id === id)).filter(Boolean)
+  );
 
   const { data: currentFaqs = [], isLoading, error } = useRightsFaqs({ lang, category: activeCategory });
 
@@ -161,7 +165,7 @@ export default function Rights() {
           {/* Metiv additions: security forces */}
           {activeCategory === 'security_forces' && (
             <VersionLinks>
-              {SECURITY_FORCES_ADDITIONS.map((entry) => (
+              {securityForcesAdditions.map((entry) => (
                 <MetivEntryAccordion key={entry.id} entry={entry} />
               ))}
             </VersionLinks>

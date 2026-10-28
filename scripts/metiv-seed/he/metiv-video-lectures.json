@@ -1,0 +1,21 @@
+{
+  "key": "VIDEO_LECTURES",
+  "slug": "metiv-video-lectures",
+  "kind": "single",
+  "rows": [
+    {
+      "_key": "VIDEO_LECTURES",
+      "title": "VIDEO_LECTURES",
+      "sortOrder": 0,
+      "content": {
+        "_key": "VIDEO_LECTURES",
+        "_col": "metiv-video-lectures",
+        "id": "video-lectures",
+        "title": "הרצאות וידאו",
+        "text": "הרצאות מצולמות של אנשי מטיב מתפרסמות בערוץ היוטיוב של מטיב.",
+        "linkLabel": "לערוץ היוטיוב של מטיב",
+        "url": "https://www.youtube.com/channel/UCBKOBQp0BFFp7uX9qiwUp8w"
+      }
+    }
+  ]
+}

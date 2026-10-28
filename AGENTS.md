@@ -81,7 +81,15 @@ src/components/admin/AdminShell.jsx    <- the whole frame: wordmark + logout, RT
 src/components/admin/PendingChanges.jsx <- staged edits, save-all review dialog, edit-log write
 src/components/admin/AdminGuide.jsx    <- /admin home page (how to use, no-revert, permissions)
 src/components/admin/EditLogPanel.jsx  <- edit log viewer (masteradmin)
+src/components/admin/AdminLang.jsx     <- content-language tabs (he/ar/en/ru/fr)
+src/components/admin/translationStaging.js <- stages AI translations of Hebrew edits
+src/components/admin/MetivAdmin.jsx    <- metiv variant: 3 groups, section sidebar, sections
+src/components/admin/ContentEditor.jsx <- schema-less JSON editor (Metiv collections)
+src/components/admin/ChatbotQaAdmin.jsx <- chatbot Q&A playbooks (category chatbot-qa), both variants
 src/pages/Admin.jsx    <- 9 content panels (CRUD UI, react-quill editor) + users
+src/api/metivAdminSource.js <- Metiv rows (categories metiv + metiv-<slug>, _key/_col)
+src/api/chatbotQaAdminSource.js <- chatbot-qa rows (one category, no _col; reindex rebuilds the Q&A index)
+src/api/adminTranslate.js   <- worker POST /translate, what to send, sibling build
 src/api/adminSource.js <- load/save/remove per entity; taxonomy resolution;
                           serializes the content JSON; md<->html conversion
 src/lib/markdownHtml.js <- mdToHtml (marked) / htmlToMd (turndown)
@@ -111,7 +119,18 @@ src/lib/auth.js         <- login/logout, JWT in sessionStorage, isAuthenticated/
   admin/moderator too (GET /admin/articles). **Not tamper-proof** - any
   admin/moderator token can PATCH/DELETE the rows; a real audit trail needs a
   backend log.
-- The panel is Hebrew-only. No language pickers.
+- **Two variants, one panel**: `/admin` (PTSD-IL) and
+  `/metiv-site-demo-v3/admin` (`AdminGate variant="metiv"`: the Metiv v3
+  collections in three groups, with the nine PTSD-IL panels under patients).
+  Contract: `docs/metiv-db-spec.md` section 3.
+- **Languages**: one set of language tabs at the top. A Hebrew edit of an
+  article-backed row stages the AI translation of its four siblings (same
+  groupId) via the worker's `POST /translate`; nothing can be saved while one is
+  pending, a failed one stays staged with a retry, and a sibling edited by hand
+  (`_tr.by === 'human'`) asks before it is overwritten. An edit in another tab
+  writes only that row and stamps `content._tr = { by: 'human', at }`.
+  Communities and the questionnaire have no cross-language link, so they are
+  edited per language and never translated.
 
 **Static layer is fully retired.** `src/data/static/*` and `src/data/db.js` have been deleted. The PCL-5 questionnaire, like every other content type, is now served from dedicated API endpoints (`/api/questionnaires`, `/api/admin/questionnaires`) and is fully editable in the admin panel. `src/data/questionnaireSections.js` remains, but it is a presentation-only overlay (Hebrew section grouping for the question list) - not a content source; do NOT add new content data under `src/data/`, new content goes through the API/admin.
 

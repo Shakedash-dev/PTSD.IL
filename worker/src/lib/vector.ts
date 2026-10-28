@@ -9,6 +9,9 @@ export type ChunkMeta = {
   // Primary category slug (rights/ptsd-info/second-circle/...), used by the
   // frontend to route `type=faq` citation chips to the right page.
   categorySlug?: string;
+  // Every category slug of the item (Metiv rows: `metiv` + `metiv-<collection>`),
+  // so the frontend can route Metiv chips by collection.
+  categorySlugs?: string[];
 };
 
 export type Hit = { score: number; meta: ChunkMeta };
@@ -34,6 +37,16 @@ export async function upsertVectors(index: VectorizeIndex, rows: VectorRow[]): P
 export async function deleteItem(index: VectorizeIndex, itemId: string, maxChunks = 64): Promise<void> {
   const ids = Array.from({ length: maxChunks }, (_, i) => `${itemId}:${i}`);
   await index.deleteByIds(ids);
+}
+
+const DELETE_BATCH = 500; // ids per Vectorize deleteByIds call
+
+// Batched cross-item delete for the bulk reindex: one subrequest per
+// DELETE_BATCH ids instead of one per item.
+export async function deleteIds(index: VectorizeIndex, ids: string[]): Promise<void> {
+  for (let i = 0; i < ids.length; i += DELETE_BATCH) {
+    await index.deleteByIds(ids.slice(i, i + DELETE_BATCH));
+  }
 }
 
 export async function query(index: VectorizeIndex, vector: number[], topK: number): Promise<Hit[]> {

@@ -1,0 +1,11 @@
+{
+  "_area": "general",
+  "_label": "תרומה",
+  "eyebrow": "Support",
+  "short1": "Two ways: donate online, or talk with us about a partnership.",
+  "short2": "The association is registered: {legalEntity}.",
+  "placeholderTag": "[Placeholder text]",
+  "placeholderNote": "The texts on this page are awaiting Metiv's wording.",
+  "way": "Option {n}",
+  "emailCta": "{cta}: {email}"
+}

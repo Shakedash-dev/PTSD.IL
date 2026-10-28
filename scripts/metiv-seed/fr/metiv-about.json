@@ -1,0 +1,85 @@
+{
+  "key": "ABOUT",
+  "slug": "metiv-about",
+  "kind": "single",
+  "rows": [
+    {
+      "_key": "ABOUT",
+      "title": "ABOUT",
+      "sortOrder": 0,
+      "content": {
+        "_key": "ABOUT",
+        "_col": "metiv-about",
+        "title": "À propos de Metiv",
+        "teamIntro": "Notre équipe se compose de professionnels de la santé mentale et de chercheurs engagés en faveur d'un service de qualité et du développement des connaissances et des possibilités de traitement dans le domaine du traumatisme.",
+        "activitiesIntro": [
+          "Selon les estimations, environ 9 % des Israéliens souffrent d'une altération de leur fonctionnement due à un trouble de stress post-traumatique (TSPT), un taux trois fois plus élevé qu'aux États-Unis et dans d'autres pays occidentaux.",
+          "Nous proposons des interventions cliniques et une variété de programmes thérapeutiques aux personnes exposées à des événements de vie traumatiques. Nos programmes et services sont également adaptés à des groupes de population qui ne bénéficient pas d'un soutien suffisant : soldats démobilisés, membres de la communauté éthiopienne, enfants et adolescents.",
+          "Au fil des années, nos professionnels ont publié des dizaines d'articles scientifiques et de livres, tout en encadrant de nombreuses recherches universitaires. Nous entretenons un enrichissement mutuel constant entre la recherche et la clinique : nous apprenons sans cesse de nouvelles méthodes, nous les étudions par la recherche et nous développons des interventions à partir des connaissances accumulées dans notre unité de recherche."
+        ],
+        "history": [
+          "Metiv, Centre israélien de psychotraumatologie, a été fondé en 1989 par le Dr Danny Brom en tant qu'antenne de l'hôpital Herzog - Institut Latner, afin de faire face au phénomène croissant du traumatisme psychique en Israël. L'histoire douloureuse d'Israël a exposé de nombreux citoyens, et en particulier des enfants, aux graves effets du traumatisme psychique. C'est pourquoi Metiv s'intéresse à un large éventail de traumatismes : des crises du cycle de vie, comme un licenciement ou un divorce, aux traumatismes médicaux et aux accidents, jusqu'aux deuils traumatiques, aux agressions sexuelles, aux expériences de combat et aux attentats.",
+          "Malgré les événements douloureux de l'histoire israélienne, la réaction la plus répandue que le Dr Brom a reçue de ses collègues de la santé mentale lorsqu'il a commencé à travailler en Israël était : « Mais ici, nous ne voyons pas de traumatisme. » L'activité de Metiv a contribué à sensibiliser Israël aux conséquences collectives et individuelles du traumatisme. Depuis qu'il est devenu une organisation indépendante en 1999, le centre Metiv a offert des services de psychothérapie aux personnes touchées par un traumatisme et a formé des centaines de professionnels de la santé mentale à des méthodes de traitement du traumatisme fondées sur les connaissances cliniques et la recherche.",
+          "Conscient de l'influence de la résilience sociale sur la capacité des individus à faire face au traumatisme, Metiv a lancé au début de la seconde Intifada, en 2001, la création de la Coalition israélienne pour le traumatisme, aujourd'hui une organisation indépendante. Sept autres organisations de traitement du traumatisme ont rejoint cette coalition, menée par Metiv avec le soutien de la Fédération juive de New York.",
+          "Au fil des années, Metiv a mis en place des programmes d'intervention pour la petite enfance, des programmes pour les écoles et divers services de traitement du traumatisme. Parmi eux figurait le Programme national de résilience pour les écoles, mené en collaboration avec le ministère de l'Éducation. Dans le cadre de ce projet, Metiv a formé plus de 5 000 enseignants au renforcement de la résilience, et un protocole, des outils de diagnostic et des programmes thérapeutiques ont été élaborés pour environ 50 000 enfants. En 2011-2012, Metiv a évalué le programme avec les Centres pour le contrôle et la prévention des maladies (CDC) d'Atlanta.",
+          "Depuis le tremblement de terre de 1999 en Turquie, Metiv a acquis une expérience de l'intervention immédiate dans des zones sinistrées à travers le monde. L'équipe de Metiv a apporté une première aide et formé des intervenants de terrain et des thérapeutes en Haïti, en Tchétchénie, au Mississippi, au Sri Lanka, au Népal et à New York après les attentats contre les tours jumelles.",
+          "Parmi les collaborations professionnelles du centre, on peut citer le travail commun avec des experts en santé mentale de l'université Al-Quds dans le cadre du programme CHERISH, destiné aux écoles, aux parents endeuillés, aux pédiatres et aux responsables de jeunesse en Israël, en Cisjordanie et à Gaza. Dans le domaine de la recherche, des collaborations ont eu lieu avec le Pr Claude Chemtob de l'hôpital Mount Sinai à New York et avec George Bonanno de l'université Columbia.",
+          "En Israël, Metiv intervient dans le domaine du traumatisme à travers des services variés, du traitement individuel aux interventions de groupe après une crise, en passant par des programmes communautaires. Au fil des années, nous avons travaillé avec des ministères, notamment le ministère de la Défense dans le cadre du programme Peace of Mind, ainsi qu'avec des organisations du secteur associatif, des établissements d'enseignement et des entreprises privées. Nous avons également beaucoup travaillé avec des « primo-intervenants » : le Magen David Adom, la police israélienne et l'Autorité nationale des pompiers et des secours.",
+          "Une part importante de notre activité se concentre sur la périphérie : nous travaillons avec la communauté bédouine de Rahat et des villages non reconnus, avec les habitants de Sdérot à la frontière de Gaza, avec les Israéliens d'origine éthiopienne dans tout le pays, et bien d'autres. Nous nous engageons à développer et à mettre en œuvre de nouveaux programmes de santé mentale pour les communautés qui en ont besoin, et nous consacrons des efforts importants à la recherche et à l'évaluation de ces programmes. L'équipe de Metiv publie des articles universitaires dans des revues scientifiques, ainsi que des articles de presse et des livres destinés aux professionnels et au grand public."
+        ],
+        "timeline": [
+          {
+            "year": "1989",
+            "text": "Metiv est fondé par le Dr Danny Brom en tant qu'antenne de l'hôpital Herzog - Institut Latner."
+          },
+          {
+            "year": "1999",
+            "text": "Metiv devient une organisation indépendante."
+          },
+          {
+            "year": "1999",
+            "text": "Début des interventions immédiates dans des zones sinistrées à travers le monde, à la suite du tremblement de terre en Turquie."
+          },
+          {
+            "year": "2001",
+            "text": "Au début de la seconde Intifada, Metiv lance la création de la Coalition israélienne pour le traumatisme."
+          },
+          {
+            "year": "2011-2012",
+            "text": "Évaluation du Programme national de résilience pour les écoles avec les CDC d'Atlanta."
+          },
+          {
+            "year": "2023",
+            "text": "En octobre 2023, la clinique Migdalor est créée pour le Département de réadaptation du ministère de la Défense - district de Jérusalem."
+          }
+        ],
+        "activities": [
+          "Thérapie individuelle, de groupe et familiale pour adultes et enfants",
+          "Programmes pour soldats démobilisés (Peace of Mind)",
+          "Formations, cours et supervisions pour professionnels",
+          "Formation et accompagnement des organisations",
+          "Recherche et évaluation de programmes thérapeutiques",
+          "Interventions communautaires et programmes pour les écoles et la petite enfance",
+          "Intervention immédiate dans des zones sinistrées en Israël et dans le monde"
+        ],
+        "partnersAbroad": [
+          "Haïti",
+          "Tchétchénie",
+          "Mississippi",
+          "Sri Lanka",
+          "Népal",
+          "New York (après les attentats contre les tours jumelles)",
+          "Turquie (tremblement de terre, 1999)"
+        ],
+        "communities": [
+          "La communauté bédouine de Rahat et des villages non reconnus",
+          "Les habitants de Sdérot, à la frontière de Gaza",
+          "Les Israéliens d'origine éthiopienne dans tout le pays",
+          "Soldats démobilisés",
+          "Enfants et adolescents"
+        ],
+        "sourceUrl": "https://metiv.org/אודות/"
+      }
+    }
+  ]
+}

@@ -1,0 +1,167 @@
+{
+  "key": "PATIENT_NAV",
+  "slug": "metiv-patient-nav",
+  "kind": "list",
+  "rows": [
+    {
+      "_key": "patient",
+      "title": "Главная",
+      "sortOrder": 0,
+      "content": {
+        "_key": "patient",
+        "_col": "metiv-patient-nav",
+        "key": "patient",
+        "label": "Главная",
+        "route": "/patient"
+      }
+    },
+    {
+      "_key": "firstCircle",
+      "title": "Я живу с ПТСР",
+      "sortOrder": 1,
+      "content": {
+        "_key": "firstCircle",
+        "_col": "metiv-patient-nav",
+        "key": "firstCircle",
+        "label": "Я живу с ПТСР",
+        "route": "/patient/first-circle",
+        "children": [
+          {
+            "key": "ptsdInfo",
+            "label": "О ПТСР",
+            "route": "/patient/ptsd-info"
+          },
+          {
+            "key": "selfHelp",
+            "label": "Инструменты самопомощи",
+            "route": "/patient/self-help"
+          },
+          {
+            "key": "rights",
+            "label": "Права",
+            "route": "/patient/rights"
+          },
+          {
+            "key": "treatment",
+            "label": "Терапия",
+            "route": "/patient/treatment"
+          },
+          {
+            "key": "community",
+            "label": "Сообщество",
+            "route": "/patient/community"
+          },
+          {
+            "key": "children",
+            "label": "Материалы для детей",
+            "route": "/patient/children"
+          }
+        ]
+      }
+    },
+    {
+      "_key": "secondCircle",
+      "title": "Мой близкий живёт с ПТСР",
+      "sortOrder": 2,
+      "content": {
+        "_key": "secondCircle",
+        "_col": "metiv-patient-nav",
+        "key": "secondCircle",
+        "label": "Мой близкий живёт с ПТСР",
+        "route": "/patient/second-circle",
+        "children": [
+          {
+            "key": "ptsdInfo",
+            "label": "О ПТСР",
+            "route": "/patient/ptsd-info"
+          },
+          {
+            "key": "secondCircleTools",
+            "label": "Инструменты совладания",
+            "route": "/patient/second-circle-tools"
+          },
+          {
+            "key": "rights",
+            "label": "Права",
+            "route": "/patient/rights"
+          },
+          {
+            "key": "treatment",
+            "label": "Терапия",
+            "route": "/patient/treatment"
+          },
+          {
+            "key": "children",
+            "label": "Материалы для детей",
+            "route": "/patient/children"
+          },
+          {
+            "key": "community",
+            "label": "Сообщество",
+            "route": "/patient/community"
+          }
+        ]
+      }
+    },
+    {
+      "_key": "questionnaire",
+      "title": "Опросник для самопроверки",
+      "sortOrder": 3,
+      "content": {
+        "_key": "questionnaire",
+        "_col": "metiv-patient-nav",
+        "key": "questionnaire",
+        "label": "Опросник для самопроверки",
+        "route": "/patient/questionnaire"
+      }
+    },
+    {
+      "_key": "whereToGetHelp",
+      "title": "Где получить терапию",
+      "sortOrder": 4,
+      "content": {
+        "_key": "whereToGetHelp",
+        "_col": "metiv-patient-nav",
+        "key": "whereToGetHelp",
+        "label": "Где получить терапию",
+        "route": "/patient/where-to-get-help"
+      }
+    },
+    {
+      "_key": "freeTreatment",
+      "title": "Бесплатная терапия и исследования",
+      "sortOrder": 5,
+      "content": {
+        "_key": "freeTreatment",
+        "_col": "metiv-patient-nav",
+        "key": "freeTreatment",
+        "label": "Бесплатная терапия и исследования",
+        "route": "/patient/free-treatment-and-research"
+      }
+    },
+    {
+      "_key": "calming",
+      "title": "Упражнения для успокоения",
+      "sortOrder": 6,
+      "content": {
+        "_key": "calming",
+        "_col": "metiv-patient-nav",
+        "key": "calming",
+        "label": "Упражнения для успокоения",
+        "route": "/patient/calming"
+      }
+    },
+    {
+      "_key": "sources",
+      "title": "Источники",
+      "sortOrder": 7,
+      "content": {
+        "_key": "sources",
+        "_col": "metiv-patient-nav",
+        "key": "sources",
+        "label": "Источники",
+        "route": "/patient/sources"
+      }
+    }
+  ]
+}

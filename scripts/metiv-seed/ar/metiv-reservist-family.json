@@ -1,0 +1,58 @@
+{
+  "key": "RESERVIST_FAMILY_PROGRAMS",
+  "slug": "metiv-reservist-family",
+  "kind": "list",
+  "rows": [
+    {
+      "_key": "panda-family",
+      "title": "باندا للعائلة",
+      "sortOrder": 0,
+      "content": {
+        "_key": "panda-family",
+        "_col": "metiv-reservist-family",
+        "id": "panda-family",
+        "title": "باندا للعائلة",
+        "provider": "ميتيف للأطفال",
+        "icon": "Users",
+        "who": "جنود الاحتياط وأفراد عائلاتهم.",
+        "ages": "أطفال في أعمار 0-14",
+        "what": "أنشطة عائلية لتطوير طرق التأقلم وقدرات التنظيم: 6 لقاءات إرشاد للأهل و6 لقاءات عائلية.",
+        "location": "في البيت أو في ميتيف",
+        "cost": "دون تكلفة",
+        "contacts": [
+          {
+            "kind": "link",
+            "label": "نموذج التوجّه لبرامج العائلات",
+            "href": "https://tinyurl.com/metivkids"
+          }
+        ],
+        "source": "https://metiv.org/טיפולים-ללא-עלות-דרך-מטיב/"
+      }
+    },
+    {
+      "_key": "namal-family",
+      "title": "نامال للعائلة - لنُفسح مكانًا للّعب",
+      "sortOrder": 1,
+      "content": {
+        "_key": "namal-family",
+        "_col": "metiv-reservist-family",
+        "id": "namal-family",
+        "title": "نامال للعائلة - لنُفسح مكانًا للّعب",
+        "provider": "ميتيف للأطفال",
+        "icon": "Baby",
+        "who": "جنود الاحتياط وأفراد عائلاتهم. ومن بين المجموعات: مجموعة لأهالٍ عادوا من الخدمة الاحتياطية مع طفلهم، بتمويل من وزارة الأمن.",
+        "ages": "أهالي الأطفال في أعمار 2-4",
+        "what": "لقاءات جماعية مع أنشطة مشتركة للأهل والأطفال.",
+        "cost": "دون تكلفة",
+        "contacts": [
+          {
+            "kind": "link",
+            "label": "نموذج التوجّه لبرامج العائلات",
+            "href": "https://tinyurl.com/metivkids"
+          }
+        ],
+        "source": "https://metiv.org/טיפולים-ללא-עלות-דרך-מטיב/"
+      }
+    }
+  ]
+}

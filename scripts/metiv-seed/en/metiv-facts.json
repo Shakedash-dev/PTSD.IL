@@ -1,0 +1,72 @@
+{
+  "key": "FACTS",
+  "slug": "metiv-facts",
+  "kind": "list",
+  "rows": [
+    {
+      "_key": "metiv-facts-0",
+      "title": "Year founded",
+      "sortOrder": 0,
+      "content": {
+        "_key": "metiv-facts-0",
+        "_col": "metiv-facts",
+        "value": "1989",
+        "label": "Year founded",
+        "source": "עמוד אודות",
+        "sourceUrl": "https://metiv.org/אודות/"
+      }
+    },
+    {
+      "_key": "metiv-facts-1",
+      "title": "Therapists trained across Israel",
+      "sortOrder": 1,
+      "content": {
+        "_key": "metiv-facts-1",
+        "_col": "metiv-facts",
+        "value": "+2,000",
+        "label": "Therapists trained across Israel",
+        "source": "דף הבית ועמוד ההכשרות",
+        "sourceUrl": "https://metiv.org/"
+      }
+    },
+    {
+      "_key": "metiv-facts-2",
+      "title": "Teachers trained in the National Resilience Program for schools",
+      "sortOrder": 2,
+      "content": {
+        "_key": "metiv-facts-2",
+        "_col": "metiv-facts",
+        "value": "+5,000",
+        "label": "Teachers trained in the National Resilience Program for schools",
+        "source": "עמוד אודות",
+        "sourceUrl": "https://metiv.org/אודות/"
+      }
+    },
+    {
+      "_key": "metiv-facts-3",
+      "title": "Patients per year at the Adult Clinic",
+      "sortOrder": 3,
+      "content": {
+        "_key": "metiv-facts-3",
+        "_col": "metiv-facts",
+        "value": "~300",
+        "label": "Patients per year at the Adult Clinic",
+        "source": "עמוד מרפאת המבוגרים",
+        "sourceUrl": "https://metiv.org/מרפאת-מבוגרים/"
+      }
+    },
+    {
+      "_key": "metiv-facts-4",
+      "title": "Therapists on the Adult Clinic team",
+      "sortOrder": 4,
+      "content": {
+        "_key": "metiv-facts-4",
+        "_col": "metiv-facts",
+        "value": "~20",
+        "label": "Therapists on the Adult Clinic team",
+        "source": "עמוד מרפאת המבוגרים",
+        "sourceUrl": "https://metiv.org/מרפאת-מבוגרים/"
+      }
+    }
+  ]
+}

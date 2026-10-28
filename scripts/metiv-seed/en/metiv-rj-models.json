@@ -1,0 +1,99 @@
+{
+  "key": "JOURNEY_MODELS",
+  "slug": "metiv-rj-models",
+  "kind": "list",
+  "rows": [
+    {
+      "_key": "abroad",
+      "title": "Full journey abroad",
+      "sortOrder": 0,
+      "content": {
+        "_key": "abroad",
+        "_col": "metiv-rj-models",
+        "key": "abroad",
+        "label": "Full journey abroad",
+        "title": "Full journey abroad",
+        "summary": "4 workshops over about nine months. The main workshop takes place over a week abroad, and the rest in Israel.",
+        "duration": "About nine months",
+        "workshops": [
+          {
+            "title": "Opening workshop",
+            "text": "A day and a half, including an overnight stay: from Thursday at around 17:30 until Friday at 14:00."
+          },
+          {
+            "title": "The main workshop",
+            "text": "A week abroad, hosted by a Jewish community. Accommodation with host families."
+          },
+          {
+            "title": "Closing workshop",
+            "text": "About a month and a half after the main workshop. Friday, 8:00 to 14:00, usually in a forest in the Jerusalem area."
+          },
+          {
+            "title": "Follow-up workshop",
+            "text": "About 6 months after the closing workshop. About six hours, in the evening."
+          }
+        ]
+      }
+    },
+    {
+      "_key": "israel",
+      "title": "Full journey in Israel",
+      "sortOrder": 1,
+      "content": {
+        "_key": "israel",
+        "_col": "metiv-rj-models",
+        "key": "israel",
+        "label": "Full journey in Israel",
+        "title": "Full journey in Israel",
+        "summary": "4 workshops over about nine months. The main workshop takes place over five days at a secluded location in Israel.",
+        "duration": "About nine months",
+        "workshops": [
+          {
+            "title": "Opening workshop",
+            "text": "One day: Friday, from morning until the afternoon."
+          },
+          {
+            "title": "The main workshop",
+            "text": "Five days at a secluded location in Israel, with work both indoors and outdoors."
+          },
+          {
+            "title": "Closing workshop",
+            "text": "About a month after the main workshop. Friday, 8:00 to 14:00, usually in a forest in the Jerusalem area."
+          },
+          {
+            "title": "Follow-up workshop",
+            "text": "About 6 months after the closing workshop. About six hours, in the evening."
+          }
+        ]
+      }
+    },
+    {
+      "_key": "short",
+      "title": "Short journey in Israel",
+      "sortOrder": 2,
+      "content": {
+        "_key": "short",
+        "_col": "metiv-rj-models",
+        "key": "short",
+        "label": "Short journey in Israel",
+        "title": "Short journey in Israel",
+        "summary": "3 workshops over about two months. The main workshop takes place over three days at a secluded location in Israel.",
+        "duration": "About two months",
+        "workshops": [
+          {
+            "title": "Opening workshop",
+            "text": "One day: Friday, from morning until the afternoon."
+          },
+          {
+            "title": "The main workshop",
+            "text": "Three days (Tuesday to Thursday) at a secluded location in Israel, with work both indoors and outdoors."
+          },
+          {
+            "title": "Closing workshop",
+            "text": "About a month after the main workshop. Friday, 8:00 to 14:00, usually in a forest in the Jerusalem area."
+          }
+        ]
+      }
+    }
+  ]
+}

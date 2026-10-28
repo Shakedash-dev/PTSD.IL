@@ -1,0 +1,11 @@
+{
+  "_area": "patient",
+  "_label": "אזור המטופלים: זכויות",
+  "fieldWho": "Для кого",
+  "fieldAges": "Возраст",
+  "fieldWhat": "Что включает",
+  "fieldLocation": "Где",
+  "fieldCost": "Стоимость",
+  "fieldProcess": "Как обратиться",
+  "fullDetails": "Подробнее"
+}

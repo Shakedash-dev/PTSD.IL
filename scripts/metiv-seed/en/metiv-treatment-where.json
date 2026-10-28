@@ -1,0 +1,20 @@
+{
+  "key": "TREATMENT_WHERE_BLOCK",
+  "slug": "metiv-treatment-where",
+  "kind": "single",
+  "rows": [
+    {
+      "_key": "TREATMENT_WHERE_BLOCK",
+      "title": "TREATMENT_WHERE_BLOCK",
+      "sortOrder": 0,
+      "content": {
+        "_key": "TREATMENT_WHERE_BLOCK",
+        "_col": "metiv-treatment-where",
+        "title": "Where to get treatment",
+        "text": "A list of services where treatment is available: the health funds, resilience centers, the Rehabilitation Department, nonprofits and Metiv clinics, with contact details for each.",
+        "linkLabel": "See the list of services",
+        "route": "/patient/where-to-get-help"
+      }
+    }
+  ]
+}

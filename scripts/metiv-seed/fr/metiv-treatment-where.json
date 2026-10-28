@@ -1,0 +1,20 @@
+{
+  "key": "TREATMENT_WHERE_BLOCK",
+  "slug": "metiv-treatment-where",
+  "kind": "single",
+  "rows": [
+    {
+      "_key": "TREATMENT_WHERE_BLOCK",
+      "title": "TREATMENT_WHERE_BLOCK",
+      "sortOrder": 0,
+      "content": {
+        "_key": "TREATMENT_WHERE_BLOCK",
+        "_col": "metiv-treatment-where",
+        "title": "Où se faire soigner",
+        "text": "Une liste de structures qui proposent des soins : les caisses de maladie, les centres de résilience, le Département de réadaptation, des associations et les cliniques de Metiv, avec les coordonnées de chacune.",
+        "linkLabel": "Voir la liste des structures",
+        "route": "/patient/where-to-get-help"
+      }
+    }
+  ]
+}

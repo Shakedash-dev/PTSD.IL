@@ -1,0 +1,58 @@
+{
+  "key": "RESERVIST_FAMILY_PROGRAMS",
+  "slug": "metiv-reservist-family",
+  "kind": "list",
+  "rows": [
+    {
+      "_key": "panda-family",
+      "title": "PANDA for the Family",
+      "sortOrder": 0,
+      "content": {
+        "_key": "panda-family",
+        "_col": "metiv-reservist-family",
+        "id": "panda-family",
+        "title": "PANDA for the Family",
+        "provider": "Metiv Children",
+        "icon": "Users",
+        "who": "Reservists and their families.",
+        "ages": "Children aged 0-14",
+        "what": "Family activities for developing coping skills and regulation abilities: 6 parent guidance sessions and 6 family sessions.",
+        "location": "At home or at Metiv",
+        "cost": "Free of charge",
+        "contacts": [
+          {
+            "kind": "link",
+            "label": "Inquiry form for family programs",
+            "href": "https://tinyurl.com/metivkids"
+          }
+        ],
+        "source": "https://metiv.org/טיפולים-ללא-עלות-דרך-מטיב/"
+      }
+    },
+    {
+      "_key": "namal-family",
+      "title": "NAMAL for the Family - Let's Make Room for Play",
+      "sortOrder": 1,
+      "content": {
+        "_key": "namal-family",
+        "_col": "metiv-reservist-family",
+        "id": "namal-family",
+        "title": "NAMAL for the Family - Let's Make Room for Play",
+        "provider": "Metiv Children",
+        "icon": "Baby",
+        "who": "Reservists and their families. The groups include one for parents back from reserve duty together with their child, funded by the Ministry of Defense.",
+        "ages": "Parents of children aged 2-4",
+        "what": "Group sessions with shared activities for parents and children.",
+        "cost": "Free of charge",
+        "contacts": [
+          {
+            "kind": "link",
+            "label": "Inquiry form for family programs",
+            "href": "https://tinyurl.com/metivkids"
+          }
+        ],
+        "source": "https://metiv.org/טיפולים-ללא-עלות-דרך-מטיב/"
+      }
+    }
+  ]
+}

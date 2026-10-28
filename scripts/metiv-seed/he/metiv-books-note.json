@@ -1,0 +1,17 @@
+{
+  "key": "METIV_BOOKS_ORDER_NOTE",
+  "slug": "metiv-books-note",
+  "kind": "single",
+  "rows": [
+    {
+      "_key": "METIV_BOOKS_ORDER_NOTE",
+      "title": "METIV_BOOKS_ORDER_NOTE",
+      "sortOrder": 0,
+      "content": {
+        "_key": "METIV_BOOKS_ORDER_NOTE",
+        "_col": "metiv-books-note",
+        "text": "להזמנה בישראל אפשר לכתוב למטיב: info@metiv.org"
+      }
+    }
+  ]
+}

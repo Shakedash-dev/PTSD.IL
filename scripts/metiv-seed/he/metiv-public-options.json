@@ -1,0 +1,146 @@
+{
+  "key": "PUBLIC_OPTIONS",
+  "slug": "metiv-public-options",
+  "kind": "list",
+  "rows": [
+    {
+      "_key": "health-funds",
+      "title": "קופות החולים",
+      "sortOrder": 0,
+      "content": {
+        "_key": "health-funds",
+        "_col": "metiv-public-options",
+        "id": "health-funds",
+        "title": "קופות החולים",
+        "provider": "מכבי, כללית, מאוחדת, לאומית",
+        "icon": "Stethoscope",
+        "what": "הקופות מספקות שירות פסיכולוגי ופסיכיאטרי.",
+        "process": "פונים לרופא/ה הראשוני/ת בקופה ומבקשים הפניה לפסיכולוג/ית או לפסיכיאטר/ית.",
+        "contacts": [
+          {
+            "kind": "text",
+            "label": "מכבי",
+            "value": "3555"
+          },
+          {
+            "kind": "text",
+            "label": "כללית (מוקד בריאות הנפש)",
+            "value": "8703*"
+          },
+          {
+            "kind": "text",
+            "label": "מאוחדת",
+            "value": "3833"
+          },
+          {
+            "kind": "text",
+            "label": "לאומית",
+            "value": "507"
+          }
+        ]
+      }
+    },
+    {
+      "_key": "resilience-centers",
+      "title": "מרכזי החוסן",
+      "sortOrder": 1,
+      "content": {
+        "_key": "resilience-centers",
+        "_col": "metiv-public-options",
+        "id": "resilience-centers",
+        "title": "מרכזי החוסן",
+        "provider": "משרד הבריאות",
+        "icon": "Building2",
+        "who": "נפגעי פעולות איבה.",
+        "process": "פונים למרכז החוסן הקרוב לאזור המגורים, מתוך רשימת המרכזים.",
+        "contacts": [
+          {
+            "kind": "link",
+            "label": "רשימת מרכזי החוסן - gov.il",
+            "href": "https://www.gov.il/he/Departments/DynamicCollectors/resilience-centers-list?skip=0"
+          },
+          {
+            "kind": "link",
+            "label": "מרכזי חוסן - משרד הבריאות",
+            "href": "https://me.health.gov.il/mental-health/therapy-rehabilitation/public-care/community-treatment/resilience-center/"
+          }
+        ]
+      }
+    },
+    {
+      "_key": "mod-rehabilitation",
+      "title": "אגף השיקום",
+      "sortOrder": 2,
+      "content": {
+        "_key": "mod-rehabilitation",
+        "_col": "metiv-public-options",
+        "id": "mod-rehabilitation",
+        "title": "אגף השיקום",
+        "provider": "משרד הביטחון",
+        "icon": "Shield",
+        "who": "חיילים וכוחות ביטחון שנפגעו נפשית עקב השירות.",
+        "cost": "הסיוע נקבע בהתאם להכרה ולאחוזי הנכות. אפשר לקבל אישור לטיפול רפואי ונפשי כבר במהלך בירור הבקשה.",
+        "process": "מגישים בקשה להכרה בנכות בטופס דיגיטלי. מרכז \"בידיים טובות\" מטעם אגף השיקום מסייע במילוי הבקשה.",
+        "contacts": [
+          {
+            "kind": "link",
+            "label": "טופס דיגיטלי - בקשה להכרה בנכות",
+            "href": "https://shikum.mod.gov.il/recognition/request/apply"
+          },
+          {
+            "kind": "link",
+            "label": "טיפול רפואי בזמן תהליך ההכרה",
+            "href": "https://shikum.mod.gov.il/recognition/request/medical-care"
+          },
+          {
+            "kind": "link",
+            "label": "בידיים טובות - סיוע בהגשת הבקשה",
+            "href": "https://shikum.mod.gov.il/ContactUs/goodhands"
+          },
+          {
+            "kind": "internal",
+            "label": "הזכויות בפירוט",
+            "href": "/patient/rights"
+          }
+        ]
+      }
+    },
+    {
+      "_key": "national-insurance",
+      "title": "ביטוח לאומי",
+      "sortOrder": 3,
+      "content": {
+        "_key": "national-insurance",
+        "_col": "metiv-public-options",
+        "id": "national-insurance",
+        "title": "ביטוח לאומי",
+        "provider": "המוסד לביטוח לאומי",
+        "icon": "Landmark",
+        "who": "נפגעי פעולות איבה, נפגעי עבודה, ומי שנקבעה לו נכות נפשית.",
+        "what": "תגמולים והכרה, שיקום מקצועי, וסל שיקום של משרד הבריאות למי שנקבעה לו נכות נפשית של 40% לפחות.",
+        "contacts": [
+          {
+            "kind": "text",
+            "label": "סיוע במילוי תביעה לנכות כללית",
+            "value": "3928*"
+          },
+          {
+            "kind": "link",
+            "label": "ביטוח לאומי - נכות נפשית ונכות כללית",
+            "href": "https://www.btl.gov.il/ZcuyotAsdience/MitmoddiNefesh/Pages/NecotNafsitNecotKlalit.aspx"
+          },
+          {
+            "kind": "link",
+            "label": "נפגעי פעולות איבה - ביטוח לאומי",
+            "href": "https://www.btl.gov.il/benefits/Victims_of_Hostilities/Pages/default.aspx"
+          },
+          {
+            "kind": "internal",
+            "label": "הזכויות בפירוט",
+            "href": "/patient/rights"
+          }
+        ]
+      }
+    }
+  ]
+}

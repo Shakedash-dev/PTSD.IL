@@ -1,0 +1,167 @@
+{
+  "key": "ACTIVE_STUDIES",
+  "slug": "metiv-studies",
+  "kind": "list",
+  "rows": [
+    {
+      "_key": "release-journey-study",
+      "title": "Peace of Mind Study",
+      "sortOrder": 0,
+      "content": {
+        "_key": "release-journey-study",
+        "_col": "metiv-studies",
+        "slug": "release-journey-study",
+        "title": "Peace of Mind Study",
+        "summary": "An evaluation and measurement study that accompanies the Peace of Mind programs for veterans.",
+        "description": "Peace of Mind study - accompanying the Peace of Mind programs, with evaluation and measurement research on the various programs.",
+        "population": "Veterans taking part in Peace of Mind programs",
+        "status": "Active",
+        "recruiting": false,
+        "sourceUrl": "https://metiv.org/מחקרים-פעילים-טראומה/"
+      }
+    },
+    {
+      "_key": "mdma-sea-it",
+      "title": "The MDMA / SEA-IT Study",
+      "sortOrder": 1,
+      "content": {
+        "_key": "mdma-sea-it",
+        "_col": "metiv-studies",
+        "slug": "mdma-sea-it",
+        "title": "The MDMA / SEA-IT Study",
+        "summary": "A clinical study comparing two intensive treatments for military-related PTSD: MDMA-assisted therapy and SEA-IT.",
+        "description": "Many veterans suffer from PTSD symptoms along with other psychological difficulties related to experiences they went through or witnessed during their military service.\n\nThe current study offers two intensive treatments:\n\n- **One treatment** is MDMA-assisted therapy, which combines taking the psychedelic substance with tailored psychotherapy.\n- **The second treatment** is SEA-IT (Somatic Experiential Acceptance Intensive Trauma focused Therapy), an intensive therapy focused on the body, experience and acceptance, based on a psychedelic model.\n\nThe study seeks to examine the ways in which the treatments affect various psychological and neuropsychological aspects, and to understand the mechanism of intensive treatment.\n\nEligibility for the study is based on an assessment process and does not allow a choice between the treatments.",
+        "population": "People living with military-related PTSD who have had previous trauma-focused therapy and whose symptoms persist",
+        "status": "Recruiting participants",
+        "recruiting": true,
+        "eligibility": [
+          "Living with military trauma or PTSD",
+          "Has previously taken part in trauma-focused therapy, but symptoms persist",
+          "Able to commit to an intensive process of 3-3.5 months (16 sessions, in Jerusalem)"
+        ],
+        "team": [
+          "Dr. Anna Harwood-Gross",
+          "Dalia Amit Zivan",
+          "Dr. Amichai Flor",
+          "Under the supervision of Prof. Pinchas Dannon, Head of Psychiatry at Herzog Hospital"
+        ],
+        "links": [
+          {
+            "label": "Screening questionnaire",
+            "url": "https://www.surveyhero.com/c/jzkapqr4"
+          },
+          {
+            "label": "Information letter about SEA-IT (PDF)",
+            "url": "https://metiv.org/wp-content/uploads/2025/07/מכתב-הסבר-SEA-IT.pdf"
+          },
+          {
+            "label": "Article in the Makor Rishon newspaper (PDF)",
+            "url": "https://metiv.org/wp-content/uploads/2025/07/MAKOR-RISHON-ARTICLE.pdf"
+          }
+        ],
+        "contact": {
+          "email": "moriya@metiv.org",
+          "whatsapp": "026264889"
+        },
+        "sourceUrl": "https://metiv.org/sea-it-mdma/"
+      }
+    },
+    {
+      "_key": "clinics-study",
+      "title": "Clinics Study",
+      "sortOrder": 2,
+      "content": {
+        "_key": "clinics-study",
+        "_col": "metiv-studies",
+        "slug": "clinics-study",
+        "title": "Clinics Study",
+        "summary": "A study on adding complementary treatments to psychotherapy for military PTSD.",
+        "description": "Adding complementary treatments to psychotherapy for military PTSD.",
+        "population": "Patients with military PTSD",
+        "status": "Active",
+        "recruiting": false,
+        "contact": {
+          "name": "Dr. Anna Portugalov",
+          "role": "Clinics Study Lead"
+        },
+        "sourceUrl": "https://metiv.org/מחקרים-פעילים-טראומה/"
+      }
+    },
+    {
+      "_key": "se-pe",
+      "title": "The SE PE Study",
+      "sortOrder": 3,
+      "content": {
+        "_key": "se-pe",
+        "_col": "metiv-studies",
+        "slug": "se-pe",
+        "title": "The SE PE Study",
+        "summary": "A comparative study of Somatic Experiencing (SE) and prolonged exposure (PE) in treating military PTSD, provided free of charge across Israel.",
+        "description": "A comparative study of two treatment methods for PTSD: Somatic Experiencing (SE) compared with prolonged exposure (PE). The study was conducted over different periods - the COVID pandemic, a lull and war - and gives a broad picture of coping with PTSD in Israel in a changing reality.\n\nAs part of the program, free treatment is provided across Israel to people living with PTSD from their military service (veterans only, not those in regular service). Treatment is given with one of the two methods by certified therapists, and is accompanied by questionnaires, clinical assessments and follow-up by Metiv. The data is used for clinical research.",
+        "population": "Veterans (not in regular service) living with PTSD from their military service",
+        "status": "Active",
+        "recruiting": true,
+        "contact": {
+          "email": "shir@metiv.org",
+          "whatsapp": "02-5952240"
+        },
+        "sourceUrl": "https://metiv.org/מחקרים-פעילים-טראומה/"
+      }
+    },
+    {
+      "_key": "reservists-with-ptsd",
+      "title": "Combat Soldiers with PTSD Study",
+      "sortOrder": 4,
+      "content": {
+        "_key": "reservists-with-ptsd",
+        "_col": "metiv-studies",
+        "slug": "reservists-with-ptsd",
+        "title": "Combat Soldiers with PTSD Study",
+        "summary": "A qualitative study on the experience of returning to combat in the Iron Swords war among combat soldiers who were living with military PTSD before the war.",
+        "description": "A qualitative study: analysis of interviews with combat soldiers called up for reserve duty who had a history of living with PTSD. A longitudinal study during the Iron Swords war.\n\nThe study includes an open interview with combat soldiers who took part in the war, in an attempt to understand their story, the complexity and how they coped.",
+        "population": "Combat reservists who were living with military PTSD before the Iron Swords war",
+        "status": "Active",
+        "recruiting": true,
+        "contact": {
+          "email": "shir@metiv.org",
+          "whatsapp": "02-5952240"
+        },
+        "sourceUrl": "https://metiv.org/מחקרים-פעילים-טראומה/"
+      }
+    },
+    {
+      "_key": "kids-department-study",
+      "title": "Children's Department Study",
+      "sortOrder": 5,
+      "content": {
+        "_key": "kids-department-study",
+        "_col": "metiv-studies",
+        "slug": "kids-department-study",
+        "title": "Children's Department Study",
+        "summary": "Follow-up of the children's department intervention programs: treatment for children and families, dyadic therapy and school programs.",
+        "description": "Follow-up of intervention programs, research on PTSD treatment for children and families, dyadic therapy and intervention programs in schools.",
+        "population": "Children and families",
+        "status": "Active",
+        "recruiting": false,
+        "sourceUrl": "https://metiv.org/מחקרים-פעילים-טראומה/"
+      }
+    },
+    {
+      "_key": "ai-and-ptsd",
+      "title": "PTSD and Artificial Intelligence Study",
+      "sortOrder": 6,
+      "content": {
+        "_key": "ai-and-ptsd",
+        "_col": "metiv-studies",
+        "slug": "ai-and-ptsd",
+        "title": "PTSD and Artificial Intelligence Study",
+        "summary": "A new research area at Metiv combining artificial intelligence, physiological markers and in-depth analyses for assessing and treating PTSD.",
+        "description": "A new research area at Metiv: combining artificial intelligence, physiological markers and in-depth analyses for treating and assessing PTSD.",
+        "population": "People living with PTSD",
+        "status": "Active",
+        "recruiting": false,
+        "sourceUrl": "https://metiv.org/מחקרים-פעילים-טראומה/"
+      }
+    }
+  ]
+}

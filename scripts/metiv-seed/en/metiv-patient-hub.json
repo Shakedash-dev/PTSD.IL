@@ -1,0 +1,253 @@
+{
+  "key": "PATIENT_HUB",
+  "slug": "metiv-patient-hub",
+  "kind": "single",
+  "rows": [
+    {
+      "_key": "PATIENT_HUB",
+      "title": "PATIENT_HUB",
+      "sortOrder": 0,
+      "content": {
+        "_key": "PATIENT_HUB",
+        "_col": "metiv-patient-hub",
+        "hero": {
+          "brand": "Metiv - The Israel Psychotrauma Center",
+          "eyebrow": "Post-traumatic stress",
+          "headline": "You are not alone",
+          "subtitle": "Information, tools and support - all in one place, in clear language.",
+          "ctaLabel": "What brought you here?",
+          "image": "/images/set1/home_hero.webp",
+          "about": "Post-traumatic stress disorder (PTSD) is a psychological response to a traumatic event that the brain and body keep processing long after the danger has passed.",
+          "aboutLinkLabel": "Read more",
+          "aboutRoute": "/patient/ptsd-info"
+        },
+        "paths": [
+          {
+            "key": "firstCircle",
+            "route": "/patient/first-circle",
+            "title": "Living with post-traumatic stress",
+            "subtitle": "Everything you need to understand what's happening, start treatment and know your rights - at your own pace, without losing yourself.",
+            "image": "/images/illustrations/ptsd_sufferer.webp",
+            "ctaLabel": "Continue"
+          },
+          {
+            "key": "secondCircle",
+            "route": "/patient/second-circle",
+            "title": "Close to someone who is struggling",
+            "subtitle": "For a partner, parent or friend of someone who is struggling - how to support, understand, and take care of yourself along the way.",
+            "image": "/images/illustrations/supporter.webp",
+            "ctaLabel": "Continue"
+          },
+          {
+            "key": "questionnaire",
+            "route": "/patient/questionnaire",
+            "title": "I'm not sure",
+            "subtitle": "A short anonymous questionnaire (about 3 minutes) to help you understand whether your symptoms call for further evaluation.",
+            "image": "/images/illustrations/wondering.webp",
+            "ctaLabel": "Continue"
+          }
+        ],
+        "quickLinks": [
+          {
+            "key": "ptsdInfo",
+            "label": "About PTSD",
+            "route": "/patient/ptsd-info",
+            "icon": "Brain",
+            "description": "Questions and answers about PTSD."
+          },
+          {
+            "key": "selfHelp",
+            "label": "Self-help tools",
+            "route": "/patient/self-help",
+            "icon": "Wind",
+            "description": "Tools you can try on your own, apps and video lectures."
+          },
+          {
+            "key": "treatment",
+            "label": "Treatment options",
+            "route": "/patient/treatment",
+            "icon": "Heart",
+            "description": "The roadmap to treatment, step by step."
+          },
+          {
+            "key": "whereToGetHelp",
+            "label": "Where to get treatment",
+            "route": "/patient/where-to-get-help",
+            "icon": "MapPin",
+            "description": "Treatment services and contact details, in the same format for all of them."
+          },
+          {
+            "key": "freeTreatment",
+            "label": "Free treatments and studies",
+            "route": "/patient/free-treatment-and-research",
+            "icon": "HandHeart",
+            "description": "Free services and studies recruiting participants."
+          },
+          {
+            "key": "rights",
+            "label": "Rights and bureaucracy",
+            "route": "/patient/rights",
+            "icon": "FileText",
+            "description": "Rights by type of injury, and how to apply."
+          },
+          {
+            "key": "community",
+            "label": "Communities and meetups",
+            "route": "/patient/community",
+            "icon": "Users",
+            "description": "Support groups and meetups across Israel."
+          },
+          {
+            "key": "secondCircleTools",
+            "label": "Coping tools",
+            "route": "/patient/second-circle-tools",
+            "icon": "Shield",
+            "description": "Tools for family members and loved ones."
+          },
+          {
+            "key": "children",
+            "label": "Content for children",
+            "route": "/patient/children",
+            "icon": "Baby",
+            "description": "How to talk with children, by age."
+          },
+          {
+            "key": "calming",
+            "label": "Calming exercises",
+            "route": "/patient/calming",
+            "icon": "Wind",
+            "description": "Breathing, grounding and muscle relaxation."
+          },
+          {
+            "key": "questionnaire",
+            "label": "Self-assessment questionnaire",
+            "route": "/patient/questionnaire",
+            "icon": "ClipboardList",
+            "description": "An anonymous questionnaire for self-checking. It is not a diagnosis."
+          },
+          {
+            "key": "sources",
+            "label": "Sources",
+            "route": "/patient/sources",
+            "icon": "Library",
+            "description": "The sources this information is based on."
+          }
+        ],
+        "additions": [
+          {
+            "key": "whereToGetHelp",
+            "label": "Where to get treatment",
+            "route": "/patient/where-to-get-help",
+            "icon": "MapPin",
+            "description": "Public services, nonprofits and Metiv clinics, with contact details."
+          },
+          {
+            "key": "freeTreatment",
+            "label": "Free treatment and taking part in studies",
+            "route": "/patient/free-treatment-and-research",
+            "icon": "HandHeart",
+            "description": "Who it's for, what it includes and how to apply."
+          },
+          {
+            "key": "veterans",
+            "label": "Veterans and reservists",
+            "route": "/patient/community#veterans",
+            "icon": "Compass",
+            "description": "Peace of Mind, groups for reservists' families, and parent-child groups."
+          },
+          {
+            "key": "parentChildGroups",
+            "label": "Groups for parents and children",
+            "route": "/patient/children#parent-child-groups",
+            "icon": "Baby",
+            "description": "PANDA, NAMAL and a free play session."
+          },
+          {
+            "key": "reservistFamilies",
+            "label": "For reservists' family members",
+            "route": "/patient/second-circle-tools#reservist-families",
+            "icon": "Users",
+            "description": "PANDA for the Family and NAMAL for the Family."
+          },
+          {
+            "key": "metivBooks",
+            "label": "Books by Metiv staff",
+            "route": "/patient/sources#metiv-books",
+            "icon": "Library",
+            "description": "Books written or edited by Metiv staff."
+          },
+          {
+            "key": "videoLectures",
+            "label": "Video lectures",
+            "route": "/patient/self-help#video-lectures",
+            "icon": "Youtube",
+            "description": "Metiv's YouTube channel."
+          },
+          {
+            "key": "consultation",
+            "label": "Not sure whether to reach out?",
+            "route": "/patient/where-to-get-help#consultation",
+            "icon": "MessageCircle",
+            "description": "Not sure whether or when to seek therapy? You can call Metiv and talk through the options."
+          }
+        ],
+        "crisisLines": [
+          {
+            "key": "eranPhone",
+            "label": "Crisis line - ERAN",
+            "value": "1201",
+            "href": "tel:1201",
+            "icon": "Phone"
+          },
+          {
+            "key": "eranWhatsapp",
+            "label": "ERAN on WhatsApp",
+            "value": "WhatsApp",
+            "href": "https://api.whatsapp.com/send?phone=9720528451201",
+            "icon": "MessageCircle"
+          }
+        ],
+        "consultation": {
+          "title": "Not sure whether to reach out?",
+          "text": "Not sure whether or when to seek therapy? You can call Metiv and talk through the options.",
+          "phone": "02-6449666",
+          "route": "/patient/where-to-get-help#consultation",
+          "linkLabel": "Consult with Metiv"
+        },
+        "metivServices": [
+          {
+            "id": "adults-clinic",
+            "title": "Metiv Adult Clinic",
+            "icon": "HeartHandshake",
+            "route": "/patient/where-to-get-help#adults-clinic"
+          },
+          {
+            "id": "kids-clinic",
+            "title": "Metiv Children - Center for Emotion Regulation",
+            "icon": "Baby",
+            "route": "/patient/where-to-get-help#kids-clinic"
+          },
+          {
+            "id": "migdalor",
+            "title": "Migdalor Clinic",
+            "icon": "Shield",
+            "route": "/patient/where-to-get-help#migdalor"
+          },
+          {
+            "id": "release-journey",
+            "title": "Peace of Mind",
+            "icon": "Compass",
+            "route": "/patient/where-to-get-help#release-journey"
+          },
+          {
+            "id": "free-treatments",
+            "title": "Free treatment through Metiv",
+            "icon": "HandHeart",
+            "route": "/patient/where-to-get-help#free-treatments"
+          }
+        ],
+        "disclaimer": "This website does not provide medical advice. In an emergency, see a doctor or call ERAN - Emotional First Aid at 1201"
+      }
+    }
+  ]
+}

@@ -1,0 +1,225 @@
+{
+  "key": "ROUTE_META",
+  "slug": "metiv-route-meta",
+  "kind": "single",
+  "rows": [
+    {
+      "_key": "ROUTE_META",
+      "title": "ROUTE_META",
+      "sortOrder": 0,
+      "content": {
+        "_key": "ROUTE_META",
+        "_col": "metiv-route-meta",
+        "home": {
+          "label": "דף הבית",
+          "area": "metiv"
+        },
+        "about": {
+          "label": "על מטיב",
+          "area": "therapist",
+          "parent": "therapist"
+        },
+        "aboutHistory": {
+          "label": "הסיפור של מטיב",
+          "area": "therapist",
+          "parent": "about"
+        },
+        "aboutTeam": {
+          "label": "הצוות",
+          "area": "therapist",
+          "parent": "about"
+        },
+        "aboutPartners": {
+          "label": "השותפים שלנו",
+          "area": "therapist",
+          "parent": "about"
+        },
+        "aboutCollaborations": {
+          "label": "שיתופי פעולה",
+          "area": "therapist",
+          "parent": "about"
+        },
+        "donate": {
+          "label": "תרומה",
+          "area": "metiv",
+          "parent": "home"
+        },
+        "contact": {
+          "label": "יצירת קשר",
+          "area": "metiv",
+          "parent": "home"
+        },
+        "privacy": {
+          "label": "מדיניות פרטיות",
+          "area": "metiv",
+          "parent": "home"
+        },
+        "terms": {
+          "label": "תנאי שימוש",
+          "area": "metiv",
+          "parent": "home"
+        },
+        "accessibility": {
+          "label": "הצהרת נגישות",
+          "area": "metiv",
+          "parent": "home"
+        },
+        "patient": {
+          "label": "למטופלים ולמשפחות",
+          "area": "patient",
+          "parent": "home"
+        },
+        "firstCircle": {
+          "label": "מי שחווה אירוע קשה",
+          "area": "patient",
+          "parent": "patient"
+        },
+        "secondCircle": {
+          "label": "קרובים ובני משפחה",
+          "area": "patient",
+          "parent": "patient"
+        },
+        "secondCircleTools": {
+          "label": "כלים לבני משפחה",
+          "area": "patient",
+          "parent": "secondCircle"
+        },
+        "questionnaire": {
+          "label": "שאלון אנונימי",
+          "area": "patient",
+          "parent": "patient"
+        },
+        "ptsdInfo": {
+          "label": "מה זה פוסט-טראומה",
+          "area": "patient",
+          "parent": "patient"
+        },
+        "selfHelp": {
+          "label": "עזרה עצמית",
+          "area": "patient",
+          "parent": "patient"
+        },
+        "treatment": {
+          "label": "המסע הטיפולי",
+          "area": "patient",
+          "parent": "patient"
+        },
+        "whereToGetHelp": {
+          "label": "איפה מקבלים טיפול",
+          "area": "patient",
+          "parent": "patient"
+        },
+        "freeTreatment": {
+          "label": "טיפולים ללא עלות ומחקרים",
+          "area": "patient",
+          "parent": "patient"
+        },
+        "rights": {
+          "label": "זכויות",
+          "area": "patient",
+          "parent": "patient"
+        },
+        "community": {
+          "label": "קהילות תמיכה",
+          "area": "patient",
+          "parent": "patient"
+        },
+        "children": {
+          "label": "לדבר עם ילדים",
+          "area": "patient",
+          "parent": "patient"
+        },
+        "sources": {
+          "label": "מקורות",
+          "area": "patient",
+          "parent": "patient"
+        },
+        "releaseJourney": {
+          "label": "מסע שחרור",
+          "area": "patient",
+          "parent": "patient"
+        },
+        "calming": {
+          "label": "תרגילי הרגעה",
+          "area": "patient",
+          "parent": "patient"
+        },
+        "calmingBreathing": {
+          "label": "נשימה",
+          "area": "patient",
+          "parent": "calming"
+        },
+        "calmingGrounding": {
+          "label": "קרקוע",
+          "area": "patient",
+          "parent": "calming"
+        },
+        "calmingMuscle": {
+          "label": "הרפיית שרירים",
+          "area": "patient",
+          "parent": "calming"
+        },
+        "therapist": {
+          "label": "לאנשי טיפול ומקצוע",
+          "area": "therapist",
+          "parent": "home"
+        },
+        "courses": {
+          "label": "קורסים והכשרות",
+          "area": "therapist",
+          "parent": "therapist"
+        },
+        "course": {
+          "label": "קורס",
+          "area": "therapist",
+          "parent": "courses"
+        },
+        "childrenFamily": {
+          "label": "ילדים ומשפחה",
+          "area": "therapist",
+          "parent": "therapist"
+        },
+        "supervision": {
+          "label": "הדרכה",
+          "area": "therapist",
+          "parent": "therapist"
+        },
+        "organizations": {
+          "label": "לארגונים",
+          "area": "therapist",
+          "parent": "therapist"
+        },
+        "research": {
+          "label": "מחקר",
+          "area": "therapist",
+          "parent": "therapist"
+        },
+        "publications": {
+          "label": "פרסומים",
+          "area": "therapist",
+          "parent": "therapist"
+        },
+        "articles": {
+          "label": "מאמרים",
+          "area": "therapist",
+          "parent": "therapist"
+        },
+        "article": {
+          "label": "מאמר",
+          "area": "therapist",
+          "parent": "articles"
+        },
+        "events": {
+          "label": "אירועים ועדכונים",
+          "area": "therapist",
+          "parent": "therapist"
+        },
+        "releaseJourneyPro": {
+          "label": "מסע שחרור",
+          "area": "therapist",
+          "parent": "therapist"
+        }
+      }
+    }
+  ]
+}

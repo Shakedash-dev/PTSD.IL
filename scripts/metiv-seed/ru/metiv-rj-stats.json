@@ -1,0 +1,51 @@
+{
+  "key": "RELEASE_JOURNEY_STATS",
+  "slug": "metiv-rj-stats",
+  "kind": "list",
+  "rows": [
+    {
+      "_key": "metiv-rj-stats-0",
+      "title": "лет со дня основания Peace of Mind - годовщина отмечается в этом году",
+      "sortOrder": 0,
+      "content": {
+        "_key": "metiv-rj-stats-0",
+        "_col": "metiv-rj-stats",
+        "value": "20",
+        "label": "лет со дня основания Peace of Mind - годовщина отмечается в этом году"
+      }
+    },
+    {
+      "_key": "metiv-rj-stats-1",
+      "title": "Групп бойцов прошли программу",
+      "sortOrder": 1,
+      "content": {
+        "_key": "metiv-rj-stats-1",
+        "_col": "metiv-rj-stats",
+        "value": "250",
+        "label": "Групп бойцов прошли программу"
+      }
+    },
+    {
+      "_key": "metiv-rj-stats-2",
+      "title": "Выпускников программы",
+      "sortOrder": 2,
+      "content": {
+        "_key": "metiv-rj-stats-2",
+        "_col": "metiv-rj-stats",
+        "value": "3,500",
+        "label": "Выпускников программы"
+      }
+    },
+    {
+      "_key": "metiv-rj-stats-3",
+      "title": "Общин в мире принимали участников программы",
+      "sortOrder": 3,
+      "content": {
+        "_key": "metiv-rj-stats-3",
+        "_col": "metiv-rj-stats",
+        "value": "80",
+        "label": "Общин в мире принимали участников программы"
+      }
+    }
+  ]
+}

@@ -1,0 +1,231 @@
+{
+  "key": "DEPARTMENT_GROUPS",
+  "slug": "metiv-department-groups",
+  "kind": "list",
+  "rows": [
+    {
+      "_key": "treatment",
+      "title": "Soins",
+      "sortOrder": 0,
+      "content": {
+        "_key": "treatment",
+        "_col": "metiv-department-groups",
+        "key": "treatment",
+        "title": "Soins",
+        "intro": "Les cliniques et les programmes dans lesquels Metiv offre des soins.",
+        "departments": [
+          {
+            "key": "adults-clinic",
+            "title": "Clinique pour adultes",
+            "icon": "HeartHandshake",
+            "forWhom": "Personnes de 17 ans et plus ayant vécu un traumatisme ou une perte.",
+            "what": "Thérapie individuelle à la clinique de Jérusalem, et aussi thérapie en ligne sur Zoom.",
+            "contact": {
+              "name": "Ariel Ben Aharon",
+              "role": "Directeur de la clinique pour adultes",
+              "phone": "02-6449666"
+            },
+            "links": [
+              {
+                "label": "Formulaire de demande à la clinique",
+                "href": "https://docs.google.com/forms/d/e/1FAIpQLSfz5ougCVnY1LFHJhyrBFrlICf2gQivumOzstI3YHor8_y0yg/viewform"
+              },
+              {
+                "label": "Détails dans l'espace patients",
+                "to": "/patient/where-to-get-help#adults-clinic"
+              }
+            ]
+          },
+          {
+            "key": "kids-clinic",
+            "title": "Metiv Enfants",
+            "icon": "Baby",
+            "forWhom": "Enfants jusqu'à 18 ans et leurs parents.",
+            "what": "Un centre de régulation émotionnelle : thérapie individuelle, dyadique et familiale, et groupes PANDA et NAMAL.",
+            "contact": {
+              "name": "Sarit Schramm-Yavin",
+              "role": "Directrice de la clinique pour enfants (Metiv Enfants)",
+              "email": "kids@metiv.org",
+              "phone": "02-6294858"
+            },
+            "links": [
+              {
+                "label": "Formulaire de demande à Metiv Enfants",
+                "href": "https://docs.google.com/forms/d/e/1FAIpQLSfiUHfJ4UDrpSUPQxtPKWmQuZGKg7lfL1c21D_JAsmwxlYLJA/viewform"
+              },
+              {
+                "label": "Détails dans l'espace patients",
+                "to": "/patient/where-to-get-help#kids-clinic"
+              }
+            ]
+          },
+          {
+            "key": "migdalor",
+            "title": "Clinique Migdalor",
+            "icon": "Shield",
+            "forWhom": "Patients reconnus par le Département de réadaptation du ministère de la Défense, district de Jérusalem.",
+            "what": "Une clinique au Centre médical Herzog, gérée par Metiv et le Centre médical Herzog.",
+            "note": "La demande se fait par l'intermédiaire du Département de réadaptation, qui oriente vers la clinique.",
+            "links": [
+              {
+                "label": "Détails dans l'espace patients",
+                "to": "/patient/where-to-get-help#migdalor"
+              }
+            ]
+          },
+          {
+            "key": "release-journey",
+            "title": "Peace of Mind",
+            "icon": "Compass",
+            "forWhom": "Soldats démobilisés exposés à des combats pendant leur service.",
+            "what": "Des voyages de groupe pour des unités constituées, en Israël et à l'étranger, et des thérapies individuelles.",
+            "contact": {
+              "name": "Racheli Brooks",
+              "role": "Directrice de Peace of Mind"
+            },
+            "links": [
+              {
+                "label": "Page Peace of Mind",
+                "to": "/therapist/release-journey"
+              },
+              {
+                "label": "S'inscrire à Peace of Mind",
+                "href": "https://wkf.ms/4i9R9bO"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "_key": "training",
+      "title": "Formation et accompagnement professionnel",
+      "sortOrder": 1,
+      "content": {
+        "_key": "training",
+        "_col": "metiv-department-groups",
+        "key": "training",
+        "title": "Formation et accompagnement professionnel",
+        "intro": "Pour les professionnels du soin, les équipes et les organisations.",
+        "departments": [
+          {
+            "key": "training-unit",
+            "title": "Unité des formations",
+            "icon": "GraduationCap",
+            "forWhom": "Professionnels de la santé mentale.",
+            "what": "Cours, journées de formation continue et formations au traitement du traumatisme, et supervision individuelle et de groupe.",
+            "contact": {
+              "name": "Gafnit Agasi",
+              "role": "Directrice de l'unité des formations",
+              "email": "gafnit@metiv.org"
+            },
+            "links": [
+              {
+                "label": "Cours et formations",
+                "to": "/therapist/courses"
+              },
+              {
+                "label": "Supervision",
+                "to": "/therapist/supervision"
+              },
+              {
+                "label": "Formulaire de demande de formation ou de supervision",
+                "href": "https://docs.google.com/forms/d/e/1FAIpQLScc90IWpEglRpTtKqwmeBToTCGXeZpZXwvcjE6UHaLR4YKxuw/viewform"
+              }
+            ]
+          },
+          {
+            "key": "organizations",
+            "title": "Organisations et communauté",
+            "icon": "Building2",
+            "forWhom": "Organisations, équipes, collectivités et communautés.",
+            "what": "Formations pour les organisations, Espace Metiv, construire une organisation adaptée au traumatisme et ateliers sur mesure.",
+            "contact": {
+              "name": "Yonit Efrati",
+              "role": "Directrice de la promotion des politiques et du développement des services communautaires",
+              "email": "yonit@metiv.org"
+            },
+            "links": [
+              {
+                "label": "Pour les organisations",
+                "to": "/therapist/organizations"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "_key": "research",
+      "title": "Recherche",
+      "sortOrder": 2,
+      "content": {
+        "_key": "research",
+        "_col": "metiv-department-groups",
+        "key": "research",
+        "title": "Recherche",
+        "intro": "L'unité de recherche de Metiv.",
+        "departments": [
+          {
+            "key": "research-unit",
+            "title": "Unité de recherche",
+            "icon": "Microscope",
+            "forWhom": "Chercheurs, organismes souhaitant collaborer et personnes intéressées par une participation à une étude.",
+            "what": "Études en cours, recherche et évaluation des programmes thérapeutiques, et publications des équipes de Metiv.",
+            "contact": {
+              "name": "Shir Elias",
+              "role": "Directrice du département de recherche",
+              "email": "shir@metiv.org"
+            },
+            "links": [
+              {
+                "label": "Études en cours",
+                "to": "/therapist/research"
+              },
+              {
+                "label": "Publications",
+                "to": "/therapist/publications"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "_key": "partnerships",
+      "title": "Partenariats et soutien",
+      "sortOrder": 3,
+      "content": {
+        "_key": "partnerships",
+        "_col": "metiv-department-groups",
+        "key": "partnerships",
+        "title": "Partenariats et soutien",
+        "intro": "Pour les fondations, les donateurs et les organismes qui souhaitent travailler avec Metiv.",
+        "departments": [
+          {
+            "key": "development",
+            "title": "Développement et partenariats",
+            "icon": "Handshake",
+            "forWhom": "Fondations, donateurs, organismes publics et organisations.",
+            "what": "Partenariats, soutien à un programme précis et nouvelles collaborations.",
+            "contact": {
+              "name": "Haim Landau",
+              "role": "Responsable du développement et des partenariats",
+              "email": "Chaim@metiv.org"
+            },
+            "links": [
+              {
+                "label": "Nos partenaires",
+                "to": "/about/partners"
+              },
+              {
+                "label": "Faire un don à Metiv",
+                "to": "/donate"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

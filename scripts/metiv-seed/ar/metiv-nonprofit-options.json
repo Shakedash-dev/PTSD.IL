@@ -1,0 +1,110 @@
+{
+  "key": "NONPROFIT_OPTIONS",
+  "slug": "metiv-nonprofit-options",
+  "kind": "list",
+  "rows": [
+    {
+      "_key": "eran",
+      "title": "عيران",
+      "sortOrder": 0,
+      "content": {
+        "_key": "eran",
+        "_col": "metiv-nonprofit-options",
+        "id": "eran",
+        "title": "عيران",
+        "provider": "خط طوارئ",
+        "icon": "Phone",
+        "what": "خط هاتفي وواتساب للتحدّث في حالات الضيق.",
+        "contacts": [
+          {
+            "kind": "phone",
+            "label": "الهاتف",
+            "value": "1201"
+          },
+          {
+            "kind": "link",
+            "label": "WhatsApp",
+            "href": "https://api.whatsapp.com/send?phone=9720528451201"
+          }
+        ]
+      }
+    },
+    {
+      "_key": "amcha-jerusalem",
+      "title": "مركز المناعة النفسية - القدس (عَمخا)",
+      "sortOrder": 1,
+      "content": {
+        "_key": "amcha-jerusalem",
+        "_col": "metiv-nonprofit-options",
+        "id": "amcha-jerusalem",
+        "title": "مركز المناعة النفسية - القدس (عَمخا)",
+        "provider": "جمعية عَمخا",
+        "icon": "Users",
+        "who": "متضرّرو الأعمال العدائية والصدمات والقلق وعائلاتهم.",
+        "what": "علاج فردي وجماعي وعائلي.",
+        "location": "القدس. عبر الهاتف أو زوم أو وجهًا لوجه.",
+        "contacts": [
+          {
+            "kind": "link",
+            "label": "موقع عَمخا",
+            "href": "https://www.amcha.org/"
+          }
+        ]
+      }
+    },
+    {
+      "_key": "natal",
+      "title": "ناتال",
+      "sortOrder": 2,
+      "content": {
+        "_key": "natal",
+        "_col": "metiv-nonprofit-options",
+        "id": "natal",
+        "title": "ناتال",
+        "provider": "جمعية ناتال",
+        "icon": "Users",
+        "who": "متضرّرو الصدمات واضطراب ما بعد الصدمة على خلفية الحرب والإرهاب وأفراد عائلاتهم.",
+        "what": "مجموعات دعم ومجموعات علاجية، بما في ذلك مجموعات للزوجات والأزواج.",
+        "contacts": [
+          {
+            "kind": "link",
+            "label": "مجموعات الدعم في ناتال",
+            "href": "https://www.natal.org.il/תמיכה-וטיפול-נפשי/קבוצות-טיפוליות-וקבוצות-תמיכה/"
+          }
+        ]
+      }
+    },
+    {
+      "_key": "sexual-assault-centers",
+      "title": "مراكز مساعدة ضحايا الاعتداءات الجنسية من النساء والرجال",
+      "sortOrder": 3,
+      "content": {
+        "_key": "sexual-assault-centers",
+        "_col": "metiv-nonprofit-options",
+        "id": "sexual-assault-centers",
+        "title": "مراكز مساعدة ضحايا الاعتداءات الجنسية من النساء والرجال",
+        "provider": "اتحاد مراكز المساعدة",
+        "icon": "Heart",
+        "who": "ضحايا الاعتداءات الجنسية من النساء والرجال وعائلاتهم.",
+        "what": "خطوط مساعدة قطرية (1202 للنساء، 1203 للرجال)، ودردشة، وشبكة من مراكز المساعدة الإقليمية.",
+        "contacts": [
+          {
+            "kind": "phone",
+            "label": "للنساء",
+            "value": "1202"
+          },
+          {
+            "kind": "phone",
+            "label": "للرجال",
+            "value": "1203"
+          },
+          {
+            "kind": "link",
+            "label": "موقع الاتحاد",
+            "href": "https://www.1202.org.il/"
+          }
+        ]
+      }
+    }
+  ]
+}

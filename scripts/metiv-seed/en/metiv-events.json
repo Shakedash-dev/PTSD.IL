@@ -1,0 +1,472 @@
+{
+  "key": "EVENTS",
+  "slug": "metiv-events",
+  "kind": "list",
+  "rows": [
+    {
+      "_key": "cbt-trauma-2026",
+      "title": "New Cohort: CBT for Trauma Training",
+      "sortOrder": 0,
+      "content": {
+        "_key": "cbt-trauma-2026",
+        "_col": "metiv-events",
+        "slug": "cbt-trauma-2026",
+        "title": "New Cohort: CBT for Trauma Training",
+        "date": "14.10.2026",
+        "dateISO": "2026-10-14",
+        "type": "Course cohort",
+        "summary": "The start of the two-year program in cognitive behavioral therapy for trauma, on Mondays, 13:00-17:30.",
+        "location": "Metiv Center, Givat Shaul, Jerusalem",
+        "price": "NIS 10,350 per year",
+        "link": "/therapist/courses/cbt-trauma",
+        "external": false,
+        "courseSlug": "cbt-trauma",
+        "isPast": false,
+        "sourceUrl": "https://metiv.org/קורס-cbt-לטראומה/"
+      }
+    },
+    {
+      "_key": "roadmap-2026-10",
+      "title": "The Roadmap for Trauma Therapy - In-Person Cohort",
+      "sortOrder": 1,
+      "content": {
+        "_key": "roadmap-2026-10",
+        "_col": "metiv-events",
+        "slug": "roadmap-2026-10",
+        "title": "The Roadmap for Trauma Therapy - In-Person Cohort",
+        "date": "29.10.2026",
+        "dateISO": "2026-10-29",
+        "type": "Course cohort",
+        "summary": "Four sessions: October 29 and November 5, 12 and 19, 2026, 9:00-15:00.",
+        "location": "Metiv Center, Herzog Medical Center, Jerusalem",
+        "price": "1,700 ₪",
+        "link": "/therapist/courses/roadmap",
+        "external": false,
+        "courseSlug": "roadmap",
+        "isPast": false,
+        "sourceUrl": "https://metiv.org/יסודות-הטיפול-בטראומה/"
+      }
+    },
+    {
+      "_key": "summer-course-2026",
+      "title": "International Summer Course: Trauma & Resilience",
+      "sortOrder": 2,
+      "content": {
+        "_key": "summer-course-2026",
+        "_col": "metiv-events",
+        "slug": "summer-course-2026",
+        "title": "International Summer Course: Trauma & Resilience",
+        "date": "June 28 - July 9, 2026; clinical training July 12-16, 2026",
+        "dateISO": "2026-06-28",
+        "type": "Course cohort",
+        "summary": "A course in English in partnership with the Hebrew University, with an optional third week of clinical training.",
+        "location": "Rothberg International School, Mount Scopus",
+        "link": "/therapist/courses/summer-course",
+        "external": false,
+        "courseSlug": "summer-course",
+        "isPast": true,
+        "sourceUrl": "https://metiv.org/en/international-summer-course/"
+      }
+    },
+    {
+      "_key": "skills-day-2026-04",
+      "title": "Trauma Therapy Skills Practice Day",
+      "sortOrder": 3,
+      "content": {
+        "_key": "skills-day-2026-04",
+        "_col": "metiv-events",
+        "slug": "skills-day-2026-04",
+        "title": "Trauma Therapy Skills Practice Day",
+        "date": "16.4.2026",
+        "dateISO": "2026-04-16",
+        "type": "Workshop",
+        "summary": "A practice day for graduates of The Roadmap course, 9:00-15:00.",
+        "location": "Metiv Center, Herzog Medical Center, Jerusalem",
+        "price": "500 ₪",
+        "link": "/therapist/courses/skills-day",
+        "external": false,
+        "courseSlug": "skills-day",
+        "isPast": true,
+        "sourceUrl": "https://metiv.org/תרגול-מיומנויות/"
+      }
+    },
+    {
+      "_key": "complex-trauma-2026-03",
+      "title": "The Foundations of Treating Complex Trauma",
+      "sortOrder": 4,
+      "content": {
+        "_key": "complex-trauma-2026-03",
+        "_col": "metiv-events",
+        "slug": "complex-trauma-2026-03",
+        "title": "The Foundations of Treating Complex Trauma",
+        "date": "5.3.2026",
+        "dateISO": "2026-03-05",
+        "type": "Course cohort",
+        "summary": "Six sessions on Thursdays, March 5-26 and April 16 and 23, 2026.",
+        "location": "Metiv Center, Herzog Medical Center, Jerusalem",
+        "price": "2,500 ₪",
+        "link": "/therapist/courses/complex-trauma",
+        "external": false,
+        "courseSlug": "complex-trauma",
+        "isPast": true,
+        "sourceUrl": "https://metiv.org/טראומה-מורכבת-קורס/"
+      }
+    },
+    {
+      "_key": "roadmap-2026-01-zoom",
+      "title": "The Roadmap for Trauma Therapy - Zoom Cohort",
+      "sortOrder": 5,
+      "content": {
+        "_key": "roadmap-2026-01-zoom",
+        "_col": "metiv-events",
+        "slug": "roadmap-2026-01-zoom",
+        "title": "The Roadmap for Trauma Therapy - Zoom Cohort",
+        "date": "1.1.2026",
+        "dateISO": "2026-01-01",
+        "type": "Course cohort",
+        "summary": "Four sessions on Zoom: January 1, 8, 15 and 22, 2026.",
+        "location": "Zoom",
+        "price": "1,700 ₪",
+        "link": "/therapist/courses/roadmap",
+        "external": false,
+        "courseSlug": "roadmap",
+        "isPast": true,
+        "sourceUrl": "https://metiv.org/קורס-מפת-הדרכים-zoom/"
+      }
+    },
+    {
+      "_key": "trauma-informed-org-2025-07",
+      "title": "One-Day Course: Building a Trauma-Informed Organization",
+      "sortOrder": 6,
+      "content": {
+        "_key": "trauma-informed-org-2025-07",
+        "_col": "metiv-events",
+        "slug": "trauma-informed-org-2025-07",
+        "title": "One-Day Course: Building a Trauma-Informed Organization",
+        "date": "15.7.2025",
+        "dateISO": "2025-07-15",
+        "type": "Workshop",
+        "summary": "A seminar day for HR managers and organizational consultants as part of \"Metiv Space\".",
+        "location": "8 Eliezer Kaplan St., Fiverr offices",
+        "price": "300 ₪",
+        "link": "/therapist/courses/trauma-informed-org-day",
+        "external": false,
+        "courseSlug": "trauma-informed-org-day",
+        "isPast": true,
+        "sourceUrl": "https://metiv.org/בניית-ארגון-מותאם-טראומה/"
+      }
+    },
+    {
+      "_key": "kaleidoscope-narrative-work",
+      "title": "Kaleidoscope: Narrative Work with Post-Traumatic Stress",
+      "sortOrder": 7,
+      "content": {
+        "_key": "kaleidoscope-narrative-work",
+        "_col": "metiv-events",
+        "slug": "kaleidoscope-narrative-work",
+        "title": "Kaleidoscope: Narrative Work with Post-Traumatic Stress",
+        "date": "6.7.2025",
+        "dateISO": "2025-07-06",
+        "type": "Workshop",
+        "summary": "A learning unit led by Dr. Michal Simchon, 9:00-16:00.",
+        "link": "/therapist/courses/kaleidoscope",
+        "external": false,
+        "courseSlug": "kaleidoscope",
+        "isPast": true,
+        "sourceUrl": "https://metiv.org/jet-popup/קליידוסקופ-טיפול-בפגיעות-מיניות-2/"
+      }
+    },
+    {
+      "_key": "kaleidoscope-birth-stories",
+      "title": "Kaleidoscope: Childbirth - \"Birth Stories\"",
+      "sortOrder": 8,
+      "content": {
+        "_key": "kaleidoscope-birth-stories",
+        "_col": "metiv-events",
+        "slug": "kaleidoscope-birth-stories",
+        "title": "Kaleidoscope: Childbirth - \"Birth Stories\"",
+        "date": "22.6.2025",
+        "dateISO": "2025-06-22",
+        "type": "Workshop",
+        "summary": "A learning unit on treating women after childbirth and working with birth experiences, 16:00-21:00, at the Metiv Center.",
+        "link": "/therapist/courses/kaleidoscope",
+        "external": false,
+        "courseSlug": "kaleidoscope",
+        "isPast": true,
+        "sourceUrl": "https://metiv.org/jet-popup/קליידוסקופ-לידות-בידיים-מלאות/"
+      }
+    },
+    {
+      "_key": "kaleidoscope-sexual-trauma",
+      "title": "Kaleidoscope: Treating Sexual Trauma",
+      "sortOrder": 9,
+      "content": {
+        "_key": "kaleidoscope-sexual-trauma",
+        "_col": "metiv-events",
+        "slug": "kaleidoscope-sexual-trauma",
+        "title": "Kaleidoscope: Treating Sexual Trauma",
+        "date": "12.6.2025",
+        "dateISO": "2025-06-12",
+        "type": "Workshop",
+        "summary": "A learning unit led by Michal Zmora, 17:00-21:00, at Metiv.",
+        "link": "/therapist/courses/kaleidoscope",
+        "external": false,
+        "courseSlug": "kaleidoscope",
+        "isPast": true,
+        "sourceUrl": "https://metiv.org/jet-popup/קליידוסקופ-טיפול-בפגיעות-מיניות/"
+      }
+    },
+    {
+      "_key": "roadmap-2025-06",
+      "title": "The Roadmap for Trauma Therapy - June Cohort",
+      "sortOrder": 10,
+      "content": {
+        "_key": "roadmap-2025-06",
+        "_col": "metiv-events",
+        "slug": "roadmap-2025-06",
+        "title": "The Roadmap for Trauma Therapy - June Cohort",
+        "date": "5.6.2025",
+        "dateISO": "2025-06-05",
+        "type": "Course cohort",
+        "summary": "Four sessions on Thursdays in June 2025, 8:30-15:30.",
+        "location": "Metiv - The Psychotrauma Center, Jerusalem",
+        "price": "NIS 1,500",
+        "link": "/therapist/courses/roadmap",
+        "external": false,
+        "courseSlug": "roadmap",
+        "isPast": true,
+        "sourceUrl": "https://metiv.org/jet-popup/מפת-הדרכים-יוני/"
+      }
+    },
+    {
+      "_key": "kaleidoscope-not-by-words-alone",
+      "title": "Kaleidoscope: \"Not by Talk Alone\"",
+      "sortOrder": 11,
+      "content": {
+        "_key": "kaleidoscope-not-by-words-alone",
+        "_col": "metiv-events",
+        "slug": "kaleidoscope-not-by-words-alone",
+        "title": "Kaleidoscope: \"Not by Talk Alone\"",
+        "date": "22.5.2025",
+        "dateISO": "2025-05-22",
+        "type": "Workshop",
+        "summary": "An experiential workshop led by Yoel Wardi and Michal Zmora, 15:00-19:00, at the Metiv Center.",
+        "link": "/therapist/courses/kaleidoscope",
+        "external": false,
+        "courseSlug": "kaleidoscope",
+        "isPast": true,
+        "sourceUrl": "https://metiv.org/jet-popup/קליידוסקופ-לא-על-הדיבור-לבדו/"
+      }
+    },
+    {
+      "_key": "supervision-group-2025-05",
+      "title": "Zoom Supervision Group Led by Uri Birnbaum",
+      "sortOrder": 12,
+      "content": {
+        "_key": "supervision-group-2025-05",
+        "_col": "metiv-events",
+        "slug": "supervision-group-2025-05",
+        "title": "Zoom Supervision Group Led by Uri Birnbaum",
+        "date": "14.5.2025",
+        "dateISO": "2025-05-14",
+        "type": "Course cohort",
+        "summary": "Six weekly sessions on Zoom, on Wednesdays at 14:00, for a group of about 5 therapists.",
+        "price": "About NIS 1,200",
+        "link": "/therapist/supervision",
+        "external": false,
+        "isPast": true,
+        "sourceUrl": "https://metiv.org/jet-popup/קבוצת-הדרכה/"
+      }
+    },
+    {
+      "_key": "kaleidoscope-act",
+      "title": "Kaleidoscope: ACT for Trauma Therapy",
+      "sortOrder": 13,
+      "content": {
+        "_key": "kaleidoscope-act",
+        "_col": "metiv-events",
+        "slug": "kaleidoscope-act",
+        "title": "Kaleidoscope: ACT for Trauma Therapy",
+        "date": "7.5.2025",
+        "dateISO": "2025-05-07",
+        "type": "Workshop",
+        "summary": "A learning unit led by Dalia Zivan, 9:00-16:00, at the Metiv Center.",
+        "link": "/therapist/courses/kaleidoscope",
+        "external": false,
+        "courseSlug": "kaleidoscope",
+        "isPast": true,
+        "sourceUrl": "https://metiv.org/jet-popup/קליידוסקופ-act-לטיפול-בטראומה/"
+      }
+    },
+    {
+      "_key": "kaleidoscope-art",
+      "title": "Kaleidoscope: Using Art for Therapists Who Are Not Art Therapists",
+      "sortOrder": 14,
+      "content": {
+        "_key": "kaleidoscope-art",
+        "_col": "metiv-events",
+        "slug": "kaleidoscope-art",
+        "title": "Kaleidoscope: Using Art for Therapists Who Are Not Art Therapists",
+        "date": "3.4.2025",
+        "dateISO": "2025-04-03",
+        "type": "Workshop",
+        "summary": "A learning unit led by Tamara Weiner, 15:00-20:00, at Metiv.",
+        "link": "/therapist/courses/kaleidoscope",
+        "external": false,
+        "courseSlug": "kaleidoscope",
+        "isPast": true,
+        "sourceUrl": "https://metiv.org/jet-popup/קליידוסקופ-סדנה-באומנות/"
+      }
+    },
+    {
+      "_key": "kaleidoscope-traumatic-grief",
+      "title": "Kaleidoscope: Meeting at the Heart of the Rupture - Treating Traumatic Grief",
+      "sortOrder": 15,
+      "content": {
+        "_key": "kaleidoscope-traumatic-grief",
+        "_col": "metiv-events",
+        "slug": "kaleidoscope-traumatic-grief",
+        "title": "Kaleidoscope: Meeting at the Heart of the Rupture - Treating Traumatic Grief",
+        "date": "26.3.2025",
+        "dateISO": "2025-03-26",
+        "type": "Workshop",
+        "summary": "A learning unit on Zoom led by Nili Lavie, 10:00-16:00.",
+        "link": "/therapist/courses/kaleidoscope",
+        "external": false,
+        "courseSlug": "kaleidoscope",
+        "isPast": true,
+        "sourceUrl": "https://metiv.org/jet-popup/קליידוסקופ-אבל/"
+      }
+    },
+    {
+      "_key": "kaleidoscope-dissociation",
+      "title": "Kaleidoscope: Dissociation and Trauma",
+      "sortOrder": 16,
+      "content": {
+        "_key": "kaleidoscope-dissociation",
+        "_col": "metiv-events",
+        "slug": "kaleidoscope-dissociation",
+        "title": "Kaleidoscope: Dissociation and Trauma",
+        "date": "February 6 and February 13, 2025",
+        "dateISO": "2025-02-06",
+        "type": "Workshop",
+        "summary": "Two sessions on Zoom with Danny Brom, 14:00-17:00.",
+        "link": "/therapist/courses/kaleidoscope",
+        "external": false,
+        "courseSlug": "kaleidoscope",
+        "isPast": true,
+        "sourceUrl": "https://metiv.org/jet-popup/קליידוסקופ-דיסוציאציה-וטראומה/"
+      }
+    },
+    {
+      "_key": "panda-training-2025-02",
+      "title": "PANDA Training for Therapists (Elementary School Age)",
+      "sortOrder": 17,
+      "content": {
+        "_key": "panda-training-2025-02",
+        "_col": "metiv-events",
+        "slug": "panda-training-2025-02",
+        "title": "PANDA Training for Therapists (Elementary School Age)",
+        "date": "3.2.2025",
+        "dateISO": "2025-02-03",
+        "type": "Course cohort",
+        "summary": "Four sessions on Zoom on Mondays, February 3-24, 9:00-15:00.",
+        "location": "Zoom",
+        "price": "NIS 2,000",
+        "link": "/therapist/courses/panda-training",
+        "external": false,
+        "courseSlug": "panda-training",
+        "isPast": true,
+        "sourceUrl": "https://metiv.org/הכשרה-למטפלים-פנדה-יסודי/"
+      }
+    },
+    {
+      "_key": "conference-year-of-coping",
+      "title": "\"A Year of Coping\" Conference for Therapists, Marking One Year Since the War Began",
+      "sortOrder": 18,
+      "content": {
+        "_key": "conference-year-of-coping",
+        "_col": "metiv-events",
+        "slug": "conference-year-of-coping",
+        "title": "\"A Year of Coping\" Conference for Therapists, Marking One Year Since the War Began",
+        "date": "29.9.2024",
+        "dateISO": "2024-09-29",
+        "publishedDate": "4.9.2024",
+        "type": "Conference",
+        "summary": "A conference of listening and sharing for therapists, one year into the war. Free of charge, with advance registration.",
+        "body": "**When?** Sunday, September 29, 2024, 9:00-13:00.\n\n**Where?** Beit Vagan Guest House, 8 HaPisga St., Jerusalem.\n\n**What's on the program?**\n\n- Dr. Danny Brom, founding CEO of Metiv - \"War outside and war inside: our place as therapists\"\n- Facilitated discussion circles\n- Sarit Zussman, social activist, artist and educator, mother of the late Ben Zussman, who fell in the Iron Swords war - \"Choosing life and insisting on the quality of life\"\n\nParticipation is free of charge but requires advance registration.",
+        "location": "Beit Vagan Guest House, 8 HaPisga St., Jerusalem",
+        "price": "Free of charge, with advance registration",
+        "link": "https://metiv.org/הרשמה-לכנס-שנה-של-התמודדות-מטיב-המרכז-ה/",
+        "external": true,
+        "isPast": true,
+        "sourceUrl": "https://metiv.org/news/כנס-למטפלים-לרגל-שנה-למלחמה/"
+      }
+    },
+    {
+      "_key": "kids-trauma-basics-2024-09",
+      "title": "New Cohort of the \"Foundations of Treating Trauma in Children\" Course",
+      "sortOrder": 19,
+      "content": {
+        "_key": "kids-trauma-basics-2024-09",
+        "_col": "metiv-events",
+        "slug": "kids-trauma-basics-2024-09",
+        "title": "New Cohort of the \"Foundations of Treating Trauma in Children\" Course",
+        "date": "September 11, 12 and 15, 2024",
+        "dateISO": "2024-09-11",
+        "publishedDate": "21.8.2024",
+        "type": "Course cohort",
+        "summary": "An intensive course for therapists with a recognized degree and experience working with children, led by Sarit Schramm-Yavin.",
+        "body": "**Who is the course for?** Therapists with a recognized degree and experience working with children. No experience working with trauma is required.\n\n**When?** September 11, 12 and 15, 9:00-15:00.\n\n**Where?** Metiv offices, Clinics Building, Herzog Medical Center, Jerusalem.\n\n**For more details and registration:** Stav - 0547466538 or by email at stav@metiv.org",
+        "location": "Metiv offices, Clinics Building, Herzog Medical Center, Jerusalem",
+        "link": "/therapist/courses/kids-trauma-basics",
+        "external": false,
+        "courseSlug": "kids-trauma-basics",
+        "isPast": true,
+        "sourceUrl": "https://metiv.org/news/מחזור-חדש-לקורס-יסודות-הטיפול-בטראומה/"
+      }
+    },
+    {
+      "_key": "trauma-informed-care-conference-2023",
+      "title": "A Roadmap for Trauma-Informed Care - A Joint Conference on Research and Psychotherapy",
+      "sortOrder": 20,
+      "content": {
+        "_key": "trauma-informed-care-conference-2023",
+        "_col": "metiv-events",
+        "slug": "trauma-informed-care-conference-2023",
+        "title": "A Roadmap for Trauma-Informed Care - A Joint Conference on Research and Psychotherapy",
+        "date": "28.2-1.3.2023",
+        "dateISO": "2023-02-28",
+        "publishedDate": "20.1.2023",
+        "type": "Conference",
+        "summary": "A two-day conference for researchers and therapists on trauma research and treatment in the context of Israeli society.",
+        "body": "The conference took place on February 28 - March 1, 2023, 09:00-17:00, at Herzog Hospital in Jerusalem.\n\nOn the first day: TED talks on current trauma research in Israel, parallel sessions on various topics (medicine, society, religion and spirituality) in the context of trauma, and a panel of senior researchers. On the second day: lectures, clinical workshops on trauma therapy, and voices from patients' testimonies.",
+        "location": "Herzog Hospital, Jerusalem",
+        "link": "https://metiv.org/en/news/a-roadmap-for-trauma-informed-care/",
+        "external": true,
+        "isPast": true,
+        "sourceUrl": "https://metiv.org/en/news/a-roadmap-for-trauma-informed-care/"
+      }
+    },
+    {
+      "_key": "free-treatment-veterans-news",
+      "title": "Free Treatment for Veterans Living with Post-Traumatic Stress",
+      "sortOrder": 21,
+      "content": {
+        "_key": "free-treatment-veterans-news",
+        "_col": "metiv-events",
+        "slug": "free-treatment-veterans-news",
+        "title": "Free Treatment for Veterans Living with Post-Traumatic Stress",
+        "date": "8.7.2021",
+        "dateISO": "2021-07-08",
+        "type": "News",
+        "summary": "Metiv has opened a free treatment program for veterans with PTSD as part of a clinical research project.",
+        "body": "Veterans coping with trauma from their military service can contact us to check whether they are suitable for free psychological treatment as part of a research project. According to the English-language page, the clinic operates as part of a clinical study of Somatic Experiencing.",
+        "link": "/patient/free-treatment-and-research",
+        "external": false,
+        "isPast": true,
+        "sourceUrl": "https://metiv.org/news/טיפול-לחיילים-משוחררים-המתמודדים-עם-פ/"
+      }
+    }
+  ]
+}

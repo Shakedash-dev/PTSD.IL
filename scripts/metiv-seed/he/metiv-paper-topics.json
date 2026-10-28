@@ -1,0 +1,25 @@
+{
+  "key": "PAPER_TOPICS",
+  "slug": "metiv-paper-topics",
+  "kind": "single",
+  "rows": [
+    {
+      "_key": "PAPER_TOPICS",
+      "title": "PAPER_TOPICS",
+      "sortOrder": 0,
+      "content": {
+        "_key": "PAPER_TOPICS",
+        "_col": "metiv-paper-topics",
+        "veterans": "לוחמים, מילואים וחיילים משוחררים",
+        "children-family": "ילדים ומשפחות",
+        "adolescents": "מתבגרים",
+        "schools-resilience": "חוסן ובתי ספר",
+        "growth": "צמיחה פוסט-טראומטית",
+        "terror-war": "טרור ומלחמה",
+        "treatment": "שיטות טיפול",
+        "policy": "מדיניות ומימון",
+        "other": "אחר"
+      }
+    }
+  ]
+}

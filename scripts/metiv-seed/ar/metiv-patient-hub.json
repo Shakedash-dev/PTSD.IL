@@ -1,0 +1,253 @@
+{
+  "key": "PATIENT_HUB",
+  "slug": "metiv-patient-hub",
+  "kind": "single",
+  "rows": [
+    {
+      "_key": "PATIENT_HUB",
+      "title": "PATIENT_HUB",
+      "sortOrder": 0,
+      "content": {
+        "_key": "PATIENT_HUB",
+        "_col": "metiv-patient-hub",
+        "hero": {
+          "brand": "ميتيف - المركز الإسرائيلي للصدمات النفسية",
+          "eyebrow": "اضطراب ما بعد الصدمة",
+          "headline": "لست وحدك",
+          "subtitle": "معلومات وأدوات ودعم - كل شيء في مكان واحد، بلغة واضحة.",
+          "ctaLabel": "ما الذي أتى بك إلى هنا؟",
+          "image": "/images/set1/home_hero.webp",
+          "about": "اضطراب ما بعد الصدمة (PTSD) هو استجابة نفسية لحدث صادم يواصل الدماغ والجسد معالجته وقتًا طويلًا بعد زوال الخطر.",
+          "aboutLinkLabel": "اقرأ المزيد",
+          "aboutRoute": "/patient/ptsd-info"
+        },
+        "paths": [
+          {
+            "key": "firstCircle",
+            "route": "/patient/first-circle",
+            "title": "أعاني من اضطراب ما بعد الصدمة",
+            "subtitle": "كل ما تحتاجه لفهم حالتك، والبدء بالعلاج، ومعرفة حقوقك - بالإيقاع الذي يناسبك، دون أن تفقد نفسك.",
+            "image": "/images/illustrations/ptsd_sufferer.webp",
+            "ctaLabel": "متابعة"
+          },
+          {
+            "key": "secondCircle",
+            "route": "/patient/second-circle",
+            "title": "مقرّب من شخص يعاني",
+            "subtitle": "لشريك الحياة أو الوالد أو الصديق لمن يعاني - كيف تدعم وتفهم، وتحافظ على نفسك أيضًا على طول الطريق.",
+            "image": "/images/illustrations/supporter.webp",
+            "ctaLabel": "متابعة"
+          },
+          {
+            "key": "questionnaire",
+            "route": "/patient/questionnaire",
+            "title": "لست متأكدًا",
+            "subtitle": "استبيان قصير مجهول الهوية (نحو 3 دقائق) يساعدك على فهم ما إذا كانت أعراضك تستدعي فحصًا إضافيًا.",
+            "image": "/images/illustrations/wondering.webp",
+            "ctaLabel": "متابعة"
+          }
+        ],
+        "quickLinks": [
+          {
+            "key": "ptsdInfo",
+            "label": "عن اضطراب ما بعد الصدمة",
+            "route": "/patient/ptsd-info",
+            "icon": "Brain",
+            "description": "أسئلة وأجوبة عن اضطراب ما بعد الصدمة."
+          },
+          {
+            "key": "selfHelp",
+            "label": "أدوات للمساعدة الذاتية",
+            "route": "/patient/self-help",
+            "icon": "Wind",
+            "description": "أدوات يمكن تجربتها وحدك، وتطبيقات، ومحاضرات فيديو."
+          },
+          {
+            "key": "treatment",
+            "label": "طرق العلاج",
+            "route": "/patient/treatment",
+            "icon": "Heart",
+            "description": "خارطة الطريق إلى العلاج، خطوة بخطوة."
+          },
+          {
+            "key": "whereToGetHelp",
+            "label": "أين يمكن الحصول على العلاج",
+            "route": "/patient/where-to-get-help",
+            "icon": "MapPin",
+            "description": "أطر العلاج وتفاصيل التوجّه، بالبنية نفسها للجميع."
+          },
+          {
+            "key": "freeTreatment",
+            "label": "علاجات دون تكلفة وأبحاث",
+            "route": "/patient/free-treatment-and-research",
+            "icon": "HandHeart",
+            "description": "أطر دون تكلفة وأبحاث تستقطب مشاركين."
+          },
+          {
+            "key": "rights",
+            "label": "الحقوق والبيروقراطية",
+            "route": "/patient/rights",
+            "icon": "FileText",
+            "description": "الحقوق حسب نوع الإصابة، وكيفية تقديم الطلب."
+          },
+          {
+            "key": "community",
+            "label": "المجتمعات واللقاءات",
+            "route": "/patient/community",
+            "icon": "Users",
+            "description": "مجموعات دعم ولقاءات في أنحاء البلاد."
+          },
+          {
+            "key": "secondCircleTools",
+            "label": "أدوات للتأقلم",
+            "route": "/patient/second-circle-tools",
+            "icon": "Shield",
+            "description": "أدوات لأفراد العائلة والمقرّبين."
+          },
+          {
+            "key": "children",
+            "label": "مضامين للأطفال",
+            "route": "/patient/children",
+            "icon": "Baby",
+            "description": "كيف نتحدث مع الأطفال، حسب العمر."
+          },
+          {
+            "key": "calming",
+            "label": "تمارين التهدئة",
+            "route": "/patient/calming",
+            "icon": "Wind",
+            "description": "التنفّس والتأريض وإرخاء العضلات."
+          },
+          {
+            "key": "questionnaire",
+            "label": "استبيان تقييم ذاتي",
+            "route": "/patient/questionnaire",
+            "icon": "ClipboardList",
+            "description": "استبيان مجهول الهوية للفحص الذاتي. ليس تشخيصًا."
+          },
+          {
+            "key": "sources",
+            "label": "المصادر",
+            "route": "/patient/sources",
+            "icon": "Library",
+            "description": "المصادر التي تستند إليها المعلومات."
+          }
+        ],
+        "additions": [
+          {
+            "key": "whereToGetHelp",
+            "label": "أين يمكن الحصول على العلاج",
+            "route": "/patient/where-to-get-help",
+            "icon": "MapPin",
+            "description": "أطر عامة وجمعيات وعيادات ميتيف، مع تفاصيل التوجّه."
+          },
+          {
+            "key": "freeTreatment",
+            "label": "علاجات دون تكلفة والمشاركة في الأبحاث",
+            "route": "/patient/free-treatment-and-research",
+            "icon": "HandHeart",
+            "description": "لمن تناسب، وماذا تشمل، وكيف يتم التوجّه."
+          },
+          {
+            "key": "veterans",
+            "label": "الجنود المسرّحون وجنود الاحتياط",
+            "route": "/patient/community#veterans",
+            "icon": "Compass",
+            "description": "Peace of Mind (راحة البال)، ومجموعات لعائلات جنود الاحتياط، ومجموعات للأهل والأطفال."
+          },
+          {
+            "key": "parentChildGroups",
+            "label": "مجموعات للأهل والأطفال",
+            "route": "/patient/children#parent-child-groups",
+            "icon": "Baby",
+            "description": "باندا ونامال ولقاء لعب دون تكلفة."
+          },
+          {
+            "key": "reservistFamilies",
+            "label": "لأفراد عائلات جنود الاحتياط",
+            "route": "/patient/second-circle-tools#reservist-families",
+            "icon": "Users",
+            "description": "باندا للعائلة ونامال للعائلة."
+          },
+          {
+            "key": "metivBooks",
+            "label": "كتب العاملين في ميتيف",
+            "route": "/patient/sources#metiv-books",
+            "icon": "Library",
+            "description": "كتب ألّفها أو حرّرها العاملون في ميتيف."
+          },
+          {
+            "key": "videoLectures",
+            "label": "محاضرات فيديو",
+            "route": "/patient/self-help#video-lectures",
+            "icon": "Youtube",
+            "description": "قناة ميتيف على يوتيوب."
+          },
+          {
+            "key": "consultation",
+            "label": "لستم متأكدين إن كان عليكم التوجّه؟",
+            "route": "/patient/where-to-get-help#consultation",
+            "icon": "MessageCircle",
+            "description": "تتردّدون في التوجّه إلى العلاج أو في توقيته؟ يمكنكم الاتصال بميتيف واستشارتنا حول الإمكانيات المتاحة."
+          }
+        ],
+        "crisisLines": [
+          {
+            "key": "eranPhone",
+            "label": "خط طوارئ - عيران",
+            "value": "1201",
+            "href": "tel:1201",
+            "icon": "Phone"
+          },
+          {
+            "key": "eranWhatsapp",
+            "label": "عيران عبر واتساب",
+            "value": "WhatsApp",
+            "href": "https://api.whatsapp.com/send?phone=9720528451201",
+            "icon": "MessageCircle"
+          }
+        ],
+        "consultation": {
+          "title": "لستم متأكدين إن كان عليكم التوجّه؟",
+          "text": "تتردّدون في التوجّه إلى العلاج أو في توقيته؟ يمكنكم الاتصال بميتيف واستشارتنا حول الإمكانيات المتاحة.",
+          "phone": "02-6449666",
+          "route": "/patient/where-to-get-help#consultation",
+          "linkLabel": "للاستشارة مع ميتيف"
+        },
+        "metivServices": [
+          {
+            "id": "adults-clinic",
+            "title": "عيادة البالغين في ميتيف",
+            "icon": "HeartHandshake",
+            "route": "/patient/where-to-get-help#adults-clinic"
+          },
+          {
+            "id": "kids-clinic",
+            "title": "ميتيف للأطفال - مركز لتنظيم المشاعر",
+            "icon": "Baby",
+            "route": "/patient/where-to-get-help#kids-clinic"
+          },
+          {
+            "id": "migdalor",
+            "title": "عيادة ميغدالور",
+            "icon": "Shield",
+            "route": "/patient/where-to-get-help#migdalor"
+          },
+          {
+            "id": "release-journey",
+            "title": "Peace of Mind (راحة البال)",
+            "icon": "Compass",
+            "route": "/patient/where-to-get-help#release-journey"
+          },
+          {
+            "id": "free-treatments",
+            "title": "علاجات دون تكلفة عبر ميتيف",
+            "icon": "HandHeart",
+            "route": "/patient/where-to-get-help#free-treatments"
+          }
+        ],
+        "disclaimer": "لا يقدّم الموقع استشارة طبية. في حالة الطوارئ توجّه إلى الطبيب أو اتصل بعيران: 1201"
+      }
+    }
+  ]
+}

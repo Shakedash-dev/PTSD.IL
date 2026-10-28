@@ -9,13 +9,14 @@ import { Button } from '@/components/ui/button';
 import { IMAGES } from '@/lib/images';
 import ValidatableContent from '@/components/ValidatableContent';
 import HeroChatInput from '@/components/chat/HeroChatInput';
+import { fmt, useCopy } from '../content/MetivContent';
 
 // Metiv demo (V3): a copy of src/pages/Home.jsx for /patient. Changes only: the
 // Metiv logo replaces the PTSD.IL wordmark, and the two new Metiv pages join the
 // quick nav chips.
 const METIV_LOGO = `${import.meta.env.BASE_URL || '/'}images/metiv-demo/metiv-logo.png`;
 
-/** @type {{ key: string, path: string, icon: any, label?: string }[]} */
+/** @type {{ key: string, path: string, icon: any, labelCopy?: string }[]} */
 const quickNavItems = [
   { key: 'ptsd_info', path: '/ptsd-info', icon: Brain },
   { key: 'treatment', path: '/treatment', icon: Heart },
@@ -24,8 +25,9 @@ const quickNavItems = [
   { key: 'second_circle', path: '/second-circle', icon: Shield },
   { key: 'children_content', path: '/children', icon: Baby },
   // Metiv additions (approved): the two new pages.
-  { key: 'where_to_get_help', label: 'איפה אפשר לקבל טיפול', path: '/where-to-get-help', icon: MapPin },
-  { key: 'free_treatment', label: 'טיפולים ללא עלות והשתתפות במחקרים', path: '/free-treatment-and-research', icon: HandHeart },
+  // Their labels come from the `patientHome` copy.
+  { key: 'where_to_get_help', labelCopy: 'whereToGetHelpChip', path: '/where-to-get-help', icon: MapPin },
+  { key: 'free_treatment', labelCopy: 'freeTreatmentChip', path: '/free-treatment-and-research', icon: HandHeart },
 ];
 
 // Per-path placeholder accents so the three big path cards feel distinct even
@@ -59,6 +61,7 @@ const PATHS_META = [
 
 export default function Home() {
   const { lang } = useLang();
+  const c = useCopy('patientHome');
   const paths = PATHS_META.map(p => ({ ...p, image: IMAGES[p.imageKey] }));
   const { isRTL } = useDirection();
   const ArrowIcon = isRTL ? ArrowLeft : ArrowRight;
@@ -80,9 +83,9 @@ export default function Home() {
 
         <div className="relative flex-1 max-w-5xl w-full mx-auto px-5 sm:px-6 pt-24 pb-32 flex flex-col items-center justify-center text-center">
           <span className="inline-flex items-center rounded-full bg-card/95 px-4 py-2 mb-6 shadow-atmospheric">
-            <img src={METIV_LOGO} alt="מטיב" className="h-8 w-auto" />
+            <img src={METIV_LOGO} alt={c.logoAlt} className="h-8 w-auto" />
           </span>
-          <ValidatableContent contentId="home.hero.tagline" label="כותרת ראשית - הום">
+          <ValidatableContent contentId="home.hero.tagline" label={c.validateHeroTagline}>
             <h1 className="mb-8 max-w-4xl">
               <span className="block font-heading font-light text-2xl sm:text-3xl lg:text-4xl tracking-tight opacity-80 mb-3">
                 {t(lang, 'hero_eyebrow')}
@@ -92,7 +95,7 @@ export default function Home() {
               </span>
             </h1>
           </ValidatableContent>
-          <ValidatableContent contentId="home.hero.subtitle" label="כותרת משנה - הום">
+          <ValidatableContent contentId="home.hero.subtitle" label={c.validateHeroSubtitle}>
             <HeroChatInput />
           </ValidatableContent>
           <Button asChild variant="pill-green" size="pill-lg">
@@ -136,12 +139,12 @@ export default function Home() {
                   )}
                 </div>
                 <div className="flex-1 px-6 pt-5 pb-7">
-                  <ValidatableContent contentId={`home.path.${idx}.title`} label={`כרטיס נתיב ${idx + 1} - כותרת`}>
+                  <ValidatableContent contentId={`home.path.${idx}.title`} label={fmt(c.validatePathTitle, { n: idx + 1 })}>
                     <h2 className="font-heading font-semibold text-2xl sm:text-3xl text-foreground mb-3 leading-tight">
                       {t(lang, panel.titleKey)}
                     </h2>
                   </ValidatableContent>
-                  <ValidatableContent contentId={`home.path.${idx}.subtitle`} label={`כרטיס נתיב ${idx + 1} - תת-כותרת`}>
+                  <ValidatableContent contentId={`home.path.${idx}.subtitle`} label={fmt(c.validatePathSubtitle, { n: idx + 1 })}>
                     <p className="font-body text-card-foreground leading-relaxed mb-4">
                       {t(lang, panel.subtitleKey)}
                     </p>
@@ -160,7 +163,7 @@ export default function Home() {
       {/* ── About PTSD strip ── */}
       <SectionBlock variant="muted" maxWidth="default" padding="py-20 sm:py-24">
         <div className="text-center">
-          <ValidatableContent contentId="home.about.text" label="תיאור קצר על PTSD">
+          <ValidatableContent contentId="home.about.text" label={c.validateAbout}>
             <p className="font-body text-xl sm:text-2xl leading-relaxed text-foreground font-light">
               {t(lang, 'about_ptsd_short')}
             </p>
@@ -188,7 +191,7 @@ export default function Home() {
                 className="group inline-flex items-center gap-2.5 px-5 py-2.5 bg-card border border-border rounded-full text-sm font-medium text-foreground hover:border-primary hover:bg-muted transition-colors duration-300"
               >
                 <Icon className="w-4 h-4 text-primary" />
-                <span>{item.label || t(lang, item.key)}</span>
+                <span>{item.labelCopy ? c[item.labelCopy] : t(lang, item.key)}</span>
               </Link>
             );
           })}

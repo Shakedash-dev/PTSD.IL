@@ -1,0 +1,167 @@
+{
+  "key": "PATIENT_NAV",
+  "slug": "metiv-patient-nav",
+  "kind": "list",
+  "rows": [
+    {
+      "_key": "patient",
+      "title": "الرئيسية",
+      "sortOrder": 0,
+      "content": {
+        "_key": "patient",
+        "_col": "metiv-patient-nav",
+        "key": "patient",
+        "label": "الرئيسية",
+        "route": "/patient"
+      }
+    },
+    {
+      "_key": "firstCircle",
+      "title": "أعاني من اضطراب ما بعد الصدمة",
+      "sortOrder": 1,
+      "content": {
+        "_key": "firstCircle",
+        "_col": "metiv-patient-nav",
+        "key": "firstCircle",
+        "label": "أعاني من اضطراب ما بعد الصدمة",
+        "route": "/patient/first-circle",
+        "children": [
+          {
+            "key": "ptsdInfo",
+            "label": "عن PTSD",
+            "route": "/patient/ptsd-info"
+          },
+          {
+            "key": "selfHelp",
+            "label": "أدوات للمساعدة الذاتية",
+            "route": "/patient/self-help"
+          },
+          {
+            "key": "rights",
+            "label": "الحقوق",
+            "route": "/patient/rights"
+          },
+          {
+            "key": "treatment",
+            "label": "العلاج",
+            "route": "/patient/treatment"
+          },
+          {
+            "key": "community",
+            "label": "المجتمع",
+            "route": "/patient/community"
+          },
+          {
+            "key": "children",
+            "label": "مضامين للأطفال",
+            "route": "/patient/children"
+          }
+        ]
+      }
+    },
+    {
+      "_key": "secondCircle",
+      "title": "مقرّب من شخص يعاني",
+      "sortOrder": 2,
+      "content": {
+        "_key": "secondCircle",
+        "_col": "metiv-patient-nav",
+        "key": "secondCircle",
+        "label": "مقرّب من شخص يعاني",
+        "route": "/patient/second-circle",
+        "children": [
+          {
+            "key": "ptsdInfo",
+            "label": "عن PTSD",
+            "route": "/patient/ptsd-info"
+          },
+          {
+            "key": "secondCircleTools",
+            "label": "أدوات للتأقلم",
+            "route": "/patient/second-circle-tools"
+          },
+          {
+            "key": "rights",
+            "label": "الحقوق",
+            "route": "/patient/rights"
+          },
+          {
+            "key": "treatment",
+            "label": "العلاج",
+            "route": "/patient/treatment"
+          },
+          {
+            "key": "children",
+            "label": "مضامين للأطفال",
+            "route": "/patient/children"
+          },
+          {
+            "key": "community",
+            "label": "المجتمع",
+            "route": "/patient/community"
+          }
+        ]
+      }
+    },
+    {
+      "_key": "questionnaire",
+      "title": "استبيان تقييم ذاتي",
+      "sortOrder": 3,
+      "content": {
+        "_key": "questionnaire",
+        "_col": "metiv-patient-nav",
+        "key": "questionnaire",
+        "label": "استبيان تقييم ذاتي",
+        "route": "/patient/questionnaire"
+      }
+    },
+    {
+      "_key": "whereToGetHelp",
+      "title": "أين نحصل على العلاج",
+      "sortOrder": 4,
+      "content": {
+        "_key": "whereToGetHelp",
+        "_col": "metiv-patient-nav",
+        "key": "whereToGetHelp",
+        "label": "أين نحصل على العلاج",
+        "route": "/patient/where-to-get-help"
+      }
+    },
+    {
+      "_key": "freeTreatment",
+      "title": "علاجات دون تكلفة وأبحاث",
+      "sortOrder": 5,
+      "content": {
+        "_key": "freeTreatment",
+        "_col": "metiv-patient-nav",
+        "key": "freeTreatment",
+        "label": "علاجات دون تكلفة وأبحاث",
+        "route": "/patient/free-treatment-and-research"
+      }
+    },
+    {
+      "_key": "calming",
+      "title": "تمارين التهدئة",
+      "sortOrder": 6,
+      "content": {
+        "_key": "calming",
+        "_col": "metiv-patient-nav",
+        "key": "calming",
+        "label": "تمارين التهدئة",
+        "route": "/patient/calming"
+      }
+    },
+    {
+      "_key": "sources",
+      "title": "المصادر",
+      "sortOrder": 7,
+      "content": {
+        "_key": "sources",
+        "_col": "metiv-patient-nav",
+        "key": "sources",
+        "label": "المصادر",
+        "route": "/patient/sources"
+      }
+    }
+  ]
+}

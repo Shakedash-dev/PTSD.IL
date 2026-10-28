@@ -1,0 +1,231 @@
+{
+  "key": "DEPARTMENT_GROUPS",
+  "slug": "metiv-department-groups",
+  "kind": "list",
+  "rows": [
+    {
+      "_key": "treatment",
+      "title": "Терапия",
+      "sortOrder": 0,
+      "content": {
+        "_key": "treatment",
+        "_col": "metiv-department-groups",
+        "key": "treatment",
+        "title": "Терапия",
+        "intro": "Клиники и программы, в которых Метив оказывает терапевтическую помощь.",
+        "departments": [
+          {
+            "key": "adults-clinic",
+            "title": "Клиника для взрослых",
+            "icon": "HeartHandshake",
+            "forWhom": "Обращающиеся в возрасте 17 лет и старше, пережившие травму или утрату.",
+            "what": "Индивидуальная терапия в клинике в Иерусалиме, а также онлайн-терапия в Zoom.",
+            "contact": {
+              "name": "Ариэль Бен-Аарон",
+              "role": "Директор клиники для взрослых",
+              "phone": "02-6449666"
+            },
+            "links": [
+              {
+                "label": "Форма обращения в клинику",
+                "href": "https://docs.google.com/forms/d/e/1FAIpQLSfz5ougCVnY1LFHJhyrBFrlICf2gQivumOzstI3YHor8_y0yg/viewform"
+              },
+              {
+                "label": "Подробнее в разделе для клиентов",
+                "to": "/patient/where-to-get-help#adults-clinic"
+              }
+            ]
+          },
+          {
+            "key": "kids-clinic",
+            "title": "Метив - дети",
+            "icon": "Baby",
+            "forWhom": "Дети до 18 лет и их родители.",
+            "what": "Центр регуляции эмоций: индивидуальная, диадическая и семейная терапия, а также группы ПАНДА и НАМАЛЬ.",
+            "contact": {
+              "name": "Сарит Шрам-Явин",
+              "role": "Директор детской клиники («Метив - дети»)",
+              "email": "kids@metiv.org",
+              "phone": "02-6294858"
+            },
+            "links": [
+              {
+                "label": "Форма обращения в «Метив - дети»",
+                "href": "https://docs.google.com/forms/d/e/1FAIpQLSfiUHfJ4UDrpSUPQxtPKWmQuZGKg7lfL1c21D_JAsmwxlYLJA/viewform"
+              },
+              {
+                "label": "Подробнее в разделе для клиентов",
+                "to": "/patient/where-to-get-help#kids-clinic"
+              }
+            ]
+          },
+          {
+            "key": "migdalor",
+            "title": "Клиника «Мигдалор»",
+            "icon": "Shield",
+            "forWhom": "Клиенты, признанные Отделом реабилитации Министерства обороны, Иерусалимский округ.",
+            "what": "Клиника в Медицинском центре Герцог, совместная клиника Метива и Медицинского центра Герцог.",
+            "note": "Направление оформляется через Отдел реабилитации, который направляет в клинику.",
+            "links": [
+              {
+                "label": "Подробнее в разделе для клиентов",
+                "to": "/patient/where-to-get-help#migdalor"
+              }
+            ]
+          },
+          {
+            "key": "release-journey",
+            "title": "Peace of Mind",
+            "icon": "Compass",
+            "forWhom": "Демобилизованные военнослужащие, которые во время службы столкнулись с боевыми событиями.",
+            "what": "Групповые поездки в Израиле и за рубежом для бойцов, служивших в одном подразделении, и индивидуальная терапия.",
+            "contact": {
+              "name": "Рахели Брукс",
+              "role": "Руководитель Peace of Mind"
+            },
+            "links": [
+              {
+                "label": "На страницу Peace of Mind",
+                "to": "/therapist/release-journey"
+              },
+              {
+                "label": "Запись в Peace of Mind",
+                "href": "https://wkf.ms/4i9R9bO"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "_key": "training",
+      "title": "Обучение и профессиональное сопровождение",
+      "sortOrder": 1,
+      "content": {
+        "_key": "training",
+        "_col": "metiv-department-groups",
+        "key": "training",
+        "title": "Обучение и профессиональное сопровождение",
+        "intro": "Для специалистов помогающих профессий, команд и организаций.",
+        "departments": [
+          {
+            "key": "training-unit",
+            "title": "Отдел обучения",
+            "icon": "GraduationCap",
+            "forWhom": "Специалисты в области психического здоровья.",
+            "what": "Курсы, дни повышения квалификации и обучение терапии травмы, а также индивидуальная и групповая супервизия.",
+            "contact": {
+              "name": "Гафнит Агаси",
+              "role": "Руководитель отдела обучения",
+              "email": "gafnit@metiv.org"
+            },
+            "links": [
+              {
+                "label": "Курсы и обучение",
+                "to": "/therapist/courses"
+              },
+              {
+                "label": "Супервизия",
+                "to": "/therapist/supervision"
+              },
+              {
+                "label": "Форма запроса на обучение или супервизию",
+                "href": "https://docs.google.com/forms/d/e/1FAIpQLScc90IWpEglRpTtKqwmeBToTCGXeZpZXwvcjE6UHaLR4YKxuw/viewform"
+              }
+            ]
+          },
+          {
+            "key": "organizations",
+            "title": "Организации и сообщества",
+            "icon": "Building2",
+            "forWhom": "Организации, команды, органы власти и сообщества.",
+            "what": "Обучение для организаций, «Пространство Метив», построение организации, учитывающей травму, и семинары под заказ.",
+            "contact": {
+              "name": "Йонит Эфрати",
+              "role": "Руководитель направления развития политики и общественных служб",
+              "email": "yonit@metiv.org"
+            },
+            "links": [
+              {
+                "label": "Для организаций",
+                "to": "/therapist/organizations"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "_key": "research",
+      "title": "Исследования",
+      "sortOrder": 2,
+      "content": {
+        "_key": "research",
+        "_col": "metiv-department-groups",
+        "key": "research",
+        "title": "Исследования",
+        "intro": "Исследовательский отдел Метива.",
+        "departments": [
+          {
+            "key": "research-unit",
+            "title": "Исследовательский отдел",
+            "icon": "Microscope",
+            "forWhom": "Исследователи, организации, которые хотят сотрудничать, и все, кто интересуется участием в исследованиях.",
+            "what": "Текущие исследования, исследование и оценка терапевтических программ и публикации сотрудников Метива.",
+            "contact": {
+              "name": "Шир Элиас",
+              "role": "Руководитель исследовательского отдела",
+              "email": "shir@metiv.org"
+            },
+            "links": [
+              {
+                "label": "Текущие исследования",
+                "to": "/therapist/research"
+              },
+              {
+                "label": "Публикации",
+                "to": "/therapist/publications"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "_key": "partnerships",
+      "title": "Партнёрства и поддержка",
+      "sortOrder": 3,
+      "content": {
+        "_key": "partnerships",
+        "_col": "metiv-department-groups",
+        "key": "partnerships",
+        "title": "Партнёрства и поддержка",
+        "intro": "Для фондов, доноров и организаций, которые хотят работать с Метивом.",
+        "departments": [
+          {
+            "key": "development",
+            "title": "Развитие и партнёрства",
+            "icon": "Handshake",
+            "forWhom": "Фонды, доноры, государственные организации и другие организации.",
+            "what": "Партнёрства, поддержка конкретной программы и новое сотрудничество.",
+            "contact": {
+              "name": "Хаим Ландау",
+              "role": "Руководитель по развитию и партнёрствам",
+              "email": "Chaim@metiv.org"
+            },
+            "links": [
+              {
+                "label": "Наши партнёры",
+                "to": "/about/partners"
+              },
+              {
+                "label": "Пожертвовать Метиву",
+                "to": "/donate"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,115 @@
+{
+  "key": "NAV",
+  "slug": "metiv-nav",
+  "kind": "list",
+  "rows": [
+    {
+      "_key": "therapist",
+      "title": "الرئيسية",
+      "sortOrder": 0,
+      "content": {
+        "_key": "therapist",
+        "_col": "metiv-nav",
+        "key": "therapist",
+        "label": "الرئيسية",
+        "route": "/therapist"
+      }
+    },
+    {
+      "_key": "courses",
+      "title": "الدورات",
+      "sortOrder": 1,
+      "content": {
+        "_key": "courses",
+        "_col": "metiv-nav",
+        "key": "courses",
+        "label": "الدورات",
+        "route": "/therapist/courses"
+      }
+    },
+    {
+      "_key": "childrenFamily",
+      "title": "الأطفال والعائلة",
+      "sortOrder": 2,
+      "content": {
+        "_key": "childrenFamily",
+        "_col": "metiv-nav",
+        "key": "childrenFamily",
+        "label": "الأطفال والعائلة",
+        "route": "/therapist/children-and-family"
+      }
+    },
+    {
+      "_key": "supervision",
+      "title": "الإشراف المهني",
+      "sortOrder": 3,
+      "content": {
+        "_key": "supervision",
+        "_col": "metiv-nav",
+        "key": "supervision",
+        "label": "الإشراف المهني",
+        "route": "/therapist/supervision"
+      }
+    },
+    {
+      "_key": "organizations",
+      "title": "للمنظمات",
+      "sortOrder": 4,
+      "content": {
+        "_key": "organizations",
+        "_col": "metiv-nav",
+        "key": "organizations",
+        "label": "للمنظمات",
+        "route": "/therapist/organizations"
+      }
+    },
+    {
+      "_key": "research",
+      "title": "البحث",
+      "sortOrder": 5,
+      "content": {
+        "_key": "research",
+        "_col": "metiv-nav",
+        "key": "research",
+        "label": "البحث",
+        "route": "/therapist/research"
+      }
+    },
+    {
+      "_key": "publications",
+      "title": "المنشورات",
+      "sortOrder": 6,
+      "content": {
+        "_key": "publications",
+        "_col": "metiv-nav",
+        "key": "publications",
+        "label": "المنشورات",
+        "route": "/therapist/publications"
+      }
+    },
+    {
+      "_key": "articles",
+      "title": "المقالات",
+      "sortOrder": 7,
+      "content": {
+        "_key": "articles",
+        "_col": "metiv-nav",
+        "key": "articles",
+        "label": "المقالات",
+        "route": "/therapist/articles"
+      }
+    },
+    {
+      "_key": "events",
+      "title": "الفعاليات",
+      "sortOrder": 8,
+      "content": {
+        "_key": "events",
+        "_col": "metiv-nav",
+        "key": "events",
+        "label": "الفعاليات",
+        "route": "/therapist/events"
+      }
+    }
+  ]
+}

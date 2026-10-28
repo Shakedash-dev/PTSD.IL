@@ -1,0 +1,8 @@
+{
+  "_area": "patient",
+  "_label": "אזור המטופלים: מקורות",
+  "booksTitle": "كتب العاملين في ميتيف",
+  "booksIntro": "كتب ألّفها أو حرّرها العاملون في ميتيف. {note}",
+  "bookLanguage": "كتاب · {language}",
+  "bookLink": "إلى صفحة الكتاب"
+}

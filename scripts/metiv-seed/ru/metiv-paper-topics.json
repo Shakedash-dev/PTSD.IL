@@ -1,0 +1,25 @@
+{
+  "key": "PAPER_TOPICS",
+  "slug": "metiv-paper-topics",
+  "kind": "single",
+  "rows": [
+    {
+      "_key": "PAPER_TOPICS",
+      "title": "PAPER_TOPICS",
+      "sortOrder": 0,
+      "content": {
+        "_key": "PAPER_TOPICS",
+        "_col": "metiv-paper-topics",
+        "veterans": "Бойцы, резервисты и демобилизованные военнослужащие",
+        "children-family": "Дети и семьи",
+        "adolescents": "Подростки",
+        "schools-resilience": "Жизнестойкость и школы",
+        "growth": "Посттравматический рост",
+        "terror-war": "Террор и война",
+        "treatment": "Методы терапии",
+        "policy": "Политика и финансирование",
+        "other": "Другое"
+      }
+    }
+  ]
+}

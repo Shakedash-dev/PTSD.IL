@@ -1,0 +1,225 @@
+{
+  "key": "ROUTE_META",
+  "slug": "metiv-route-meta",
+  "kind": "single",
+  "rows": [
+    {
+      "_key": "ROUTE_META",
+      "title": "ROUTE_META",
+      "sortOrder": 0,
+      "content": {
+        "_key": "ROUTE_META",
+        "_col": "metiv-route-meta",
+        "home": {
+          "label": "الصفحة الرئيسية",
+          "area": "metiv"
+        },
+        "about": {
+          "label": "عن ميتيف",
+          "area": "therapist",
+          "parent": "therapist"
+        },
+        "aboutHistory": {
+          "label": "قصة ميتيف",
+          "area": "therapist",
+          "parent": "about"
+        },
+        "aboutTeam": {
+          "label": "الطاقم",
+          "area": "therapist",
+          "parent": "about"
+        },
+        "aboutPartners": {
+          "label": "شركاؤنا",
+          "area": "therapist",
+          "parent": "about"
+        },
+        "aboutCollaborations": {
+          "label": "الشراكات",
+          "area": "therapist",
+          "parent": "about"
+        },
+        "donate": {
+          "label": "التبرّع",
+          "area": "metiv",
+          "parent": "home"
+        },
+        "contact": {
+          "label": "اتصل بنا",
+          "area": "metiv",
+          "parent": "home"
+        },
+        "privacy": {
+          "label": "سياسة الخصوصية",
+          "area": "metiv",
+          "parent": "home"
+        },
+        "terms": {
+          "label": "شروط الاستخدام",
+          "area": "metiv",
+          "parent": "home"
+        },
+        "accessibility": {
+          "label": "بيان إتاحة الوصول",
+          "area": "metiv",
+          "parent": "home"
+        },
+        "patient": {
+          "label": "للمتعالجين والعائلات",
+          "area": "patient",
+          "parent": "home"
+        },
+        "firstCircle": {
+          "label": "من مرّ بحدث صعب",
+          "area": "patient",
+          "parent": "patient"
+        },
+        "secondCircle": {
+          "label": "المقرّبون وأفراد العائلة",
+          "area": "patient",
+          "parent": "patient"
+        },
+        "secondCircleTools": {
+          "label": "أدوات لأفراد العائلة",
+          "area": "patient",
+          "parent": "secondCircle"
+        },
+        "questionnaire": {
+          "label": "استبيان مجهول الهوية",
+          "area": "patient",
+          "parent": "patient"
+        },
+        "ptsdInfo": {
+          "label": "ما هو اضطراب ما بعد الصدمة",
+          "area": "patient",
+          "parent": "patient"
+        },
+        "selfHelp": {
+          "label": "المساعدة الذاتية",
+          "area": "patient",
+          "parent": "patient"
+        },
+        "treatment": {
+          "label": "الرحلة العلاجية",
+          "area": "patient",
+          "parent": "patient"
+        },
+        "whereToGetHelp": {
+          "label": "أين نحصل على العلاج",
+          "area": "patient",
+          "parent": "patient"
+        },
+        "freeTreatment": {
+          "label": "علاجات دون تكلفة وأبحاث",
+          "area": "patient",
+          "parent": "patient"
+        },
+        "rights": {
+          "label": "الحقوق",
+          "area": "patient",
+          "parent": "patient"
+        },
+        "community": {
+          "label": "مجتمعات الدعم",
+          "area": "patient",
+          "parent": "patient"
+        },
+        "children": {
+          "label": "التحدّث مع الأطفال",
+          "area": "patient",
+          "parent": "patient"
+        },
+        "sources": {
+          "label": "المصادر",
+          "area": "patient",
+          "parent": "patient"
+        },
+        "releaseJourney": {
+          "label": "Peace of Mind (راحة البال)",
+          "area": "patient",
+          "parent": "patient"
+        },
+        "calming": {
+          "label": "تمارين التهدئة",
+          "area": "patient",
+          "parent": "patient"
+        },
+        "calmingBreathing": {
+          "label": "التنفّس",
+          "area": "patient",
+          "parent": "calming"
+        },
+        "calmingGrounding": {
+          "label": "التأريض",
+          "area": "patient",
+          "parent": "calming"
+        },
+        "calmingMuscle": {
+          "label": "إرخاء العضلات",
+          "area": "patient",
+          "parent": "calming"
+        },
+        "therapist": {
+          "label": "للعاملين في العلاج والمهنيين",
+          "area": "therapist",
+          "parent": "home"
+        },
+        "courses": {
+          "label": "الدورات والتأهيلات",
+          "area": "therapist",
+          "parent": "therapist"
+        },
+        "course": {
+          "label": "دورة",
+          "area": "therapist",
+          "parent": "courses"
+        },
+        "childrenFamily": {
+          "label": "الأطفال والعائلة",
+          "area": "therapist",
+          "parent": "therapist"
+        },
+        "supervision": {
+          "label": "الإشراف المهني",
+          "area": "therapist",
+          "parent": "therapist"
+        },
+        "organizations": {
+          "label": "للمنظمات",
+          "area": "therapist",
+          "parent": "therapist"
+        },
+        "research": {
+          "label": "البحث",
+          "area": "therapist",
+          "parent": "therapist"
+        },
+        "publications": {
+          "label": "المنشورات",
+          "area": "therapist",
+          "parent": "therapist"
+        },
+        "articles": {
+          "label": "المقالات",
+          "area": "therapist",
+          "parent": "therapist"
+        },
+        "article": {
+          "label": "مقال",
+          "area": "therapist",
+          "parent": "articles"
+        },
+        "events": {
+          "label": "الفعاليات والمستجدات",
+          "area": "therapist",
+          "parent": "therapist"
+        },
+        "releaseJourneyPro": {
+          "label": "Peace of Mind (راحة البال)",
+          "area": "therapist",
+          "parent": "therapist"
+        }
+      }
+    }
+  ]
+}

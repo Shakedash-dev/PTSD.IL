@@ -1,0 +1,115 @@
+{
+  "key": "NAV",
+  "slug": "metiv-nav",
+  "kind": "list",
+  "rows": [
+    {
+      "_key": "therapist",
+      "title": "ראשי",
+      "sortOrder": 0,
+      "content": {
+        "_key": "therapist",
+        "_col": "metiv-nav",
+        "key": "therapist",
+        "label": "ראשי",
+        "route": "/therapist"
+      }
+    },
+    {
+      "_key": "courses",
+      "title": "קורסים",
+      "sortOrder": 1,
+      "content": {
+        "_key": "courses",
+        "_col": "metiv-nav",
+        "key": "courses",
+        "label": "קורסים",
+        "route": "/therapist/courses"
+      }
+    },
+    {
+      "_key": "childrenFamily",
+      "title": "ילדים ומשפחה",
+      "sortOrder": 2,
+      "content": {
+        "_key": "childrenFamily",
+        "_col": "metiv-nav",
+        "key": "childrenFamily",
+        "label": "ילדים ומשפחה",
+        "route": "/therapist/children-and-family"
+      }
+    },
+    {
+      "_key": "supervision",
+      "title": "הדרכה",
+      "sortOrder": 3,
+      "content": {
+        "_key": "supervision",
+        "_col": "metiv-nav",
+        "key": "supervision",
+        "label": "הדרכה",
+        "route": "/therapist/supervision"
+      }
+    },
+    {
+      "_key": "organizations",
+      "title": "לארגונים",
+      "sortOrder": 4,
+      "content": {
+        "_key": "organizations",
+        "_col": "metiv-nav",
+        "key": "organizations",
+        "label": "לארגונים",
+        "route": "/therapist/organizations"
+      }
+    },
+    {
+      "_key": "research",
+      "title": "מחקר",
+      "sortOrder": 5,
+      "content": {
+        "_key": "research",
+        "_col": "metiv-nav",
+        "key": "research",
+        "label": "מחקר",
+        "route": "/therapist/research"
+      }
+    },
+    {
+      "_key": "publications",
+      "title": "פרסומים",
+      "sortOrder": 6,
+      "content": {
+        "_key": "publications",
+        "_col": "metiv-nav",
+        "key": "publications",
+        "label": "פרסומים",
+        "route": "/therapist/publications"
+      }
+    },
+    {
+      "_key": "articles",
+      "title": "מאמרים",
+      "sortOrder": 7,
+      "content": {
+        "_key": "articles",
+        "_col": "metiv-nav",
+        "key": "articles",
+        "label": "מאמרים",
+        "route": "/therapist/articles"
+      }
+    },
+    {
+      "_key": "events",
+      "title": "אירועים",
+      "sortOrder": 8,
+      "content": {
+        "_key": "events",
+        "_col": "metiv-nav",
+        "key": "events",
+        "label": "אירועים",
+        "route": "/therapist/events"
+      }
+    }
+  ]
+}

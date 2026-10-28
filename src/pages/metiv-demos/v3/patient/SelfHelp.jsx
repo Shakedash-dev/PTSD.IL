@@ -7,7 +7,7 @@ import { useSelfHelpTools } from '@/api/hooks';
 import PageHeader from '@/components/patterns/PageHeader';
 import Disclosure from '@/components/patterns/Disclosure';
 import { Wind, Moon, PenLine, Smartphone, Zap, ArrowLeft, ArrowRight, Compass, Wrench, Apple, PlayCircle, ExternalLink, Youtube } from 'lucide-react';
-import { VIDEO_LECTURES } from '@/pages/metiv-demos/shared/patient/additions';
+import { useMetiv } from '../content/MetivContent';
 
 // Metiv demo (V3): a copy of src/pages/SelfHelp.jsx. Change only: the approved
 // video lectures section at the end.
@@ -79,6 +79,7 @@ function ToolCard({ tool, contentId }) {
 
 export default function SelfHelp() {
   const { lang } = useLang();
+  const { VIDEO_LECTURES } = useMetiv();
   const { isRTL } = useDirection();
   const ArrowIcon = isRTL ? ArrowLeft : ArrowRight;
   const { data: tools = [], isLoading, error } = useSelfHelpTools({ lang });

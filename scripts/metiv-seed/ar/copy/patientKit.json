@@ -1,0 +1,13 @@
+{
+  "_area": "patient",
+  "_label": "רכיבים משותפים באזור המטופלים",
+  "fieldWho": "لمن مخصّص",
+  "fieldAges": "الأعمار",
+  "fieldWhat": "ماذا يشمل",
+  "fieldLocation": "المكان",
+  "fieldCost": "التكلفة والتمويل",
+  "fieldProcess": "كيف يتم التوجّه وماذا يحدث بعد ذلك",
+  "contactHeading": "اتصل بنا",
+  "consultationPhoneLabel": "ميتيف",
+  "releaseJourneyPageLink": "إلى صفحة Peace of Mind (راحة البال)"
+}

@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, afterEach } from "vitest";
 import { reindexItem, reindexById } from "../src/lib/ingest";
 import type { Item } from "../src/lib/content";
+import { fakeKV } from "./kv";
 
 afterEach(() => vi.restoreAllMocks());
 
@@ -51,6 +52,7 @@ describe("reindexById (type-agnostic single-item sync)", () => {
     API_BASE: "https://api/x",
     AI: { run: async (_m: string, i: { text: string[] }) => ({ data: i.text.map(() => [0.1, 0.2]) }) },
     VECTORIZE: { upsert, deleteByIds },
+    RL: fakeKV(),
   }) as unknown as import("../src/index").Env;
 
   it("indexes a community when the id is not an article (article 404 → community)", async () => {

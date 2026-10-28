@@ -183,6 +183,22 @@ describe("ChatPanel", () => {
     expect(chip).toHaveAttribute("href", "/ptsd-info");
   });
 
+  it("links a cited Metiv source to its v3 patient page by collection slug", () => {
+    setChat({
+      messages: [{
+        role: "assistant",
+        content: "A fact.[[1]]",
+        sources: [
+          { n: 1, itemId: "m", groupId: "gm", type: "article", categorySlug: "metiv-veterans", categorySlugs: ["metiv", "metiv-veterans"], langId: "he", title: "Veterans", text: "Cited passage." },
+        ],
+      }],
+      crisisLang: null,
+    });
+    render(<MemoryRouter><ChatPanel /></MemoryRouter>);
+    const chip = screen.getByText("Veterans").closest("a");
+    expect(chip).toHaveAttribute("href", "/metiv-site-demo-v3/patient/community");
+  });
+
   it("shows no chips when no sources were cited", () => {
     setChat({
       messages: [{

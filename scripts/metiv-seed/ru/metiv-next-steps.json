@@ -1,0 +1,146 @@
+{
+  "key": "NEXT_STEPS",
+  "slug": "metiv-next-steps",
+  "kind": "single",
+  "rows": [
+    {
+      "_key": "NEXT_STEPS",
+      "title": "NEXT_STEPS",
+      "sortOrder": 0,
+      "content": {
+        "_key": "NEXT_STEPS",
+        "_col": "metiv-next-steps",
+        "firstCircle": [
+          {
+            "label": "К анонимному опроснику",
+            "to": "/patient/questionnaire"
+          },
+          {
+            "label": "Где получить терапию",
+            "to": "/patient/where-to-get-help"
+          }
+        ],
+        "secondCircle": [
+          {
+            "label": "Инструменты для близких",
+            "to": "/patient/second-circle-tools"
+          },
+          {
+            "label": "Как говорить с детьми",
+            "to": "/patient/children"
+          }
+        ],
+        "secondCircleTools": [
+          {
+            "label": "Сообщества поддержки",
+            "to": "/patient/community"
+          },
+          {
+            "label": "Где получить терапию",
+            "to": "/patient/where-to-get-help"
+          }
+        ],
+        "questionnaire": [
+          {
+            "label": "Что такое ПТСР",
+            "to": "/patient/ptsd-info"
+          },
+          {
+            "label": "Где получить терапию",
+            "to": "/patient/where-to-get-help"
+          }
+        ],
+        "ptsdInfo": [
+          {
+            "label": "Самопомощь",
+            "to": "/patient/self-help"
+          },
+          {
+            "label": "Терапевтический путь",
+            "to": "/patient/treatment"
+          }
+        ],
+        "selfHelp": [
+          {
+            "label": "Упражнения для успокоения",
+            "to": "/patient/calming"
+          },
+          {
+            "label": "Сообщества поддержки",
+            "to": "/patient/community"
+          }
+        ],
+        "treatment": [
+          {
+            "label": "Где получить терапию",
+            "to": "/patient/where-to-get-help"
+          },
+          {
+            "label": "Права",
+            "to": "/patient/rights"
+          }
+        ],
+        "whereToGetHelp": [
+          {
+            "label": "Бесплатная терапия и исследования",
+            "to": "/patient/free-treatment-and-research"
+          },
+          {
+            "label": "Права",
+            "to": "/patient/rights"
+          }
+        ],
+        "freeTreatment": [
+          {
+            "label": "Где получить терапию",
+            "to": "/patient/where-to-get-help"
+          },
+          {
+            "label": "Права",
+            "to": "/patient/rights"
+          }
+        ],
+        "rights": [
+          {
+            "label": "Бесплатная терапия и исследования",
+            "to": "/patient/free-treatment-and-research"
+          },
+          {
+            "label": "Терапевтический путь",
+            "to": "/patient/treatment"
+          }
+        ],
+        "community": [
+          {
+            "label": "Как говорить с детьми",
+            "to": "/patient/children"
+          },
+          {
+            "label": "Самопомощь",
+            "to": "/patient/self-help"
+          }
+        ],
+        "children": [
+          {
+            "label": "Инструменты для близких",
+            "to": "/patient/second-circle-tools"
+          },
+          {
+            "label": "Сообщества поддержки",
+            "to": "/patient/community"
+          }
+        ],
+        "sources": [
+          {
+            "label": "Что такое ПТСР",
+            "to": "/patient/ptsd-info"
+          },
+          {
+            "label": "Ко всем темам",
+            "to": "/patient"
+          }
+        ]
+      }
+    }
+  ]
+}

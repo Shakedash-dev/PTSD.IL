@@ -1,0 +1,80 @@
+{
+  "key": "THERAPIST_HUB",
+  "slug": "metiv-therapist-hub",
+  "kind": "single",
+  "rows": [
+    {
+      "_key": "THERAPIST_HUB",
+      "title": "THERAPIST_HUB",
+      "sortOrder": 0,
+      "content": {
+        "_key": "THERAPIST_HUB",
+        "_col": "metiv-therapist-hub",
+        "title": "לאנשי טיפול ומקצוע",
+        "intro": "קורסים, הכשרות, הדרכה ומחקר בתחום הטיפול בטראומה, מבית מטיב - המרכז הישראלי לטיפול בפסיכוטראומה. כאן אפשר למצוא את מחזורי הלימוד הקרובים, הכשרות בתחום הילדים והמשפחה, הדרכה פרטנית וקבוצתית, תוכניות לארגונים, ומחקרים ופרסומים של אנשי מטיב.",
+        "sections": [
+          {
+            "key": "courses",
+            "title": "קורסים והכשרות",
+            "description": "CBT בטראומה, מפת הדרכים, טראומה מורכבת, ימי השתלמות וקורס קיץ.",
+            "route": "/therapist/courses",
+            "icon": "GraduationCap"
+          },
+          {
+            "key": "childrenFamily",
+            "title": "ילדים ומשפחה",
+            "description": "יסודות הטיפול בטראומה בילדים והכשרות למנחי פנד\"ה ונמ\"ל.",
+            "route": "/therapist/children-and-family",
+            "icon": "Baby"
+          },
+          {
+            "key": "supervision",
+            "title": "הדרכה",
+            "description": "הדרכה פרטנית, קבוצות הדרכה והדרכה לצוותים בארגונים.",
+            "route": "/therapist/supervision",
+            "icon": "Users"
+          },
+          {
+            "key": "organizations",
+            "title": "לארגונים",
+            "description": "מרחב מטיב, בניית ארגון מותאם טראומה, סדנאות והכשרות בהתאמה.",
+            "route": "/therapist/organizations",
+            "icon": "Building2"
+          },
+          {
+            "key": "research",
+            "title": "מחקר",
+            "description": "המחקרים שמתנהלים כעת ביחידת המחקר, כולל מחקרים שמגייסים משתתפים.",
+            "route": "/therapist/research",
+            "icon": "Microscope"
+          },
+          {
+            "key": "publications",
+            "title": "פרסומים",
+            "description": "ספרים, מאמרים ופרקים שפרסמו אנשי מטיב.",
+            "route": "/therapist/publications",
+            "icon": "Library"
+          },
+          {
+            "key": "articles",
+            "title": "מאמרים",
+            "description": "מאמרים וכתיבה מקצועית של צוות מטיב.",
+            "route": "/therapist/articles",
+            "icon": "FileText"
+          },
+          {
+            "key": "events",
+            "title": "אירועים ועדכונים",
+            "description": "מחזורי קורסים, סדנאות וכנסים, קרובים ושהתקיימו.",
+            "route": "/therapist/events",
+            "icon": "CalendarDays"
+          }
+        ],
+        "cta": {
+          "label": "טופס פנייה להכשרה או הדרכה",
+          "url": "https://docs.google.com/forms/d/e/1FAIpQLScc90IWpEglRpTtKqwmeBToTCGXeZpZXwvcjE6UHaLR4YKxuw/viewform"
+        }
+      }
+    }
+  ]
+}

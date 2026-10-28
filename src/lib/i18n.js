@@ -677,7 +677,7 @@ export const translations = {
     grounding_subtitle: '5-4-3-2-1',
     muscle_title: 'الشد والإفراج',
     muscle_subtitle: 'لإرخاء توتر الجسم',
-    eran_link: 'إذا كنت في ضائقة - تحدث مع إيران',
+    eran_link: 'إذا كنت في ضائقة - تحدث مع عيران',
     eran_phone: '1201',
     back: 'رجوع',
     next_step: 'الخطوة التالية',
@@ -784,9 +784,9 @@ export const translations = {
     chatbot_placeholder: 'روبوت محادثة - قريباً',
     chat_tooltip: 'اسألنا - قريباً',
     footer_rights: 'جميع الحقوق محفوظة',
-    footer_disclaimer: 'هذا الموقع لا يقدم استشارات طبية. في حالات الطوارئ، اتصل بالطبيب أو إيران: 1201',
+    footer_disclaimer: 'هذا الموقع لا يقدم استشارات طبية. في حالات الطوارئ، اتصل بالطبيب أو عيران: 1201',
     footer_info_heading: 'معلومات ودعم',
-    footer_emergency_heading: 'خط الطوارئ - إيران',
+    footer_emergency_heading: 'خط الطوارئ - عيران',
     footer_credit_prefix: 'أُنشئ هذا الموقع بالشراكة مع',
     footer_partner_org: 'ميتيف - مركز علاج الصدمات النفسية',
 
@@ -863,7 +863,7 @@ export const translations = {
     muscle_group_6_name: 'القدمان',
     muscle_group_6_squeeze: 'اثنِ أصابع قدميك إلى الداخل بقوة',
     muscle_group_6_release: 'أرخِ - اشعر بالأرض تحت قدميك',
-    crisis_line_short: 'إيران: 1201',
+    crisis_line_short: 'عيران: 1201',
   },
 
   ru: {

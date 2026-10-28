@@ -1,0 +1,146 @@
+{
+  "key": "NEXT_STEPS",
+  "slug": "metiv-next-steps",
+  "kind": "single",
+  "rows": [
+    {
+      "_key": "NEXT_STEPS",
+      "title": "NEXT_STEPS",
+      "sortOrder": 0,
+      "content": {
+        "_key": "NEXT_STEPS",
+        "_col": "metiv-next-steps",
+        "firstCircle": [
+          {
+            "label": "Questionnaire anonyme",
+            "to": "/patient/questionnaire"
+          },
+          {
+            "label": "Où se faire soigner",
+            "to": "/patient/where-to-get-help"
+          }
+        ],
+        "secondCircle": [
+          {
+            "label": "Outils pour les proches",
+            "to": "/patient/second-circle-tools"
+          },
+          {
+            "label": "Parler avec les enfants",
+            "to": "/patient/children"
+          }
+        ],
+        "secondCircleTools": [
+          {
+            "label": "Communautés de soutien",
+            "to": "/patient/community"
+          },
+          {
+            "label": "Où se faire soigner",
+            "to": "/patient/where-to-get-help"
+          }
+        ],
+        "questionnaire": [
+          {
+            "label": "Qu'est-ce que le TSPT ?",
+            "to": "/patient/ptsd-info"
+          },
+          {
+            "label": "Où se faire soigner",
+            "to": "/patient/where-to-get-help"
+          }
+        ],
+        "ptsdInfo": [
+          {
+            "label": "Auto-assistance",
+            "to": "/patient/self-help"
+          },
+          {
+            "label": "Le parcours thérapeutique",
+            "to": "/patient/treatment"
+          }
+        ],
+        "selfHelp": [
+          {
+            "label": "Exercices d'apaisement",
+            "to": "/patient/calming"
+          },
+          {
+            "label": "Communautés de soutien",
+            "to": "/patient/community"
+          }
+        ],
+        "treatment": [
+          {
+            "label": "Où se faire soigner",
+            "to": "/patient/where-to-get-help"
+          },
+          {
+            "label": "Droits",
+            "to": "/patient/rights"
+          }
+        ],
+        "whereToGetHelp": [
+          {
+            "label": "Traitements gratuits et études",
+            "to": "/patient/free-treatment-and-research"
+          },
+          {
+            "label": "Droits",
+            "to": "/patient/rights"
+          }
+        ],
+        "freeTreatment": [
+          {
+            "label": "Où se faire soigner",
+            "to": "/patient/where-to-get-help"
+          },
+          {
+            "label": "Droits",
+            "to": "/patient/rights"
+          }
+        ],
+        "rights": [
+          {
+            "label": "Traitements gratuits et études",
+            "to": "/patient/free-treatment-and-research"
+          },
+          {
+            "label": "Le parcours thérapeutique",
+            "to": "/patient/treatment"
+          }
+        ],
+        "community": [
+          {
+            "label": "Parler avec les enfants",
+            "to": "/patient/children"
+          },
+          {
+            "label": "Auto-assistance",
+            "to": "/patient/self-help"
+          }
+        ],
+        "children": [
+          {
+            "label": "Outils pour les proches",
+            "to": "/patient/second-circle-tools"
+          },
+          {
+            "label": "Communautés de soutien",
+            "to": "/patient/community"
+          }
+        ],
+        "sources": [
+          {
+            "label": "Qu'est-ce que le TSPT ?",
+            "to": "/patient/ptsd-info"
+          },
+          {
+            "label": "Retour à tous les thèmes",
+            "to": "/patient"
+          }
+        ]
+      }
+    }
+  ]
+}

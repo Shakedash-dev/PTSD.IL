@@ -1,0 +1,22 @@
+{
+  "key": "CONSULTATION",
+  "slug": "metiv-consultation",
+  "kind": "single",
+  "rows": [
+    {
+      "_key": "CONSULTATION",
+      "title": "CONSULTATION",
+      "sortOrder": 0,
+      "content": {
+        "_key": "CONSULTATION",
+        "_col": "metiv-consultation",
+        "id": "consultation",
+        "title": "לא בטוחים אם לפנות?",
+        "text": "מתלבטים אם ומתי לפנות לטיפול? אפשר להתקשר למטיב ולהתייעץ על האפשרויות.",
+        "phone": "02-6449666",
+        "route": "/patient/where-to-get-help#consultation",
+        "linkLabel": "להתייעצות עם מטיב"
+      }
+    }
+  ]
+}

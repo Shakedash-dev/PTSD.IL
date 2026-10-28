@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button';
 import { IMAGES } from '@/lib/images';
 import { useQuestionnaire } from '@/api/hooks';
 import { HE_SECTIONS } from '@/data/questionnaireSections';
-import { ConsultationBlock, CrisisLines } from '@/pages/metiv-demos/shared/patient/components';
+import { ConsultationBlock, CrisisLines } from './PatientKit';
 import { VersionLinks } from './PtsdIlRouting';
 
 // Metiv demo (V3): a copy of src/pages/Questionnaire.jsx. Change only: the
@@ -115,13 +115,13 @@ export default function Questionnaire() {
 
       {isLoading ? (
         <div className="max-w-3xl mx-auto px-4 sm:px-6 pb-16 text-center text-muted-foreground py-16">
-          {t(lang, 'loading') || 'טוען...'}
+          {t(lang, 'loading')}
         </div>
       ) : error || !q ? (
         <div className="max-w-3xl mx-auto px-4 sm:px-6 pb-16">
           <div className="rounded-super p-8 text-center bg-card border border-warning/30">
             <AlertCircle className="w-8 h-8 mx-auto mb-3 text-warning" />
-            <p className="text-muted-foreground">{t(lang, 'error_loading') || 'שגיאה בטעינת השאלון. נסו לרענן.'}</p>
+            <p className="text-muted-foreground">{t(lang, 'error_loading')}</p>
           </div>
         </div>
       ) : result === null ? (

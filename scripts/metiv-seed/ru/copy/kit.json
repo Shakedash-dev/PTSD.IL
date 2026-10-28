@@ -1,0 +1,18 @@
+{
+  "_area": "general",
+  "_label": "רכיבים משותפים (כפתורים, קישורים, \"האם זה עזר?\")",
+  "newTab": "(откроется в новой вкладке)",
+  "shortVersion": "Коротко",
+  "continue": "Продолжить",
+  "details": "Подробнее",
+  "toPage": "На страницу",
+  "whatsapp": "WhatsApp",
+  "helpfulQuestion": "Эта страница помогла?",
+  "helpfulYes": "Да, спасибо",
+  "helpfulNo": "Не особенно",
+  "helpfulThanks": "Спасибо, что поделились. На демонстрационном сайте ничего не сохраняется.",
+  "helpfulSorry": "Жаль. Можно попросить {consultation} или вернуться к разделу {topics}.",
+  "helpfulConsultation": "консультацию",
+  "helpfulTopics": "Все темы",
+  "nextStep": "Следующий шаг, если подходит"
+}

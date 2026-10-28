@@ -1,0 +1,77 @@
+{
+  "key": "SHORT_VERSIONS",
+  "slug": "metiv-short-versions",
+  "kind": "single",
+  "rows": [
+    {
+      "_key": "SHORT_VERSIONS",
+      "title": "SHORT_VERSIONS",
+      "sortOrder": 0,
+      "content": {
+        "_key": "SHORT_VERSIONS",
+        "_col": "metiv-short-versions",
+        "firstCircle": [
+          "Un parcours pour les personnes qui ont elles-mêmes vécu un événement difficile.",
+          "Des informations sur le TSPT, des outils à essayer seul et vos droits.",
+          "Comment commencer un traitement, les communautés de soutien et comment parler aux enfants."
+        ],
+        "secondCircle": [
+          "Un parcours pour les conjoints, parents, enfants et amis d'une personne concernée.",
+          "Ce que vit votre proche, et comment le soutenir.",
+          "Comment prendre aussi soin de vous en chemin."
+        ],
+        "secondCircleTools": [
+          "Des outils pratiques pour les membres de la famille et les proches.",
+          "Vous pouvez n'ouvrir que ce qui vous concerne pour le moment.",
+          "En bas de la page : les dispositifs pour les familles de réservistes."
+        ],
+        "questionnaire": [
+          "Un questionnaire anonyme, environ 3 minutes.",
+          "Le questionnaire n'est pas un diagnostic.",
+          "À la fin, des pistes pour la suite sont proposées, dont un entretien de conseil."
+        ],
+        "ptsdInfo": [
+          "Questions et réponses sur le TSPT, en termes simples.",
+          "Vous pouvez n'ouvrir que les questions qui vous intéressent."
+        ],
+        "selfHelp": [
+          "Des outils à essayer seul, à votre rythme.",
+          "Des applications et des idées pour le quotidien.",
+          "Des conférences vidéo de la chaîne YouTube de Metiv."
+        ],
+        "treatment": [
+          "La feuille de route du traitement, étape par étape.",
+          "Ce qui se passe à chaque étape et quelles questions poser.",
+          "À la fin : où se faire soigner."
+        ],
+        "whereToGetHelp": [
+          "Structures de soin publiques, associations et cliniques de Metiv.",
+          "Chaque structure est présentée de la même façon : pour qui, ce que cela comprend, le coût et comment s'adresser.",
+          "Vous hésitez à nous contacter ? Un entretien de conseil est possible."
+        ],
+        "freeTreatment": [
+          "Dispositifs de traitement gratuits.",
+          "Études qui recrutent des participants.",
+          "Pour chaque dispositif : pour qui et comment s'adresser."
+        ],
+        "rights": [
+          "Les droits selon le type d'atteinte.",
+          "Choisissez une catégorie et n'ouvrez que la question qui vous intéresse.",
+          "Certaines réponses comprennent une explication étape par étape et des liens."
+        ],
+        "community": [
+          "Groupes de soutien et rencontres dans tout le pays.",
+          "Des dispositifs pour les soldats démobilisés et les réservistes."
+        ],
+        "children": [
+          "Comment parler aux enfants, selon leur âge.",
+          "Des groupes pour les parents et les enfants."
+        ],
+        "sources": [
+          "Les sources sur lesquelles reposent les informations de cet espace.",
+          "Des livres écrits ou dirigés par des membres de Metiv."
+        ]
+      }
+    }
+  ]
+}

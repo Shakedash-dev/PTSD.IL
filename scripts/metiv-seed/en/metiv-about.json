@@ -1,0 +1,85 @@
+{
+  "key": "ABOUT",
+  "slug": "metiv-about",
+  "kind": "single",
+  "rows": [
+    {
+      "_key": "ABOUT",
+      "title": "ABOUT",
+      "sortOrder": 0,
+      "content": {
+        "_key": "ABOUT",
+        "_col": "metiv-about",
+        "title": "About Metiv",
+        "teamIntro": "Our team is made up of mental health professionals and researchers committed to high-quality service and to advancing knowledge and treatment options in the field of trauma.",
+        "activitiesIntro": [
+          "An estimated 9% of Israelis suffer from impaired functioning as a result of post-traumatic stress disorder (PTSD), a rate three times higher than in the US and other Western countries.",
+          "We provide clinical interventions and a range of therapeutic programs for people who have been exposed to traumatic life events. Our programs and services are also tailored to population groups that do not receive enough support: veterans (discharged soldiers), people from the Ethiopian community, children and teenagers.",
+          "Over the years, our professionals have published dozens of scientific papers and books, and have supervised many academic research projects. We maintain an ongoing cross-fertilization between research and treatment: we constantly learn new methods, study them through research, and develop interventions based on the research knowledge accumulated in our research unit."
+        ],
+        "history": [
+          "Metiv - The Israel Psychotrauma Center was founded in 1989 by Dr. Danny Brom as a branch of Herzog Hospital - Latner Institute, to address the growing phenomenon of psychological trauma in Israel. Israel's painful history has exposed many citizens, and children in particular, to the severe effects of psychological trauma. Metiv therefore focuses on a broad range of trauma, from life-cycle crises such as layoffs and divorce, through medical trauma and accidents, to traumatic loss, sexual assault, combat experiences and terror attacks.",
+          "Despite the hard events throughout Israel's history, the common response Dr. Brom received from mental health colleagues when he began working in Israel was: \"But we don't see trauma here.\" Metiv's work helped build awareness in Israel of the collective and personal consequences of trauma. Since becoming an independent organization in 1999, Metiv has provided psychotherapy services to trauma survivors and has trained hundreds of mental health professionals in trauma treatment methods grounded in clinical and research knowledge.",
+          "Aware of the impact of social resilience on individuals' ability to cope with trauma, Metiv initiated the founding of the Israel Trauma Coalition at the start of the Second Intifada in 2001; the coalition is now an independent organization. Seven other trauma care organizations joined the coalition led by Metiv, with the support of the UJA-Federation of New York.",
+          "Over the years, Metiv has built early childhood intervention programs, school programs and a range of trauma care services. These included the National Resilience Program for schools, run in cooperation with the Ministry of Education. In this project, Metiv trained more than 5,000 teachers in building resilience, and a protocol, assessment tools and therapeutic programs were developed for about 50,000 children. In 2011-2012, Metiv evaluated the program together with the Centers for Disease Control and Prevention (CDC) in Atlanta.",
+          "Since the 1999 earthquake in Turkey, Metiv has built up experience in early intervention in disaster areas around the world. The Metiv team provided initial response and trained field workers and therapists in Haiti, Chechnya, Mississippi, Sri Lanka, Nepal, and New York after 9/11.",
+          "The center's professional collaborations include joint work with mental health experts from Al-Quds University on the CHERISH program for schools, bereaved parents, pediatricians and youth leaders in Israel, the West Bank and Gaza. In research, the center has collaborated with Prof. Claude Chemtob of Mount Sinai Hospital in New York and with George Bonanno of Columbia University.",
+          "In Israel, Metiv works in the field of trauma through a range of services, from individual therapy to group interventions after a crisis and community programs. Over the years we have worked with government ministries, including the Ministry of Defense on the Peace of Mind program, as well as with nonprofit organizations, educational institutions and private companies. We have also worked extensively with first responders - Magen David Adom, the Israel Police and the Israel Fire and Rescue Authority.",
+          "A large part of our work focuses on Israel's periphery: working with the Bedouin community in Rahat and in the unrecognized villages, with residents of Sderot on the Gaza border, with Israelis of Ethiopian origin across the country, and more. We are committed to developing and implementing new mental health programs for communities that need them, and we invest considerable effort in researching and evaluating these programs. The Metiv team publishes academic papers in scientific journals, as well as newspaper articles and books for professionals and the general public."
+        ],
+        "timeline": [
+          {
+            "year": "1989",
+            "text": "Metiv is founded by Dr. Danny Brom as a branch of Herzog Hospital - Latner Institute."
+          },
+          {
+            "year": "1999",
+            "text": "Metiv becomes an independent organization."
+          },
+          {
+            "year": "1999",
+            "text": "Start of early intervention work in disaster areas around the world, following the earthquake in Turkey."
+          },
+          {
+            "year": "2001",
+            "text": "At the start of the Second Intifada, Metiv initiates the founding of the Israel Trauma Coalition."
+          },
+          {
+            "year": "2011-2012",
+            "text": "Evaluation of the National Resilience Program for schools together with the CDC in Atlanta."
+          },
+          {
+            "year": "2023",
+            "text": "In October 2023, the Migdalor Clinic was established for the Ministry of Defense Rehabilitation Department - Jerusalem District."
+          }
+        ],
+        "activities": [
+          "Individual, group and family therapy for adults and children",
+          "Programs for veterans (Peace of Mind)",
+          "Training, courses and supervision for professionals",
+          "Training and support for organizations",
+          "Research and evaluation of treatment programs",
+          "Community interventions and programs for schools and early childhood",
+          "Early intervention in disaster areas in Israel and worldwide"
+        ],
+        "partnersAbroad": [
+          "Haiti",
+          "Chechnya",
+          "Mississippi",
+          "Sri Lanka",
+          "Nepal",
+          "New York (after 9/11)",
+          "Turkey (earthquake, 1999)"
+        ],
+        "communities": [
+          "The Bedouin community in Rahat and the unrecognized villages",
+          "Residents of Sderot on the Gaza border",
+          "Israelis of Ethiopian origin across the country",
+          "Veterans (discharged soldiers)",
+          "Children and teenagers"
+        ],
+        "sourceUrl": "https://metiv.org/אודות/"
+      }
+    }
+  ]
+}

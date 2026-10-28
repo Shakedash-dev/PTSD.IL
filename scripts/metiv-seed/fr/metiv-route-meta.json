@@ -1,0 +1,225 @@
+{
+  "key": "ROUTE_META",
+  "slug": "metiv-route-meta",
+  "kind": "single",
+  "rows": [
+    {
+      "_key": "ROUTE_META",
+      "title": "ROUTE_META",
+      "sortOrder": 0,
+      "content": {
+        "_key": "ROUTE_META",
+        "_col": "metiv-route-meta",
+        "home": {
+          "label": "Accueil",
+          "area": "metiv"
+        },
+        "about": {
+          "label": "À propos de Metiv",
+          "area": "therapist",
+          "parent": "therapist"
+        },
+        "aboutHistory": {
+          "label": "L'histoire de Metiv",
+          "area": "therapist",
+          "parent": "about"
+        },
+        "aboutTeam": {
+          "label": "L'équipe",
+          "area": "therapist",
+          "parent": "about"
+        },
+        "aboutPartners": {
+          "label": "Nos partenaires",
+          "area": "therapist",
+          "parent": "about"
+        },
+        "aboutCollaborations": {
+          "label": "Partenariats",
+          "area": "therapist",
+          "parent": "about"
+        },
+        "donate": {
+          "label": "Faire un don",
+          "area": "metiv",
+          "parent": "home"
+        },
+        "contact": {
+          "label": "Contact",
+          "area": "metiv",
+          "parent": "home"
+        },
+        "privacy": {
+          "label": "Politique de confidentialité",
+          "area": "metiv",
+          "parent": "home"
+        },
+        "terms": {
+          "label": "Conditions d'utilisation",
+          "area": "metiv",
+          "parent": "home"
+        },
+        "accessibility": {
+          "label": "Déclaration d'accessibilité",
+          "area": "metiv",
+          "parent": "home"
+        },
+        "patient": {
+          "label": "Pour les patients et les familles",
+          "area": "patient",
+          "parent": "home"
+        },
+        "firstCircle": {
+          "label": "Vous avez vécu un événement difficile",
+          "area": "patient",
+          "parent": "patient"
+        },
+        "secondCircle": {
+          "label": "Proches et membres de la famille",
+          "area": "patient",
+          "parent": "patient"
+        },
+        "secondCircleTools": {
+          "label": "Outils pour les proches",
+          "area": "patient",
+          "parent": "secondCircle"
+        },
+        "questionnaire": {
+          "label": "Questionnaire anonyme",
+          "area": "patient",
+          "parent": "patient"
+        },
+        "ptsdInfo": {
+          "label": "Qu'est-ce que le TSPT ?",
+          "area": "patient",
+          "parent": "patient"
+        },
+        "selfHelp": {
+          "label": "Auto-assistance",
+          "area": "patient",
+          "parent": "patient"
+        },
+        "treatment": {
+          "label": "Le parcours thérapeutique",
+          "area": "patient",
+          "parent": "patient"
+        },
+        "whereToGetHelp": {
+          "label": "Où se faire soigner",
+          "area": "patient",
+          "parent": "patient"
+        },
+        "freeTreatment": {
+          "label": "Traitements gratuits et études",
+          "area": "patient",
+          "parent": "patient"
+        },
+        "rights": {
+          "label": "Droits",
+          "area": "patient",
+          "parent": "patient"
+        },
+        "community": {
+          "label": "Communautés de soutien",
+          "area": "patient",
+          "parent": "patient"
+        },
+        "children": {
+          "label": "Parler avec les enfants",
+          "area": "patient",
+          "parent": "patient"
+        },
+        "sources": {
+          "label": "Sources",
+          "area": "patient",
+          "parent": "patient"
+        },
+        "releaseJourney": {
+          "label": "Peace of Mind",
+          "area": "patient",
+          "parent": "patient"
+        },
+        "calming": {
+          "label": "Exercices d'apaisement",
+          "area": "patient",
+          "parent": "patient"
+        },
+        "calmingBreathing": {
+          "label": "Respiration",
+          "area": "patient",
+          "parent": "calming"
+        },
+        "calmingGrounding": {
+          "label": "Ancrage",
+          "area": "patient",
+          "parent": "calming"
+        },
+        "calmingMuscle": {
+          "label": "Relaxation musculaire",
+          "area": "patient",
+          "parent": "calming"
+        },
+        "therapist": {
+          "label": "Pour les thérapeutes et les professionnels",
+          "area": "therapist",
+          "parent": "home"
+        },
+        "courses": {
+          "label": "Cours et formations",
+          "area": "therapist",
+          "parent": "therapist"
+        },
+        "course": {
+          "label": "Cours",
+          "area": "therapist",
+          "parent": "courses"
+        },
+        "childrenFamily": {
+          "label": "Enfants et famille",
+          "area": "therapist",
+          "parent": "therapist"
+        },
+        "supervision": {
+          "label": "Supervision",
+          "area": "therapist",
+          "parent": "therapist"
+        },
+        "organizations": {
+          "label": "Pour les organisations",
+          "area": "therapist",
+          "parent": "therapist"
+        },
+        "research": {
+          "label": "Recherche",
+          "area": "therapist",
+          "parent": "therapist"
+        },
+        "publications": {
+          "label": "Publications",
+          "area": "therapist",
+          "parent": "therapist"
+        },
+        "articles": {
+          "label": "Articles",
+          "area": "therapist",
+          "parent": "therapist"
+        },
+        "article": {
+          "label": "Article",
+          "area": "therapist",
+          "parent": "articles"
+        },
+        "events": {
+          "label": "Événements et actualités",
+          "area": "therapist",
+          "parent": "therapist"
+        },
+        "releaseJourneyPro": {
+          "label": "Peace of Mind",
+          "area": "therapist",
+          "parent": "therapist"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "key": "DONATE",
+  "slug": "metiv-donate",
+  "kind": "single",
+  "rows": [
+    {
+      "_key": "DONATE",
+      "title": "DONATE",
+      "sortOrder": 0,
+      "content": {
+        "_key": "DONATE",
+        "_col": "metiv-donate",
+        "isPlaceholder": true,
+        "title": "Donate to Metiv",
+        "intro": "[Placeholder text] Metiv is a registered nonprofit (reg. no. 580313926). Metiv's text on how donations are used and the ways to donate will appear here.",
+        "ways": [
+          {
+            "key": "jgive",
+            "title": "Donate online via JGive",
+            "description": "[Placeholder text] Donate by credit card through the association's page on JGive.",
+            "url": "https://www.jgive.com/new/en/ils/charity-organizations/1179",
+            "cta": "Donate via JGive"
+          },
+          {
+            "key": "contact",
+            "title": "Partnerships and Institutional Giving",
+            "description": "[Placeholder text] To discuss a partnership, an institutional donation or support for a specific program, contact Haim Landau, Head of Development and Partnerships.",
+            "email": "Chaim@metiv.org",
+            "cta": "Contact by email"
+          }
+        ],
+        "paymentNote": "Donations and payments for the association's services are made through third-party service providers. The association does not store credit card data or any other payment information.",
+        "legalEntity": "Reg. nonprofit no. 580313926"
+      }
+    }
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "key": "RESEARCH_INTRO",
+  "slug": "metiv-research-intro",
+  "kind": "single",
+  "rows": [
+    {
+      "_key": "RESEARCH_INTRO",
+      "title": "RESEARCH_INTRO",
+      "sortOrder": 0,
+      "content": {
+        "_key": "RESEARCH_INTRO",
+        "_col": "metiv-research-intro",
+        "title": "L'unité de recherche de Metiv",
+        "paragraphs": [
+          "L'unité de recherche est responsable des connaissances appliquées et scientifiques, de l'évaluation des programmes et des méthodes de traitement, de l'évaluation des formations pour thérapeutes, du développement d'outils et de la collecte de données pour éclairer la prise de décision.",
+          "En outre, le travail thérapeutique chez Metiv fait l'objet d'un suivi constant et est examiné à l'aide d'outils d'évaluation, afin de mesurer et de suivre les difficultés et les progrès des patients."
+        ],
+        "focus": "Le traitement du TSPT auprès de populations cibles civiles et militaires.",
+        "role": "Faire le lien entre les connaissances issues de la recherche et la pratique thérapeutique sur le terrain ; traduire les enseignements en procédures et en pratiques ; soutenir la recherche de financements.",
+        "principles": [
+          "Pertinence clinique",
+          "Validité scientifique",
+          "Éthique et protection de la vie privée",
+          "Transparence et diffusion des connaissances",
+          "Partenariat avec les thérapeutes et les communautés cibles"
+        ],
+        "pastResearchAreas": [
+          "La résilience des enfants et des adolescents en Israël",
+          "Comprendre la complexité des expériences des combattants démobilisés",
+          "Développement et évaluation de méthodes d'intervention et de traitement pour différentes populations",
+          "Recherche sur le traitement du trouble de stress post-traumatique (TSPT) par le SE (Somatic Experiencing)"
+        ],
+        "collaborationContact": {
+          "name": "Shir Elias",
+          "role": "Directrice de la recherche",
+          "email": "shir@metiv.org"
+        },
+        "journalClub": {
+          "title": "Journal Club",
+          "description": "Une communauté apprenante autour de la recherche et du traitement du traumatisme, gratuite.",
+          "url": "https://youtube.com/playlist?list=PL7kR2brVa2aHQOHC1realKQBf6950Yip1"
+        },
+        "booksOrderingNote": "Pour toute information sur la commande des livres en Israël : info@metiv.org",
+        "sourceUrl": "https://metiv.org/מחקרים-פעילים-טראומה/"
+      }
+    }
+  ]
+}

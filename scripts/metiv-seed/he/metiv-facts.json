@@ -1,0 +1,72 @@
+{
+  "key": "FACTS",
+  "slug": "metiv-facts",
+  "kind": "list",
+  "rows": [
+    {
+      "_key": "metiv-facts-0",
+      "title": "שנת ההקמה",
+      "sortOrder": 0,
+      "content": {
+        "_key": "metiv-facts-0",
+        "_col": "metiv-facts",
+        "value": "1989",
+        "label": "שנת ההקמה",
+        "source": "עמוד אודות",
+        "sourceUrl": "https://metiv.org/אודות/"
+      }
+    },
+    {
+      "_key": "metiv-facts-1",
+      "title": "מטפלים שהוכשרו ברחבי הארץ",
+      "sortOrder": 1,
+      "content": {
+        "_key": "metiv-facts-1",
+        "_col": "metiv-facts",
+        "value": "+2,000",
+        "label": "מטפלים שהוכשרו ברחבי הארץ",
+        "source": "דף הבית ועמוד ההכשרות",
+        "sourceUrl": "https://metiv.org/"
+      }
+    },
+    {
+      "_key": "metiv-facts-2",
+      "title": "מורים שהוכשרו בתכנית החוסן הלאומית לבתי ספר",
+      "sortOrder": 2,
+      "content": {
+        "_key": "metiv-facts-2",
+        "_col": "metiv-facts",
+        "value": "+5,000",
+        "label": "מורים שהוכשרו בתכנית החוסן הלאומית לבתי ספר",
+        "source": "עמוד אודות",
+        "sourceUrl": "https://metiv.org/אודות/"
+      }
+    },
+    {
+      "_key": "metiv-facts-3",
+      "title": "מטופלים בשנה במרפאת המבוגרים",
+      "sortOrder": 3,
+      "content": {
+        "_key": "metiv-facts-3",
+        "_col": "metiv-facts",
+        "value": "~300",
+        "label": "מטופלים בשנה במרפאת המבוגרים",
+        "source": "עמוד מרפאת המבוגרים",
+        "sourceUrl": "https://metiv.org/מרפאת-מבוגרים/"
+      }
+    },
+    {
+      "_key": "metiv-facts-4",
+      "title": "מטפלים בצוות מרפאת המבוגרים",
+      "sortOrder": 4,
+      "content": {
+        "_key": "metiv-facts-4",
+        "_col": "metiv-facts",
+        "value": "~20",
+        "label": "מטפלים בצוות מרפאת המבוגרים",
+        "source": "עמוד מרפאת המבוגרים",
+        "sourceUrl": "https://metiv.org/מרפאת-מבוגרים/"
+      }
+    }
+  ]
+}

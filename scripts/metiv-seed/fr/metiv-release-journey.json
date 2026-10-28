@@ -1,0 +1,53 @@
+{
+  "key": "RELEASE_JOURNEY",
+  "slug": "metiv-release-journey",
+  "kind": "single",
+  "rows": [
+    {
+      "_key": "RELEASE_JOURNEY",
+      "title": "RELEASE_JOURNEY",
+      "sortOrder": 0,
+      "content": {
+        "_key": "RELEASE_JOURNEY",
+        "_col": "metiv-release-journey",
+        "title": "Peace of Mind",
+        "siteUrl": "https://peaceofmind.org.il/",
+        "siteLabel": "peaceofmind.org.il",
+        "registerUrl": "https://wkf.ms/4i9R9bO",
+        "social": [
+          {
+            "label": "Facebook",
+            "url": "https://www.facebook.com/pomisrael/"
+          },
+          {
+            "label": "Instagram",
+            "url": "https://www.instagram.com/pom_israel/"
+          },
+          {
+            "label": "YouTube",
+            "url": "https://www.youtube.com/channel/UCDhYpTPUXP1wWUeDjFyXrUQ"
+          }
+        ],
+        "belief": "De nombreux soldats démobilisés ont vécu pendant leur service des événements difficiles et marquants. Nous croyons que, de même qu'ils se sont entraînés ensemble et ont combattu ensemble, les combattants ont besoin d'élaborer leurs expériences ensemble.",
+        "description": "Le projet Peace of Mind aide les soldats démobilisés exposés à des combats pendant leur service militaire à élaborer leurs expériences de combat, à acquérir des façons de faire face et à achever leur transition vers la vie civile, grâce à diverses interventions de groupe et individuelles.",
+        "scope": "Le projet organise des voyages d'élaboration des expériences de combat pour des unités constituées, ainsi que des thérapies individuelles, et se consacre au développement et à la recherche de nouveaux services pour les soldats démobilisés confrontés aux événements de leur service.",
+        "facilitators": "Les ateliers sont menés et animés par des travailleurs sociaux cliniciens et des psychologues de l'équipe de Metiv.",
+        "hosting": "Lors du voyage à l'étranger, le groupe est accueilli pendant une semaine par une communauté juive, et loge chez des familles d'accueil de la communauté. La majeure partie de la journée est consacrée à des ateliers communs, et le reste du temps à des activités de loisirs avec la communauté.",
+        "hostCountries": [
+          "États-Unis",
+          "Royaume-Uni",
+          "Canada",
+          "France",
+          "Allemagne",
+          "Italie",
+          "Monaco"
+        ],
+        "credits": [
+          "Le projet Peace of Mind a été développé par une équipe de Metiv composée de la Pr Ruth Pat-Horenczyk, d'Alon Weltman, de Yoel Vardi et du Dr Danny Brom.",
+          "Le lieutenant-colonel (de réserve) Sasson Rahabi, travailleur social clinicien, a apporté son professionnalisme et sa personnalité au développement du projet."
+        ],
+        "partnership": "Le programme est mené en partenariat avec le ministère de la Défense."
+      }
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "key": "TREATMENT_WHERE_BLOCK",
+  "slug": "metiv-treatment-where",
+  "kind": "single",
+  "rows": [
+    {
+      "_key": "TREATMENT_WHERE_BLOCK",
+      "title": "TREATMENT_WHERE_BLOCK",
+      "sortOrder": 0,
+      "content": {
+        "_key": "TREATMENT_WHERE_BLOCK",
+        "_col": "metiv-treatment-where",
+        "title": "איפה אפשר לקבל טיפול",
+        "text": "רשימה של מסגרות שבהן ניתן טיפול: קופות החולים, מרכזי החוסן, אגף השיקום, עמותות ומרפאות מטיב, עם פרטי פנייה לכל אחת.",
+        "linkLabel": "לרשימת המסגרות",
+        "route": "/patient/where-to-get-help"
+      }
+    }
+  ]
+}

@@ -1,0 +1,225 @@
+{
+  "key": "ROUTE_META",
+  "slug": "metiv-route-meta",
+  "kind": "single",
+  "rows": [
+    {
+      "_key": "ROUTE_META",
+      "title": "ROUTE_META",
+      "sortOrder": 0,
+      "content": {
+        "_key": "ROUTE_META",
+        "_col": "metiv-route-meta",
+        "home": {
+          "label": "Главная",
+          "area": "metiv"
+        },
+        "about": {
+          "label": "О Метиве",
+          "area": "therapist",
+          "parent": "therapist"
+        },
+        "aboutHistory": {
+          "label": "История Метива",
+          "area": "therapist",
+          "parent": "about"
+        },
+        "aboutTeam": {
+          "label": "Команда",
+          "area": "therapist",
+          "parent": "about"
+        },
+        "aboutPartners": {
+          "label": "Наши партнёры",
+          "area": "therapist",
+          "parent": "about"
+        },
+        "aboutCollaborations": {
+          "label": "Партнёрства",
+          "area": "therapist",
+          "parent": "about"
+        },
+        "donate": {
+          "label": "Пожертвовать",
+          "area": "metiv",
+          "parent": "home"
+        },
+        "contact": {
+          "label": "Контакты",
+          "area": "metiv",
+          "parent": "home"
+        },
+        "privacy": {
+          "label": "Политика конфиденциальности",
+          "area": "metiv",
+          "parent": "home"
+        },
+        "terms": {
+          "label": "Условия пользования",
+          "area": "metiv",
+          "parent": "home"
+        },
+        "accessibility": {
+          "label": "Заявление о доступности",
+          "area": "metiv",
+          "parent": "home"
+        },
+        "patient": {
+          "label": "Для клиентов и их семей",
+          "area": "patient",
+          "parent": "home"
+        },
+        "firstCircle": {
+          "label": "Тем, кто пережил тяжёлое событие",
+          "area": "patient",
+          "parent": "patient"
+        },
+        "secondCircle": {
+          "label": "Родным и близким",
+          "area": "patient",
+          "parent": "patient"
+        },
+        "secondCircleTools": {
+          "label": "Инструменты для близких",
+          "area": "patient",
+          "parent": "secondCircle"
+        },
+        "questionnaire": {
+          "label": "Анонимный опросник",
+          "area": "patient",
+          "parent": "patient"
+        },
+        "ptsdInfo": {
+          "label": "Что такое ПТСР",
+          "area": "patient",
+          "parent": "patient"
+        },
+        "selfHelp": {
+          "label": "Самопомощь",
+          "area": "patient",
+          "parent": "patient"
+        },
+        "treatment": {
+          "label": "Терапевтический путь",
+          "area": "patient",
+          "parent": "patient"
+        },
+        "whereToGetHelp": {
+          "label": "Где получить терапию",
+          "area": "patient",
+          "parent": "patient"
+        },
+        "freeTreatment": {
+          "label": "Бесплатная терапия и исследования",
+          "area": "patient",
+          "parent": "patient"
+        },
+        "rights": {
+          "label": "Права",
+          "area": "patient",
+          "parent": "patient"
+        },
+        "community": {
+          "label": "Сообщества поддержки",
+          "area": "patient",
+          "parent": "patient"
+        },
+        "children": {
+          "label": "Как говорить с детьми",
+          "area": "patient",
+          "parent": "patient"
+        },
+        "sources": {
+          "label": "Источники",
+          "area": "patient",
+          "parent": "patient"
+        },
+        "releaseJourney": {
+          "label": "Peace of Mind",
+          "area": "patient",
+          "parent": "patient"
+        },
+        "calming": {
+          "label": "Упражнения для успокоения",
+          "area": "patient",
+          "parent": "patient"
+        },
+        "calmingBreathing": {
+          "label": "Дыхание",
+          "area": "patient",
+          "parent": "calming"
+        },
+        "calmingGrounding": {
+          "label": "Заземление",
+          "area": "patient",
+          "parent": "calming"
+        },
+        "calmingMuscle": {
+          "label": "Мышечная релаксация",
+          "area": "patient",
+          "parent": "calming"
+        },
+        "therapist": {
+          "label": "Для специалистов",
+          "area": "therapist",
+          "parent": "home"
+        },
+        "courses": {
+          "label": "Курсы и обучение",
+          "area": "therapist",
+          "parent": "therapist"
+        },
+        "course": {
+          "label": "Курс",
+          "area": "therapist",
+          "parent": "courses"
+        },
+        "childrenFamily": {
+          "label": "Дети и семья",
+          "area": "therapist",
+          "parent": "therapist"
+        },
+        "supervision": {
+          "label": "Супервизия",
+          "area": "therapist",
+          "parent": "therapist"
+        },
+        "organizations": {
+          "label": "Для организаций",
+          "area": "therapist",
+          "parent": "therapist"
+        },
+        "research": {
+          "label": "Исследования",
+          "area": "therapist",
+          "parent": "therapist"
+        },
+        "publications": {
+          "label": "Публикации",
+          "area": "therapist",
+          "parent": "therapist"
+        },
+        "articles": {
+          "label": "Статьи",
+          "area": "therapist",
+          "parent": "therapist"
+        },
+        "article": {
+          "label": "Статья",
+          "area": "therapist",
+          "parent": "articles"
+        },
+        "events": {
+          "label": "Мероприятия и новости",
+          "area": "therapist",
+          "parent": "therapist"
+        },
+        "releaseJourneyPro": {
+          "label": "Peace of Mind",
+          "area": "therapist",
+          "parent": "therapist"
+        }
+      }
+    }
+  ]
+}

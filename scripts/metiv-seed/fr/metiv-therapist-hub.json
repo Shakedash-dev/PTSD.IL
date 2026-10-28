@@ -1,0 +1,80 @@
+{
+  "key": "THERAPIST_HUB",
+  "slug": "metiv-therapist-hub",
+  "kind": "single",
+  "rows": [
+    {
+      "_key": "THERAPIST_HUB",
+      "title": "THERAPIST_HUB",
+      "sortOrder": 0,
+      "content": {
+        "_key": "THERAPIST_HUB",
+        "_col": "metiv-therapist-hub",
+        "title": "Pour les thérapeutes et les professionnels",
+        "intro": "Cours, formations, supervision et recherche dans le domaine du traitement du traumatisme, par Metiv - Centre israélien de psychotraumatologie. Vous trouverez ici les prochaines sessions de cours, les formations dans le domaine de l'enfance et de la famille, la supervision individuelle et de groupe, les programmes pour les organisations, ainsi que les études et les publications des équipes de Metiv.",
+        "sections": [
+          {
+            "key": "courses",
+            "title": "Cours et formations",
+            "description": "TCC du traumatisme, « La feuille de route », traumatisme complexe, journées de formation continue et cours d'été.",
+            "route": "/therapist/courses",
+            "icon": "GraduationCap"
+          },
+          {
+            "key": "childrenFamily",
+            "title": "Enfants et famille",
+            "description": "Les bases du traitement du traumatisme chez l'enfant et les formations d'animateurs PANDA et NAMAL.",
+            "route": "/therapist/children-and-family",
+            "icon": "Baby"
+          },
+          {
+            "key": "supervision",
+            "title": "Supervision",
+            "description": "Supervision individuelle, groupes de supervision et supervision d'équipes au sein d'organisations.",
+            "route": "/therapist/supervision",
+            "icon": "Users"
+          },
+          {
+            "key": "organizations",
+            "title": "Pour les organisations",
+            "description": "Espace Metiv, construire une organisation adaptée au traumatisme, ateliers et formations sur mesure.",
+            "route": "/therapist/organizations",
+            "icon": "Building2"
+          },
+          {
+            "key": "research",
+            "title": "Recherche",
+            "description": "Les études en cours à l'unité de recherche, y compris celles qui recrutent des participants.",
+            "route": "/therapist/research",
+            "icon": "Microscope"
+          },
+          {
+            "key": "publications",
+            "title": "Publications",
+            "description": "Livres, articles et chapitres publiés par les équipes de Metiv.",
+            "route": "/therapist/publications",
+            "icon": "Library"
+          },
+          {
+            "key": "articles",
+            "title": "Articles",
+            "description": "Articles et écrits professionnels de l'équipe de Metiv.",
+            "route": "/therapist/articles",
+            "icon": "FileText"
+          },
+          {
+            "key": "events",
+            "title": "Événements et actualités",
+            "description": "Sessions de cours, ateliers et conférences, à venir et passés.",
+            "route": "/therapist/events",
+            "icon": "CalendarDays"
+          }
+        ],
+        "cta": {
+          "label": "Formulaire de demande de formation ou de supervision",
+          "url": "https://docs.google.com/forms/d/e/1FAIpQLScc90IWpEglRpTtKqwmeBToTCGXeZpZXwvcjE6UHaLR4YKxuw/viewform"
+        }
+      }
+    }
+  ]
+}

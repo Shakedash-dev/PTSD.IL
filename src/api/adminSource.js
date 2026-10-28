@@ -147,6 +147,9 @@ async function fetchArticles({ type, langId, categoryId, parentId } = {}) {
 // isPublished untouched/preserved by omission), otherwise POST (create,
 // isPublished defaults true, groupId omitted so the API auto-generates one
 // unless ctx.groupId is supplied for linking a new translation).
+// `ctx.onSaved` sees the stored row before the reindex runs, so a caller that
+// needs the new row's groupId (its translations) gets it even when the chatbot
+// sync then fails.
 async function writeArticle(draft, ctx, payload) {
   let saved;
   if (draft.id) {
@@ -156,6 +159,7 @@ async function writeArticle(draft, ctx, payload) {
     if (ctx.groupId) createPayload.groupId = ctx.groupId;
     saved = await adminApi('POST', ARTICLES, createPayload);
   }
+  ctx.onSaved?.(saved);
   // Sync the chatbot's vector DB for this item (create/update). Runs after the
   // content write succeeds; a sync failure surfaces as a ChatbotSyncError the
   // panel treats as a non-fatal warning (the content is already saved).
@@ -169,6 +173,60 @@ async function removeArticle(id, { skipReindex = false } = {}) {
   const res = await adminApi('DELETE', `${ARTICLES}/${id}`);
   if (!skipReindex) await reindexItem(id); // worker 404s on the deleted id and drops its vectors
   return res;
+}
+
+// ─── Reserved `_` keys and translations ─────────────────────────────────────
+// A row's content JSON may carry reserved keys that start with `_` (`_tr`, the
+// translation stamp, see docs/metiv-db-spec.md). The panels never edit them, so
+// load* keeps them on the draft as `_meta` and build* writes them back. A save
+// from a non-Hebrew tab (ctx.human) stamps the row as edited by hand.
+
+function metaOf(content) {
+  const meta = Object.fromEntries(Object.entries(content || {}).filter(([k]) => k.startsWith('_')));
+  return Object.keys(meta).length ? { _meta: meta } : {};
+}
+
+function withMeta(content, draft, ctx) {
+  const out = { ...content, ...(draft._meta || {}) };
+  if (ctx.human) out._tr = { by: 'human', at: new Date().toISOString() };
+  return out;
+}
+
+/**
+ * The other-language rows of a group (ar/en/ru/fr), by language. Fetched
+ * unfiltered by category on purpose: a categoryId-filtered list only returns
+ * the matched category in each row.
+ * @param {string|undefined} groupId
+ * @param {string} type
+ * @returns {Promise<Record<string, { id: string, title: string, content: any }>>}
+ */
+export async function loadArticleSiblings(groupId, type) {
+  if (!groupId) return {};
+  const items = await fetchArticles({ type });
+  /** @type {Record<string, { id: string, title: string, content: any }>} */
+  const out = {};
+  for (const item of items) {
+    if (item.groupId === groupId && item.langId !== 'he') {
+      out[item.langId] = { id: item.id, title: item.title, content: parseContent(item) };
+    }
+  }
+  return out;
+}
+
+/**
+ * Writes one translated sibling of a Hebrew row. Every non-content column
+ * (type, categories, audiences, age groups, url, sortOrder) comes from the
+ * Hebrew row's payload; title and content are the translation's.
+ * @param {any} hePayload what build* produced for the Hebrew row
+ * @param {string} lang
+ * @param {{ title: string|undefined, content: any }} built
+ * @param {{ id: string }|null} sibling
+ * @param {string|undefined} groupId the Hebrew row's
+ */
+export function writeArticleSibling(hePayload, lang, built, sibling, groupId) {
+  if (!sibling && !groupId) throw new Error('השורה העברית לא נשמרה, ולכן אין לאן לקשר את התרגום');
+  const payload = { ...hePayload, langId: lang, title: built.title ?? hePayload.title, content: JSON.stringify(built.content) };
+  return writeArticle(sibling ? { id: sibling.id } : {}, { groupId }, payload);
 }
 
 // ─── editLog - article, category `admin-log`, unpublished ───────────────────
@@ -250,7 +308,7 @@ export async function loadEditLog() {
     .sort((a, b) => (a.at < b.at ? 1 : a.at > b.at ? -1 : 0));
 }
 
-// ─── ptsdFaq — faq, category `ptsd-info`, per langId ───────────────────────
+// ─── ptsdFaq - faq, category `ptsd-info`, per langId ───────────────────────
 // draft: { id, groupId, langId, q, a }         (a = rich, md<->html)
 // content JSON: { answer }
 
@@ -270,30 +328,36 @@ export async function loadPtsdFaq(ctx = {}) {
         langId: item.langId,
         q: item.title,
         a: mdToHtml(c.answer),
+        ...metaOf(c),
       };
     });
 }
 
-export async function savePtsdFaq(draft, ctx = {}) {
-  const lang = ctx.lang || draft.langId || 'he';
+// The payload a save would send, without sending it - the AI translation
+// compares two of these (see src/components/admin/translationStaging.js).
+export async function buildPtsdFaq(draft, ctx = {}) {
+  const lang = draft.langId || ctx.lang || 'he';
   const taxonomy = await getTaxonomy();
   const categoryId = requireCategoryId(taxonomy, 'ptsd-info');
-  const content = { answer: htmlToMd(draft.a) };
-  const payload = {
+  const content = withMeta({ answer: htmlToMd(draft.a) }, draft, ctx);
+  return {
     type: 'faq',
     langId: lang,
     title: draft.q,
     content: JSON.stringify(content),
     categoryIds: [categoryId],
   };
-  return writeArticle(draft, ctx, payload);
+}
+
+export async function savePtsdFaq(draft, ctx = {}) {
+  return writeArticle(draft, ctx, await buildPtsdFaq(draft, ctx));
 }
 
 export function removePtsdFaq(id) {
   return removeArticle(id);
 }
 
-// ─── rightsFaq — faq, category `rights`, audienceSlug=bucket, per langId ───
+// ─── rightsFaq - faq, category `rights`, audienceSlug=bucket, per langId ───
 // draft: { id, groupId, langId, q, a, steps, links, general_only? }
 //   (a/steps = rich; links = structured passthrough; general_only is not a
 //   panel field per the spec's draft column, but is carried through here as
@@ -325,23 +389,23 @@ export async function loadRightsFaq(ctx = {}) {
         links: c.links ?? [],
       };
       if (c.general_only) draft.general_only = true;
-      return draft;
+      return { ...draft, ...metaOf(c) };
     });
 }
 
-export async function saveRightsFaq(draft, ctx = {}) {
-  const lang = ctx.lang || draft.langId || 'he';
+export async function buildRightsFaq(draft, ctx = {}) {
+  const lang = draft.langId || ctx.lang || 'he';
   const audienceSlug = toHyphenSlug(ctx.audienceSlug || 'general');
   const taxonomy = await getTaxonomy();
   const categoryId = requireCategoryId(taxonomy, 'rights');
   const audienceId = requireAudienceId(taxonomy, audienceSlug);
-  const content = {
+  const content = withMeta({
     answer: htmlToMd(draft.a),
     ...(draft.steps ? { steps: htmlToMd(draft.steps) } : {}),
     ...(draft.links?.length ? { links: draft.links } : {}),
     ...(draft.general_only ? { general_only: true } : {}),
-  };
-  const payload = {
+  }, draft, ctx);
+  return {
     type: 'faq',
     langId: lang,
     title: draft.q,
@@ -349,14 +413,17 @@ export async function saveRightsFaq(draft, ctx = {}) {
     categoryIds: [categoryId],
     audienceIds: [audienceId],
   };
-  return writeArticle(draft, ctx, payload);
+}
+
+export async function saveRightsFaq(draft, ctx = {}) {
+  return writeArticle(draft, ctx, await buildRightsFaq(draft, ctx));
 }
 
 export function removeRightsFaq(id) {
   return removeArticle(id);
 }
 
-// ─── secondCircle — faq, category `second-circle`, per langId ─────────────
+// ─── secondCircle - faq, category `second-circle`, per langId ─────────────
 // draft: { id, groupId, langId, q, intro, sections:[{heading,body}], closing, callout }
 //   (intro/section.body/closing/callout = rich)
 // content JSON: { intro, sections:[{heading,body}], closing?, callout? }
@@ -380,44 +447,49 @@ export async function loadSecondCircle(ctx = {}) {
         sections: (c.sections ?? []).map(s => ({ heading: s.heading, body: mdToHtml(s.body) })),
         closing: mdToHtml(c.closing),
         callout: mdToHtml(c.callout),
+        ...metaOf(c),
       };
     });
 }
 
-export async function saveSecondCircle(draft, ctx = {}) {
-  const lang = ctx.lang || draft.langId || 'he';
+export async function buildSecondCircle(draft, ctx = {}) {
+  const lang = draft.langId || ctx.lang || 'he';
   const taxonomy = await getTaxonomy();
   const categoryId = requireCategoryId(taxonomy, 'second-circle');
-  const content = {
+  const content = withMeta({
     intro: htmlToMd(draft.intro),
     sections: (draft.sections ?? []).map(s => ({ heading: s.heading, body: htmlToMd(s.body) })),
     ...(draft.closing ? { closing: htmlToMd(draft.closing) } : {}),
     ...(draft.callout ? { callout: htmlToMd(draft.callout) } : {}),
-  };
-  const payload = {
+  }, draft, ctx);
+  return {
     type: 'faq',
     langId: lang,
     title: draft.q,
     content: JSON.stringify(content),
     categoryIds: [categoryId],
   };
-  return writeArticle(draft, ctx, payload);
+}
+
+export async function saveSecondCircle(draft, ctx = {}) {
+  return writeArticle(draft, ctx, await buildSecondCircle(draft, ctx));
 }
 
 export function removeSecondCircle(id) {
   return removeArticle(id);
 }
 
-// ─── selfHelp — tool, category self-help+sub(category), he ────────────────
-// draft: { id, groupId, langId, category, title_he, content_he, apps? }
+// ─── selfHelp - tool, category self-help+sub(category), per langId ────────
+// draft: { id, groupId, langId, category, title_he, content_he, apps? }   (per langId)
 //   (content_he = rich; apps is an optional passthrough array - no dedicated
 //   panel UI edits it yet, so it's carried through byte-for-byte)
 // content JSON: { body, apps? }
 
-export async function loadSelfHelp() {
+export async function loadSelfHelp(ctx = {}) {
+  const lang = ctx.lang || 'he';
   const taxonomy = await getTaxonomy();
   const parentId = requireCategoryId(taxonomy, 'self-help');
-  const items = await fetchArticles({ type: 'tool', langId: 'he', categoryId: parentId });
+  const items = await fetchArticles({ type: 'tool', langId: lang, categoryId: parentId });
   return items
     .slice()
     .sort((a, b) => a.sortOrder - b.sortOrder)
@@ -431,33 +503,37 @@ export async function loadSelfHelp() {
         title_he: item.title,
         content_he: mdToHtml(c.body),
         ...(c.apps?.length ? { apps: c.apps } : {}),
+        ...metaOf(c),
       };
     });
 }
 
-export async function saveSelfHelp(draft, ctx = {}) {
+export async function buildSelfHelp(draft, ctx = {}) {
   const taxonomy = await getTaxonomy();
   const parentId = requireCategoryId(taxonomy, 'self-help');
   const subId = requireCategoryId(taxonomy, draft.category);
-  const content = {
+  const content = withMeta({
     body: htmlToMd(draft.content_he),
     ...(draft.apps?.length ? { apps: draft.apps } : {}),
-  };
-  const payload = {
+  }, draft, ctx);
+  return {
     type: 'tool',
-    langId: 'he',
+    langId: draft.langId || ctx.lang || 'he',
     title: draft.title_he,
     content: JSON.stringify(content),
     categoryIds: [parentId, subId],
   };
-  return writeArticle(draft, ctx, payload);
+}
+
+export async function saveSelfHelp(draft, ctx = {}) {
+  return writeArticle(draft, ctx, await buildSelfHelp(draft, ctx));
 }
 
 export function removeSelfHelp(id) {
   return removeArticle(id);
 }
 
-// ─── treatment — treatment_step, category `treatment`, per langId ──────────
+// ─── treatment - treatment_step, category `treatment`, per langId ──────────
 // draft: { id, groupId, langId, step_number, title_he, description_he, how_to_start_he, methods, links }
 //   (how_to_start_he = rich; description_he = plain per spec notes; `methods`
 //   is the per-step list of individual therapies - steps 3 and 4 carry them -
@@ -498,17 +574,18 @@ export async function loadTreatment(ctx = {}) {
           links: m.links ?? [],
         })),
         links: c.links ?? [],
+        ...metaOf(c),
       };
     });
 }
 
-export async function saveTreatment(draft, ctx = {}) {
+export async function buildTreatment(draft, ctx = {}) {
   // An existing row keeps its own language: PATCHing an English step with
   // langId 'he' would silently re-label it as Hebrew.
   const lang = draft.langId || ctx.lang || 'he';
   const taxonomy = await getTaxonomy();
   const categoryId = requireCategoryId(taxonomy, 'treatment');
-  const content = {
+  const content = withMeta({
     description: draft.description_he ?? '',
     how_to_start: htmlToMd(draft.how_to_start_he),
     ...(draft.methods?.length
@@ -522,8 +599,8 @@ export async function saveTreatment(draft, ctx = {}) {
         }
       : {}),
     ...(draft.links?.length ? { links: draft.links } : {}),
-  };
-  const payload = {
+  }, draft, ctx);
+  return {
     type: 'treatment_step',
     langId: lang,
     title: draft.title_he,
@@ -531,22 +608,26 @@ export async function saveTreatment(draft, ctx = {}) {
     categoryIds: [categoryId],
     sortOrder: draft.step_number,
   };
-  return writeArticle(draft, ctx, payload);
+}
+
+export async function saveTreatment(draft, ctx = {}) {
+  return writeArticle(draft, ctx, await buildTreatment(draft, ctx));
 }
 
 export function removeTreatment(id) {
   return removeArticle(id);
 }
 
-// ─── source — source, category sources+sub(category), he, native url ──────
+// ─── source - source, category sources+sub(category), per langId, native url
 // draft: { id, groupId, langId, title, authors, year, url, description_he, category }
 //   (all plain - description_he is plain text per src/api/source.js's comment)
 // content JSON: { authors, year, description }
 
-export async function loadSource() {
+export async function loadSource(ctx = {}) {
+  const lang = ctx.lang || 'he';
   const taxonomy = await getTaxonomy();
   const parentId = requireCategoryId(taxonomy, 'sources');
-  const items = await fetchArticles({ type: 'source', langId: 'he', categoryId: parentId });
+  const items = await fetchArticles({ type: 'source', langId: lang, categoryId: parentId });
   return items.map(item => {
     const c = parseContent(item);
     return {
@@ -559,47 +640,51 @@ export async function loadSource() {
       url: item.url ?? '',
       description_he: c.description ?? '',
       category: subCategorySlug(item.categories),
+      ...metaOf(c),
     };
   });
 }
 
-export async function saveSource(draft, ctx = {}) {
+export async function buildSource(draft, ctx = {}) {
   const taxonomy = await getTaxonomy();
   const parentId = requireCategoryId(taxonomy, 'sources');
   const subId = requireCategoryId(taxonomy, draft.category);
-  const content = {
+  const content = withMeta({
     authors: draft.authors ?? '',
     year: draft.year ?? '',
     description: draft.description_he ?? '',
-  };
-  const payload = {
+  }, draft, ctx);
+  return {
     type: 'source',
-    langId: 'he',
+    langId: draft.langId || ctx.lang || 'he',
     title: draft.title,
     url: draft.url, // native column, required by the API for type=source
     content: JSON.stringify(content),
     categoryIds: [parentId, subId],
   };
-  return writeArticle(draft, ctx, payload);
+}
+
+export async function saveSource(draft, ctx = {}) {
+  return writeArticle(draft, ctx, await buildSource(draft, ctx));
 }
 
 export function removeSource(id) {
   return removeArticle(id);
 }
 
-// ─── childrenGuidelines — article, category children+ageGroup, he ─────────
+// ─── childrenGuidelines - article, category children+ageGroup, per langId ──
 // Singleton per age group (the "הנחיות" box), not a list - draft is a single
 // object (or null if that age group has no guidelines article yet).
 // draft: { id, groupId, langId, ageGroup, guidelines }   (guidelines = rich)
 // content JSON: { body }
-// ctx: { ageGroupSlug }
+// ctx: { ageGroupSlug, lang? }
 
 export async function loadChildrenGuidelines(ctx = {}) {
   const ageGroupSlug = ctx.ageGroupSlug;
   if (!ageGroupSlug) throw new Error('loadChildrenGuidelines requires ctx.ageGroupSlug');
   const taxonomy = await getTaxonomy();
   const categoryId = requireCategoryId(taxonomy, 'children');
-  const items = await fetchArticles({ type: 'article', langId: 'he', categoryId });
+  const items = await fetchArticles({ type: 'article', langId: ctx.lang || 'he', categoryId });
   const item = items.find(it => (it.ageGroups || []).some(g => g.slug === ageGroupSlug));
   if (!item) return null;
   const c = parseContent(item);
@@ -608,33 +693,39 @@ export async function loadChildrenGuidelines(ctx = {}) {
     groupId: item.groupId,
     langId: item.langId,
     ageGroup: ageGroupSlug,
+    title: item.title,
     guidelines: mdToHtml(c.body),
+    ...metaOf(c),
   };
 }
 
-export async function saveChildrenGuidelines(draft, ctx = {}) {
+export async function buildChildrenGuidelines(draft, ctx = {}) {
   const ageGroupSlug = draft.ageGroup || ctx.ageGroupSlug;
   if (!ageGroupSlug) throw new Error('saveChildrenGuidelines requires draft.ageGroup or ctx.ageGroupSlug');
   const taxonomy = await getTaxonomy();
   const categoryId = requireCategoryId(taxonomy, 'children');
   const ageGroupId = requireAgeGroupId(taxonomy, ageGroupSlug);
-  const content = { body: htmlToMd(draft.guidelines) };
-  const payload = {
+  const content = withMeta({ body: htmlToMd(draft.guidelines) }, draft, ctx);
+  return {
     type: 'article',
-    langId: 'he',
-    title: 'הנחיות',
+    langId: draft.langId || ctx.lang || 'he',
+    // A translated row keeps its own (translated) title.
+    title: draft.title || 'הנחיות',
     content: JSON.stringify(content),
     categoryIds: [categoryId],
     ageGroupIds: [ageGroupId],
   };
-  return writeArticle(draft, ctx, payload);
+}
+
+export async function saveChildrenGuidelines(draft, ctx = {}) {
+  return writeArticle(draft, ctx, await buildChildrenGuidelines(draft, ctx));
 }
 
 export function removeChildrenGuidelines(id) {
   return removeArticle(id);
 }
 
-// ─── childrenResource — book/activity/story/video, category children+ageGroup, he ─
+// ─── childrenResource - book/activity/story/video, category children+ageGroup, per langId
 // draft: { id, groupId, langId, type, title_he, description_he, content_he, cta_label, cta_url }
 //   (content_he = rich; description_he/cta_* = plain)
 // content JSON: { body, description, cta?:{label,url} }
@@ -647,7 +738,7 @@ export async function loadChildrenResource(ctx = {}) {
   if (!ageGroupSlug) throw new Error('loadChildrenResource requires ctx.ageGroupSlug');
   const taxonomy = await getTaxonomy();
   const categoryId = requireCategoryId(taxonomy, 'children');
-  const items = await fetchArticles({ langId: 'he', categoryId });
+  const items = await fetchArticles({ langId: ctx.lang || 'he', categoryId });
   return items
     .filter(it => CHILDREN_RESOURCE_TYPES.has(it.type) && (it.ageGroups || []).some(g => g.slug === ageGroupSlug))
     .slice()
@@ -664,39 +755,43 @@ export async function loadChildrenResource(ctx = {}) {
         content_he: mdToHtml(c.body),
         cta_label: c.cta?.label ?? '',
         cta_url: c.cta?.url ?? '',
+        ...metaOf(c),
       };
     });
 }
 
-export async function saveChildrenResource(draft, ctx = {}) {
+export async function buildChildrenResource(draft, ctx = {}) {
   const ageGroupSlug = ctx.ageGroupSlug;
   if (!ageGroupSlug) throw new Error('saveChildrenResource requires ctx.ageGroupSlug');
   const taxonomy = await getTaxonomy();
   const categoryId = requireCategoryId(taxonomy, 'children');
   const ageGroupId = requireAgeGroupId(taxonomy, ageGroupSlug);
-  const content = {
+  const content = withMeta({
     body: htmlToMd(draft.content_he),
     description: draft.description_he ?? '',
     ...(draft.cta_label || draft.cta_url
       ? { cta: { label: draft.cta_label ?? '', url: draft.cta_url ?? '' } }
       : {}),
-  };
-  const payload = {
+  }, draft, ctx);
+  return {
     type: draft.type,
-    langId: 'he',
+    langId: draft.langId || ctx.lang || 'he',
     title: draft.title_he,
     content: JSON.stringify(content),
     categoryIds: [categoryId],
     ageGroupIds: [ageGroupId],
   };
-  return writeArticle(draft, ctx, payload);
+}
+
+export async function saveChildrenResource(draft, ctx = {}) {
+  return writeArticle(draft, ctx, await buildChildrenResource(draft, ctx));
 }
 
 export function removeChildrenResource(id) {
   return removeArticle(id);
 }
 
-// ─── community — /admin/communities, native fields ─────────────────────────
+// ─── community - /admin/communities, native fields ─────────────────────────
 // draft: { id, name, organization, description_he, target_audience[], location, meeting_type, contact_url }
 //   (all plain - communities never carry HTML/Markdown per the db-remigration
 //   spec)
@@ -713,10 +808,12 @@ export function removeChildrenResource(id) {
 // uses the public `GET /communities`, so inactive communities (if any) won't
 // surface here.
 
-export async function loadCommunity() {
-  // Hebrew-only admin: the /communities resource is language-scoped (one row per
-  // language), so filter to he - otherwise every language's rows show up here.
-  const items = await adminApi('GET', '/communities?langId=he');
+// Communities have no groupId linking a community to its translations, so they
+// are edited per language (the admin's language tab) and never AI-translated.
+export async function loadCommunity(ctx = {}) {
+  // The /communities resource is language-scoped (one row per language), so
+  // filter to the tab's language - otherwise every language's rows show up here.
+  const items = await adminApi('GET', `/communities?langId=${ctx.lang || 'he'}`);
   return items.map(item => ({
     id: item.id,
     name: item.name,
@@ -729,15 +826,15 @@ export async function loadCommunity() {
   }));
 }
 
-export async function saveCommunity(draft) {
+export async function saveCommunity(draft, ctx = {}) {
   const taxonomy = await getTaxonomy();
   const audienceIds = (draft.target_audience || [])
     .map(slug => taxonomy.audiencesBySlug.get(toHyphenSlug(slug)))
     .filter(Boolean);
   const payload = {
-    // Hebrew-only admin: langId is required on create (POST 422s without it) and
-    // keeps new communities in the he-scoped list. Verified against the live API.
-    langId: 'he',
+    // langId is required on create (POST 422s without it) and keeps new
+    // communities in that language's list. Verified against the live API.
+    langId: ctx.lang || 'he',
     name: draft.name,
     organization: draft.organization || null,
     description: draft.description_he || null,

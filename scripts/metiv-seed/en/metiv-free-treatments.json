@@ -1,0 +1,74 @@
+{
+  "key": "FREE_TREATMENTS",
+  "slug": "metiv-free-treatments",
+  "kind": "list",
+  "rows": [
+    {
+      "_key": "military-ptsd-treatment",
+      "title": "Free Treatment for People Living with PTSD from Military Service",
+      "sortOrder": 0,
+      "content": {
+        "_key": "military-ptsd-treatment",
+        "_col": "metiv-free-treatments",
+        "id": "military-ptsd-treatment",
+        "title": "Free Treatment for People Living with PTSD from Military Service",
+        "provider": "Metiv",
+        "icon": "HandHeart",
+        "who": "Veterans (not in regular service) living with PTSD from their military service.",
+        "what": "Treatment with one of two methods, Somatic Experiencing (SE) or prolonged exposure (PE), by certified therapists. The program includes filling out questionnaires, clinical assessments and follow-up by Metiv, and the data is used for clinical research.",
+        "location": "Nationwide",
+        "cost": "Free of charge",
+        "contacts": [
+          {
+            "kind": "email",
+            "label": "Email",
+            "value": "shir@metiv.org"
+          },
+          {
+            "kind": "text",
+            "label": "WhatsApp",
+            "value": "02-5952240"
+          }
+        ],
+        "source": "https://metiv.org/טיפולים-ללא-עלות-דרך-מטיב/"
+      }
+    },
+    {
+      "_key": "kids-space",
+      "title": "Metiv Space for Children",
+      "sortOrder": 1,
+      "content": {
+        "_key": "kids-space",
+        "_col": "metiv-free-treatments",
+        "id": "kids-space",
+        "title": "Metiv Space for Children",
+        "provider": "Metiv Children",
+        "icon": "Sparkles",
+        "who": "Parents who are unsure whether their child needs therapy, who are on a waiting list for treatment, or who have questions about their child.",
+        "ages": "Parents of children aged 0-9",
+        "what": "A one-time parent-and-child play session with professionals in childhood trauma, whom you can ask questions. This is not therapy and not an assessment.",
+        "location": "Metiv Children, Givat Shaul, Herzog Medical Center, floor -1, Jerusalem. Tuesday afternoons and Wednesday mornings, with advance registration.",
+        "cost": "Free of charge",
+        "process": "You fill out a short questionnaire, after which a call or an introductory meeting is offered.",
+        "contacts": [
+          {
+            "kind": "link",
+            "label": "Register for upcoming dates",
+            "href": "https://www.surveyhero.com/c/merhav1"
+          },
+          {
+            "kind": "email",
+            "label": "Email",
+            "value": "panda@metiv.org"
+          },
+          {
+            "kind": "phone",
+            "label": "Phone",
+            "value": "02-6294858"
+          }
+        ],
+        "source": "https://metiv.org/מרחב-מטיב-ילדים/"
+      }
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "_area": "patient",
+  "_label": "אזור המטופלים: דף הבית",
+  "logoAlt": "Metiv",
+  "whereToGetHelpChip": "Where to get treatment",
+  "freeTreatmentChip": "Free treatment and taking part in studies",
+  "validateHeroTagline": "Main heading - home",
+  "validateHeroSubtitle": "Subheading - home",
+  "validatePathTitle": "Path card {n} - heading",
+  "validatePathSubtitle": "Path card {n} - subheading",
+  "validateAbout": "Short description of PTSD"
+}

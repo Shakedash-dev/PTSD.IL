@@ -1,0 +1,23 @@
+{
+  "key": "TEAM_GROUPS",
+  "slug": "metiv-team-groups",
+  "kind": "strings",
+  "rows": [
+    {
+      "_key": "TEAM_GROUPS",
+      "title": "TEAM_GROUPS",
+      "sortOrder": 0,
+      "content": {
+        "_key": "TEAM_GROUPS",
+        "_col": "metiv-team-groups",
+        "items": [
+          "الإدارة",
+          "العيادات",
+          "البحث",
+          "التأهيلات",
+          "Peace of Mind (راحة البال)"
+        ]
+      }
+    }
+  ]
+}

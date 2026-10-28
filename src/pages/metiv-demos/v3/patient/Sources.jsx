@@ -4,7 +4,8 @@ import { t } from '@/lib/i18n';
 import { useSources } from '@/api/hooks';
 import PageHeader from '@/components/patterns/PageHeader';
 import { ExternalLink, Globe, BookOpen } from 'lucide-react';
-import { METIV_BOOKS, METIV_BOOKS_ORDER_NOTE, ADDITION_ANCHORS } from '@/pages/metiv-demos/shared/patient/additions';
+import { fmt, useCopy, useMetiv } from '../content/MetivContent';
+import { PATIENT_ANCHORS } from './PatientKit';
 
 // Metiv demo (V3): a copy of src/pages/Sources.jsx. Change only: the approved
 // section of books by Metiv staff at the end.
@@ -19,6 +20,8 @@ const CATEGORY_COLORS = {
 
 export default function Sources() {
   const { lang } = useLang();
+  const { METIV_BOOKS, METIV_BOOKS_ORDER_NOTE } = useMetiv();
+  const c = useCopy('patientSources');
   const { data: sources = [], isLoading, error } = useSources({ lang });
 
   return (
@@ -89,10 +92,10 @@ export default function Sources() {
         </div>
 
         {/* Metiv addition: books by Metiv staff */}
-        <section id={ADDITION_ANCHORS.metivBooks} className="scroll-mt-24 mt-16">
-          <h2 className="font-heading font-semibold text-2xl text-foreground mb-2">ספרים של אנשי מטיב</h2>
+        <section id={PATIENT_ANCHORS.metivBooks} className="scroll-mt-24 mt-16">
+          <h2 className="font-heading font-semibold text-2xl text-foreground mb-2">{c.booksTitle}</h2>
           <p className="text-muted-foreground leading-relaxed mb-6">
-            ספרים שכתבו או ערכו אנשי מטיב. {METIV_BOOKS_ORDER_NOTE}
+            {fmt(c.booksIntro, { note: METIV_BOOKS_ORDER_NOTE })}
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {METIV_BOOKS.map((book) => (
@@ -100,7 +103,7 @@ export default function Sources() {
                 <div className="flex items-start justify-between gap-3 mb-3">
                   <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-muted text-muted-foreground">
                     <BookOpen className="w-3.5 h-3.5" aria-hidden="true" />
-                    ספר · {book.language}
+                    {fmt(c.bookLanguage, { language: book.language })}
                   </span>
                   <span className="text-xs text-muted-foreground">{book.year}</span>
                 </div>
@@ -117,7 +120,7 @@ export default function Sources() {
                   className="inline-flex items-center gap-1.5 text-xs text-primary hover:text-primary/80 transition-natural mt-auto"
                 >
                   <Globe className="w-3.5 h-3.5" />
-                  לעמוד הספר
+                  {c.bookLink}
                   <ExternalLink className="w-3 h-3" />
                 </a>
               </div>

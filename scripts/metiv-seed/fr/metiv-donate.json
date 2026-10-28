@@ -1,0 +1,37 @@
+{
+  "key": "DONATE",
+  "slug": "metiv-donate",
+  "kind": "single",
+  "rows": [
+    {
+      "_key": "DONATE",
+      "title": "DONATE",
+      "sortOrder": 0,
+      "content": {
+        "_key": "DONATE",
+        "_col": "metiv-donate",
+        "isPlaceholder": true,
+        "title": "Faire un don à Metiv",
+        "intro": "[Texte provisoire] Metiv est une association enregistrée (n° 580313926). Un texte de Metiv sur l'utilisation des dons et les moyens de donner figurera ici.",
+        "ways": [
+          {
+            "key": "jgive",
+            "title": "Don en ligne sur JGive",
+            "description": "[Texte provisoire] Don par carte bancaire via la page de l'association sur le site JGive.",
+            "url": "https://www.jgive.com/new/en/ils/charity-organizations/1179",
+            "cta": "Faire un don sur JGive"
+          },
+          {
+            "key": "contact",
+            "title": "Partenariats et dons institutionnels",
+            "description": "[Texte provisoire] Pour discuter d'un partenariat, d'un don institutionnel ou du soutien à un programme précis, contactez Haim Landau, responsable du développement et des partenariats.",
+            "email": "Chaim@metiv.org",
+            "cta": "Écrire par e-mail"
+          }
+        ],
+        "paymentNote": "Les dons et les paiements pour les services de l'association passent par des prestataires tiers. L'association ne conserve pas les données de carte bancaire ni aucune autre information sur les moyens de paiement.",
+        "legalEntity": "Association enregistrée n° 580313926"
+      }
+    }
+  ]
+}

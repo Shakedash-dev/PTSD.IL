@@ -1,0 +1,167 @@
+{
+  "key": "ACTIVE_STUDIES",
+  "slug": "metiv-studies",
+  "kind": "list",
+  "rows": [
+    {
+      "_key": "release-journey-study",
+      "title": "Étude Peace of Mind",
+      "sortOrder": 0,
+      "content": {
+        "_key": "release-journey-study",
+        "_col": "metiv-studies",
+        "slug": "release-journey-study",
+        "title": "Étude Peace of Mind",
+        "summary": "Une étude d'évaluation et de mesure qui accompagne les programmes Peace of Mind pour les soldats démobilisés.",
+        "description": "Étude Peace of Mind : accompagnement des programmes Peace of Mind, étude d'évaluation et de mesure des différents programmes.",
+        "population": "Soldats démobilisés participant aux programmes Peace of Mind",
+        "status": "En cours",
+        "recruiting": false,
+        "sourceUrl": "https://metiv.org/מחקרים-פעילים-טראומה/"
+      }
+    },
+    {
+      "_key": "mdma-sea-it",
+      "title": "Étude MDMA / SEA-IT",
+      "sortOrder": 1,
+      "content": {
+        "_key": "mdma-sea-it",
+        "_col": "metiv-studies",
+        "slug": "mdma-sea-it",
+        "title": "Étude MDMA / SEA-IT",
+        "summary": "Une étude clinique qui compare deux traitements intensifs du TSPT d'origine militaire : la thérapie assistée par MDMA et la SEA-IT.",
+        "description": "De nombreux soldats démobilisés souffrent de symptômes de TSPT accompagnés d'autres difficultés psychologiques, liés à des expériences qu'ils ont vécues ou dont ils ont été témoins pendant leur service militaire.\n\nL'étude actuelle propose deux traitements intensifs :\n\n- **Le premier traitement** est la thérapie assistée par MDMA, qui associe la prise de la substance psychédélique à une psychothérapie adaptée.\n- **Le second traitement** est la SEA-IT (Somatic Experiential Acceptance Intensive Trauma focused Therapy), une thérapie intensive centrée sur le corps, l'expérience et l'acceptation, selon un modèle psychédélique.\n\nL'étude vise à examiner la manière dont les traitements agissent sur différents aspects psychologiques et neuropsychologiques, et à comprendre le mécanisme du traitement intensif.\n\nL'éligibilité à l'étude repose sur un processus d'évaluation et ne permet pas de choisir entre les traitements.",
+        "population": "Personnes souffrant de TSPT d'origine militaire, ayant déjà suivi un traitement centré sur le traumatisme et dont les symptômes persistent",
+        "status": "Recrutement de participants",
+        "recruiting": true,
+        "eligibility": [
+          "Confronté à un traumatisme militaire ou à un TSPT",
+          "A déjà suivi un traitement centré sur le traumatisme, mais les symptômes persistent",
+          "Capable de s'engager dans un processus intensif de 3 à 3,5 mois (16 séances, à Jérusalem)"
+        ],
+        "team": [
+          "Dr Anna Harwood-Gross",
+          "Dalia Amit Zivan",
+          "Dr Amichai Flor",
+          "Sous la supervision du Pr Pinchas Dannon, chef du service de psychiatrie de l'hôpital Herzog"
+        ],
+        "links": [
+          {
+            "label": "Questionnaire d'éligibilité",
+            "url": "https://www.surveyhero.com/c/jzkapqr4"
+          },
+          {
+            "label": "Lettre d'information sur la SEA-IT (PDF)",
+            "url": "https://metiv.org/wp-content/uploads/2025/07/מכתב-הסבר-SEA-IT.pdf"
+          },
+          {
+            "label": "Article du journal Makor Rishon (PDF)",
+            "url": "https://metiv.org/wp-content/uploads/2025/07/MAKOR-RISHON-ARTICLE.pdf"
+          }
+        ],
+        "contact": {
+          "email": "moriya@metiv.org",
+          "whatsapp": "026264889"
+        },
+        "sourceUrl": "https://metiv.org/sea-it-mdma/"
+      }
+    },
+    {
+      "_key": "clinics-study",
+      "title": "Étude des cliniques",
+      "sortOrder": 2,
+      "content": {
+        "_key": "clinics-study",
+        "_col": "metiv-studies",
+        "slug": "clinics-study",
+        "title": "Étude des cliniques",
+        "summary": "Une étude sur l'ajout de traitements complémentaires à la psychothérapie dans le TSPT d'origine militaire.",
+        "description": "L'ajout de traitements complémentaires à la psychothérapie dans le TSPT d'origine militaire.",
+        "population": "Patients souffrant de TSPT d'origine militaire",
+        "status": "En cours",
+        "recruiting": false,
+        "contact": {
+          "name": "Dr Anna Portugalov",
+          "role": "Responsable de l'étude des cliniques"
+        },
+        "sourceUrl": "https://metiv.org/מחקרים-פעילים-טראומה/"
+      }
+    },
+    {
+      "_key": "se-pe",
+      "title": "Étude SE PE",
+      "sortOrder": 3,
+      "content": {
+        "_key": "se-pe",
+        "_col": "metiv-studies",
+        "slug": "se-pe",
+        "title": "Étude SE PE",
+        "summary": "Une étude comparative entre le Somatic Experiencing (SE) et la thérapie d'exposition prolongée (PE) dans le traitement du TSPT d'origine militaire, proposée gratuitement dans tout le pays.",
+        "description": "Une étude comparative entre deux méthodes de traitement du TSPT : le Somatic Experiencing (SE) comparé à la thérapie d'exposition prolongée (PE). L'étude s'est déroulée à différentes périodes (Covid, accalmie et guerre) et offre une vue d'ensemble de la manière de faire face au TSPT en Israël dans une réalité changeante.\n\nDans le cadre de ce dispositif, un traitement gratuit est proposé dans tout le pays aux personnes souffrant de TSPT lié au service militaire (uniquement aux soldats démobilisés, hors service actif). Le traitement est dispensé selon l'une des deux méthodes par des thérapeutes certifiés, et s'accompagne de questionnaires, d'évaluations cliniques et d'un accompagnement par Metiv. Les données sont utilisées pour une étude clinique.",
+        "population": "Soldats démobilisés (hors service actif) souffrant de TSPT lié au service militaire",
+        "status": "En cours",
+        "recruiting": true,
+        "contact": {
+          "email": "shir@metiv.org",
+          "whatsapp": "02-5952240"
+        },
+        "sourceUrl": "https://metiv.org/מחקרים-פעילים-טראומה/"
+      }
+    },
+    {
+      "_key": "reservists-with-ptsd",
+      "title": "Étude sur les combattants souffrant de TSPT",
+      "sortOrder": 4,
+      "content": {
+        "_key": "reservists-with-ptsd",
+        "_col": "metiv-studies",
+        "slug": "reservists-with-ptsd",
+        "title": "Étude sur les combattants souffrant de TSPT",
+        "summary": "Une étude qualitative sur l'expérience du retour au combat pendant la guerre « Épées de fer » chez des combattants qui souffraient déjà d'un TSPT d'origine militaire avant la guerre.",
+        "description": "Une étude qualitative : analyse d'entretiens avec des combattants mobilisés dans la réserve et ayant des antécédents de TSPT. Une étude longitudinale pendant la guerre « Épées de fer ».\n\nDans le cadre de l'étude, un entretien ouvert est mené avec des combattants ayant participé à la guerre, afin de comprendre leur histoire, sa complexité et leur manière d'y faire face.",
+        "population": "Combattants réservistes qui souffraient d'un TSPT d'origine militaire avant la guerre « Épées de fer »",
+        "status": "En cours",
+        "recruiting": true,
+        "contact": {
+          "email": "shir@metiv.org",
+          "whatsapp": "02-5952240"
+        },
+        "sourceUrl": "https://metiv.org/מחקרים-פעילים-טראומה/"
+      }
+    },
+    {
+      "_key": "kids-department-study",
+      "title": "Étude du département enfants",
+      "sortOrder": 5,
+      "content": {
+        "_key": "kids-department-study",
+        "_col": "metiv-studies",
+        "slug": "kids-department-study",
+        "title": "Étude du département enfants",
+        "summary": "Un suivi des programmes d'intervention du département enfants : traitements pour les enfants et les familles, traitements dyadiques et programmes dans les écoles.",
+        "description": "Suivi des programmes d'intervention, recherche sur les traitements du TSPT pour les enfants et les familles, traitements dyadiques et programmes d'intervention dans les écoles.",
+        "population": "Enfants et familles",
+        "status": "En cours",
+        "recruiting": false,
+        "sourceUrl": "https://metiv.org/מחקרים-פעילים-טראומה/"
+      }
+    },
+    {
+      "_key": "ai-and-ptsd",
+      "title": "Étude TSPT et intelligence artificielle",
+      "sortOrder": 6,
+      "content": {
+        "_key": "ai-and-ptsd",
+        "_col": "metiv-studies",
+        "slug": "ai-and-ptsd",
+        "title": "Étude TSPT et intelligence artificielle",
+        "summary": "Un nouveau domaine de recherche chez Metiv, qui associe l'intelligence artificielle, des marqueurs physiologiques et des analyses approfondies pour l'évaluation et le traitement du TSPT.",
+        "description": "Un nouveau domaine de recherche chez Metiv : associer l'intelligence artificielle, des marqueurs physiologiques et des analyses approfondies pour le traitement et l'évaluation du TSPT.",
+        "population": "Personnes souffrant de TSPT",
+        "status": "En cours",
+        "recruiting": false,
+        "sourceUrl": "https://metiv.org/מחקרים-פעילים-טראומה/"
+      }
+    }
+  ]
+}

@@ -1,0 +1,146 @@
+{
+  "key": "NEXT_STEPS",
+  "slug": "metiv-next-steps",
+  "kind": "single",
+  "rows": [
+    {
+      "_key": "NEXT_STEPS",
+      "title": "NEXT_STEPS",
+      "sortOrder": 0,
+      "content": {
+        "_key": "NEXT_STEPS",
+        "_col": "metiv-next-steps",
+        "firstCircle": [
+          {
+            "label": "Take the anonymous questionnaire",
+            "to": "/patient/questionnaire"
+          },
+          {
+            "label": "Where to get treatment",
+            "to": "/patient/where-to-get-help"
+          }
+        ],
+        "secondCircle": [
+          {
+            "label": "Tools for family members",
+            "to": "/patient/second-circle-tools"
+          },
+          {
+            "label": "Talking with children",
+            "to": "/patient/children"
+          }
+        ],
+        "secondCircleTools": [
+          {
+            "label": "Support communities",
+            "to": "/patient/community"
+          },
+          {
+            "label": "Where to get treatment",
+            "to": "/patient/where-to-get-help"
+          }
+        ],
+        "questionnaire": [
+          {
+            "label": "What is PTSD?",
+            "to": "/patient/ptsd-info"
+          },
+          {
+            "label": "Where to get treatment",
+            "to": "/patient/where-to-get-help"
+          }
+        ],
+        "ptsdInfo": [
+          {
+            "label": "Self-help",
+            "to": "/patient/self-help"
+          },
+          {
+            "label": "The therapy journey",
+            "to": "/patient/treatment"
+          }
+        ],
+        "selfHelp": [
+          {
+            "label": "Calming exercises",
+            "to": "/patient/calming"
+          },
+          {
+            "label": "Support communities",
+            "to": "/patient/community"
+          }
+        ],
+        "treatment": [
+          {
+            "label": "Where to get treatment",
+            "to": "/patient/where-to-get-help"
+          },
+          {
+            "label": "Rights",
+            "to": "/patient/rights"
+          }
+        ],
+        "whereToGetHelp": [
+          {
+            "label": "Free treatments and studies",
+            "to": "/patient/free-treatment-and-research"
+          },
+          {
+            "label": "Rights",
+            "to": "/patient/rights"
+          }
+        ],
+        "freeTreatment": [
+          {
+            "label": "Where to get treatment",
+            "to": "/patient/where-to-get-help"
+          },
+          {
+            "label": "Rights",
+            "to": "/patient/rights"
+          }
+        ],
+        "rights": [
+          {
+            "label": "Free treatments and studies",
+            "to": "/patient/free-treatment-and-research"
+          },
+          {
+            "label": "The therapy journey",
+            "to": "/patient/treatment"
+          }
+        ],
+        "community": [
+          {
+            "label": "Talking with children",
+            "to": "/patient/children"
+          },
+          {
+            "label": "Self-help",
+            "to": "/patient/self-help"
+          }
+        ],
+        "children": [
+          {
+            "label": "Tools for family members",
+            "to": "/patient/second-circle-tools"
+          },
+          {
+            "label": "Support communities",
+            "to": "/patient/community"
+          }
+        ],
+        "sources": [
+          {
+            "label": "What is PTSD?",
+            "to": "/patient/ptsd-info"
+          },
+          {
+            "label": "Back to all topics",
+            "to": "/patient"
+          }
+        ]
+      }
+    }
+  ]
+}

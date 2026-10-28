@@ -1,0 +1,11 @@
+{
+  "_area": "general",
+  "_label": "תרומה",
+  "eyebrow": "תמיכה",
+  "short1": "שתי דרכים: תרומה מקוונת, או שיחה על שותפות.",
+  "short2": "העמותה רשומה: {legalEntity}.",
+  "placeholderTag": "[טקסט זמני]",
+  "placeholderNote": "הטקסטים בעמוד הזה ממתינים לנוסח של מטיב.",
+  "way": "דרך {n}",
+  "emailCta": "{cta}: {email}"
+}

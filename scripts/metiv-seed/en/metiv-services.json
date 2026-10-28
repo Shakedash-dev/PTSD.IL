@@ -1,0 +1,161 @@
+{
+  "key": "METIV_SERVICES",
+  "slug": "metiv-services",
+  "kind": "list",
+  "rows": [
+    {
+      "_key": "adults-clinic",
+      "title": "Metiv Adult Clinic",
+      "sortOrder": 0,
+      "content": {
+        "_key": "adults-clinic",
+        "_col": "metiv-services",
+        "id": "adults-clinic",
+        "title": "Metiv Adult Clinic",
+        "provider": "Metiv",
+        "icon": "HeartHandshake",
+        "who": "People coping with hard events: life-cycle crises such as layoffs and divorce, medical trauma and accidents, traumatic loss, sexual assault, combat experiences and terror attacks. The clinic also offers support and guidance for family members.",
+        "ages": "17 and over",
+        "location": "Jerusalem. Online therapy on Zoom is also available.",
+        "cost": "Treatment involves a fee unless there is a funding body. Funding bodies include the Ministry of Defense, the National Insurance Institute (Bituach Leumi), and health and welfare bodies. Treatment is not funded by the health funds.",
+        "process": "After you get in touch, you are invited to an assessment meeting to get to know you, understand your needs and match you with a therapist and a treatment plan. The team tries to respond to inquiries within 24 hours.",
+        "contacts": [
+          {
+            "kind": "phone",
+            "label": "Phone",
+            "value": "02-6449666"
+          },
+          {
+            "kind": "link",
+            "label": "Adult Clinic intake form",
+            "href": "https://docs.google.com/forms/d/e/1FAIpQLSfz5ougCVnY1LFHJhyrBFrlICf2gQivumOzstI3YHor8_y0yg/viewform"
+          }
+        ],
+        "source": "https://metiv.org/מרפאת-מבוגרים/",
+        "shortTitle": "Adult Clinic",
+        "summary": "A clinic in Jerusalem for people aged 17 and over who have experienced trauma or loss. Online therapy on Zoom is also available."
+      }
+    },
+    {
+      "_key": "kids-clinic",
+      "title": "Metiv Children - Center for Emotion Regulation",
+      "sortOrder": 1,
+      "content": {
+        "_key": "kids-clinic",
+        "_col": "metiv-services",
+        "id": "kids-clinic",
+        "title": "Metiv Children - Center for Emotion Regulation",
+        "provider": "Metiv",
+        "icon": "Baby",
+        "who": "Children who have difficulties with emotion regulation or have experienced trauma, and their parents. Individual, dyadic and family therapy, as well as PANDA and NAMAL groups for children, parents and families.",
+        "ages": "Up to age 18, and parents",
+        "location": "Givat Shaul, Herzog Medical Center Clinics Building, Jerusalem",
+        "contacts": [
+          {
+            "kind": "phone",
+            "label": "Phone",
+            "value": "02-6449666"
+          },
+          {
+            "kind": "email",
+            "label": "Email",
+            "value": "Kids@metiv.org"
+          },
+          {
+            "kind": "link",
+            "label": "Metiv Children intake form",
+            "href": "https://docs.google.com/forms/d/e/1FAIpQLSfiUHfJ4UDrpSUPQxtPKWmQuZGKg7lfL1c21D_JAsmwxlYLJA/viewform"
+          }
+        ],
+        "source": "https://metiv.org/מטיב-ילדים-טראומה/",
+        "shortTitle": "Metiv Children",
+        "summary": "A center for emotion regulation for children up to age 18 and their parents: individual, dyadic and family therapy, as well as PANDA and NAMAL groups."
+      }
+    },
+    {
+      "_key": "migdalor",
+      "title": "Migdalor Clinic",
+      "sortOrder": 2,
+      "content": {
+        "_key": "migdalor",
+        "_col": "metiv-services",
+        "id": "migdalor",
+        "title": "Migdalor Clinic",
+        "provider": "Metiv and Herzog Medical Center, for the Ministry of Defense Rehabilitation Department - Jerusalem District",
+        "icon": "Shield",
+        "who": "Security forces personnel recognized by the Rehabilitation Department who are coping with psychological distress, PTSD, anxiety or depression. The clinic also accepts patients who are in individual therapy in the community.",
+        "location": "Clinics Building, Herzog Medical Center, Givat Shaul, Jerusalem",
+        "cost": "As part of the Rehabilitation Department's treatment packages (psychiatric follow-up, basic, intensive).",
+        "process": "Contact the Ministry of Defense Rehabilitation Department, which refers you to the clinic. Intake includes an intake meeting with a social worker and a psychiatric assessment. At the end of intake, the applicant may not be accepted, in which case the assessment is used to refer them to other treatment in the community.",
+        "contacts": [
+          {
+            "kind": "link",
+            "label": "Contact the Rehabilitation Department",
+            "href": "https://shikum.mod.gov.il/recognition/request/apply"
+          }
+        ],
+        "source": "https://metiv.org/מגדלור/",
+        "shortTitle": "Migdalor Clinic",
+        "summary": "A clinic at Herzog Medical Center for patients recognized by the Ministry of Defense Rehabilitation Department, on referral from the department."
+      }
+    },
+    {
+      "_key": "release-journey",
+      "title": "Peace of Mind",
+      "sortOrder": 3,
+      "content": {
+        "_key": "release-journey",
+        "_col": "metiv-services",
+        "id": "release-journey",
+        "title": "Peace of Mind",
+        "provider": "Metiv",
+        "icon": "Compass",
+        "who": "Veterans who were exposed to combat events during their military service. Group journeys for soldiers who served together in the same unit, and individual therapy.",
+        "what": "Three models: a full journey abroad (4 workshops over about nine months, with the main workshop a week abroad), a full journey in Israel (4 workshops over about nine months) and a short journey in Israel (3 workshops over about two months). The workshops are facilitated by clinical social workers and psychologists.",
+        "location": "In Israel and abroad, depending on the model",
+        "contacts": [
+          {
+            "kind": "link",
+            "label": "Register for Peace of Mind",
+            "href": "https://wkf.ms/4i9R9bO"
+          }
+        ],
+        "source": "https://metiv.org/מסע-שחרור/",
+        "shortTitle": "Peace of Mind",
+        "summary": "A group and individual program for veterans who were exposed to combat events, with journeys in Israel and abroad."
+      }
+    },
+    {
+      "_key": "free-treatments",
+      "title": "Free treatment through Metiv",
+      "sortOrder": 4,
+      "content": {
+        "_key": "free-treatments",
+        "_col": "metiv-services",
+        "id": "free-treatments",
+        "title": "Free treatment through Metiv",
+        "provider": "Metiv",
+        "icon": "HandHeart",
+        "who": "Mainly veterans and reservists living with PTSD, and their families.",
+        "what": "Free treatment programs, studies recruiting participants, and groups for reservists' families. Full details on a separate page.",
+        "location": "Depending on the program: nationwide or in Jerusalem",
+        "cost": "Free of charge",
+        "contacts": [
+          {
+            "kind": "internal",
+            "label": "Program details",
+            "href": "/patient/free-treatment-and-research"
+          },
+          {
+            "kind": "phone",
+            "label": "Phone",
+            "value": "02-6449666"
+          }
+        ],
+        "source": "https://metiv.org/טיפולים-ללא-עלות-דרך-מטיב/",
+        "shortTitle": "Free treatment",
+        "summary": "Free treatment and research programs, mainly for veterans with PTSD, reservists and their families."
+      }
+    }
+  ]
+}

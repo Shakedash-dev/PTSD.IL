@@ -1,0 +1,55 @@
+{
+  "key": "ORG",
+  "slug": "metiv-org",
+  "kind": "single",
+  "rows": [
+    {
+      "_key": "ORG",
+      "title": "ORG",
+      "sortOrder": 0,
+      "content": {
+        "_key": "ORG",
+        "_col": "metiv-org",
+        "name": "ميتيف - المركز الإسرائيلي للصدمات النفسية",
+        "shortName": "ميتيف",
+        "legalName": "جمعية ميتيف - المركز الإسرائيلي للصدمات النفسية",
+        "legalEntity": "جمعية مسجّلة رقم 580313926",
+        "tagline": "بعد الصدمة",
+        "headline": "الناس بحاجة إلى الناس",
+        "vision": "مجتمع يفسح مكانًا للصدمة النفسية، ويعتني بمن يعانون منها، ويلتزم بتمكينهم.",
+        "mission": "هدفنا تقديم خدمة عالية الجودة، إنسانية ومُراعية للمجتمعات والأفراد قبل الصدمة وخلالها وبعدها، ونشر معرفتنا الشاملة في موضوع الصدمة النفسية من خلال البحث الأكاديمي والتأهيلات، كي يتمكّن الآخرون من ترسيخ هذه المعرفة في مجتمعاتهم.",
+        "intro": "في ميتيف ندرك أن التعامل مع الصدمة في زمن الحرب والإرهاب رحلة مركّبة. إنها رحلة قد تؤثّر في جميع مجالات الحياة، ولذلك نحن هنا لمرافقتكم. نقدّم حيّزًا آمنًا وحسّاسًا يمكنكم فيه الحصول على دعم مهني، وأن تشقّوا معنا طريق التأقلم واستعادة القوة. لأنكم لستم وحدكم.",
+        "address": "غفعات شاؤول، مركز هرتسوغ الطبي، القدس",
+        "mail": "ص.ب. 3900، القدس 91035",
+        "phones": {
+          "main": "02-6449666",
+          "footer": "02-595-2234",
+          "kids": "02-6294858",
+          "fax": "02-644-9777",
+          "coursesWhatsapp": "02-5952235",
+          "researchWhatsapp": "02-5952240",
+          "accessibilityCoordinator": "02-595-2236"
+        },
+        "emails": {
+          "general": "info@metiv.org",
+          "kids": "kids@metiv.org",
+          "courses": "shimrit@metiv.org",
+          "research": "shir@metiv.org",
+          "registration": "stav@metiv.org",
+          "partnerships": "Chaim@metiv.org"
+        },
+        "social": {
+          "facebook": "https://www.facebook.com/metivtraumacenter",
+          "facebookKids": "https://www.facebook.com/Metivkids",
+          "youtube": "https://www.youtube.com/channel/UCBKOBQp0BFFp7uX9qiwUp8w",
+          "linktree": "https://linktr.ee/metivkids"
+        },
+        "donateUrl": "https://www.jgive.com/new/en/ils/charity-organizations/1179",
+        "trainingsFormUrl": "https://docs.google.com/forms/d/e/1FAIpQLScc90IWpEglRpTtKqwmeBToTCGXeZpZXwvcjE6UHaLR4YKxuw/viewform",
+        "adultsClinicFormUrl": "https://docs.google.com/forms/d/e/1FAIpQLSfz5ougCVnY1LFHJhyrBFrlICf2gQivumOzstI3YHor8_y0yg/viewform",
+        "kidsClinicFormUrl": "https://docs.google.com/forms/d/e/1FAIpQLSfiUHfJ4UDrpSUPQxtPKWmQuZGKg7lfL1c21D_JAsmwxlYLJA/viewform",
+        "sourceUrl": "https://metiv.org/"
+      }
+    }
+  ]
+}

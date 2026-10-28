@@ -1,0 +1,37 @@
+{
+  "key": "DONATE",
+  "slug": "metiv-donate",
+  "kind": "single",
+  "rows": [
+    {
+      "_key": "DONATE",
+      "title": "DONATE",
+      "sortOrder": 0,
+      "content": {
+        "_key": "DONATE",
+        "_col": "metiv-donate",
+        "isPlaceholder": true,
+        "title": "תרומה למטיב",
+        "intro": "[טקסט זמני] מטיב היא עמותה רשומה (ע\"ר 580313926). כאן יופיע טקסט של מטיב על השימוש בתרומות ועל דרכי התרומה.",
+        "ways": [
+          {
+            "key": "jgive",
+            "title": "תרומה מקוונת ב-JGive",
+            "description": "[טקסט זמני] תרומה בכרטיס אשראי דרך עמוד העמותה באתר JGive.",
+            "url": "https://www.jgive.com/new/en/ils/charity-organizations/1179",
+            "cta": "לתרומה ב-JGive"
+          },
+          {
+            "key": "contact",
+            "title": "שותפויות ותרומות מוסדיות",
+            "description": "[טקסט זמני] לשיחה על שותפות, תרומה מוסדית או תמיכה בתכנית מסוימת, פנו לחיים לנדאו, אחראי פיתוח ושיתופי פעולה.",
+            "email": "Chaim@metiv.org",
+            "cta": "לפנייה במייל"
+          }
+        ],
+        "paymentNote": "תרומות ותשלומים עבור שירותי העמותה נעשים באמצעות ספקי שירות צד שלישי. העמותה אינה שומרת נתוני אשראי או מידע אחר על אמצעי תשלום.",
+        "legalEntity": "ע\"ר 580313926"
+      }
+    }
+  ]
+}

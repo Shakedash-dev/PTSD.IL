@@ -1,0 +1,12 @@
+{
+  "_area": "patient",
+  "_label": "אזור המטופלים: דף הבית",
+  "logoAlt": "Metiv",
+  "whereToGetHelpChip": "Où se faire soigner",
+  "freeTreatmentChip": "Traitements gratuits et participation à des études",
+  "validateHeroTagline": "Titre principal - accueil",
+  "validateHeroSubtitle": "Sous-titre - accueil",
+  "validatePathTitle": "Fiche parcours {n} - titre",
+  "validatePathSubtitle": "Fiche parcours {n} - sous-titre",
+  "validateAbout": "Courte description du TSPT"
+}

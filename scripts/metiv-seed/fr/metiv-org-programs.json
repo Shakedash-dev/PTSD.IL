@@ -1,0 +1,205 @@
+{
+  "key": "ORGANIZATION_PROGRAMS",
+  "slug": "metiv-org-programs",
+  "kind": "list",
+  "rows": [
+    {
+      "_key": "metiv-space",
+      "title": "Espace Metiv",
+      "sortOrder": 0,
+      "content": {
+        "_key": "metiv-space",
+        "_col": "metiv-org-programs",
+        "slug": "metiv-space",
+        "title": "Espace Metiv",
+        "subtitle": "Développer des organisations adaptées au traumatisme",
+        "summary": "Des formations et un accompagnement pour les organisations et institutions qui servent des personnes touchées par un traumatisme, vers une approche organisationnelle et de service adaptée au traumatisme.",
+        "description": "## Traumatisme personnel et national, et ses effets sur les organisations\n\nLa catastrophe du 7 octobre et la guerre « Épées de fer » ont exposé et continuent d'exposer de nombreuses personnes à des événements traumatiques graves, vécus sur le plan personnel, familial, communautaire et national. La société israélienne compte désormais de nombreux blessés de guerre, physiques et psychiques, des familles endeuillées et des proches qui ont vécu une perte. Beaucoup de personnes dans le pays vivent dans un état de vigilance accrue face à la situation sécuritaire qui perdure.\n\nLe traumatisme ne reste pas confiné à la salle de thérapie. Bien souvent, la rencontre entre des personnes traumatisées et des prestataires de services ravive, sans le vouloir, une expérience traumatique. Des procédures bureaucratiques lourdes et peu claires, une attitude distante ou méprisante de la part des prestataires, des contrôles de sécurité : tout cela peut susciter un sentiment de perte de contrôle, faire revivre des expériences d'humiliation ou de rejet, et amener une personne ayant vécu un traumatisme à la frustration, à la colère et à la perte de contrôle. Ces réactions peuvent à leur tour enclencher un cycle qui se répète chez le prestataire de services.\n\nLe programme **Espace Metiv - développer des organisations adaptées au traumatisme** vise à réduire ces situations blessantes et à créer un espace bienveillant pour les personnes traumatisées, en aidant les organisations et les institutions à adopter une approche organisationnelle et de service sensibilisée au traumatisme et adaptée à celui-ci.\n\n## Qu'est-ce qu'une organisation adaptée au traumatisme ?\n\nUne organisation adaptée au traumatisme est une organisation qui comprend les effets du traumatisme sur l'individu et sur la communauté et qui, en conséquence, crée un environnement soutenant et sûr et offre un service adapté. Une telle organisation :\n\n- **crée un environnement sûr et soutenant** pour les employés et les usagers\n- **prête attention à l'expérience de service** et à la prévention de la réactivation d'expériences traumatiques\n- **construit la confiance** entre les usagers et l'organisation, et entre les employés et l'organisation\n- **prend en compte l'épuisement professionnel et le traumatisme secondaire** chez les employés\n- **brise le cercle des réactions traumatiques** entre employés et usagers\n- **fait face aux conséquences du traumatisme collectif**\n- **participe au processus de rétablissement et de réadaptation** des personnes traumatisées dans la société israélienne\n\n## Que comprend la formation dans les organisations ?\n\n- Approfondir la compréhension du traumatisme et du deuil : symptômes, schémas de pensée caractéristiques, et la manière dont tout cela se manifeste dans la rencontre avec les prestataires de services et sur le lieu de travail\n- Le changement organisationnel : ce qu'il faut adapter, modifier et développer dans l'organisation, selon les principes directeurs enseignés pendant la formation\n- Développer des compétences interpersonnelles et intrapersonnelles : pour faire face personnellement et offrir un service adapté\n- Des outils pour faire face aux situations d'agitation, d'agressivité, de dissociation, etc.",
+        "formats": [
+          "Formations et accompagnement au sein de l'organisation",
+          "Cours d'une journée pour les responsables des ressources humaines et les consultants en organisation"
+        ],
+        "audience": [
+          "Organisations et institutions au service du public",
+          "Personnel en contact avec le public",
+          "Responsables des ressources humaines et consultants en organisation"
+        ],
+        "clientList": [],
+        "voices": [
+          "J'ai déjà du mal à sortir de chez moi, je ne sors pas sans ma femme pour m'accompagner, et eux, ils me donnent encore plus l'impression d'être un zéro. Ils me donnent l'impression d'être un zéro, ça me crée vraiment un traumatisme de plus par-dessus le traumatisme existant",
+          "J'ai tout donné à l'État, j'ai donné mon fils, et c'est comme ça que l'État me traite en retour ? Je me suis senti humilié, blessé, trahi",
+          "J'ai du mal dans les endroits bondés, je sens mon stress monter, j'étouffe, mon cœur s'accélère, je sens l'événement remonter (au supermarché)",
+          "Le TSPT est une blessure invisible ; je suis tellement invisible que même quand je montre ma carte, on ne me croit toujours pas"
+        ],
+        "links": [
+          {
+            "label": "Commander une formation sur mesure pour votre organisation",
+            "url": "https://forms.gle/f2kjVCqy18KwBY4j9"
+          },
+          {
+            "label": "Vous avez été touché par un traumatisme ? Partagez avec nous vos expériences face aux services et aux organisations",
+            "url": "https://forms.gle/riXY9UWZ38jrHUxS6"
+          },
+          {
+            "label": "Professionnels en contact avec le public : partagez avec nous les défis du service aux personnes touchées par un traumatisme",
+            "url": "https://forms.gle/gxagPMjZeF2Gvt786"
+          }
+        ],
+        "relatedCourseSlug": "trauma-informed-org-day",
+        "contact": {
+          "name": "Yonit Efrati",
+          "role": "Directrice de la promotion des politiques et du développement des services communautaires",
+          "email": "yonit@metiv.org"
+        },
+        "sourceUrl": "https://metiv.org/מרחב-מטיב/"
+      }
+    },
+    {
+      "_key": "trauma-informed-org",
+      "title": "Construire une organisation adaptée au traumatisme",
+      "sortOrder": 1,
+      "content": {
+        "_key": "trauma-informed-org",
+        "_col": "metiv-org-programs",
+        "slug": "trauma-informed-org",
+        "title": "Construire une organisation adaptée au traumatisme",
+        "subtitle": "Un cours d'une journée pour les responsables des ressources humaines et les consultants en organisation",
+        "summary": "Une journée d'étude dans le cadre d'« Espace Metiv » sur les effets du traumatisme sur le lieu de travail et sur l'adaptation des procédures, des processus et des politiques.",
+        "description": "Dans ce cours, vous approfondirez votre compréhension du traumatisme et de ses effets sur les employés et les clients, et vous recevrez des outils pour conduire votre organisation à devenir adaptée au traumatisme.\n\nLa dernière session publiée a eu lieu le mardi 15 juillet 2025 (de 9 h 15 à 15 h 30, 300 ₪). Les dates des prochains cours seront publiées le moment venu.",
+        "formats": [
+          "En présentiel, une journée (6 heures)"
+        ],
+        "audience": [
+          "Responsables des ressources humaines",
+          "Consultants en organisation"
+        ],
+        "topics": [
+          "Une compréhension des manifestations du traumatisme dans l'environnement de travail",
+          "Des principes pour créer un environnement organisationnel adapté",
+          "Des outils pour adapter les procédures, les processus et les politiques",
+          "Des compétences pratiques d'autorégulation et de gestion des situations extrêmes",
+          "Des moyens d'ancrer le changement vers une organisation adaptée au traumatisme"
+        ],
+        "clientList": [],
+        "relatedCourseSlug": "trauma-informed-org-day",
+        "contact": {
+          "name": "Yonit Efrati",
+          "email": "yonit@metiv.org"
+        },
+        "sourceUrl": "https://metiv.org/בניית-ארגון-מותאם-טראומה/"
+      }
+    },
+    {
+      "_key": "custom-workshops",
+      "title": "Ateliers et formations sur mesure",
+      "sortOrder": 2,
+      "content": {
+        "_key": "custom-workshops",
+        "_col": "metiv-org-programs",
+        "slug": "custom-workshops",
+        "title": "Ateliers et formations sur mesure",
+        "summary": "Des ateliers et des conférences conçus selon les besoins de l'organisme demandeur, pour des professionnels, des employés qui rencontrent des personnes touchées par un traumatisme et des groupes ayant vécu des événements traumatiques.",
+        "description": "Nous proposons un large éventail d'ateliers et de conférences sur mesure pour des publics variés. Nous travaillons avec des professionnels de la santé mentale, des employés qui rencontrent des personnes touchées par un traumatisme, des groupes ayant vécu des événements traumatiques, ainsi qu'avec des écoles, des ministères, des entreprises privées, etc.\n\nNous vous invitons à nous consulter pour concevoir un atelier pour votre lieu de travail ou votre groupe de pairs.\n\n**Chaque programme est conçu selon les besoins de l'organisme demandeur, en s'adaptant au mieux aux conditions concrètes du lieu.**",
+        "formats": [
+          "Atelier",
+          "Conférence",
+          "Journée d'étude"
+        ],
+        "audience": [
+          "Professionnels de la santé mentale",
+          "Employés qui rencontrent des personnes touchées par un traumatisme",
+          "Groupes ayant vécu des événements traumatiques",
+          "Écoles",
+          "Ministères",
+          "Entreprises privées"
+        ],
+        "topics": [
+          "Faire face à un deuil sur le lieu de travail",
+          "Soutenir les aidants",
+          "Croissance post-traumatique pour les femmes en rémission d'un cancer du sein",
+          "Renforcer la résilience personnelle et professionnelle",
+          "Crise et traumatisme : une vue d'ensemble pour les responsables communautaires",
+          "La parentalité en période d'incertitude",
+          "Deuil et traumatisme dans l'enfance",
+          "La résilience pour les responsables de jeunesse",
+          "L'épuisement professionnel",
+          "L'intervention de crise",
+          "Faire face à une réalité de guerre",
+          "Le TSPT d'origine militaire",
+          "Les difficultés familiales dans une réalité de guerre"
+        ],
+        "clientList": [
+          "Yad Vashem, Mémorial de la Shoah et de l'héroïsme",
+          "Ministère de la Défense",
+          "Ministère des Finances",
+          "Bureau du Premier ministre",
+          "Ministère de la Santé",
+          "Bureau du Contrôleur de l'État",
+          "Police israélienne",
+          "Pompiers de Jérusalem",
+          "Magen David Adom",
+          "Caisse de maladie Clalit",
+          "Caisse de maladie Leumit",
+          "Hôpital Shaare Zedek",
+          "Hôpital Mazor",
+          "Kidoum Noar (services de soutien aux jeunes)",
+          "Beit Ham",
+          "Parquet du district de Tel-Aviv",
+          "Services sociaux de diverses municipalités",
+          "Conseil des psychologues",
+          "Équipes éducatives de la petite enfance dans tout le pays",
+          "Écoles de Nahariya",
+          "Écoles publiques de Biloxi, Mississippi",
+          "Rabbins communautaires",
+          "Association israélienne des auberges de jeunesse",
+          "Services de placement familial",
+          "Headspace",
+          "Service psychologique scolaire de Pardes Hanna",
+          "Service psychologique scolaire de Jérusalem",
+          "Netzah Yehuda",
+          "Société psychanalytique d'Israël",
+          "ERAN - Premiers secours émotionnels (1201)"
+        ],
+        "contact": {
+          "email": "shir@metiv.org"
+        },
+        "sourceUrl": "https://metiv.org/סדנאות-והכשרות-בהתאמה-אישית/"
+      }
+    },
+    {
+      "_key": "org-trainings",
+      "title": "Formations pour les organisations de soin",
+      "sortOrder": 3,
+      "content": {
+        "_key": "org-trainings",
+        "_col": "metiv-org-programs",
+        "slug": "org-trainings",
+        "title": "Formations pour les organisations de soin",
+        "subtitle": "Formation de thérapeutes du traumatisme pour les équipes",
+        "summary": "Une formation au traitement du traumatisme pour les équipes thérapeutiques des organisations, adaptée au domaine d'activité de l'organisation.",
+        "description": "La formation apporte à l'équipe thérapeutique des connaissances actuelles, une expérience clinique, des outils applicables et une compréhension des processus thérapeutiques centrés sur le traumatisme.\n\n## Ce que l'organisation y gagne\n\n- Des connaissances professionnelles approfondies\n- Des outils pratiques pour le travail de terrain\n- Un langage thérapeutique commun\n- Une adaptation au domaine d'activité de votre organisation",
+        "formats": [
+          "Cours pour l'équipe de l'organisation",
+          "« La feuille de route » pour les organismes publics et les associations"
+        ],
+        "audience": [
+          "Thérapeutes ayant une expérience du traumatisme",
+          "Thérapeutes sans expérience préalable souhaitant acquérir des outils dans ce domaine",
+          "Équipes pluridisciplinaires qui accompagnent des personnes touchées par un traumatisme"
+        ],
+        "clientList": [
+          "Ministère de l'Éducation - district Nord",
+          "Association Misholim",
+          "Institut Feuerstein",
+          "Enosh",
+          "Kidoum Noar (services de soutien aux jeunes)"
+        ],
+        "relatedCourseSlug": "org-therapist-training",
+        "contact": {
+          "email": "shir@metiv.org"
+        },
+        "sourceUrl": "https://metiv.org/הכשרות-לארגונים/"
+      }
+    }
+  ]
+}

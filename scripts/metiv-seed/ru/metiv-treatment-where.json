@@ -1,0 +1,20 @@
+{
+  "key": "TREATMENT_WHERE_BLOCK",
+  "slug": "metiv-treatment-where",
+  "kind": "single",
+  "rows": [
+    {
+      "_key": "TREATMENT_WHERE_BLOCK",
+      "title": "TREATMENT_WHERE_BLOCK",
+      "sortOrder": 0,
+      "content": {
+        "_key": "TREATMENT_WHERE_BLOCK",
+        "_col": "metiv-treatment-where",
+        "title": "Где можно получить терапию",
+        "text": "Список учреждений, где можно получить терапию: больничные кассы, центры жизнестойкости, Отдел реабилитации, некоммерческие организации и клиники Метива, с контактами для обращения в каждое из них.",
+        "linkLabel": "К списку учреждений",
+        "route": "/patient/where-to-get-help"
+      }
+    }
+  ]
+}

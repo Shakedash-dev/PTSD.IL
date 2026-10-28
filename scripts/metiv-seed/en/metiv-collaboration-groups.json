@@ -1,0 +1,92 @@
+{
+  "key": "COLLABORATION_GROUPS",
+  "slug": "metiv-collaboration-groups",
+  "kind": "list",
+  "rows": [
+    {
+      "_key": "academic",
+      "title": "Academia and Research",
+      "sortOrder": 0,
+      "content": {
+        "_key": "academic",
+        "_col": "metiv-collaboration-groups",
+        "key": "academic",
+        "title": "Academia and Research",
+        "intro": "Institutions and researchers Metiv has worked with in research, program evaluation and teaching.",
+        "icon": "Microscope",
+        "partners": [
+          {
+            "name": "The Hebrew University of Jerusalem",
+            "role": "Partner in the international summer course (Rothberg International School)"
+          },
+          {
+            "name": "Al-Quds University",
+            "role": "Partner in the CHERISH program"
+          },
+          {
+            "name": "Mount Sinai Hospital, New York",
+            "role": "Research collaboration with Prof. Claude Chemtob"
+          },
+          {
+            "name": "Columbia University",
+            "role": "Research collaboration with George Bonanno"
+          },
+          {
+            "name": "Centers for Disease Control and Prevention (CDC), Atlanta",
+            "role": "Partner in evaluating the resilience program for schools (2011-2012)"
+          }
+        ]
+      }
+    },
+    {
+      "_key": "professional",
+      "title": "Professional Organizations and Coalitions",
+      "sortOrder": 1,
+      "content": {
+        "_key": "professional",
+        "_col": "metiv-collaboration-groups",
+        "key": "professional",
+        "title": "Professional Organizations and Coalitions",
+        "intro": "Joint work with organizations in the field of trauma and therapy.",
+        "icon": "Network",
+        "partners": [
+          {
+            "name": "The Israel Trauma Coalition",
+            "role": "Metiv initiated its founding in 2001, with the support of the UJA-Federation of New York. Seven other trauma care organizations joined it, and it is now an independent organization."
+          },
+          {
+            "name": "YAHAT (Israeli Association of Creative and Expressive Therapies)",
+            "role": "A PANDA course for creative arts therapists as part of its training programs"
+          }
+        ]
+      }
+    },
+    {
+      "_key": "responders",
+      "title": "First Responders",
+      "sortOrder": 2,
+      "content": {
+        "_key": "responders",
+        "_col": "metiv-collaboration-groups",
+        "key": "responders",
+        "title": "First Responders",
+        "intro": "Organizations Metiv has worked with over the years.",
+        "icon": "Siren",
+        "partners": [
+          {
+            "name": "Magen David Adom",
+            "role": "Work with the organization's teams."
+          },
+          {
+            "name": "Israel Police",
+            "role": "Work with the organization's teams."
+          },
+          {
+            "name": "Israel Fire and Rescue Authority",
+            "role": "Work with the organization's teams."
+          }
+        ]
+      }
+    }
+  ]
+}

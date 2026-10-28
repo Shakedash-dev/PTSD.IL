@@ -1,0 +1,72 @@
+{
+  "key": "FACTS",
+  "slug": "metiv-facts",
+  "kind": "list",
+  "rows": [
+    {
+      "_key": "metiv-facts-0",
+      "title": "سنة التأسيس",
+      "sortOrder": 0,
+      "content": {
+        "_key": "metiv-facts-0",
+        "_col": "metiv-facts",
+        "value": "1989",
+        "label": "سنة التأسيس",
+        "source": "עמוד אודות",
+        "sourceUrl": "https://metiv.org/אודות/"
+      }
+    },
+    {
+      "_key": "metiv-facts-1",
+      "title": "معالجون تأهّلوا في أنحاء البلاد",
+      "sortOrder": 1,
+      "content": {
+        "_key": "metiv-facts-1",
+        "_col": "metiv-facts",
+        "value": "+2,000",
+        "label": "معالجون تأهّلوا في أنحاء البلاد",
+        "source": "דף הבית ועמוד ההכשרות",
+        "sourceUrl": "https://metiv.org/"
+      }
+    },
+    {
+      "_key": "metiv-facts-2",
+      "title": "معلمون تأهّلوا في برنامج المناعة النفسية الوطني للمدارس",
+      "sortOrder": 2,
+      "content": {
+        "_key": "metiv-facts-2",
+        "_col": "metiv-facts",
+        "value": "+5,000",
+        "label": "معلمون تأهّلوا في برنامج المناعة النفسية الوطني للمدارس",
+        "source": "עמוד אודות",
+        "sourceUrl": "https://metiv.org/אודות/"
+      }
+    },
+    {
+      "_key": "metiv-facts-3",
+      "title": "متعالجون سنويًا في عيادة البالغين",
+      "sortOrder": 3,
+      "content": {
+        "_key": "metiv-facts-3",
+        "_col": "metiv-facts",
+        "value": "~300",
+        "label": "متعالجون سنويًا في عيادة البالغين",
+        "source": "עמוד מרפאת המבוגרים",
+        "sourceUrl": "https://metiv.org/מרפאת-מבוגרים/"
+      }
+    },
+    {
+      "_key": "metiv-facts-4",
+      "title": "معالجون في طاقم عيادة البالغين",
+      "sortOrder": 4,
+      "content": {
+        "_key": "metiv-facts-4",
+        "_col": "metiv-facts",
+        "value": "~20",
+        "label": "معالجون في طاقم عيادة البالغين",
+        "source": "עמוד מרפאת המבוגרים",
+        "sourceUrl": "https://metiv.org/מרפאת-מבוגרים/"
+      }
+    }
+  ]
+}

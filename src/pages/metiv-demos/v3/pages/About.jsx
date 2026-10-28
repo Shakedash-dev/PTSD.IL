@@ -1,55 +1,55 @@
 import React from 'react';
 import { DemoLink } from '@/pages/metiv-demos/shared/DemoChrome';
 import { ROUTES } from '@/pages/metiv-demos/shared/routes';
-import { NamedIcon } from '@/pages/metiv-demos/shared/patient/components';
-import { ORG } from '@/pages/metiv-demos/shared/therapist';
 import PageHeaderV3 from '../components/PageHeaderV3';
+import { useCopy, useMetiv } from '../content/MetivContent';
 import { SUPPORTER_IMG } from '../images';
-import { ALL_ROUTES, ROUTE_META } from '../meta';
-import { DEPARTMENT_GROUPS } from '../data/aboutMetiv';
+import { ALL_ROUTES } from '../meta';
 import { AboutTabs, LinkChips } from '../components/AboutParts';
-import { Band, CHIP_LINK, ContactChips, LinkCard, PILL_OUTLINE, SectionHeading } from '../components/kit';
+import { Band, CHIP_LINK, ContactChips, LinkCard, NamedIcon, PILL_OUTLINE, SectionHeading } from '../components/kit';
 
 // "על מטיב": opens with the services and departments the organisation is built
 // from (owner feedback: that is what a visitor needs first), and leads to the
 // sub-pages: the story, the team, partners and collaborations.
 
+// Descriptions are copy: `about.more<Key>` (moreAboutHistory, ...).
 const MORE = [
-  { key: 'aboutHistory', icon: 'BookOpen', description: 'איך מטיב התחיל, ציוני דרך, ומה הוא עושה היום.' },
-  { key: 'aboutTeam', icon: 'Users', description: 'האנשים שעובדים במטיב, לפי מחלקה.' },
-  { key: 'aboutPartners', icon: 'Landmark', description: 'גופים ציבוריים, קרנות ותורמים שמחוברים לשירותים של מטיב.' },
-  { key: 'aboutCollaborations', icon: 'Network', description: 'עבודה משותפת עם אקדמיה, ארגונים מקצועיים וקהילות.' },
+  { key: 'aboutHistory', icon: 'BookOpen' },
+  { key: 'aboutTeam', icon: 'Users' },
+  { key: 'aboutPartners', icon: 'Landmark' },
+  { key: 'aboutCollaborations', icon: 'Network' },
 ];
 
 const BANDS = /** @type {const} */ (['canvas', 'card']);
 
 export default function About() {
+  const c = useCopy('about');
+  const { DEPARTMENT_GROUPS, ORG, ROUTE_META } = useMetiv();
+  /** @type {import('../components/AboutParts').DepartmentGroup[]} */
+  const groups = DEPARTMENT_GROUPS ?? [];
   return (
     <div className="bg-background">
       <PageHeaderV3
         tone="muted"
         size="editorial"
-        eyebrow="על מטיב"
-        title="ממה מטיב בנוי, ולמי פונים"
+        eyebrow={ROUTE_META.about?.label}
+        title={c.title}
         subtitle={ORG.vision}
         illustration={SUPPORTER_IMG}
-        short={[
-          'כל מחלקה: למי היא מיועדת, מה היא עושה ואיך פונים.',
-          'בלשוניות: הסיפור של מטיב, הצוות, השותפים ושיתופי הפעולה.',
-        ]}
+        short={[c.short1, c.short2]}
       />
       <AboutTabs />
 
       <Band tone="card" padding="py-6" labelledBy="about-jump">
-        <h2 id="about-jump" className="sr-only">קפיצה למחלקה</h2>
+        <h2 id="about-jump" className="sr-only">{c.jump}</h2>
         <ul className="flex flex-wrap gap-2">
-          {DEPARTMENT_GROUPS.flatMap((g) => g.departments).map((d) => (
+          {groups.flatMap((g) => g.departments).map((d) => (
             <li key={d.key}><a href={`#dept-${d.key}`} className={CHIP_LINK}>{d.title}</a></li>
           ))}
         </ul>
       </Band>
 
-      {DEPARTMENT_GROUPS.map((g, i) => (
+      {groups.map((g, i) => (
         <Band key={g.key} tone={BANDS[i % 2]} padding="py-12 sm:py-16" labelledBy={`about-${g.key}`}>
           <SectionHeading id={`about-${g.key}`} title={g.title} intro={g.intro} />
           <ul className="grid gap-5 md:grid-cols-2">
@@ -63,17 +63,17 @@ export default function About() {
                 </div>
                 <dl className="space-y-3">
                   <div>
-                    <dt className="text-xs font-semibold text-accent mb-0.5">למי</dt>
+                    <dt className="text-xs font-semibold text-accent mb-0.5">{c.forWhom}</dt>
                     <dd className="text-foreground leading-relaxed">{d.forWhom}</dd>
                   </div>
                   <div>
-                    <dt className="text-xs font-semibold text-accent mb-0.5">מה</dt>
+                    <dt className="text-xs font-semibold text-accent mb-0.5">{c.what}</dt>
                     <dd className="text-foreground leading-relaxed">{d.what}</dd>
                   </div>
                 </dl>
                 {d.note && <p className="rounded-super-sm bg-muted p-3 text-sm text-foreground leading-relaxed">{d.note}</p>}
                 <div className="mt-auto space-y-3 border-t border-border pt-4">
-                  <p className="text-xs font-semibold text-muted-foreground">איך פונים</p>
+                  <p className="text-xs font-semibold text-muted-foreground">{c.howToContact}</p>
                   <ContactChips contact={d.contact} />
                   <LinkChips links={d.links} />
                 </div>
@@ -84,17 +84,17 @@ export default function About() {
       ))}
 
       <Band tone="muted" labelledBy="about-more">
-        <SectionHeading id="about-more" eyebrow="עוד על מטיב" title="להכיר את הארגון" />
+        <SectionHeading id="about-more" eyebrow={c.moreEyebrow} title={c.moreTitle} />
         <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {MORE.map((m) => (
             <li key={m.key}>
-              <LinkCard to={ALL_ROUTES[m.key]} title={ROUTE_META[m.key].label} description={m.description} icon={<NamedIcon name={m.icon} className="w-6 h-6" />} />
+              <LinkCard to={ALL_ROUTES[m.key]} title={ROUTE_META[m.key]?.label} description={c[`more${m.key[0].toUpperCase()}${m.key.slice(1)}`]} icon={<NamedIcon name={m.icon} className="w-6 h-6" />} />
             </li>
           ))}
         </ul>
         <div className="mt-8 flex flex-wrap items-center gap-3">
-          <p className="text-foreground">לא בטוחים למי לפנות?</p>
-          <DemoLink to={ROUTES.contact} className={PILL_OUTLINE}>יצירת קשר עם מטיב</DemoLink>
+          <p className="text-foreground">{c.notSure}</p>
+          <DemoLink to={ROUTES.contact} className={PILL_OUTLINE}>{c.contact}</DemoLink>
         </div>
       </Band>
     </div>

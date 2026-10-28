@@ -1,0 +1,146 @@
+{
+  "key": "NEXT_STEPS",
+  "slug": "metiv-next-steps",
+  "kind": "single",
+  "rows": [
+    {
+      "_key": "NEXT_STEPS",
+      "title": "NEXT_STEPS",
+      "sortOrder": 0,
+      "content": {
+        "_key": "NEXT_STEPS",
+        "_col": "metiv-next-steps",
+        "firstCircle": [
+          {
+            "label": "إلى الاستبيان مجهول الهوية",
+            "to": "/patient/questionnaire"
+          },
+          {
+            "label": "أين نحصل على العلاج",
+            "to": "/patient/where-to-get-help"
+          }
+        ],
+        "secondCircle": [
+          {
+            "label": "أدوات لأفراد العائلة",
+            "to": "/patient/second-circle-tools"
+          },
+          {
+            "label": "التحدّث مع الأطفال",
+            "to": "/patient/children"
+          }
+        ],
+        "secondCircleTools": [
+          {
+            "label": "مجتمعات الدعم",
+            "to": "/patient/community"
+          },
+          {
+            "label": "أين نحصل على العلاج",
+            "to": "/patient/where-to-get-help"
+          }
+        ],
+        "questionnaire": [
+          {
+            "label": "ما هو اضطراب ما بعد الصدمة",
+            "to": "/patient/ptsd-info"
+          },
+          {
+            "label": "أين نحصل على العلاج",
+            "to": "/patient/where-to-get-help"
+          }
+        ],
+        "ptsdInfo": [
+          {
+            "label": "المساعدة الذاتية",
+            "to": "/patient/self-help"
+          },
+          {
+            "label": "الرحلة العلاجية",
+            "to": "/patient/treatment"
+          }
+        ],
+        "selfHelp": [
+          {
+            "label": "تمارين التهدئة",
+            "to": "/patient/calming"
+          },
+          {
+            "label": "مجتمعات الدعم",
+            "to": "/patient/community"
+          }
+        ],
+        "treatment": [
+          {
+            "label": "أين نحصل على العلاج",
+            "to": "/patient/where-to-get-help"
+          },
+          {
+            "label": "الحقوق",
+            "to": "/patient/rights"
+          }
+        ],
+        "whereToGetHelp": [
+          {
+            "label": "علاجات دون تكلفة وأبحاث",
+            "to": "/patient/free-treatment-and-research"
+          },
+          {
+            "label": "الحقوق",
+            "to": "/patient/rights"
+          }
+        ],
+        "freeTreatment": [
+          {
+            "label": "أين نحصل على العلاج",
+            "to": "/patient/where-to-get-help"
+          },
+          {
+            "label": "الحقوق",
+            "to": "/patient/rights"
+          }
+        ],
+        "rights": [
+          {
+            "label": "علاجات دون تكلفة وأبحاث",
+            "to": "/patient/free-treatment-and-research"
+          },
+          {
+            "label": "الرحلة العلاجية",
+            "to": "/patient/treatment"
+          }
+        ],
+        "community": [
+          {
+            "label": "التحدّث مع الأطفال",
+            "to": "/patient/children"
+          },
+          {
+            "label": "المساعدة الذاتية",
+            "to": "/patient/self-help"
+          }
+        ],
+        "children": [
+          {
+            "label": "أدوات لأفراد العائلة",
+            "to": "/patient/second-circle-tools"
+          },
+          {
+            "label": "مجتمعات الدعم",
+            "to": "/patient/community"
+          }
+        ],
+        "sources": [
+          {
+            "label": "ما هو اضطراب ما بعد الصدمة",
+            "to": "/patient/ptsd-info"
+          },
+          {
+            "label": "العودة إلى جميع المواضيع",
+            "to": "/patient"
+          }
+        ]
+      }
+    }
+  ]
+}

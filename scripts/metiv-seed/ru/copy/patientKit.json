@@ -1,0 +1,13 @@
+{
+  "_area": "patient",
+  "_label": "רכיבים משותפים באזור המטופלים",
+  "fieldWho": "Для кого",
+  "fieldAges": "Возраст",
+  "fieldWhat": "Что включает",
+  "fieldLocation": "Место",
+  "fieldCost": "Стоимость и финансирование",
+  "fieldProcess": "Как обратиться и что происходит потом",
+  "contactHeading": "Контакты",
+  "consultationPhoneLabel": "Метив",
+  "releaseJourneyPageLink": "На страницу Peace of Mind"
+}

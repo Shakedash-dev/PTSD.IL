@@ -7,7 +7,69 @@
 // preview branch is compiled out (see the guard in src/lib/adminPreview.js).
 //
 // Deliberately NOT real content: this is scaffolding to design against, and it
-// should be obvious in the UI that it is not the live database.
+// should be obvious in the UI that it is not the live database. The one
+// exception is the Metiv variant (/metiv-site-demo-v3/admin), which shows the
+// Hebrew seed (scripts/metiv-seed/he, copy) - the same rows the DB is seeded
+// with, since a schema-less editor is only worth designing against real shapes.
+// The chatbot Q&A panel (both variants) likewise shows the Hebrew Q&A seed
+// (scripts/metiv-seed/chatbot-qa/he.json).
+
+import { COLLECTIONS, COPY_SLUG, METIV_PARENT_SLUG } from '@/pages/metiv-demos/v3/content/registry';
+
+const METIV_SEED = import.meta.glob('../../scripts/metiv-seed/he/*.json', { eager: true, import: 'default' });
+const METIV_COPY = import.meta.glob('../../scripts/metiv-seed/copy/*.json', { eager: true, import: 'default' });
+const QA_SEED = import.meta.glob('../../scripts/metiv-seed/chatbot-qa/he.json', { eager: true, import: 'default' });
+
+const METIV_PARENT = { id: 'cat-metiv', slug: METIV_PARENT_SLUG, name: 'מטיב', parentId: null };
+const METIV_CHILDREN = [...COLLECTIONS.map(c => ({ slug: c.slug, name: c.label })), { slug: COPY_SLUG, name: 'טקסטים בעמודים' }]
+  .map(c => ({ id: `cat-${c.slug}`, slug: c.slug, name: c.name, parentId: METIV_PARENT.id }));
+
+/** The Hebrew seed as GET /admin/articles rows, each with both its categories. */
+function metivRows() {
+  const rows = [];
+  const push = (slug, key, title, sortOrder, content) => rows.push({
+    id: `m-${slug}-${key}`,
+    groupId: `grp-m-${slug}-${key}`,
+    langId: 'he',
+    type: 'article',
+    title,
+    content: JSON.stringify(content),
+    sortOrder,
+    isPublished: true,
+    categories: [METIV_PARENT, { id: `cat-${slug}`, slug, parentId: METIV_PARENT.id }],
+    audiences: [],
+    ageGroups: [],
+  });
+  for (const file of Object.values(METIV_SEED)) {
+    const { slug, rows: items } = /** @type {any} */ (file);
+    for (const r of items) push(slug, r._key, r.title, r.sortOrder, r.content);
+  }
+  for (const [path, file] of Object.entries(METIV_COPY)) {
+    const ns = path.split('/').pop().replace(/\.json$/, '');
+    push(COPY_SLUG, ns, ns, 0, { _key: ns, _col: COPY_SLUG, .../** @type {any} */ (file) });
+  }
+  return rows;
+}
+
+const QA_CATEGORY = { id: 'cat-chatbot-qa', slug: 'chatbot-qa', name: 'צ׳אטבוט: שאלות ותשובות מוכנות', parentId: null };
+
+/** The Hebrew Q&A seed as GET /admin/articles rows: one category, chatbot-qa. */
+function qaRows() {
+  const items = /** @type {any[]} */ (Object.values(QA_SEED)[0] ?? []);
+  return items.map((q, i) => ({
+    id: `qa-${q._key}`,
+    groupId: `grp-qa-${q._key}`,
+    langId: 'he',
+    type: 'article',
+    title: q.question,
+    content: JSON.stringify(q),
+    sortOrder: i,
+    isPublished: true,
+    categories: [QA_CATEGORY],
+    audiences: [],
+    ageGroups: [],
+  }));
+}
 
 const CATEGORIES = [
   { id: 'cat-ptsd-info', slug: 'ptsd-info', name: 'מידע על PTSD', children: [] },
@@ -18,6 +80,8 @@ const CATEGORIES = [
   { id: 'cat-children', slug: 'children', name: 'ילדים', children: [] },
   { id: 'cat-second-circle', slug: 'second-circle', name: 'מעגל שני', children: [] },
   { id: 'cat-admin-log', slug: 'admin-log', name: 'יומן עריכות', children: [] },
+  { ...METIV_PARENT, children: METIV_CHILDREN },
+  { ...QA_CATEGORY, children: [] },
 ];
 
 const AUDIENCES = [
@@ -77,6 +141,8 @@ const ARTICLES = [
       { section: 'מקורות', action: 'delete', title: 'מקור ישן לדוגמה', fields: [] },
     ],
   }, 0), isPublished: false },
+  ...metivRows(),
+  ...qaRows(),
 ];
 
 const COMMUNITIES = [
@@ -125,7 +191,10 @@ export function previewGet(path) {
   const [base, query = ''] = path.split('?');
   const params = new URLSearchParams(query);
 
-  if (base === '/categories') return CATEGORIES;
+  if (base === '/categories') {
+    const parentId = params.get('parentId');
+    return parentId ? CATEGORIES.find(c => c.id === parentId)?.children ?? [] : CATEGORIES;
+  }
   if (base === '/audiences') return AUDIENCES;
   if (base === '/age-groups') return AGE_GROUPS;
   if (base === '/communities') return COMMUNITIES;
@@ -145,4 +214,21 @@ export function previewGet(path) {
     );
   }
   return undefined;
+}
+
+/**
+ * A stand-in for the chatbot worker's POST /translate, so the translation flow
+ * can be seen locally: every text comes back prefixed with its language. French
+ * answers "flagged" so the warning state is visible too.
+ * @param {{ target: string, items: Record<string, string> }} body
+ */
+export async function previewTranslate({ target, items }) {
+  await new Promise(r => setTimeout(r, 400));
+  const flagged = target === 'fr';
+  return {
+    items: Object.fromEntries(Object.entries(items).map(([k, v]) => [k, `[${target}] ${v}`])),
+    status: /** @type {'flagged'|'pass'} */ (flagged ? 'flagged' : 'pass'),
+    notes: flagged ? ['תצוגה מקדימה: דוגמה לתרגום שסומן לבדיקה'] : [],
+    model: 'preview',
+  };
 }

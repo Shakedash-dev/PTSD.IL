@@ -1,0 +1,22 @@
+{
+  "key": "CONSULTATION",
+  "slug": "metiv-consultation",
+  "kind": "single",
+  "rows": [
+    {
+      "_key": "CONSULTATION",
+      "title": "CONSULTATION",
+      "sortOrder": 0,
+      "content": {
+        "_key": "CONSULTATION",
+        "_col": "metiv-consultation",
+        "id": "consultation",
+        "title": "Сомневаетесь, стоит ли обращаться?",
+        "text": "Не знаете, стоит ли обращаться за терапией и когда? Вы можете позвонить в Метив и проконсультироваться о возможностях.",
+        "phone": "02-6449666",
+        "route": "/patient/where-to-get-help#consultation",
+        "linkLabel": "Консультация в Метиве"
+      }
+    }
+  ]
+}

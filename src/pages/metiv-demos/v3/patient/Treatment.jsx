@@ -3,9 +3,10 @@ import { Link } from 'react-router-dom';
 import { useLang } from '@/lib/LanguageContext';
 import { t } from '@/lib/i18n';
 import { useTreatmentSteps } from '@/api/hooks';
-import { Wrench, Building2, Brain, Leaf, Pill, ExternalLink, ChevronDown, MapPin, ArrowLeft } from 'lucide-react';
+import { Wrench, Building2, Brain, Leaf, Pill, ExternalLink, ChevronDown, MapPin, ArrowLeft, ArrowRight } from 'lucide-react';
+import useDirection from '@/lib/useDirection';
 import { DemoLink } from '@/pages/metiv-demos/shared/DemoChrome';
-import { TREATMENT_WHERE_BLOCK } from '@/pages/metiv-demos/shared/patient/additions';
+import { useCopy, useMetiv } from '../content/MetivContent';
 import { VersionLinks } from './PtsdIlRouting';
 
 // Metiv demo (V3): a copy of src/pages/Treatment.jsx. Changes only: the approved
@@ -253,6 +254,10 @@ function TrailMarkers({ stepCount }) {
 
 export default function Treatment() {
   const { lang } = useLang();
+  const { TREATMENT_WHERE_BLOCK } = useMetiv();
+  const c = useCopy('patientTreatment');
+  const { isRTL } = useDirection();
+  const ArrowIcon = isRTL ? ArrowLeft : ArrowRight;
   const stepImages = TREATMENT_STEP_IMAGES;
   const { data: steps = [], isLoading, error } = useTreatmentSteps({ lang });
   const [hovered, setHovered] = useState(false);
@@ -265,7 +270,7 @@ export default function Treatment() {
     <div className="bg-background">
       {/* ── Hero ── */}
       <section className="min-h-[calc(100vh-4rem)] w-full bg-sanctuary text-sanctuary-foreground flex flex-col items-center justify-center px-5 py-24 relative">
-        <ValidatableContent contentId="treatment.hero" label="כותרת דף טיפולים">
+        <ValidatableContent contentId="treatment.hero" label={c.validateHero}>
         <div className="max-w-3xl mx-auto text-center">
           <span className="font-heading font-semibold text-sm tracking-[0.2em] opacity-70 mb-6 block">
             {t(lang, 'treatment')}
@@ -362,7 +367,7 @@ export default function Treatment() {
               className="px-5 py-2.5 bg-primary text-primary-foreground rounded-xl text-sm font-medium hover:bg-accent transition-natural flex-shrink-0 inline-flex items-center gap-1"
             >
               {TREATMENT_WHERE_BLOCK.linkLabel}
-              <ArrowLeft className="w-4 h-4" />
+              <ArrowIcon className="w-4 h-4" />
             </DemoLink>
           </section>
         </div>

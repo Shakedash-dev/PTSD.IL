@@ -1,0 +1,472 @@
+{
+  "key": "EVENTS",
+  "slug": "metiv-events",
+  "kind": "list",
+  "rows": [
+    {
+      "_key": "cbt-trauma-2026",
+      "title": "Ouverture d'une session de la formation à la TCC du traumatisme",
+      "sortOrder": 0,
+      "content": {
+        "_key": "cbt-trauma-2026",
+        "_col": "metiv-events",
+        "slug": "cbt-trauma-2026",
+        "title": "Ouverture d'une session de la formation à la TCC du traumatisme",
+        "date": "14.10.2026",
+        "dateISO": "2026-10-14",
+        "type": "Session de cours",
+        "summary": "Ouverture du programme de deux ans en thérapie cognitivo-comportementale du traumatisme, le lundi de 13 h à 17 h 30.",
+        "location": "Centre Metiv, Givat Shaul, Jérusalem",
+        "price": "10 350 ₪ par an",
+        "link": "/therapist/courses/cbt-trauma",
+        "external": false,
+        "courseSlug": "cbt-trauma",
+        "isPast": false,
+        "sourceUrl": "https://metiv.org/קורס-cbt-לטראומה/"
+      }
+    },
+    {
+      "_key": "roadmap-2026-10",
+      "title": "La feuille de route du traitement du traumatisme - session en présentiel",
+      "sortOrder": 1,
+      "content": {
+        "_key": "roadmap-2026-10",
+        "_col": "metiv-events",
+        "slug": "roadmap-2026-10",
+        "title": "La feuille de route du traitement du traumatisme - session en présentiel",
+        "date": "29.10.2026",
+        "dateISO": "2026-10-29",
+        "type": "Session de cours",
+        "summary": "Quatre séances : 29 octobre et 5, 12, 19 novembre 2026, de 9 h à 15 h.",
+        "location": "Centre Metiv, Centre médical Herzog, Jérusalem",
+        "price": "1,700 ₪",
+        "link": "/therapist/courses/roadmap",
+        "external": false,
+        "courseSlug": "roadmap",
+        "isPast": false,
+        "sourceUrl": "https://metiv.org/יסודות-הטיפול-בטראומה/"
+      }
+    },
+    {
+      "_key": "summer-course-2026",
+      "title": "Cours d'été international : Trauma & Resilience",
+      "sortOrder": 2,
+      "content": {
+        "_key": "summer-course-2026",
+        "_col": "metiv-events",
+        "slug": "summer-course-2026",
+        "title": "Cours d'été international : Trauma & Resilience",
+        "date": "Du 28 juin au 9 juillet 2026, formation clinique du 12 au 16 juillet 2026",
+        "dateISO": "2026-06-28",
+        "type": "Session de cours",
+        "summary": "Un cours en anglais en partenariat avec l'Université hébraïque, avec une troisième semaine optionnelle de formation clinique.",
+        "location": "École internationale Rothberg, mont Scopus",
+        "link": "/therapist/courses/summer-course",
+        "external": false,
+        "courseSlug": "summer-course",
+        "isPast": true,
+        "sourceUrl": "https://metiv.org/en/international-summer-course/"
+      }
+    },
+    {
+      "_key": "skills-day-2026-04",
+      "title": "Journée de pratique des compétences en traitement du traumatisme",
+      "sortOrder": 3,
+      "content": {
+        "_key": "skills-day-2026-04",
+        "_col": "metiv-events",
+        "slug": "skills-day-2026-04",
+        "title": "Journée de pratique des compétences en traitement du traumatisme",
+        "date": "16.4.2026",
+        "dateISO": "2026-04-16",
+        "type": "Atelier",
+        "summary": "Une journée de pratique pour les diplômés du cours « La feuille de route », de 9 h à 15 h.",
+        "location": "Centre Metiv, Centre médical Herzog, Jérusalem",
+        "price": "500 ₪",
+        "link": "/therapist/courses/skills-day",
+        "external": false,
+        "courseSlug": "skills-day",
+        "isPast": true,
+        "sourceUrl": "https://metiv.org/תרגול-מיומנויות/"
+      }
+    },
+    {
+      "_key": "complex-trauma-2026-03",
+      "title": "Les fondements du traitement du traumatisme complexe",
+      "sortOrder": 4,
+      "content": {
+        "_key": "complex-trauma-2026-03",
+        "_col": "metiv-events",
+        "slug": "complex-trauma-2026-03",
+        "title": "Les fondements du traitement du traumatisme complexe",
+        "date": "5.3.2026",
+        "dateISO": "2026-03-05",
+        "type": "Session de cours",
+        "summary": "Six séances le jeudi, du 5 au 26 mars et les 16 et 23 avril 2026.",
+        "location": "Centre Metiv, Centre médical Herzog, Jérusalem",
+        "price": "2,500 ₪",
+        "link": "/therapist/courses/complex-trauma",
+        "external": false,
+        "courseSlug": "complex-trauma",
+        "isPast": true,
+        "sourceUrl": "https://metiv.org/טראומה-מורכבת-קורס/"
+      }
+    },
+    {
+      "_key": "roadmap-2026-01-zoom",
+      "title": "La feuille de route du traitement du traumatisme - session sur Zoom",
+      "sortOrder": 5,
+      "content": {
+        "_key": "roadmap-2026-01-zoom",
+        "_col": "metiv-events",
+        "slug": "roadmap-2026-01-zoom",
+        "title": "La feuille de route du traitement du traumatisme - session sur Zoom",
+        "date": "1.1.2026",
+        "dateISO": "2026-01-01",
+        "type": "Session de cours",
+        "summary": "Quatre séances sur Zoom : 1er, 8, 15 et 22 janvier 2026.",
+        "location": "Zoom",
+        "price": "1,700 ₪",
+        "link": "/therapist/courses/roadmap",
+        "external": false,
+        "courseSlug": "roadmap",
+        "isPast": true,
+        "sourceUrl": "https://metiv.org/קורס-מפת-הדרכים-zoom/"
+      }
+    },
+    {
+      "_key": "trauma-informed-org-2025-07",
+      "title": "Cours d'une journée : construire une organisation adaptée au traumatisme",
+      "sortOrder": 6,
+      "content": {
+        "_key": "trauma-informed-org-2025-07",
+        "_col": "metiv-events",
+        "slug": "trauma-informed-org-2025-07",
+        "title": "Cours d'une journée : construire une organisation adaptée au traumatisme",
+        "date": "15.7.2025",
+        "dateISO": "2025-07-15",
+        "type": "Atelier",
+        "summary": "Une journée d'étude pour les responsables des ressources humaines et les consultants en organisation, dans le cadre d'« Espace Metiv ».",
+        "location": "8, rue Eliezer Kaplan, société fiverr",
+        "price": "300 ₪",
+        "link": "/therapist/courses/trauma-informed-org-day",
+        "external": false,
+        "courseSlug": "trauma-informed-org-day",
+        "isPast": true,
+        "sourceUrl": "https://metiv.org/בניית-ארגון-מותאם-טראומה/"
+      }
+    },
+    {
+      "_key": "kaleidoscope-narrative-work",
+      "title": "Kaléidoscope : le travail narratif avec le TSPT",
+      "sortOrder": 7,
+      "content": {
+        "_key": "kaleidoscope-narrative-work",
+        "_col": "metiv-events",
+        "slug": "kaleidoscope-narrative-work",
+        "title": "Kaléidoscope : le travail narratif avec le TSPT",
+        "date": "6.7.2025",
+        "dateISO": "2025-07-06",
+        "type": "Atelier",
+        "summary": "Un module animé par la Dr Michal Simchon, de 9 h à 16 h.",
+        "link": "/therapist/courses/kaleidoscope",
+        "external": false,
+        "courseSlug": "kaleidoscope",
+        "isPast": true,
+        "sourceUrl": "https://metiv.org/jet-popup/קליידוסקופ-טיפול-בפגיעות-מיניות-2/"
+      }
+    },
+    {
+      "_key": "kaleidoscope-birth-stories",
+      "title": "Kaléidoscope : accouchements - « Récits de naissance »",
+      "sortOrder": 8,
+      "content": {
+        "_key": "kaleidoscope-birth-stories",
+        "_col": "metiv-events",
+        "slug": "kaleidoscope-birth-stories",
+        "title": "Kaléidoscope : accouchements - « Récits de naissance »",
+        "date": "22.6.2025",
+        "dateISO": "2025-06-22",
+        "type": "Atelier",
+        "summary": "Un module sur l'accompagnement thérapeutique des jeunes mères et le travail sur les expériences d'accouchement, de 16 h à 21 h, au centre Metiv.",
+        "link": "/therapist/courses/kaleidoscope",
+        "external": false,
+        "courseSlug": "kaleidoscope",
+        "isPast": true,
+        "sourceUrl": "https://metiv.org/jet-popup/קליידוסקופ-לידות-בידיים-מלאות/"
+      }
+    },
+    {
+      "_key": "kaleidoscope-sexual-trauma",
+      "title": "Kaléidoscope : le traitement des violences sexuelles",
+      "sortOrder": 9,
+      "content": {
+        "_key": "kaleidoscope-sexual-trauma",
+        "_col": "metiv-events",
+        "slug": "kaleidoscope-sexual-trauma",
+        "title": "Kaléidoscope : le traitement des violences sexuelles",
+        "date": "12.6.2025",
+        "dateISO": "2025-06-12",
+        "type": "Atelier",
+        "summary": "Un module animé par Michal Zmora, de 17 h à 21 h, chez Metiv.",
+        "link": "/therapist/courses/kaleidoscope",
+        "external": false,
+        "courseSlug": "kaleidoscope",
+        "isPast": true,
+        "sourceUrl": "https://metiv.org/jet-popup/קליידוסקופ-טיפול-בפגיעות-מיניות/"
+      }
+    },
+    {
+      "_key": "roadmap-2025-06",
+      "title": "La feuille de route du traitement du traumatisme - session de juin",
+      "sortOrder": 10,
+      "content": {
+        "_key": "roadmap-2025-06",
+        "_col": "metiv-events",
+        "slug": "roadmap-2025-06",
+        "title": "La feuille de route du traitement du traumatisme - session de juin",
+        "date": "5.6.2025",
+        "dateISO": "2025-06-05",
+        "type": "Session de cours",
+        "summary": "Quatre séances le jeudi en juin 2025, de 8 h 30 à 15 h 30.",
+        "location": "Metiv - Centre de psychotraumatologie, Jérusalem",
+        "price": "1 500 ₪",
+        "link": "/therapist/courses/roadmap",
+        "external": false,
+        "courseSlug": "roadmap",
+        "isPast": true,
+        "sourceUrl": "https://metiv.org/jet-popup/מפת-הדרכים-יוני/"
+      }
+    },
+    {
+      "_key": "kaleidoscope-not-by-words-alone",
+      "title": "Kaléidoscope : « Pas seulement par la parole »",
+      "sortOrder": 11,
+      "content": {
+        "_key": "kaleidoscope-not-by-words-alone",
+        "_col": "metiv-events",
+        "slug": "kaleidoscope-not-by-words-alone",
+        "title": "Kaléidoscope : « Pas seulement par la parole »",
+        "date": "22.5.2025",
+        "dateISO": "2025-05-22",
+        "type": "Atelier",
+        "summary": "Un atelier expérientiel animé par Yoel Vardi et Michal Zmora, de 15 h à 19 h, au centre Metiv.",
+        "link": "/therapist/courses/kaleidoscope",
+        "external": false,
+        "courseSlug": "kaleidoscope",
+        "isPast": true,
+        "sourceUrl": "https://metiv.org/jet-popup/קליידוסקופ-לא-על-הדיבור-לבדו/"
+      }
+    },
+    {
+      "_key": "supervision-group-2025-05",
+      "title": "Groupe de supervision sur Zoom animé par Uri Birnbaum",
+      "sortOrder": 12,
+      "content": {
+        "_key": "supervision-group-2025-05",
+        "_col": "metiv-events",
+        "slug": "supervision-group-2025-05",
+        "title": "Groupe de supervision sur Zoom animé par Uri Birnbaum",
+        "date": "14.5.2025",
+        "dateISO": "2025-05-14",
+        "type": "Session de cours",
+        "summary": "Six séances hebdomadaires sur Zoom, le mercredi à 14 h, pour un groupe d'environ 5 thérapeutes.",
+        "price": "Environ 1 200 ₪",
+        "link": "/therapist/supervision",
+        "external": false,
+        "isPast": true,
+        "sourceUrl": "https://metiv.org/jet-popup/קבוצת-הדרכה/"
+      }
+    },
+    {
+      "_key": "kaleidoscope-act",
+      "title": "Kaléidoscope : l'ACT dans le traitement du traumatisme",
+      "sortOrder": 13,
+      "content": {
+        "_key": "kaleidoscope-act",
+        "_col": "metiv-events",
+        "slug": "kaleidoscope-act",
+        "title": "Kaléidoscope : l'ACT dans le traitement du traumatisme",
+        "date": "7.5.2025",
+        "dateISO": "2025-05-07",
+        "type": "Atelier",
+        "summary": "Un module animé par Dalia Zivan, de 9 h à 16 h, au centre Metiv.",
+        "link": "/therapist/courses/kaleidoscope",
+        "external": false,
+        "courseSlug": "kaleidoscope",
+        "isPast": true,
+        "sourceUrl": "https://metiv.org/jet-popup/קליידוסקופ-act-לטיפול-בטראומה/"
+      }
+    },
+    {
+      "_key": "kaleidoscope-art",
+      "title": "Kaléidoscope : l'utilisation de l'art pour les thérapeutes qui ne sont pas art-thérapeutes",
+      "sortOrder": 14,
+      "content": {
+        "_key": "kaleidoscope-art",
+        "_col": "metiv-events",
+        "slug": "kaleidoscope-art",
+        "title": "Kaléidoscope : l'utilisation de l'art pour les thérapeutes qui ne sont pas art-thérapeutes",
+        "date": "3.4.2025",
+        "dateISO": "2025-04-03",
+        "type": "Atelier",
+        "summary": "Un module animé par Tamara Weiner, de 15 h à 20 h, chez Metiv.",
+        "link": "/therapist/courses/kaleidoscope",
+        "external": false,
+        "courseSlug": "kaleidoscope",
+        "isPast": true,
+        "sourceUrl": "https://metiv.org/jet-popup/קליידוסקופ-סדנה-באומנות/"
+      }
+    },
+    {
+      "_key": "kaleidoscope-traumatic-grief",
+      "title": "Kaléidoscope : au cœur de la brisure - le traitement du deuil traumatique",
+      "sortOrder": 15,
+      "content": {
+        "_key": "kaleidoscope-traumatic-grief",
+        "_col": "metiv-events",
+        "slug": "kaleidoscope-traumatic-grief",
+        "title": "Kaléidoscope : au cœur de la brisure - le traitement du deuil traumatique",
+        "date": "26.3.2025",
+        "dateISO": "2025-03-26",
+        "type": "Atelier",
+        "summary": "Un module sur Zoom animé par Nili Lavie, de 10 h à 16 h.",
+        "link": "/therapist/courses/kaleidoscope",
+        "external": false,
+        "courseSlug": "kaleidoscope",
+        "isPast": true,
+        "sourceUrl": "https://metiv.org/jet-popup/קליידוסקופ-אבל/"
+      }
+    },
+    {
+      "_key": "kaleidoscope-dissociation",
+      "title": "Kaléidoscope : dissociation et traumatisme",
+      "sortOrder": 16,
+      "content": {
+        "_key": "kaleidoscope-dissociation",
+        "_col": "metiv-events",
+        "slug": "kaleidoscope-dissociation",
+        "title": "Kaléidoscope : dissociation et traumatisme",
+        "date": "6 et 13 février 2025",
+        "dateISO": "2025-02-06",
+        "type": "Atelier",
+        "summary": "Deux séances sur Zoom avec Danny Brom, de 14 h à 17 h.",
+        "link": "/therapist/courses/kaleidoscope",
+        "external": false,
+        "courseSlug": "kaleidoscope",
+        "isPast": true,
+        "sourceUrl": "https://metiv.org/jet-popup/קליידוסקופ-דיסוציאציה-וטראומה/"
+      }
+    },
+    {
+      "_key": "panda-training-2025-02",
+      "title": "Formation PANDA pour l'école primaire, destinée aux thérapeutes",
+      "sortOrder": 17,
+      "content": {
+        "_key": "panda-training-2025-02",
+        "_col": "metiv-events",
+        "slug": "panda-training-2025-02",
+        "title": "Formation PANDA pour l'école primaire, destinée aux thérapeutes",
+        "date": "3.2.2025",
+        "dateISO": "2025-02-03",
+        "type": "Session de cours",
+        "summary": "Quatre séances sur Zoom le lundi, du 3 au 24 février, de 9 h à 15 h.",
+        "location": "Zoom",
+        "price": "2 000 ₪",
+        "link": "/therapist/courses/panda-training",
+        "external": false,
+        "courseSlug": "panda-training",
+        "isPast": true,
+        "sourceUrl": "https://metiv.org/הכשרה-למטפלים-פנדה-יסודי/"
+      }
+    },
+    {
+      "_key": "conference-year-of-coping",
+      "title": "Conférence « Une année à faire face » pour thérapeutes, un an après le début de la guerre",
+      "sortOrder": 18,
+      "content": {
+        "_key": "conference-year-of-coping",
+        "_col": "metiv-events",
+        "slug": "conference-year-of-coping",
+        "title": "Conférence « Une année à faire face » pour thérapeutes, un an après le début de la guerre",
+        "date": "29.9.2024",
+        "dateISO": "2024-09-29",
+        "publishedDate": "4.9.2024",
+        "type": "Conférence",
+        "summary": "Une conférence d'écoute et de partage pour les professionnels du soin, un an après le début de la guerre. Gratuite, sur inscription préalable.",
+        "body": "**Quand ?** Dimanche 29 septembre 2024, de 9 h à 13 h.\n\n**Où ?** Maison d'hôtes Beit Vagan, 8, rue HaPisga, Jérusalem.\n\n**Au programme**\n\n- Dr Danny Brom, directeur général fondateur de Metiv - « Guerre au-dehors et guerre au-dedans : notre place en tant que thérapeutes »\n- Cercles de parole animés\n- Sarit Zussman, militante associative, créatrice et éducatrice, mère de Ben Zussman, de mémoire bénie, tombé pendant la guerre « Épées de fer » - « Choisir la vie et insister sur la qualité de la vie »\n\nLa participation est gratuite mais soumise à une inscription préalable.",
+        "location": "Maison d'hôtes Beit Vagan, 8, rue HaPisga, Jérusalem",
+        "price": "Gratuit, sur inscription préalable",
+        "link": "https://metiv.org/הרשמה-לכנס-שנה-של-התמודדות-מטיב-המרכז-ה/",
+        "external": true,
+        "isPast": true,
+        "sourceUrl": "https://metiv.org/news/כנס-למטפלים-לרגל-שנה-למלחמה/"
+      }
+    },
+    {
+      "_key": "kids-trauma-basics-2024-09",
+      "title": "Nouvelle session du cours « Les bases du traitement du traumatisme chez l'enfant »",
+      "sortOrder": 19,
+      "content": {
+        "_key": "kids-trauma-basics-2024-09",
+        "_col": "metiv-events",
+        "slug": "kids-trauma-basics-2024-09",
+        "title": "Nouvelle session du cours « Les bases du traitement du traumatisme chez l'enfant »",
+        "date": "11, 12 et 15 septembre 2024",
+        "dateISO": "2024-09-11",
+        "publishedDate": "21.8.2024",
+        "type": "Session de cours",
+        "summary": "Un cours intensif pour les professionnels du soin titulaires d'un diplôme reconnu et ayant une expérience du travail avec les enfants, animé par Sarit Schramm-Yavin.",
+        "body": "**À qui s'adresse le cours ?** Aux professionnels du soin titulaires d'un diplôme reconnu et ayant une expérience du travail avec les enfants. Aucune expérience du travail avec le traumatisme n'est requise.\n\n**Quand ?** Les 11, 12 et 15 septembre, de 9 h à 15 h.\n\n**Où ?** Bureaux de Metiv, bâtiment des consultations, Centre médical Herzog, Jérusalem.\n\n**Informations et inscription :** Stav - 0547466538 ou par e-mail à stav@metiv.org",
+        "location": "Bureaux de Metiv, bâtiment des consultations, Centre médical Herzog, Jérusalem",
+        "link": "/therapist/courses/kids-trauma-basics",
+        "external": false,
+        "courseSlug": "kids-trauma-basics",
+        "isPast": true,
+        "sourceUrl": "https://metiv.org/news/מחזור-חדש-לקורס-יסודות-הטיפול-בטראומה/"
+      }
+    },
+    {
+      "_key": "trauma-informed-care-conference-2023",
+      "title": "A Roadmap for Trauma-Informed Care - une conférence associant recherche et psychothérapie",
+      "sortOrder": 20,
+      "content": {
+        "_key": "trauma-informed-care-conference-2023",
+        "_col": "metiv-events",
+        "slug": "trauma-informed-care-conference-2023",
+        "title": "A Roadmap for Trauma-Informed Care - une conférence associant recherche et psychothérapie",
+        "date": "28.2-1.3.2023",
+        "dateISO": "2023-02-28",
+        "publishedDate": "20.1.2023",
+        "type": "Conférence",
+        "summary": "Une conférence de deux jours pour chercheurs et thérapeutes sur la recherche et le traitement du traumatisme dans le contexte de la société israélienne.",
+        "body": "La conférence s'est tenue du 28 février au 1er mars 2023, de 9 h à 17 h, à l'hôpital Herzog de Jérusalem.\n\nLe premier jour : des conférences TED sur la recherche actuelle sur le traumatisme en Israël, des sessions parallèles sur différents thèmes (médecine, société, religion et spiritualité) en lien avec le traumatisme, et une table ronde de chercheurs de premier plan. Le deuxième jour : des conférences, des ateliers cliniques sur le traitement du traumatisme et des voix issues de témoignages de patients.",
+        "location": "Hôpital Herzog, Jérusalem",
+        "link": "https://metiv.org/en/news/a-roadmap-for-trauma-informed-care/",
+        "external": true,
+        "isPast": true,
+        "sourceUrl": "https://metiv.org/en/news/a-roadmap-for-trauma-informed-care/"
+      }
+    },
+    {
+      "_key": "free-treatment-veterans-news",
+      "title": "Un traitement gratuit pour les soldats démobilisés souffrant de TSPT",
+      "sortOrder": 21,
+      "content": {
+        "_key": "free-treatment-veterans-news",
+        "_col": "metiv-events",
+        "slug": "free-treatment-veterans-news",
+        "title": "Un traitement gratuit pour les soldats démobilisés souffrant de TSPT",
+        "date": "8.7.2021",
+        "dateISO": "2021-07-08",
+        "type": "Actualités",
+        "summary": "Metiv a ouvert un dispositif de traitement gratuit pour les soldats démobilisés souffrant de TSPT, dans le cadre d'un projet de recherche clinique.",
+        "body": "Les soldats démobilisés confrontés à un traumatisme lié à leur service militaire peuvent se renseigner sur leur éligibilité à un traitement psychologique gratuit, dans le cadre d'un projet de recherche. Selon la page en anglais, la clinique fonctionne dans le cadre d'une étude clinique sur le Somatic Experiencing (SE).",
+        "link": "/patient/free-treatment-and-research",
+        "external": false,
+        "isPast": true,
+        "sourceUrl": "https://metiv.org/news/טיפול-לחיילים-משוחררים-המתמודדים-עם-פ/"
+      }
+    }
+  ]
+}

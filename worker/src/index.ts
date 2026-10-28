@@ -2,8 +2,9 @@ import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { reindexAll, reindexById } from "./lib/ingest";
 import { handleChat } from "./lib/chat";
-import { verifyAdmin } from "./lib/auth";
+import { verifyAdmin, verifyAdminCached, tokenHash } from "./lib/auth";
 import { checkLimit } from "./lib/ratelimit";
+import { translate, validateTranslateRequest } from "./lib/translate";
 
 export type Env = {
   AI: Ai;
@@ -14,7 +15,14 @@ export type Env = {
   GEMINI_MODEL: string;
   GEMINI_API_KEY: string;
   ADMIN_VERIFY_URL: string;
+  TRANSLATE_MODEL?: string;
+  QA_STRONG?: string; // playbook "follow it" cosine threshold, default 0.80
+  QA_WEAK?: string; // playbook "possibly relevant" threshold, default 0.72
 };
+
+// Per admin token. One Hebrew save sends 4 requests (one per target language),
+// so this is ~60 saved rows an hour.
+const TRANSLATE_LIMIT = 240;
 
 const app = new Hono<{ Bindings: Env }>();
 
@@ -46,6 +54,27 @@ app.post("/reindex", async (c) => {
     return c.json({ ok: true, ...result });
   } catch (e) {
     return c.json({ error: "reindex_failed", message: (e as Error).message }, 500);
+  }
+});
+
+app.post("/translate", async (c) => {
+  const auth = c.req.header("Authorization") ?? null;
+  if (!(await verifyAdminCached(c.env, auth))) return c.json({ error: "unauthorized" }, 401);
+  if (!(await checkLimit(c.env, `tr:${await tokenHash(auth!)}`, TRANSLATE_LIMIT, 3600))) {
+    return c.json({ error: "rate_limited" }, 429);
+  }
+  let body: unknown;
+  try {
+    body = await c.req.json();
+  } catch {
+    return c.json({ error: "invalid_json" }, 400);
+  }
+  const v = validateTranslateRequest(body);
+  if (!v.ok) return c.json({ error: v.error }, v.status);
+  try {
+    return c.json(await translate(c.env, v.req));
+  } catch (e) {
+    return c.json({ error: "translate_failed", message: (e as Error).message }, 502);
   }
 });
 

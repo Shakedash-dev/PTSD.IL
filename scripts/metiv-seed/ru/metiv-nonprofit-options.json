@@ -1,0 +1,110 @@
+{
+  "key": "NONPROFIT_OPTIONS",
+  "slug": "metiv-nonprofit-options",
+  "kind": "list",
+  "rows": [
+    {
+      "_key": "eran",
+      "title": "ЭРАН - Эмоциональная первая помощь (1201)",
+      "sortOrder": 0,
+      "content": {
+        "_key": "eran",
+        "_col": "metiv-nonprofit-options",
+        "id": "eran",
+        "title": "ЭРАН - Эмоциональная первая помощь (1201)",
+        "provider": "Экстренная линия",
+        "icon": "Phone",
+        "what": "Телефонная линия и WhatsApp для разговора в трудную минуту.",
+        "contacts": [
+          {
+            "kind": "phone",
+            "label": "Телефон",
+            "value": "1201"
+          },
+          {
+            "kind": "link",
+            "label": "WhatsApp",
+            "href": "https://api.whatsapp.com/send?phone=9720528451201"
+          }
+        ]
+      }
+    },
+    {
+      "_key": "amcha-jerusalem",
+      "title": "Центр жизнестойкости - Иерусалим («Амха»)",
+      "sortOrder": 1,
+      "content": {
+        "_key": "amcha-jerusalem",
+        "_col": "metiv-nonprofit-options",
+        "id": "amcha-jerusalem",
+        "title": "Центр жизнестойкости - Иерусалим («Амха»)",
+        "provider": "Ассоциация «Амха»",
+        "icon": "Users",
+        "who": "Пострадавшие от враждебных действий (терактов), люди с травмой и тревогой и их семьи.",
+        "what": "Индивидуальная, групповая и семейная терапия.",
+        "location": "Иерусалим. По телефону, в Zoom или очно.",
+        "contacts": [
+          {
+            "kind": "link",
+            "label": "Сайт «Амха»",
+            "href": "https://www.amcha.org/"
+          }
+        ]
+      }
+    },
+    {
+      "_key": "natal",
+      "title": "НАТАЛ - Израильский центр травмы и жизнестойкости",
+      "sortOrder": 2,
+      "content": {
+        "_key": "natal",
+        "_col": "metiv-nonprofit-options",
+        "id": "natal",
+        "title": "НАТАЛ - Израильский центр травмы и жизнестойкости",
+        "provider": "Ассоциация НАТАЛ",
+        "icon": "Users",
+        "who": "Люди, пережившие травму и страдающие от ПТСР в связи с войной и терроризмом, и их близкие.",
+        "what": "Группы поддержки и терапевтические группы, в том числе группы для партнёров.",
+        "contacts": [
+          {
+            "kind": "link",
+            "label": "Группы поддержки НАТАЛ",
+            "href": "https://www.natal.org.il/תמיכה-וטיפול-נפשי/קבוצות-טיפוליות-וקבוצות-תמיכה/"
+          }
+        ]
+      }
+    },
+    {
+      "_key": "sexual-assault-centers",
+      "title": "Центры помощи пострадавшим от сексуального насилия",
+      "sortOrder": 3,
+      "content": {
+        "_key": "sexual-assault-centers",
+        "_col": "metiv-nonprofit-options",
+        "id": "sexual-assault-centers",
+        "title": "Центры помощи пострадавшим от сексуального насилия",
+        "provider": "Союз центров помощи",
+        "icon": "Heart",
+        "who": "Женщины и мужчины, пострадавшие от сексуального насилия, и их семьи.",
+        "what": "Общенациональные линии помощи (1202 для женщин, 1203 для мужчин), чат и сеть региональных центров помощи.",
+        "contacts": [
+          {
+            "kind": "phone",
+            "label": "Для женщин",
+            "value": "1202"
+          },
+          {
+            "kind": "phone",
+            "label": "Для мужчин",
+            "value": "1203"
+          },
+          {
+            "kind": "link",
+            "label": "Сайт Союза",
+            "href": "https://www.1202.org.il/"
+          }
+        ]
+      }
+    }
+  ]
+}

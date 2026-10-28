@@ -1,0 +1,83 @@
+{
+  "key": "PARENT_CHILD_GROUPS",
+  "slug": "metiv-parent-child",
+  "kind": "list",
+  "rows": [
+    {
+      "_key": "panda-groups",
+      "title": "PANDA - « Ici, nous apprenons des façons de faire face »",
+      "sortOrder": 0,
+      "content": {
+        "_key": "panda-groups",
+        "_col": "metiv-parent-child",
+        "id": "panda-groups",
+        "title": "PANDA - « Ici, nous apprenons des façons de faire face »",
+        "provider": "Metiv Enfants",
+        "icon": "Users",
+        "who": "PANDA pour enfants : enfants de la 2e à la 6e année qui ont des difficultés de régulation émotionnelle liées à une surcharge émotionnelle, à des troubles de l'attention, à l'anxiété ou à des difficultés sociales. PANDA pour parents (compétences DBT) : parents d'enfants de tous âges. PANDA en famille : familles d'au moins 2 enfants.",
+        "ages": "Enfants de 7 à 12 ans, et parents",
+        "what": "Un programme de groupe pour renforcer la régulation émotionnelle et développer des façons de faire face, qui associe des techniques de pleine conscience et des techniques cognitivo-comportementales au jeu. PANDA pour enfants : 8 séances pour les enfants et 3 séances pour les parents. PANDA pour parents : 8 séances (ou 6). PANDA en famille : en général, 6 séances familiales et 6 séances de guidance parentale.",
+        "location": "Metiv Enfants, Jérusalem",
+        "process": "Vous remplissez un questionnaire et une demande de participation, vous avez un entretien de présentation avec un animateur, puis vous êtes placé dans un groupe selon l'âge.",
+        "contacts": [
+          {
+            "kind": "link",
+            "label": "Formulaire de demande à Metiv Enfants",
+            "href": "https://docs.google.com/forms/d/e/1FAIpQLSfiUHfJ4UDrpSUPQxtPKWmQuZGKg7lfL1c21D_JAsmwxlYLJA/viewform"
+          },
+          {
+            "kind": "email",
+            "label": "E-mail",
+            "value": "Kids@metiv.org"
+          }
+        ],
+        "source": "https://metiv.org/תכנית-פנדה-לילדים/"
+      }
+    },
+    {
+      "_key": "namal-groups",
+      "title": "NAMAL - Faisons place au jeu",
+      "sortOrder": 1,
+      "content": {
+        "_key": "namal-groups",
+        "_col": "metiv-parent-child",
+        "id": "namal-groups",
+        "title": "NAMAL - Faisons place au jeu",
+        "provider": "Metiv Enfants",
+        "icon": "Baby",
+        "who": "Binômes parent-tout-petit exposés à des situations de stress, de crise ou de traumatisme, ainsi que binômes confrontés à des difficultés typiques de cet âge.",
+        "ages": "Tout-petits de 2 à 5 ans et leurs parents",
+        "what": "Un groupe de jeu pour parents et tout-petits avec des activités de jeu, de musique, d'art, de théâtre et de mouvement, ainsi que des séances réservées aux parents. 8 séances, une fois par semaine, de 16 h 30 à 18 h.",
+        "location": "Metiv Enfants, Givat Shaul, bâtiment des consultations du Centre médical Herzog, Jérusalem",
+        "contacts": [
+          {
+            "kind": "link",
+            "label": "Formulaire d'inscription",
+            "href": "https://www.surveyhero.com/c/kybdaa97"
+          },
+          {
+            "kind": "phone",
+            "label": "Efrat, coordinatrice du programme",
+            "value": "054-2189188"
+          },
+          {
+            "kind": "email",
+            "label": "E-mail",
+            "value": "efrath@metiv.org"
+          }
+        ],
+        "source": "https://metiv.org/תוכנית-נמל/"
+      }
+    },
+    {
+      "_key": "kids-space",
+      "title": "Espace Metiv pour enfants",
+      "sortOrder": 2,
+      "content": {
+        "_key": "kids-space",
+        "_col": "metiv-parent-child",
+        "$ref": "FREE_TREATMENTS#kids-space"
+      }
+    }
+  ]
+}

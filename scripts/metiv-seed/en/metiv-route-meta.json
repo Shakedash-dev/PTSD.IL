@@ -1,0 +1,225 @@
+{
+  "key": "ROUTE_META",
+  "slug": "metiv-route-meta",
+  "kind": "single",
+  "rows": [
+    {
+      "_key": "ROUTE_META",
+      "title": "ROUTE_META",
+      "sortOrder": 0,
+      "content": {
+        "_key": "ROUTE_META",
+        "_col": "metiv-route-meta",
+        "home": {
+          "label": "Home",
+          "area": "metiv"
+        },
+        "about": {
+          "label": "About Metiv",
+          "area": "therapist",
+          "parent": "therapist"
+        },
+        "aboutHistory": {
+          "label": "Metiv's story",
+          "area": "therapist",
+          "parent": "about"
+        },
+        "aboutTeam": {
+          "label": "Team",
+          "area": "therapist",
+          "parent": "about"
+        },
+        "aboutPartners": {
+          "label": "Our partners",
+          "area": "therapist",
+          "parent": "about"
+        },
+        "aboutCollaborations": {
+          "label": "Collaborations",
+          "area": "therapist",
+          "parent": "about"
+        },
+        "donate": {
+          "label": "Donate",
+          "area": "metiv",
+          "parent": "home"
+        },
+        "contact": {
+          "label": "Contact us",
+          "area": "metiv",
+          "parent": "home"
+        },
+        "privacy": {
+          "label": "Privacy policy",
+          "area": "metiv",
+          "parent": "home"
+        },
+        "terms": {
+          "label": "Terms of use",
+          "area": "metiv",
+          "parent": "home"
+        },
+        "accessibility": {
+          "label": "Accessibility Statement",
+          "area": "metiv",
+          "parent": "home"
+        },
+        "patient": {
+          "label": "For patients and families",
+          "area": "patient",
+          "parent": "home"
+        },
+        "firstCircle": {
+          "label": "If you've been through a hard event",
+          "area": "patient",
+          "parent": "patient"
+        },
+        "secondCircle": {
+          "label": "Loved ones and family members",
+          "area": "patient",
+          "parent": "patient"
+        },
+        "secondCircleTools": {
+          "label": "Tools for family members",
+          "area": "patient",
+          "parent": "secondCircle"
+        },
+        "questionnaire": {
+          "label": "Anonymous questionnaire",
+          "area": "patient",
+          "parent": "patient"
+        },
+        "ptsdInfo": {
+          "label": "What is PTSD?",
+          "area": "patient",
+          "parent": "patient"
+        },
+        "selfHelp": {
+          "label": "Self-help",
+          "area": "patient",
+          "parent": "patient"
+        },
+        "treatment": {
+          "label": "The therapy journey",
+          "area": "patient",
+          "parent": "patient"
+        },
+        "whereToGetHelp": {
+          "label": "Where to get treatment",
+          "area": "patient",
+          "parent": "patient"
+        },
+        "freeTreatment": {
+          "label": "Free treatments and studies",
+          "area": "patient",
+          "parent": "patient"
+        },
+        "rights": {
+          "label": "Rights",
+          "area": "patient",
+          "parent": "patient"
+        },
+        "community": {
+          "label": "Support communities",
+          "area": "patient",
+          "parent": "patient"
+        },
+        "children": {
+          "label": "Talking with children",
+          "area": "patient",
+          "parent": "patient"
+        },
+        "sources": {
+          "label": "Sources",
+          "area": "patient",
+          "parent": "patient"
+        },
+        "releaseJourney": {
+          "label": "Peace of Mind",
+          "area": "patient",
+          "parent": "patient"
+        },
+        "calming": {
+          "label": "Calming exercises",
+          "area": "patient",
+          "parent": "patient"
+        },
+        "calmingBreathing": {
+          "label": "Breathing",
+          "area": "patient",
+          "parent": "calming"
+        },
+        "calmingGrounding": {
+          "label": "Grounding",
+          "area": "patient",
+          "parent": "calming"
+        },
+        "calmingMuscle": {
+          "label": "Muscle relaxation",
+          "area": "patient",
+          "parent": "calming"
+        },
+        "therapist": {
+          "label": "For therapists and professionals",
+          "area": "therapist",
+          "parent": "home"
+        },
+        "courses": {
+          "label": "Courses and trainings",
+          "area": "therapist",
+          "parent": "therapist"
+        },
+        "course": {
+          "label": "Course",
+          "area": "therapist",
+          "parent": "courses"
+        },
+        "childrenFamily": {
+          "label": "Children and family",
+          "area": "therapist",
+          "parent": "therapist"
+        },
+        "supervision": {
+          "label": "Supervision",
+          "area": "therapist",
+          "parent": "therapist"
+        },
+        "organizations": {
+          "label": "For organizations",
+          "area": "therapist",
+          "parent": "therapist"
+        },
+        "research": {
+          "label": "Research",
+          "area": "therapist",
+          "parent": "therapist"
+        },
+        "publications": {
+          "label": "Publications",
+          "area": "therapist",
+          "parent": "therapist"
+        },
+        "articles": {
+          "label": "Articles",
+          "area": "therapist",
+          "parent": "therapist"
+        },
+        "article": {
+          "label": "Article",
+          "area": "therapist",
+          "parent": "articles"
+        },
+        "events": {
+          "label": "Events and updates",
+          "area": "therapist",
+          "parent": "therapist"
+        },
+        "releaseJourneyPro": {
+          "label": "Peace of Mind",
+          "area": "therapist",
+          "parent": "therapist"
+        }
+      }
+    }
+  ]
+}

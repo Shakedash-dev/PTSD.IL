@@ -20,6 +20,11 @@ import { t } from '@/lib/i18n';
 // screen too, so a session that expires mid-edit keeps its staged changes for
 // after the editor signs back in.
 //
+// `variant` picks the content the panel edits: 'ptsd' (/admin) or 'metiv'
+// (/metiv-site-demo-v3/admin - the Metiv v3 content plus the PTSD-IL panels,
+// see src/components/admin/MetivAdmin.jsx). Same origin, so Google sign-in and
+// the session work on either path.
+//
 // Local design preview: the panel opens without signing in, backed by sample
 // data, with every write disabled. Only ever reachable on a dev server - see
 // src/lib/adminPreview.js for why it cannot exist in a production build.
@@ -34,7 +39,8 @@ function AdminPreviewBanner() {
   );
 }
 
-export default function AdminGate() {
+/** @param {{ variant?: 'ptsd'|'metiv' }} props */
+export default function AdminGate({ variant = 'ptsd' }) {
   const [authed, setAuthed] = useState(() => isAuthenticated());
   const [allowed, setAllowed] = useState(() => hasAdminAccess() || hasUserManagementAccess());
 
@@ -49,7 +55,7 @@ export default function AdminGate() {
 
   let body;
   if (ADMIN_PREVIEW || (authed && allowed)) {
-    body = <Admin />;
+    body = <Admin variant={variant} />;
   } else if (!authed) {
     body = <AdminLogin />;
   } else {
@@ -62,7 +68,7 @@ export default function AdminGate() {
 
   return (
     <PendingChangesProvider>
-      <AdminShell signedIn={ADMIN_PREVIEW || authed} banner={ADMIN_PREVIEW ? <AdminPreviewBanner /> : null}>
+      <AdminShell variant={variant} signedIn={ADMIN_PREVIEW || authed} banner={ADMIN_PREVIEW ? <AdminPreviewBanner /> : null}>
         {body}
       </AdminShell>
     </PendingChangesProvider>

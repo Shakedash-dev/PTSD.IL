@@ -1,0 +1,139 @@
+{
+  "key": "FUNDERS_AND_COLLABORATORS",
+  "slug": "metiv-funders",
+  "kind": "list",
+  "rows": [
+    {
+      "_key": "המרכז הרפואי הרצוג",
+      "title": "Centre médical Herzog",
+      "sortOrder": 0,
+      "content": {
+        "_key": "המרכז הרפואי הרצוג",
+        "_col": "metiv-funders",
+        "name": "Centre médical Herzog",
+        "role": "Metiv a été fondé comme antenne de l'hôpital (Institut Latner) et est installé sur son campus ; partenaire de la clinique Migdalor",
+        "sourceUrl": "https://metiv.org/אודות/"
+      }
+    },
+    {
+      "_key": "משרד הביטחון",
+      "title": "Ministère de la Défense",
+      "sortOrder": 1,
+      "content": {
+        "_key": "משרד הביטחון",
+        "_col": "metiv-funders",
+        "name": "Ministère de la Défense",
+        "role": "Partenaire du programme Peace of Mind ; le Département de réadaptation (district de Jérusalem) oriente vers la clinique Migdalor ; financement d'un groupe NAMAL pour les parents de retour de la réserve",
+        "sourceUrl": "https://metiv.org/מגדלור/"
+      }
+    },
+    {
+      "_key": "משרד החינוך",
+      "title": "Ministère de l'Éducation",
+      "sortOrder": 2,
+      "content": {
+        "_key": "משרד החינוך",
+        "_col": "metiv-funders",
+        "name": "Ministère de l'Éducation",
+        "role": "Partenaire du Programme national de résilience pour les écoles",
+        "sourceUrl": "https://metiv.org/אודות/"
+      }
+    },
+    {
+      "_key": "ביטוח לאומי, גורמי בריאות ורווחה",
+      "title": "Institut national d'assurance (Bituach Leumi), organismes de santé et d'aide sociale",
+      "sortOrder": 3,
+      "content": {
+        "_key": "ביטוח לאומי, גורמי בריאות ורווחה",
+        "_col": "metiv-funders",
+        "name": "Institut national d'assurance (Bituach Leumi), organismes de santé et d'aide sociale",
+        "role": "Parmi les organismes qui financent les traitements à la clinique pour adultes",
+        "sourceUrl": "https://metiv.org/מרפאת-מבוגרים/"
+      }
+    },
+    {
+      "_key": "המרכז לבקרת מחלות ומניעתן (CDC), אטלנטה",
+      "title": "Centres pour le contrôle et la prévention des maladies (CDC), Atlanta",
+      "sortOrder": 4,
+      "content": {
+        "_key": "המרכז לבקרת מחלות ומניעתן (CDC), אטלנטה",
+        "_col": "metiv-funders",
+        "name": "Centres pour le contrôle et la prévention des maladies (CDC), Atlanta",
+        "role": "Partenaire de l'évaluation du Programme de résilience pour les écoles (2011-2012)",
+        "sourceUrl": "https://metiv.org/אודות/"
+      }
+    },
+    {
+      "_key": "הפדרציה היהודית של ניו-יורק",
+      "title": "Fédération juive de New York",
+      "sortOrder": 5,
+      "content": {
+        "_key": "הפדרציה היהודית של ניו-יורק",
+        "_col": "metiv-funders",
+        "name": "Fédération juive de New York",
+        "role": "A soutenu la création de la Coalition israélienne pour le traumatisme",
+        "sourceUrl": "https://metiv.org/אודות/"
+      }
+    },
+    {
+      "_key": "האוניברסיטה העברית בירושלים",
+      "title": "Université hébraïque de Jérusalem",
+      "sortOrder": 6,
+      "content": {
+        "_key": "האוניברסיטה העברית בירושלים",
+        "_col": "metiv-funders",
+        "name": "Université hébraïque de Jérusalem",
+        "role": "Partenaire du cours d'été international (École Rothberg)",
+        "sourceUrl": "https://metiv.org/קורס-קיץ-בינלאומי/"
+      }
+    },
+    {
+      "_key": "יה\"ת",
+      "title": "YAHAT (Association israélienne des thérapies créatives et expressives)",
+      "sortOrder": 7,
+      "content": {
+        "_key": "יה\"ת",
+        "_col": "metiv-funders",
+        "name": "YAHAT (Association israélienne des thérapies créatives et expressives)",
+        "role": "Cours PANDA pour art-thérapeutes dans le cadre de ses programmes de formation",
+        "sourceUrl": "https://metiv.org/הכשרת-פנדה-ייעודית-למטפלים-באמנויות-כ/"
+      }
+    },
+    {
+      "_key": "אוניברסיטת אל-קודס",
+      "title": "Université Al-Quds",
+      "sortOrder": 8,
+      "content": {
+        "_key": "אוניברסיטת אל-קודס",
+        "_col": "metiv-funders",
+        "name": "Université Al-Quds",
+        "role": "Partenaire du programme CHERISH",
+        "sourceUrl": "https://metiv.org/אודות/"
+      }
+    },
+    {
+      "_key": "בית החולים הר סיני, ניו יורק",
+      "title": "Hôpital Mount Sinai, New York",
+      "sortOrder": 9,
+      "content": {
+        "_key": "בית החולים הר סיני, ניו יורק",
+        "_col": "metiv-funders",
+        "name": "Hôpital Mount Sinai, New York",
+        "role": "Collaboration de recherche avec le Pr Claude Chemtob",
+        "sourceUrl": "https://metiv.org/אודות/"
+      }
+    },
+    {
+      "_key": "אוניברסיטת קולומביה",
+      "title": "Université Columbia",
+      "sortOrder": 10,
+      "content": {
+        "_key": "אוניברסיטת קולומביה",
+        "_col": "metiv-funders",
+        "name": "Université Columbia",
+        "role": "Collaboration de recherche avec George Bonanno",
+        "sourceUrl": "https://metiv.org/אודות/"
+      }
+    }
+  ]
+}

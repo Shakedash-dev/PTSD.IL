@@ -1,0 +1,48 @@
+{
+  "key": "RESEARCH_INTRO",
+  "slug": "metiv-research-intro",
+  "kind": "single",
+  "rows": [
+    {
+      "_key": "RESEARCH_INTRO",
+      "title": "RESEARCH_INTRO",
+      "sortOrder": 0,
+      "content": {
+        "_key": "RESEARCH_INTRO",
+        "_col": "metiv-research-intro",
+        "title": "Metiv's Research Unit",
+        "paragraphs": [
+          "The research unit is responsible for applied and scientific knowledge, evaluating treatment programs and treatment methods, evaluating trainings for therapists, developing tools and collecting data to support decision-making.",
+          "In addition, the therapeutic work at Metiv is under ongoing monitoring and is examined using assessment tools in order to check and track clients' difficulties and progress."
+        ],
+        "focus": "Treating post-traumatic stress in civilian and military target populations.",
+        "role": "Bridging research knowledge and therapeutic practice in the field; translating insights into procedures and practices; supporting fundraising.",
+        "principles": [
+          "Clinical relevance",
+          "Scientific validity",
+          "Ethics and privacy protection",
+          "Transparency and knowledge sharing",
+          "Partnership with therapists and target communities"
+        ],
+        "pastResearchAreas": [
+          "Resilience in children and adolescents in Israel",
+          "Understanding the complexity of combat veterans' experiences",
+          "Developing and testing intervention and treatment methods for different populations",
+          "Research on treatment with SE (Somatic Experiencing) for post-traumatic stress disorder (PTSD)"
+        ],
+        "collaborationContact": {
+          "name": "Shir Elias",
+          "role": "Research Director",
+          "email": "shir@metiv.org"
+        },
+        "journalClub": {
+          "title": "Journal Club",
+          "description": "A learning community on trauma research and treatment, free of charge.",
+          "url": "https://youtube.com/playlist?list=PL7kR2brVa2aHQOHC1realKQBf6950Yip1"
+        },
+        "booksOrderingNote": "For information on ordering the books in Israel: info@metiv.org",
+        "sourceUrl": "https://metiv.org/מחקרים-פעילים-טראומה/"
+      }
+    }
+  ]
+}

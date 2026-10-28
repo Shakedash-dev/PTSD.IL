@@ -1,0 +1,12 @@
+{
+  "_area": "patient",
+  "_label": "אזור המטופלים: דף הבית",
+  "logoAlt": "ميتيف",
+  "whereToGetHelpChip": "أين يمكن الحصول على العلاج",
+  "freeTreatmentChip": "علاجات دون تكلفة والمشاركة في الأبحاث",
+  "validateHeroTagline": "العنوان الرئيسي - الصفحة الرئيسية",
+  "validateHeroSubtitle": "العنوان الفرعي - الصفحة الرئيسية",
+  "validatePathTitle": "بطاقة المسار {n} - العنوان",
+  "validatePathSubtitle": "بطاقة المسار {n} - العنوان الفرعي",
+  "validateAbout": "وصف قصير عن PTSD"
+}

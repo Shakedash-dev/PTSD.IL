@@ -1,0 +1,86 @@
+{
+  "key": "PARTNER_GROUPS",
+  "slug": "metiv-partner-groups",
+  "kind": "list",
+  "rows": [
+    {
+      "_key": "public",
+      "title": "Public Bodies",
+      "sortOrder": 0,
+      "content": {
+        "_key": "public",
+        "_col": "metiv-partner-groups",
+        "key": "public",
+        "title": "Public Bodies",
+        "intro": "Government ministries and public institutions that Metiv works with, or through which some services are accessed.",
+        "icon": "Landmark",
+        "partners": [
+          {
+            "name": "Ministry of Defense",
+            "role": "Partner in the Peace of Mind program; the Rehabilitation Department (Jerusalem District) refers patients to the Migdalor Clinic; funding for a NAMAL group for parents back from reserve duty",
+            "forYou": "People recognized by the Rehabilitation Department (Jerusalem District) come to the Migdalor Clinic on referral from the department. Veterans who were exposed to combat events can apply to Peace of Mind.",
+            "links": [
+              {
+                "label": "Migdalor Clinic",
+                "to": "/patient/where-to-get-help#migdalor"
+              },
+              {
+                "label": "Peace of Mind",
+                "to": "/therapist/release-journey"
+              }
+            ]
+          },
+          {
+            "name": "Herzog Medical Center",
+            "role": "Metiv was founded as a branch of the hospital (Latner Institute) and operates on its campus; partner in the Migdalor Clinic",
+            "forYou": "Metiv's clinics operate on the medical center's campus in Givat Shaul, Jerusalem."
+          },
+          {
+            "name": "National Insurance Institute (Bituach Leumi), health and welfare bodies",
+            "role": "Among the bodies that fund treatment at the Adult Clinic",
+            "forYou": "Some of the treatment at the Adult Clinic is funded by a public body. It is worth asking when you contact the clinic.",
+            "links": [
+              {
+                "label": "Adult Clinic",
+                "to": "/patient/where-to-get-help#adults-clinic"
+              }
+            ]
+          },
+          {
+            "name": "Ministry of Education",
+            "role": "Partner in the National Resilience Program for schools"
+          }
+        ]
+      }
+    },
+    {
+      "_key": "funders",
+      "title": "Foundations, Federations and Donors",
+      "sortOrder": 1,
+      "content": {
+        "_key": "funders",
+        "_col": "metiv-partner-groups",
+        "key": "funders",
+        "title": "Foundations, Federations and Donors",
+        "intro": "Organizations that have supported Metiv's programs.",
+        "icon": "HandHeart",
+        "partners": [
+          {
+            "name": "UJA-Federation of New York",
+            "role": "Supported the founding of the Israel Trauma Coalition"
+          },
+          {
+            "name": "The Jewish Agency",
+            "role": "[Placeholder text] A description of the joint work with the Jewish Agency, including the services for Russian speakers, will appear here. The details will be filled in by Metiv.",
+            "placeholder": true
+          },
+          {
+            "name": "Other foundations and donors",
+            "role": "[Placeholder text] The list of foundations and donors will be provided by Metiv.",
+            "placeholder": true
+          }
+        ]
+      }
+    }
+  ]
+}

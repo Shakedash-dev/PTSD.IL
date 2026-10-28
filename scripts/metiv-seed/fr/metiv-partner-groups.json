@@ -1,0 +1,86 @@
+{
+  "key": "PARTNER_GROUPS",
+  "slug": "metiv-partner-groups",
+  "kind": "list",
+  "rows": [
+    {
+      "_key": "public",
+      "title": "Organismes publics",
+      "sortOrder": 0,
+      "content": {
+        "_key": "public",
+        "_col": "metiv-partner-groups",
+        "key": "public",
+        "title": "Organismes publics",
+        "intro": "Ministères et institutions publiques avec lesquels Metiv travaille, ou par lesquels on accède à certains services.",
+        "icon": "Landmark",
+        "partners": [
+          {
+            "name": "Ministère de la Défense",
+            "role": "Partenaire du programme Peace of Mind ; le Département de réadaptation (district de Jérusalem) oriente vers la clinique Migdalor ; financement d'un groupe NAMAL pour les parents de retour de la réserve",
+            "forYou": "Les personnes reconnues par le Département de réadaptation (district de Jérusalem) sont orientées vers la clinique Migdalor par le Département. Les soldats démobilisés exposés à des combats peuvent s'adresser à Peace of Mind.",
+            "links": [
+              {
+                "label": "Clinique Migdalor",
+                "to": "/patient/where-to-get-help#migdalor"
+              },
+              {
+                "label": "Peace of Mind",
+                "to": "/therapist/release-journey"
+              }
+            ]
+          },
+          {
+            "name": "Centre médical Herzog",
+            "role": "Metiv a été fondé comme antenne de l'hôpital (Institut Latner) et est installé sur son campus ; partenaire de la clinique Migdalor",
+            "forYou": "Les cliniques de Metiv sont installées sur le campus du centre médical, à Givat Shaul, à Jérusalem."
+          },
+          {
+            "name": "Institut national d'assurance (Bituach Leumi), organismes de santé et d'aide sociale",
+            "role": "Parmi les organismes qui financent les traitements à la clinique pour adultes",
+            "forYou": "Une partie des traitements de la clinique pour adultes est financée par un organisme public. Renseignez-vous lorsque vous contactez la clinique.",
+            "links": [
+              {
+                "label": "Clinique pour adultes",
+                "to": "/patient/where-to-get-help#adults-clinic"
+              }
+            ]
+          },
+          {
+            "name": "Ministère de l'Éducation",
+            "role": "Partenaire du Programme national de résilience pour les écoles"
+          }
+        ]
+      }
+    },
+    {
+      "_key": "funders",
+      "title": "Fondations, fédérations et donateurs",
+      "sortOrder": 1,
+      "content": {
+        "_key": "funders",
+        "_col": "metiv-partner-groups",
+        "key": "funders",
+        "title": "Fondations, fédérations et donateurs",
+        "intro": "Organismes qui ont soutenu les programmes de Metiv.",
+        "icon": "HandHeart",
+        "partners": [
+          {
+            "name": "Fédération juive de New York",
+            "role": "A soutenu la création de la Coalition israélienne pour le traumatisme"
+          },
+          {
+            "name": "L'Agence juive",
+            "role": "[Texte provisoire] Une description du travail commun avec l'Agence juive figurera ici, y compris les services destinés aux russophones. Le détail sera fourni par Metiv.",
+            "placeholder": true
+          },
+          {
+            "name": "Autres fondations et donateurs",
+            "role": "[Texte provisoire] La liste des fondations et des donateurs sera fournie par Metiv.",
+            "placeholder": true
+          }
+        ]
+      }
+    }
+  ]
+}

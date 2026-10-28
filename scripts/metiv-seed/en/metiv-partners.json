@@ -1,0 +1,29 @@
+{
+  "key": "PARTNERS",
+  "slug": "metiv-partners",
+  "kind": "strings",
+  "rows": [
+    {
+      "_key": "PARTNERS",
+      "title": "PARTNERS",
+      "sortOrder": 0,
+      "content": {
+        "_key": "PARTNERS",
+        "_col": "metiv-partners",
+        "items": [
+          "Ministry of Education - Northern District",
+          "Misholim Association",
+          "Feuerstein Institute",
+          "Enosh - The Israeli Mental Health Association",
+          "Youth Advancement",
+          "Ministry of Defense",
+          "Ministry of Finance",
+          "Prime Minister's Office",
+          "Clalit Health Services",
+          "Leumit Health Services",
+          "Shaare Zedek Medical Center"
+        ]
+      }
+    }
+  ]
+}

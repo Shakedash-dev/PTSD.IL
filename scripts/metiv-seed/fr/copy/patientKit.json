@@ -1,0 +1,13 @@
+{
+  "_area": "patient",
+  "_label": "רכיבים משותפים באזור המטופלים",
+  "fieldWho": "Pour qui",
+  "fieldAges": "Âges",
+  "fieldWhat": "Ce que cela comprend",
+  "fieldLocation": "Lieu",
+  "fieldCost": "Coût et financement",
+  "fieldProcess": "Comment s'adresser et ce qui se passe ensuite",
+  "contactHeading": "Contact",
+  "consultationPhoneLabel": "Metiv",
+  "releaseJourneyPageLink": "Page Peace of Mind"
+}

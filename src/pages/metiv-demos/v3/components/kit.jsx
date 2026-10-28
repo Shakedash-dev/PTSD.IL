@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
+import * as Icons from 'lucide-react';
 import { ArrowLeft, Check, ExternalLink as ExternalIcon, Mail, MessageCircle, Phone, ListChecks, Quote } from 'lucide-react';
 import SectionBlock from '@/components/patterns/SectionBlock';
 import ChoiceChip from '@/components/patterns/ChoiceChip';
 import { DemoLink } from '@/pages/metiv-demos/shared/DemoChrome';
 import { cn } from '@/lib/utils';
+import { useCopy } from '../content/MetivContent';
 
-// Version-local building blocks for V3 "Guided Journey".
+// Version-local building blocks for V3 "Guided Journey". Their fixed wording is
+// copy (`kit`).
 
 /** Shared focus ring for links styled by hand. */
 export const FOCUS = 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background';
@@ -18,6 +21,40 @@ export const PILL_OUTLINE = `inline-flex items-center justify-center gap-2 round
 export const CHIP_LINK = `inline-flex items-center gap-1.5 rounded-full border border-border bg-card text-foreground text-sm font-medium px-4 py-2 hover:border-primary hover:bg-primary/10 transition-natural ${FOCUS}`;
 /** Inline text link. */
 export const TEXT_LINK = `font-medium text-accent underline decoration-primary/40 underline-offset-4 hover:decoration-accent ${FOCUS} rounded-sm`;
+
+/** On a "forward" ArrowLeft: points the other way in left-to-right languages. */
+export const FWD = 'ltr:-scale-x-100';
+/** On a "forward" arrow inside a `group`: the hover nudge, toward the reading direction. */
+export const NUDGE = 'transition-transform rtl:group-hover:-translate-x-1 ltr:group-hover:translate-x-1';
+
+/**
+ * Lucide icon by name, or nothing. (V3 copy of the patient kit's NamedIcon.)
+ * @param {{ name?: string, className?: string }} props
+ */
+export function NamedIcon({ name, className }) {
+  const Icon = name ? /** @type {Record<string, any>} */ (Icons)[name] : null;
+  return Icon ? <Icon className={className} aria-hidden="true" /> : null;
+}
+
+/**
+ * Fills {name} placeholders in a copy string with React nodes (links, bold
+ * text), so a sentence with inline markup stays one translatable string.
+ * @param {string} text
+ * @param {Record<string, React.ReactNode>} nodes
+ * @returns {React.ReactNode[]}
+ */
+export function fmtNodes(text, nodes) {
+  return text.split(/(\{\w+\})/g).map((part, i) => {
+    const m = /^\{(\w+)\}$/.exec(part);
+    return <React.Fragment key={i}>{m && m[1] in nodes ? nodes[m[1]] : part}</React.Fragment>;
+  });
+}
+
+/** "(opens in a new tab)" for screen readers. */
+export function NewTabHint() {
+  const copy = useCopy('kit');
+  return <span className="sr-only">{copy.newTab}</span>;
+}
 
 /**
  * Full-width band.
@@ -57,11 +94,13 @@ export function SectionHeading({ eyebrow, title, intro, id, align = 'start', as 
 }
 
 /**
- * The "בקצרה" card that opens content pages.
+ * The "short version" card that opens content pages.
  * @param {{ items: React.ReactNode[], title?: string, more?: { label: string, href: string }, className?: string }} props
  */
-export function ShortVersion({ items, title = 'בקצרה', more, className = '' }) {
+export function ShortVersion({ items, title, more, className = '' }) {
+  const copy = useCopy('kit');
   if (!items?.length) return null;
+  title = title || copy.shortVersion;
   return (
     <aside aria-label={title} className={cn('rounded-super border-2 border-primary/25 bg-card p-5 sm:p-6 shadow-card text-start', className)}>
       <p className="flex items-center gap-2 font-heading font-semibold text-foreground mb-3">
@@ -81,7 +120,7 @@ export function ShortVersion({ items, title = 'בקצרה', more, className = ''
       {more && (
         <a href={more.href} className={cn('mt-4 inline-flex items-center gap-1 text-sm', TEXT_LINK)}>
           {more.label}
-          <ArrowLeft className="w-4 h-4" aria-hidden="true" />
+          <ArrowLeft className={cn('w-4 h-4', FWD)} aria-hidden="true" />
         </a>
       )}
     </aside>
@@ -97,6 +136,7 @@ export function ShortVersion({ items, title = 'בקצרה', more, className = ''
  * @param {{ steps: JourneyStep[], className?: string, label?: string }} props
  */
 export function JourneySteps({ steps, className = '', label }) {
+  const copy = useCopy('kit');
   return (
     <ol aria-label={label} className={cn('relative space-y-4', className)}>
       {steps.map((step, i) => (
@@ -112,11 +152,11 @@ export function JourneySteps({ steps, className = '', label }) {
             {step.text && <p className="text-muted-foreground mt-1 leading-relaxed">{step.text}</p>}
             {step.to && (
               <DemoLink to={step.to} className={cn('mt-3 inline-flex items-center gap-1', TEXT_LINK)}>
-                {step.cta || 'להמשיך'}
-                <ArrowLeft className="w-4 h-4" aria-hidden="true" />
+                {step.cta || copy.continue}
+                <ArrowLeft className={cn('w-4 h-4', FWD)} aria-hidden="true" />
               </DemoLink>
             )}
-            {step.href && <ExternalLink href={step.href} className={cn('mt-3', TEXT_LINK)}>{step.cta || 'לפרטים'}</ExternalLink>}
+            {step.href && <ExternalLink href={step.href} className={cn('mt-3', TEXT_LINK)}>{step.cta || copy.details}</ExternalLink>}
           </div>
         </li>
       ))}
@@ -133,7 +173,7 @@ export function ExternalLink({ href, children, className = '', icon = true }) {
     <a href={href} target="_blank" rel="noopener noreferrer" className={cn('inline-flex items-center gap-1.5', className)}>
       {children}
       {icon && <ExternalIcon className="w-3.5 h-3.5 flex-shrink-0" aria-hidden="true" />}
-      <span className="sr-only">(נפתח בלשונית חדשה)</span>
+      <NewTabHint />
     </a>
   );
 }
@@ -143,6 +183,7 @@ export function ExternalLink({ href, children, className = '', icon = true }) {
  * @param {{ to: string, title: React.ReactNode, description?: React.ReactNode, icon?: React.ReactNode, image?: string, meta?: React.ReactNode, className?: string, cta?: string }} props
  */
 export function LinkCard({ to, title, description, icon, image, meta, className = '', cta }) {
+  const copy = useCopy('kit');
   return (
     <DemoLink
       to={to}
@@ -164,8 +205,8 @@ export function LinkCard({ to, title, description, icon, image, meta, className 
       <span className="font-heading font-semibold text-lg text-foreground leading-snug">{title}</span>
       {description && <span className="mt-1.5 text-muted-foreground leading-relaxed">{description}</span>}
       <span className="mt-auto pt-4 inline-flex items-center gap-1 text-sm font-semibold text-accent">
-        {cta || 'לעמוד'}
-        <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" aria-hidden="true" />
+        {cta || copy.toPage}
+        <ArrowLeft className={cn('w-4 h-4', FWD, NUDGE)} aria-hidden="true" />
       </span>
     </DemoLink>
   );
@@ -218,6 +259,7 @@ export function FactGrid({ items, columns = 2, className = '' }) {
  * @param {{ contact?: { name?: string, role?: string, email?: string, phone?: string, whatsapp?: string }, className?: string }} props
  */
 export function ContactChips({ contact, className = '' }) {
+  const copy = useCopy('kit');
   if (!contact) return null;
   const digits = (s) => (s || '').replace(/[^\d+]/g, '');
   const wa = (s) => `https://wa.me/972${digits(s).replace(/^0/, '')}`;
@@ -246,8 +288,8 @@ export function ContactChips({ contact, className = '' }) {
         {contact.whatsapp && (
           <a href={wa(contact.whatsapp)} target="_blank" rel="noopener noreferrer" className={CHIP_LINK}>
             <MessageCircle className="w-4 h-4 text-accent" aria-hidden="true" />
-            וואטסאפ <span dir="ltr">{contact.whatsapp}</span>
-            <span className="sr-only">(נפתח בלשונית חדשה)</span>
+            {copy.whatsapp} <span dir="ltr">{contact.whatsapp}</span>
+            <NewTabHint />
           </a>
         )}
       </div>
@@ -311,34 +353,32 @@ export function Linkify({ text }) {
 }
 
 /**
- * "האם זה עזר?" with a next suggested step. Nothing is sent anywhere.
+ * "Was this helpful?" with a next suggested step. Nothing is sent anywhere.
  * @param {{ steps?: { label: string, to: string }[], className?: string }} props
  */
 export function WasThisHelpful({ steps = [], className = '' }) {
   const [answer, setAnswer] = useState(/** @type {null|'yes'|'no'} */ (null));
+  const copy = useCopy('kit');
   return (
     <div className={cn('rounded-super bg-muted p-6 sm:p-8', className)}>
       <div className="flex flex-col lg:flex-row lg:items-start gap-6 lg:gap-12">
         <div className="lg:w-1/3">
-          <p className="font-heading font-semibold text-xl text-foreground">האם העמוד הזה עזר?</p>
+          <p className="font-heading font-semibold text-xl text-foreground">{copy.helpfulQuestion}</p>
           <div className="mt-3 flex flex-wrap gap-2">
-            <ChoiceChip selected={answer === 'yes'} onClick={() => setAnswer('yes')}>כן, תודה</ChoiceChip>
-            <ChoiceChip selected={answer === 'no'} onClick={() => setAnswer('no')}>לא ממש</ChoiceChip>
+            <ChoiceChip selected={answer === 'yes'} onClick={() => setAnswer('yes')}>{copy.helpfulYes}</ChoiceChip>
+            <ChoiceChip selected={answer === 'no'} onClick={() => setAnswer('no')}>{copy.helpfulNo}</ChoiceChip>
           </div>
           <p className="mt-3 text-sm text-muted-foreground min-h-[1.5rem]" aria-live="polite">
-            {answer === 'yes' && 'תודה ששיתפת. באתר ההדגמה שום דבר לא נשמר.'}
-            {answer === 'no' && (
-              <>
-                מצטערים. אפשר לנסות{' '}
-                <DemoLink to="/patient/where-to-get-help#consultation" className={TEXT_LINK}>שיחת התייעצות</DemoLink>
-                {' '}או לחזור ל<DemoLink to="/patient" className={TEXT_LINK}>כל הנושאים</DemoLink>.
-              </>
-            )}
+            {answer === 'yes' && copy.helpfulThanks}
+            {answer === 'no' && fmtNodes(copy.helpfulSorry, {
+              consultation: <DemoLink to="/patient/where-to-get-help#consultation" className={TEXT_LINK}>{copy.helpfulConsultation}</DemoLink>,
+              topics: <DemoLink to="/patient" className={TEXT_LINK}>{copy.helpfulTopics}</DemoLink>,
+            })}
           </p>
         </div>
         {steps.length > 0 && (
           <div className="flex-1">
-            <p className="font-heading font-semibold text-xl text-foreground">הצעד הבא, אם מתאים</p>
+            <p className="font-heading font-semibold text-xl text-foreground">{copy.nextStep}</p>
             <div className="mt-3 grid sm:grid-cols-2 gap-3">
               {steps.map((s) => (
                 <DemoLink
@@ -347,7 +387,7 @@ export function WasThisHelpful({ steps = [], className = '' }) {
                   className={cn('group flex items-center justify-between gap-3 rounded-super-sm bg-card border border-border px-5 py-4 font-medium text-foreground hover:border-primary transition-natural', FOCUS)}
                 >
                   {s.label}
-                  <ArrowLeft className="w-4 h-4 text-accent transition-transform group-hover:-translate-x-1" aria-hidden="true" />
+                  <ArrowLeft className={cn('w-4 h-4 text-accent', FWD, NUDGE)} aria-hidden="true" />
                 </DemoLink>
               ))}
             </div>

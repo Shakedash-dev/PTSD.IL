@@ -1,0 +1,76 @@
+{
+  "key": "RESEARCH_STUDIES",
+  "slug": "metiv-research-studies",
+  "kind": "list",
+  "rows": [
+    {
+      "_key": "sea-it-mdma",
+      "title": "بحث SEA-IT / MDMA",
+      "sortOrder": 0,
+      "content": {
+        "_key": "sea-it-mdma",
+        "_col": "metiv-research-studies",
+        "id": "sea-it-mdma",
+        "title": "بحث SEA-IT / MDMA",
+        "provider": "ميتيف، بإشراف بروفيسور بنحاس دنون، رئيس قسم الطب النفسي في مركز هرتسوغ الطبي",
+        "icon": "FlaskConical",
+        "who": "من يعانون من PTSD على خلفية عسكرية، شاركوا في الماضي في علاج يركّز على الصدمة لكن الأعراض مستمرة، ويستطيعون الالتزام بعملية مكثفة مدتها نحو 3.5 أشهر.",
+        "what": "بحث سريري يقارن بين علاجين: العلاج المصحوب بـMDMA، الذي يدمج تناول المادة مع العلاج النفسي، وSEA-IT، وهو علاج مكثف يركّز على الجسد والتجربة والتقبّل. 16 لقاءً على مدى 3-3.5 أشهر.",
+        "location": "القدس",
+        "process": "تعبّئ استبيان ملاءمة عبر الإنترنت. تُحدَّد الملاءمة للبحث من خلال عملية تشخيص، ولا يمكن الاختيار بين العلاجين.",
+        "note": "هذا بحث: هدفه فحص العلاجين. المشاركة لا تضمن نتيجة.",
+        "contacts": [
+          {
+            "kind": "link",
+            "label": "استبيان الملاءمة",
+            "href": "https://www.surveyhero.com/c/jzkapqr4"
+          },
+          {
+            "kind": "link",
+            "label": "رسالة توضيحية عن SEA-IT (PDF)",
+            "href": "https://metiv.org/wp-content/uploads/2025/07/מכתב-הסבר-SEA-IT.pdf"
+          },
+          {
+            "kind": "email",
+            "label": "البريد الإلكتروني",
+            "value": "moriya@metiv.org"
+          },
+          {
+            "kind": "text",
+            "label": "واتساب",
+            "value": "02-6264889"
+          }
+        ],
+        "source": "https://metiv.org/sea-it-mdma/"
+      }
+    },
+    {
+      "_key": "return-to-combat-study",
+      "title": "بحث مقابلات: العودة إلى القتال",
+      "sortOrder": 1,
+      "content": {
+        "_key": "return-to-combat-study",
+        "_col": "metiv-research-studies",
+        "id": "return-to-combat-study",
+        "title": "بحث مقابلات: العودة إلى القتال",
+        "provider": "ميتيف",
+        "icon": "MessageCircle",
+        "who": "مقاتلون عانوا من اضطراب ما بعد الصدمة العسكري حتى قبل حرب السيوف الحديدية وشاركوا في الحرب.",
+        "what": "مقابلة مفتوحة حول تجربة العودة إلى القتال.",
+        "contacts": [
+          {
+            "kind": "email",
+            "label": "البريد الإلكتروني",
+            "value": "shir@metiv.org"
+          },
+          {
+            "kind": "text",
+            "label": "واتساب",
+            "value": "02-5952240"
+          }
+        ],
+        "source": "https://metiv.org/טיפולים-ללא-עלות-דרך-מטיב/"
+      }
+    }
+  ]
+}

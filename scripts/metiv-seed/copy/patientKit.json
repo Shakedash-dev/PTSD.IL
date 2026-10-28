@@ -1,0 +1,13 @@
+{
+  "_area": "patient",
+  "_label": "רכיבים משותפים באזור המטופלים",
+  "fieldWho": "למי מיועד",
+  "fieldAges": "גילאים",
+  "fieldWhat": "מה כולל",
+  "fieldLocation": "מיקום",
+  "fieldCost": "עלות ומימון",
+  "fieldProcess": "איך פונים ומה קורה אחר כך",
+  "contactHeading": "יצירת קשר",
+  "consultationPhoneLabel": "מטיב",
+  "releaseJourneyPageLink": "לעמוד מסע שחרור"
+}

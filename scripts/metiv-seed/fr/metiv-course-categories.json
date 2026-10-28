@@ -1,0 +1,40 @@
+{
+  "key": "COURSE_CATEGORIES",
+  "slug": "metiv-course-categories",
+  "kind": "list",
+  "rows": [
+    {
+      "_key": "adults",
+      "title": "Traitement du traumatisme chez l'adulte",
+      "sortOrder": 0,
+      "content": {
+        "_key": "adults",
+        "_col": "metiv-course-categories",
+        "key": "adults",
+        "label": "Traitement du traumatisme chez l'adulte"
+      }
+    },
+    {
+      "_key": "children-family",
+      "title": "Enfants et famille",
+      "sortOrder": 1,
+      "content": {
+        "_key": "children-family",
+        "_col": "metiv-course-categories",
+        "key": "children-family",
+        "label": "Enfants et famille"
+      }
+    },
+    {
+      "_key": "organizations",
+      "title": "Pour les organisations",
+      "sortOrder": 2,
+      "content": {
+        "_key": "organizations",
+        "_col": "metiv-course-categories",
+        "key": "organizations",
+        "label": "Pour les organisations"
+      }
+    }
+  ]
+}

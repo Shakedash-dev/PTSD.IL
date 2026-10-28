@@ -10,9 +10,8 @@ import SectionBlock from '@/components/patterns/SectionBlock';
 import { Users, MapPin, ExternalLink, X } from 'lucide-react';
 import { IMAGES } from '@/lib/images';
 import ValidatableContent from '@/components/ValidatableContent';
-import { EntrySection } from '@/pages/metiv-demos/shared/patient/components';
-import { VETERANS_PROGRAMS, ADDITION_ANCHORS } from '@/pages/metiv-demos/shared/patient/additions';
-import { withReleaseJourneyPage } from '../data/releaseJourneyLinks';
+import { useCopy, useMetiv } from '../content/MetivContent';
+import { EntrySection, PATIENT_ANCHORS, useWithReleaseJourneyPage } from './PatientKit';
 import { VersionLinks } from './PtsdIlRouting';
 
 // Metiv demo (V3): a copy of src/pages/Community.jsx. Change only: the approved
@@ -49,6 +48,9 @@ const CARD_PLACEHOLDERS = [
 
 export default function Community() {
   const { lang } = useLang();
+  const { VETERANS_PROGRAMS } = useMetiv();
+  const c = useCopy('patientCommunity');
+  const withReleaseJourneyPage = useWithReleaseJourneyPage();
   const [audienceFilter, setAudienceFilter] = useState('all');
   const [locationFilter, setLocationFilter] = useState('all');
   const { data: communities = [], isLoading, error } = useCommunities({ lang });
@@ -89,7 +91,7 @@ export default function Community() {
 
       {/* Why community matters - intro paragraph */}
       <SectionBlock variant="canvas" maxWidth="default" padding="pt-12 pb-8">
-        <ValidatableContent contentId="community.intro" label="פסקת מבוא - קהילה">
+        <ValidatableContent contentId="community.intro" label={c.validateIntro}>
           <div className="space-y-4">
             <p className="font-body text-lg text-foreground leading-relaxed">
               {t(lang, 'community_why_p1')}
@@ -216,9 +218,9 @@ export default function Community() {
       <VersionLinks>
         <SectionBlock variant="muted" maxWidth="wide" padding="py-16">
           <EntrySection
-            id={ADDITION_ANCHORS.veterans}
-            title="חיילים משוחררים ומילואימניקים"
-            intro="תכניות קבוצתיות של מטיב לחיילים משוחררים, למילואימניקים ולבני משפחותיהם."
+            id={PATIENT_ANCHORS.veterans}
+            title={c.veteransTitle}
+            intro={c.veteransIntro}
             entries={withReleaseJourneyPage(VETERANS_PROGRAMS)}
           />
         </SectionBlock>

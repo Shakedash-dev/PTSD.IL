@@ -1,0 +1,167 @@
+{
+  "key": "PATIENT_NAV",
+  "slug": "metiv-patient-nav",
+  "kind": "list",
+  "rows": [
+    {
+      "_key": "patient",
+      "title": "Accueil",
+      "sortOrder": 0,
+      "content": {
+        "_key": "patient",
+        "_col": "metiv-patient-nav",
+        "key": "patient",
+        "label": "Accueil",
+        "route": "/patient"
+      }
+    },
+    {
+      "_key": "firstCircle",
+      "title": "Vous vivez avec un TSPT",
+      "sortOrder": 1,
+      "content": {
+        "_key": "firstCircle",
+        "_col": "metiv-patient-nav",
+        "key": "firstCircle",
+        "label": "Vous vivez avec un TSPT",
+        "route": "/patient/first-circle",
+        "children": [
+          {
+            "key": "ptsdInfo",
+            "label": "Sur le TSPT",
+            "route": "/patient/ptsd-info"
+          },
+          {
+            "key": "selfHelp",
+            "label": "Outils d'auto-assistance",
+            "route": "/patient/self-help"
+          },
+          {
+            "key": "rights",
+            "label": "Droits",
+            "route": "/patient/rights"
+          },
+          {
+            "key": "treatment",
+            "label": "Soins",
+            "route": "/patient/treatment"
+          },
+          {
+            "key": "community",
+            "label": "Communauté",
+            "route": "/patient/community"
+          },
+          {
+            "key": "children",
+            "label": "Contenus pour les enfants",
+            "route": "/patient/children"
+          }
+        ]
+      }
+    },
+    {
+      "_key": "secondCircle",
+      "title": "Vous êtes proche d'une personne concernée",
+      "sortOrder": 2,
+      "content": {
+        "_key": "secondCircle",
+        "_col": "metiv-patient-nav",
+        "key": "secondCircle",
+        "label": "Vous êtes proche d'une personne concernée",
+        "route": "/patient/second-circle",
+        "children": [
+          {
+            "key": "ptsdInfo",
+            "label": "Sur le TSPT",
+            "route": "/patient/ptsd-info"
+          },
+          {
+            "key": "secondCircleTools",
+            "label": "Outils pour faire face",
+            "route": "/patient/second-circle-tools"
+          },
+          {
+            "key": "rights",
+            "label": "Droits",
+            "route": "/patient/rights"
+          },
+          {
+            "key": "treatment",
+            "label": "Soins",
+            "route": "/patient/treatment"
+          },
+          {
+            "key": "children",
+            "label": "Contenus pour les enfants",
+            "route": "/patient/children"
+          },
+          {
+            "key": "community",
+            "label": "Communauté",
+            "route": "/patient/community"
+          }
+        ]
+      }
+    },
+    {
+      "_key": "questionnaire",
+      "title": "Questionnaire d'auto-évaluation",
+      "sortOrder": 3,
+      "content": {
+        "_key": "questionnaire",
+        "_col": "metiv-patient-nav",
+        "key": "questionnaire",
+        "label": "Questionnaire d'auto-évaluation",
+        "route": "/patient/questionnaire"
+      }
+    },
+    {
+      "_key": "whereToGetHelp",
+      "title": "Où se faire soigner",
+      "sortOrder": 4,
+      "content": {
+        "_key": "whereToGetHelp",
+        "_col": "metiv-patient-nav",
+        "key": "whereToGetHelp",
+        "label": "Où se faire soigner",
+        "route": "/patient/where-to-get-help"
+      }
+    },
+    {
+      "_key": "freeTreatment",
+      "title": "Traitements gratuits et études",
+      "sortOrder": 5,
+      "content": {
+        "_key": "freeTreatment",
+        "_col": "metiv-patient-nav",
+        "key": "freeTreatment",
+        "label": "Traitements gratuits et études",
+        "route": "/patient/free-treatment-and-research"
+      }
+    },
+    {
+      "_key": "calming",
+      "title": "Exercices d'apaisement",
+      "sortOrder": 6,
+      "content": {
+        "_key": "calming",
+        "_col": "metiv-patient-nav",
+        "key": "calming",
+        "label": "Exercices d'apaisement",
+        "route": "/patient/calming"
+      }
+    },
+    {
+      "_key": "sources",
+      "title": "Sources",
+      "sortOrder": 7,
+      "content": {
+        "_key": "sources",
+        "_col": "metiv-patient-nav",
+        "key": "sources",
+        "label": "Sources",
+        "route": "/patient/sources"
+      }
+    }
+  ]
+}

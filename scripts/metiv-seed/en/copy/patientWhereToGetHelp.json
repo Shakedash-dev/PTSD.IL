@@ -1,0 +1,10 @@
+{
+  "_area": "patient",
+  "_label": "אזור המטופלים: איפה אפשר לקבל טיפול",
+  "title": "Where to get treatment",
+  "subtitle": "Services that provide treatment for trauma and PTSD: the public system, nonprofits and helplines, and Metiv's clinics and programs. All services are shown in the same format, with no ranking.",
+  "disclaimer": "The details were collected from the providers' websites and may change. It is a good idea to confirm them with the provider itself before getting in touch.",
+  "publicTitle": "The public system",
+  "nonprofitsTitle": "Nonprofits and helplines",
+  "metivTitle": "Metiv"
+}

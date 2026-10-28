@@ -1,0 +1,205 @@
+{
+  "key": "ORGANIZATION_PROGRAMS",
+  "slug": "metiv-org-programs",
+  "kind": "list",
+  "rows": [
+    {
+      "_key": "metiv-space",
+      "title": "Metiv Space",
+      "sortOrder": 0,
+      "content": {
+        "_key": "metiv-space",
+        "_col": "metiv-org-programs",
+        "slug": "metiv-space",
+        "title": "Metiv Space",
+        "subtitle": "Developing trauma-informed organizations",
+        "summary": "Training and support for organizations and institutions that serve trauma survivors, toward a trauma-informed organizational and service approach.",
+        "description": "## Personal and national trauma and its impact on organizations\n\nThe October 7 disaster and the Iron Swords war have exposed, and continue to expose, many people to severe traumatic events experienced on a personal, family, community and national level. Israeli society now has many people wounded physically and emotionally in the war, bereaved families, and friends who have experienced loss. Many people in the country are in a state of heightened alertness in the face of the ongoing security situation.\n\nTrauma does not stay contained in the therapy room. Often, trauma survivors' encounters with service providers unintentionally trigger a renewed traumatic experience. Cumbersome and unclear bureaucratic processes, a cold or dismissive attitude from service providers, security checks - all of these can stir up feelings of lack of control, a reliving of experiences of humiliation or rejection, and can bring a person who has experienced trauma to frustration, rage and loss of control. These reactions can in turn set off a recurring cycle on the service provider's side.\n\nThe **Metiv Space - Developing Trauma-Informed Organizations** program works to reduce these harmful incidents and to create a space that does good for trauma survivors, by helping organizations and institutions build a trauma-aware and trauma-informed approach to their organization and their services.\n\n## What is a trauma-informed organization?\n\nA trauma-informed organization is one that understands the impact of trauma on the individual and the community, and accordingly creates a supportive, safe environment and provides service adapted to it. Such an organization:\n\n- **Creates a safe and supportive environment** for employees and clients\n- **Pays attention to the service experience** and to preventing renewed traumatic experiences\n- **Builds trust** between clients and the organization, and between employees and the organization\n- **Addresses burnout and secondary trauma** among employees\n- **Breaks the cycle of traumatic reactions** between employees and clients\n- **Deals with the effects of collective trauma**\n- **Takes part in the recovery and rehabilitation process** of trauma survivors in Israeli society\n\n## What does the training in organizations include?\n\n- Broadening the understanding of trauma and bereavement: symptoms, typical thought patterns, and how these come into play in encounters with service providers and in the workplace\n- Organizational change: what needs to be adapted, changed and developed in the organization, according to guiding principles taught in the training\n- Developing interpersonal and intrapersonal skills: for personal coping and for providing trauma-informed service\n- Tools for coping with states of arousal, aggression, dissociation and the like",
+        "formats": [
+          "Training and support within the organization",
+          "A one-day course for HR managers and organizational consultants"
+        ],
+        "audience": [
+          "Organizations and institutions that serve the public",
+          "Service providers",
+          "HR managers and organizational consultants"
+        ],
+        "clientList": [],
+        "voices": [
+          "It's hard enough for me to leave the house as it is, I don't go out without my wife with me, so they make me feel even more like I'm nothing. They make me feel like I'm nothing, it really creates another trauma for me on top of the trauma I already have",
+          "I gave the country everything, I gave my son, and this is how the country treats me in return? I felt humiliated, hurt, betrayed",
+          "Crowded places are hard for me, I feel my stress rising, I feel like I'm choking, my heart races, I feel the event coming back (at the supermarket)",
+          "PTSD is an invisible injury, I'm so invisible that even when I show my ID card they still don't believe me"
+        ],
+        "links": [
+          {
+            "label": "Book a training tailored to your organization",
+            "url": "https://forms.gle/f2kjVCqy18KwBY4j9"
+          },
+          {
+            "label": "Affected by trauma? Tell us about your experiences with services and organizations",
+            "url": "https://forms.gle/riXY9UWZ38jrHUxS6"
+          },
+          {
+            "label": "Service providers: tell us about the challenges of serving trauma survivors",
+            "url": "https://forms.gle/gxagPMjZeF2Gvt786"
+          }
+        ],
+        "relatedCourseSlug": "trauma-informed-org-day",
+        "contact": {
+          "name": "Yonit Efrati",
+          "role": "Head of Policy Advancement and Community Service Development",
+          "email": "yonit@metiv.org"
+        },
+        "sourceUrl": "https://metiv.org/מרחב-מטיב/"
+      }
+    },
+    {
+      "_key": "trauma-informed-org",
+      "title": "Building a Trauma-Informed Organization",
+      "sortOrder": 1,
+      "content": {
+        "_key": "trauma-informed-org",
+        "_col": "metiv-org-programs",
+        "slug": "trauma-informed-org",
+        "title": "Building a Trauma-Informed Organization",
+        "subtitle": "A one-day course for HR managers and organizational consultants",
+        "summary": "A seminar day as part of \"Metiv Space\" on the effects of trauma in the workplace and on adapting procedures, processes and policy.",
+        "description": "In the course you will broaden your understanding of trauma and its effects on employees and clients, and receive tools for leading your organization as a trauma-informed one.\n\nThe most recent published cohort took place on July 15, 2025 (Tuesday, 9:15-15:30, NIS 300). Dates for upcoming courses will be announced.",
+        "formats": [
+          "In person, one day (6 hours)"
+        ],
+        "audience": [
+          "HR managers",
+          "Organizational consultants"
+        ],
+        "topics": [
+          "An understanding of how trauma shows up in the work environment",
+          "Principles for creating a trauma-informed organizational environment",
+          "Tools for adapting procedures, processes and policy",
+          "Practical skills for self-regulation and for managing extreme situations",
+          "Ways to embed the change toward a trauma-informed organization"
+        ],
+        "clientList": [],
+        "relatedCourseSlug": "trauma-informed-org-day",
+        "contact": {
+          "name": "Yonit Efrati",
+          "email": "yonit@metiv.org"
+        },
+        "sourceUrl": "https://metiv.org/בניית-ארגון-מותאם-טראומה/"
+      }
+    },
+    {
+      "_key": "custom-workshops",
+      "title": "Customized Workshops and Trainings",
+      "sortOrder": 2,
+      "content": {
+        "_key": "custom-workshops",
+        "_col": "metiv-org-programs",
+        "slug": "custom-workshops",
+        "title": "Customized Workshops and Trainings",
+        "summary": "Workshops and lectures built around the needs of the commissioning organization, for professionals, for employees who encounter trauma survivors, and for groups that have experienced traumatic events.",
+        "description": "We offer a wide range of customized workshops and lectures for different audiences. We work with mental health professionals, employees who encounter trauma survivors, groups that have experienced traumatic events, as well as schools, government ministries, private companies and more.\n\nWe invite you to consult with us about building a workshop for your workplace or peer group.\n\n**Every program is built around the needs of the commissioning organization, adapted as closely as possible to the actual conditions of the setting.**",
+        "formats": [
+          "Workshop",
+          "Lecture",
+          "Seminar day"
+        ],
+        "audience": [
+          "Mental health professionals",
+          "Employees who encounter trauma survivors",
+          "Groups that have experienced traumatic events",
+          "Schools",
+          "Government ministries",
+          "Private companies"
+        ],
+        "topics": [
+          "Coping with loss in the workplace",
+          "Supporting the supporters",
+          "Post-traumatic growth for breast cancer survivors",
+          "Building personal and professional resilience",
+          "Crisis and trauma: a bird's-eye view for community leaders",
+          "Parenting in times of uncertainty",
+          "Bereavement and trauma in childhood",
+          "Resilience for youth leaders",
+          "Burnout at work",
+          "Crisis intervention",
+          "Coping with the reality of war",
+          "Military PTSD",
+          "Family challenges in a reality of war"
+        ],
+        "clientList": [
+          "Yad Vashem, The World Holocaust Remembrance Center",
+          "Ministry of Defense",
+          "Ministry of Finance",
+          "Prime Minister's Office",
+          "Ministry of Health",
+          "State Comptroller's Office",
+          "Israel Police",
+          "Jerusalem Fire Department",
+          "Magen David Adom",
+          "Clalit Health Services",
+          "Leumit Health Services",
+          "Shaare Zedek Medical Center",
+          "Mazor Hospital",
+          "Youth Advancement",
+          "Beit Cham",
+          "Tel Aviv District Attorney's Office",
+          "Social services in various municipalities",
+          "Council of Psychologists",
+          "Early childhood education teams across Israel",
+          "Schools in Nahariya",
+          "Public schools in Biloxi, Mississippi",
+          "Community rabbis",
+          "Israel Youth Hostels Association",
+          "Foster care services",
+          "Headspace",
+          "Pardes Hanna Educational Psychology Service",
+          "Jerusalem Educational Psychology Service",
+          "Netzah Yehuda",
+          "Israel Psychoanalytic Society",
+          "ERAN - Emotional First Aid (1201)"
+        ],
+        "contact": {
+          "email": "shir@metiv.org"
+        },
+        "sourceUrl": "https://metiv.org/סדנאות-והכשרות-בהתאמה-אישית/"
+      }
+    },
+    {
+      "_key": "org-trainings",
+      "title": "Training for Therapeutic Organizations",
+      "sortOrder": 3,
+      "content": {
+        "_key": "org-trainings",
+        "_col": "metiv-org-programs",
+        "slug": "org-trainings",
+        "title": "Training for Therapeutic Organizations",
+        "subtitle": "A trauma therapist training course for teams",
+        "summary": "A training course in trauma therapy for therapeutic teams in organizations, tailored to the organization's field of work.",
+        "description": "The training course gives the therapeutic team up-to-date knowledge, clinical experience, practical tools and an understanding of trauma-focused treatment processes.\n\n## What does the organization get?\n\n- In-depth professional knowledge\n- Practical tools for work in the field\n- A shared therapeutic language\n- Tailoring to your organization's field of work",
+        "formats": [
+          "A course for the organization's team",
+          "The Roadmap for public bodies and nonprofits"
+        ],
+        "audience": [
+          "Therapists with experience in the field of trauma",
+          "Therapists with no prior background who want to acquire tools in this field",
+          "Multidisciplinary teams that serve trauma survivors"
+        ],
+        "clientList": [
+          "Ministry of Education - Northern District",
+          "Misholim Association",
+          "Feuerstein Institute",
+          "Enosh - The Israeli Mental Health Association",
+          "Youth Advancement"
+        ],
+        "relatedCourseSlug": "org-therapist-training",
+        "contact": {
+          "email": "shir@metiv.org"
+        },
+        "sourceUrl": "https://metiv.org/הכשרות-לארגונים/"
+      }
+    }
+  ]
+}

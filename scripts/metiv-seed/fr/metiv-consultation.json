@@ -1,0 +1,22 @@
+{
+  "key": "CONSULTATION",
+  "slug": "metiv-consultation",
+  "kind": "single",
+  "rows": [
+    {
+      "_key": "CONSULTATION",
+      "title": "CONSULTATION",
+      "sortOrder": 0,
+      "content": {
+        "_key": "CONSULTATION",
+        "_col": "metiv-consultation",
+        "id": "consultation",
+        "title": "Vous hésitez à nous contacter ?",
+        "text": "Vous vous demandez s'il faut entreprendre une thérapie, et quand ? Vous pouvez appeler Metiv pour vous renseigner sur les possibilités.",
+        "phone": "02-6449666",
+        "route": "/patient/where-to-get-help#consultation",
+        "linkLabel": "Consulter Metiv"
+      }
+    }
+  ]
+}

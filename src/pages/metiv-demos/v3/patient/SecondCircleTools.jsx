@@ -7,8 +7,8 @@ import Disclosure from '@/components/patterns/Disclosure';
 import { IMAGES } from '@/lib/images';
 import ValidatableContent from '@/components/ValidatableContent';
 import Markdown from '@/components/Markdown';
-import { EntrySection } from '@/pages/metiv-demos/shared/patient/components';
-import { RESERVIST_FAMILY_PROGRAMS, ADDITION_ANCHORS } from '@/pages/metiv-demos/shared/patient/additions';
+import { useCopy, useMetiv } from '../content/MetivContent';
+import { EntrySection, PATIENT_ANCHORS } from './PatientKit';
 import { VersionLinks } from './PtsdIlRouting';
 
 // Metiv demo (V3): a copy of src/pages/SecondCircleTools.jsx. Change only: the
@@ -54,6 +54,8 @@ function FAQItem({ q, intro, sections, closing, callout, contentId }) {
 
 export default function SecondCircleTools() {
   const { lang } = useLang();
+  const { RESERVIST_FAMILY_PROGRAMS } = useMetiv();
+  const c = useCopy('patientSecondCircleTools');
   const { data: tools = [], isLoading, error } = useSecondCircleTools({ lang });
 
   return (
@@ -70,7 +72,7 @@ export default function SecondCircleTools() {
       <div className="max-w-3xl mx-auto px-4 sm:px-6 py-16">
         {isLoading && <p className="text-center text-muted-foreground mb-4">{t(lang, 'loading')}</p>}
         {error && <p className="text-center text-muted-foreground mb-4">{t(lang, 'content_error')}</p>}
-        <ValidatableContent contentId="second-circle-tools.intro" label="מבוא - כלי מעגל שני">
+        <ValidatableContent contentId="second-circle-tools.intro" label={c.validateIntro}>
           <div className="bg-primary/5 border border-primary/20 rounded-super p-5 mb-8">
             <p className="text-foreground leading-relaxed">
               {t(lang, 'second_circle_tools_intro')}
@@ -89,9 +91,9 @@ export default function SecondCircleTools() {
       <VersionLinks>
         <div className="max-w-5xl mx-auto px-4 sm:px-6 pb-16">
           <EntrySection
-            id={ADDITION_ANCHORS.reservistFamilies}
-            title="לבני משפחה של מילואימניקים"
-            intro="מסגרות קבוצתיות ומשפחתיות של מטיב למילואימניקים ולבני משפחותיהם, לחיזוק הקשר בין הורים לילדים ויכולת ההתמודדות."
+            id={PATIENT_ANCHORS.reservistFamilies}
+            title={c.reservistTitle}
+            intro={c.reservistIntro}
             entries={RESERVIST_FAMILY_PROGRAMS}
           />
         </div>

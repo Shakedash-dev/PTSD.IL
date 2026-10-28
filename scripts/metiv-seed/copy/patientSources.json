@@ -1,0 +1,8 @@
+{
+  "_area": "patient",
+  "_label": "אזור המטופלים: מקורות",
+  "booksTitle": "ספרים של אנשי מטיב",
+  "booksIntro": "ספרים שכתבו או ערכו אנשי מטיב. {note}",
+  "bookLanguage": "ספר · {language}",
+  "bookLink": "לעמוד הספר"
+}

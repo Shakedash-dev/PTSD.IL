@@ -1,0 +1,18 @@
+{
+  "_area": "general",
+  "_label": "רכיבים משותפים (כפתורים, קישורים, \"האם זה עזר?\")",
+  "newTab": "(נפתח בלשונית חדשה)",
+  "shortVersion": "בקצרה",
+  "continue": "להמשיך",
+  "details": "לפרטים",
+  "toPage": "לעמוד",
+  "whatsapp": "וואטסאפ",
+  "helpfulQuestion": "האם העמוד הזה עזר?",
+  "helpfulYes": "כן, תודה",
+  "helpfulNo": "לא ממש",
+  "helpfulThanks": "תודה ששיתפת. באתר ההדגמה שום דבר לא נשמר.",
+  "helpfulSorry": "מצטערים. אפשר לנסות {consultation} או לחזור ל{topics}.",
+  "helpfulConsultation": "שיחת התייעצות",
+  "helpfulTopics": "כל הנושאים",
+  "nextStep": "הצעד הבא, אם מתאים"
+}

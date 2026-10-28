@@ -3,6 +3,13 @@
 DEMO ONLY. Not linked from the live site, not indexed, static data only (no API
 calls at runtime). Hebrew only, RTL.
 
+**V3 is the exception (owner decision, 2026-10-28):** it reads every piece of
+content from the live API, in all 5 languages, and is edited at
+`/metiv-site-demo-v3/admin`. Model and rules: `docs/metiv-db-spec.md`. For v3,
+rule 4 below is superseded, the static `shared/` data is only the historical
+seed source, and no Hebrew text may be typed into a v3 source file
+(`src/test/metiv-v3-no-inline-hebrew.test.js`) - it goes into a copy row.
+
 Four design variations of the same site:
 
 | Route | Folder |

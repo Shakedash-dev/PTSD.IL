@@ -1,0 +1,92 @@
+{
+  "key": "LEGAL",
+  "slug": "metiv-legal",
+  "kind": "single",
+  "rows": [
+    {
+      "_key": "LEGAL",
+      "title": "LEGAL",
+      "sortOrder": 0,
+      "content": {
+        "_key": "LEGAL",
+        "_col": "metiv-legal",
+        "accessibility": {
+          "title": "Accessibility Statement",
+          "updated": "17.12.2025",
+          "demoNote": "This text is based on the accessibility statement of metiv.org. The demo site does not include the accessibility plugin described, so before publication the statement must be updated to reflect what is actually implemented.",
+          "sections": [
+            {
+              "title": "Introduction",
+              "body": "For some people, browsing websites can be difficult or even impossible because of various disabilities. Website accessibility is an essential part of ensuring equal use for everyone, including people with disabilities. An accessible website allows every user to understand, navigate and operate the content, regardless of any physical, sensory or cognitive limitation. The Metiv association is committed to providing a fair, clear and accessible environment for the general public."
+            },
+            {
+              "title": "Accessibility on the website",
+              "body": "The metiv.org website has implemented an accessibility system by the company Osim Shivyon, and accessibility adjustments have been made in accordance with Israeli Standard 5568 at level AA and the international WCAG 2.0 guidelines."
+            },
+            {
+              "title": "Keyboard navigation on metiv.org",
+              "body": "After enabling \"Keyboard navigation\" in the accessibility menu: B to move between buttons, F between forms, H between headings, M between menus, G between images. For a screen reader experience, the NVDA software is recommended."
+            },
+            {
+              "title": "Ran into a problem?",
+              "body": "If you did not find the content you were looking for or you need help, you can contact the association's accessibility coordinator by phone at 02-595-2236 or by email at info@metiv.org; address: Givat Shaul, Herzog Medical Center, Jerusalem."
+            },
+            {
+              "title": "Person responsible for website accessibility (plugin provider)",
+              "body": "Tabor Avrahami, Osim Shivyon. Phone: 1-700-015-107. Email: info@equality.co.il"
+            }
+          ],
+          "coordinator": {
+            "phone": "02-595-2236",
+            "email": "info@metiv.org",
+            "address": "Givat Shaul, Herzog Medical Center, Jerusalem"
+          },
+          "sourceUrl": "https://metiv.org/הצהרת-נגישות/"
+        },
+        "privacy": {
+          "title": "Privacy Policy - The Metiv Association",
+          "intro": "The Metiv association - The Israel Psychotrauma Center (reg. nonprofit no. 580313926) aims to protect the privacy of visitors to its website and to respect their rights. This policy is an integral part of the terms of use of the association's website.",
+          "sections": [
+            {
+              "title": "Information collection",
+              "body": "When filling out forms on the website (such as contacting us, registering for a program, donating or requesting information), you will be asked to provide details such as your full name, email address, phone number and any other details you choose to provide. The association may store this information in its database."
+            },
+            {
+              "title": "Payment details",
+              "body": "Donations and payments are made through third-party service providers (such as secure payment processing companies). The association does not store credit card data or any other payment information."
+            },
+            {
+              "title": "Use of information",
+              "body": "Providing service and support; managing treatment programs, trainings and events; contacting you; sending updates and mailings (with your consent); statistical analysis and improving the user experience; complying with legal requirements."
+            },
+            {
+              "title": "Mailings and updates",
+              "body": "You can remove yourself from the mailing list at any time using the unsubscribe link in every mailing or by writing to info@metiv.org."
+            },
+            {
+              "title": "Sharing information",
+              "body": "The association will not pass personal information to third parties, except to external providers that provide services to it (such as mailing and hosting), when required by law or legal proceedings, or to protect the rights, property or personal safety of the association or its users."
+            },
+            {
+              "title": "Information security",
+              "body": "The association takes reasonable, accepted measures to secure personal information, including restricting access to authorized employees, encryption and secure servers. Complete security cannot be guaranteed."
+            },
+            {
+              "title": "Cookies",
+              "body": "The website uses cookies for operation, to improve the user experience, to analyze traffic and to personalize content. You can block or delete them in your browser settings, but this may affect some services."
+            },
+            {
+              "title": "Social networks",
+              "body": "The website may include social network tools. Their use is subject to the privacy policies of those platforms."
+            },
+            {
+              "title": "Changes and contact",
+              "body": "The association may update this policy from time to time. For questions: info@metiv.org"
+            }
+          ],
+          "sourceUrl": "https://metiv.org/מדיניות-פרטיות/"
+        }
+      }
+    }
+  ]
+}

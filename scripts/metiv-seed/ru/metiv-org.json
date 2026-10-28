@@ -1,0 +1,55 @@
+{
+  "key": "ORG",
+  "slug": "metiv-org",
+  "kind": "single",
+  "rows": [
+    {
+      "_key": "ORG",
+      "title": "ORG",
+      "sortOrder": 0,
+      "content": {
+        "_key": "ORG",
+        "_col": "metiv-org",
+        "name": "Метив - Израильский центр психотравмы",
+        "shortName": "Метив",
+        "legalName": "Ассоциация «Метив - Израильский центр психотравмы»",
+        "legalEntity": "Рег. № ассоциации 580313926",
+        "tagline": "После травмы",
+        "headline": "Людям нужны люди",
+        "vision": "Общество, которое признаёт психическую травму, заботится о тех, кто от неё страдает, и стремится к расширению их возможностей.",
+        "mission": "Наша цель - оказывать качественную, человечную и неравнодушную помощь сообществам и отдельным людям до травмы, во время неё и после. Распространять наши обширные знания о психической травме через академические исследования и обучение, чтобы другие могли применять эти знания в своих сообществах.",
+        "intro": "В Метиве мы понимаем, что справляться с травмой во время войны и террора - это сложный путь. Этот путь может затронуть все сферы жизни, и поэтому мы здесь, чтобы сопровождать вас. Мы предлагаем безопасное и чуткое пространство, где вы можете получить профессиональную поддержку и вместе с нами проложить путь к совладанию и восстановлению сил. Потому что вы не одни.",
+        "address": "Гиват-Шауль, Медицинский центр Герцог, Иерусалим",
+        "mail": "А/я 3900, Иерусалим 91035",
+        "phones": {
+          "main": "02-6449666",
+          "footer": "02-595-2234",
+          "kids": "02-6294858",
+          "fax": "02-644-9777",
+          "coursesWhatsapp": "02-5952235",
+          "researchWhatsapp": "02-5952240",
+          "accessibilityCoordinator": "02-595-2236"
+        },
+        "emails": {
+          "general": "info@metiv.org",
+          "kids": "kids@metiv.org",
+          "courses": "shimrit@metiv.org",
+          "research": "shir@metiv.org",
+          "registration": "stav@metiv.org",
+          "partnerships": "Chaim@metiv.org"
+        },
+        "social": {
+          "facebook": "https://www.facebook.com/metivtraumacenter",
+          "facebookKids": "https://www.facebook.com/Metivkids",
+          "youtube": "https://www.youtube.com/channel/UCBKOBQp0BFFp7uX9qiwUp8w",
+          "linktree": "https://linktr.ee/metivkids"
+        },
+        "donateUrl": "https://www.jgive.com/new/en/ils/charity-organizations/1179",
+        "trainingsFormUrl": "https://docs.google.com/forms/d/e/1FAIpQLScc90IWpEglRpTtKqwmeBToTCGXeZpZXwvcjE6UHaLR4YKxuw/viewform",
+        "adultsClinicFormUrl": "https://docs.google.com/forms/d/e/1FAIpQLSfz5ougCVnY1LFHJhyrBFrlICf2gQivumOzstI3YHor8_y0yg/viewform",
+        "kidsClinicFormUrl": "https://docs.google.com/forms/d/e/1FAIpQLSfiUHfJ4UDrpSUPQxtPKWmQuZGKg7lfL1c21D_JAsmwxlYLJA/viewform",
+        "sourceUrl": "https://metiv.org/"
+      }
+    }
+  ]
+}

@@ -23,6 +23,12 @@ async function editFaqQuestion(newText) {
   await screen.findByText(newText);
 }
 
+// A Hebrew edit is translated in the background (the preview's fake
+// translator); the final save button only appears once every language is in.
+function findFinalSave(dialog) {
+  return within(dialog).findByRole('button', { name: /שמירה סופית/ }, { timeout: 4000 });
+}
+
 describe('admin: frame and home page', () => {
   let errorSpy;
   beforeEach(() => {
@@ -58,9 +64,11 @@ describe('admin: frame and home page', () => {
     expect(screen.queryByText('מסמכים משפטיים')).toBeNull();
   });
 
-  it('has no language picker on the treatment panel', async () => {
+  it('picks the content language once, at the top, not per panel', async () => {
     renderAdmin();
     await openContent();
+    const tabs = screen.getByRole('group', { name: 'שפת העריכה' });
+    expect(within(tabs).getByRole('button', { name: 'עברית' })).toHaveAttribute('aria-pressed', 'true');
     fireEvent.click(screen.getByRole('button', { name: 'שלבי טיפול' }));
     await waitFor(() => expect(screen.getByText('שלב 1 - זיהוי')).toBeInTheDocument(), { timeout: 4000 });
     expect(screen.queryByLabelText('שפה')).toBeNull();
@@ -107,7 +115,7 @@ describe('admin: edits are staged, then saved together', () => {
     expect(within(dialog).getByText(FAQ)).toBeInTheDocument();
     expect(within(dialog).getAllByText('שאלה ערוכה').length).toBeGreaterThan(0);
 
-    const save = within(dialog).getByRole('button', { name: /שמירה סופית/ });
+    const save = await findFinalSave(dialog);
     expect(save).toBeDisabled();
     fireEvent.click(within(dialog).getByRole('checkbox'));
     expect(save).toBeEnabled();
@@ -139,8 +147,9 @@ describe('admin: edits are staged, then saved together', () => {
     await editFaqQuestion('שאלה ערוכה');
     fireEvent.click(screen.getByRole('button', { name: /סקירה ושמירה/ }));
     const dialog = await screen.findByRole('dialog');
+    const save = await findFinalSave(dialog);
     fireEvent.click(within(dialog).getByRole('checkbox'));
-    fireEvent.click(within(dialog).getByRole('button', { name: /שמירה סופית/ }));
+    fireEvent.click(save);
     // The preview refuses every write.
     await waitFor(() => expect(within(dialog).getByRole('button', { name: /שמירה סופית/ })).toBeInTheDocument());
     expect(screen.getByText('שינוי אחד ממתין לשמירה')).toBeInTheDocument();

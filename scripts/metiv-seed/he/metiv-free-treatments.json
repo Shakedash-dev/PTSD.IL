@@ -1,0 +1,74 @@
+{
+  "key": "FREE_TREATMENTS",
+  "slug": "metiv-free-treatments",
+  "kind": "list",
+  "rows": [
+    {
+      "_key": "military-ptsd-treatment",
+      "title": "טיפול ללא עלות למתמודדים עם PTSD מהשירות הצבאי",
+      "sortOrder": 0,
+      "content": {
+        "_key": "military-ptsd-treatment",
+        "_col": "metiv-free-treatments",
+        "id": "military-ptsd-treatment",
+        "title": "טיפול ללא עלות למתמודדים עם PTSD מהשירות הצבאי",
+        "provider": "מטיב",
+        "icon": "HandHeart",
+        "who": "חיילים משוחררים (לא בשירות סדיר) המתמודדים עם PTSD מהשירות הצבאי.",
+        "what": "טיפול באחת משתי שיטות, חוויה סומטית (SE) או חשיפה ממושכת (PE), על ידי מטפלים מוסמכים. המסגרת כוללת מילוי שאלונים, הערכות קליניות וליווי של מטיב, והנתונים משמשים למחקר קליני.",
+        "location": "בכל הארץ",
+        "cost": "ללא עלות",
+        "contacts": [
+          {
+            "kind": "email",
+            "label": "דוא\"ל",
+            "value": "shir@metiv.org"
+          },
+          {
+            "kind": "text",
+            "label": "וואטסאפ",
+            "value": "02-5952240"
+          }
+        ],
+        "source": "https://metiv.org/טיפולים-ללא-עלות-דרך-מטיב/"
+      }
+    },
+    {
+      "_key": "kids-space",
+      "title": "מרחב מטיב לילדים",
+      "sortOrder": 1,
+      "content": {
+        "_key": "kids-space",
+        "_col": "metiv-free-treatments",
+        "id": "kids-space",
+        "title": "מרחב מטיב לילדים",
+        "provider": "מטיב ילדים",
+        "icon": "Sparkles",
+        "who": "הורים שמתלבטים אם הילד זקוק לטיפול, שממתינים לתור לטיפול, או שיש להם שאלות על הילד.",
+        "ages": "הורים לילדים בגילאי 0-9",
+        "what": "מפגש משחק חד-פעמי של הורה וילד, עם אנשי מקצוע בתחום הטראומה אצל ילדים שאפשר לשאול אותם שאלות. זה אינו טיפול ואינו אבחון.",
+        "location": "מטיב ילדים, גבעת שאול, המרכז הרפואי הרצוג, קומה -1, ירושלים. ימי שלישי אחר הצהריים וימי רביעי בבוקר, בהרשמה מראש.",
+        "cost": "ללא עלות",
+        "process": "ממלאים שאלון קצר, ואחריו מוצעת שיחה או מפגש היכרות.",
+        "contacts": [
+          {
+            "kind": "link",
+            "label": "הרשמה למועדים הקרובים",
+            "href": "https://www.surveyhero.com/c/merhav1"
+          },
+          {
+            "kind": "email",
+            "label": "דוא\"ל",
+            "value": "panda@metiv.org"
+          },
+          {
+            "kind": "phone",
+            "label": "טלפון",
+            "value": "02-6294858"
+          }
+        ],
+        "source": "https://metiv.org/מרחב-מטיב-ילדים/"
+      }
+    }
+  ]
+}

@@ -1,0 +1,60 @@
+{
+  "key": "VETERANS_PROGRAMS",
+  "slug": "metiv-veterans",
+  "kind": "list",
+  "rows": [
+    {
+      "_key": "release-journey",
+      "title": "מסע שחרור",
+      "sortOrder": 0,
+      "content": {
+        "_key": "release-journey",
+        "_col": "metiv-veterans",
+        "$ref": "METIV_SERVICES#release-journey"
+      }
+    },
+    {
+      "_key": "panda-family",
+      "title": "פנד\"ה למשפחה",
+      "sortOrder": 1,
+      "content": {
+        "_key": "panda-family",
+        "_col": "metiv-veterans",
+        "$ref": "RESERVIST_FAMILY_PROGRAMS#panda-family"
+      }
+    },
+    {
+      "_key": "namal-family",
+      "title": "נמ\"ל למשפחה - נעשה מקום למשחק",
+      "sortOrder": 2,
+      "content": {
+        "_key": "namal-family",
+        "_col": "metiv-veterans",
+        "$ref": "RESERVIST_FAMILY_PROGRAMS#namal-family"
+      }
+    },
+    {
+      "_key": "reservist-fathers",
+      "title": "קבוצה דיאדית לאנשי מילואים וילדיהם",
+      "sortOrder": 3,
+      "content": {
+        "_key": "reservist-fathers",
+        "_col": "metiv-veterans",
+        "id": "reservist-fathers",
+        "title": "קבוצה דיאדית לאנשי מילואים וילדיהם",
+        "provider": "מטיב",
+        "icon": "Users",
+        "who": "אנשי מילואים יחד עם ילדיהם.",
+        "process": "ההרשמה בטופס באתר מטיב, מוגבלת ל-8 משתתפים וכוללת שלב תשלום.",
+        "contacts": [
+          {
+            "kind": "link",
+            "label": "לטופס ההרשמה",
+            "href": "https://metiv.org/אבות-וילדים-מילואים/"
+          }
+        ],
+        "source": "https://metiv.org/אבות-וילדים-מילואים/"
+      }
+    }
+  ]
+}

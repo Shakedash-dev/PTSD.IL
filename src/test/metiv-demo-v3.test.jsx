@@ -7,6 +7,8 @@ import { ChatProvider } from '@/lib/ChatContext';
 import { ValidationProvider } from '@/contexts/ValidationContext';
 import { UserTypeProvider } from '@/contexts/UserTypeContext';
 import Site from '@/pages/metiv-demos/v3/Site';
+import { metivQueryOptions } from '@/pages/metiv-demos/v3/content/MetivContent';
+import { metivSeedData } from '@/test/fixtures/metivSeed';
 
 // The V3 patient area renders the real PTSD-IL pages, which read content through
 // these hooks. Stub them the way test/pages-render.test.jsx does.
@@ -28,14 +30,17 @@ vi.mock('@/api/hooks', () => {
 });
 import { ROUTES } from '@/pages/metiv-demos/shared/routes';
 import { ALL_ROUTES, V3_ROUTES } from '@/pages/metiv-demos/v3/meta';
-import { ARTICLES, COURSES } from '@/pages/metiv-demos/shared/therapist';
+// Expected values come from the seed the pages render from.
+const { ARTICLES, COURSES } = metivSeedData();
 
 const BASE = '/metiv-site-demo-v3';
 const SLUGS = { course: 'cbt-trauma', article: ARTICLES[0].slug };
 
 /** @param {string} path */
 function renderAt(path) {
-  const client = new QueryClient({ defaultOptions: { queries: { retry: false, gcTime: 0 } } });
+  const client = new QueryClient({ defaultOptions: { queries: { retry: false, gcTime: Infinity, staleTime: Infinity } } });
+  // The Metiv content comes from the API; prefill it with the seed the DB holds.
+  client.setQueryData(metivQueryOptions('he').queryKey, metivSeedData());
   return render(
     <QueryClientProvider client={client}>
       <LanguageProvider>
@@ -157,6 +162,39 @@ describe('metiv demo v3 (Guided Journey)', () => {
       expect(container.querySelector('nav[aria-label="שני האזורים באתר"]')).toBeNull();
       expect(screen.getAllByRole('button', { name: /עזרה עכשיו/ }).length).toBeGreaterThan(0);
       unmount();
+    }
+  });
+
+  it('shell follows the language: English renders left-to-right with the English chrome copy', () => {
+    // LanguageProvider reads the saved language from localStorage ('natal_lang').
+    localStorage.setItem('natal_lang', 'en');
+    try {
+      const data = metivSeedData();
+      data.copy = { ...data.copy, chrome: Object.fromEntries(Object.entries(data.copy.chrome).map(([k, v]) => [k, `EN:${v}`])) };
+      const client = new QueryClient({ defaultOptions: { queries: { retry: false, gcTime: Infinity, staleTime: Infinity } } });
+      client.setQueryData(metivQueryOptions('en').queryKey, data);
+      const { container } = render(
+        <QueryClientProvider client={client}>
+          <LanguageProvider>
+            <ChatProvider>
+              <ValidationProvider>
+                <MemoryRouter initialEntries={[`${BASE}/contact`]}>
+                  <UserTypeProvider>
+                    <Routes>
+                      <Route path={`${BASE}/*`} element={<Site />} />
+                    </Routes>
+                  </UserTypeProvider>
+                </MemoryRouter>
+              </ValidationProvider>
+            </ChatProvider>
+          </LanguageProvider>
+        </QueryClientProvider>
+      );
+      expect(container.querySelector('div[dir="ltr"][lang="en"]'), 'shell is ltr, lang=en').not.toBeNull();
+      expect(container.querySelector('div[dir="rtl"][lang]'), 'no rtl shell').toBeNull();
+      expect(screen.getAllByRole('button', { name: /EN:/ }).length).toBeGreaterThan(0);
+    } finally {
+      localStorage.setItem('natal_lang', 'he');
     }
   });
 

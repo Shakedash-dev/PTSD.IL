@@ -1,0 +1,58 @@
+{
+  "key": "RESERVIST_FAMILY_PROGRAMS",
+  "slug": "metiv-reservist-family",
+  "kind": "list",
+  "rows": [
+    {
+      "_key": "panda-family",
+      "title": "PANDA en famille",
+      "sortOrder": 0,
+      "content": {
+        "_key": "panda-family",
+        "_col": "metiv-reservist-family",
+        "id": "panda-family",
+        "title": "PANDA en famille",
+        "provider": "Metiv Enfants",
+        "icon": "Users",
+        "who": "Réservistes et leurs familles.",
+        "ages": "Enfants de 0 à 14 ans",
+        "what": "Des activités familiales pour développer les façons de faire face et les capacités de régulation : 6 séances de guidance parentale et 6 séances familiales.",
+        "location": "À domicile ou chez Metiv",
+        "cost": "Gratuit",
+        "contacts": [
+          {
+            "kind": "link",
+            "label": "Formulaire de demande pour les programmes familiaux",
+            "href": "https://tinyurl.com/metivkids"
+          }
+        ],
+        "source": "https://metiv.org/טיפולים-ללא-עלות-דרך-מטיב/"
+      }
+    },
+    {
+      "_key": "namal-family",
+      "title": "NAMAL en famille - Faisons place au jeu",
+      "sortOrder": 1,
+      "content": {
+        "_key": "namal-family",
+        "_col": "metiv-reservist-family",
+        "id": "namal-family",
+        "title": "NAMAL en famille - Faisons place au jeu",
+        "provider": "Metiv Enfants",
+        "icon": "Baby",
+        "who": "Réservistes et leurs familles. Parmi les groupes : un groupe pour les parents de retour de la réserve, avec leur enfant, financé par le ministère de la Défense.",
+        "ages": "Parents d'enfants de 2 à 4 ans",
+        "what": "Des séances de groupe avec des activités communes pour les parents et les enfants.",
+        "cost": "Gratuit",
+        "contacts": [
+          {
+            "kind": "link",
+            "label": "Formulaire de demande pour les programmes familiaux",
+            "href": "https://tinyurl.com/metivkids"
+          }
+        ],
+        "source": "https://metiv.org/טיפולים-ללא-עלות-דרך-מטיב/"
+      }
+    }
+  ]
+}

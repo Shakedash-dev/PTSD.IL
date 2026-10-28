@@ -1,12 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { X, Send, ExternalLink } from "lucide-react";
 import { useLang } from "@/lib/LanguageContext";
 import { t } from "@/lib/i18n";
 import { Button } from "@/components/ui/button";
 import { useChat } from "@/lib/ChatContext";
 import Markdown from "@/components/Markdown";
-import { sectionRoute } from "@/lib/citations";
+import { sectionRoute, isMetivDemoPath } from "@/lib/citations";
 
 // Caps the textarea's growth at roughly 4-5 lines before it starts scrolling.
 // Matches the auto-grow approach used by HeroChatInput.
@@ -15,6 +15,7 @@ const MAX_TEXTAREA_HEIGHT = 120;
 export default function ChatPanel() {
   const { lang } = useLang();
   const { open, setOpen, messages, crisisLang, sending, send } = useChat();
+  const inMetivDemo = isMetivDemoPath(useLocation().pathname);
   const [draft, setDraft] = useState("");
   const textareaRef = useRef(null);
 
@@ -106,7 +107,7 @@ export default function ChatPanel() {
                 const refs = (m.sources || [])
                   .filter((s) => cited.has(s.n))
                   .filter((s) => {
-                    const key = `${sectionRoute(s.type, s.categorySlug)}|${s.title}`;
+                    const key = `${sectionRoute(s.type, s.categorySlug, s.categorySlugs, inMetivDemo)}|${s.title}`;
                     if (seen.has(key)) return false;
                     seen.add(key);
                     return true;
@@ -115,7 +116,7 @@ export default function ChatPanel() {
                 return (
                   <div className="flex flex-wrap gap-2 mt-2 pt-2 border-t border-border/50">
                     {refs.map((s) => (
-                      <Link key={s.itemId} to={sectionRoute(s.type, s.categorySlug)}
+                      <Link key={s.itemId} to={sectionRoute(s.type, s.categorySlug, s.categorySlugs, inMetivDemo)}
                         className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-primary/10 text-foreground rounded-full text-xs font-medium hover:bg-primary/20 transition-natural">
                         {s.title}<ExternalLink className="w-3 h-3" />
                       </Link>

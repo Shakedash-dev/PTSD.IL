@@ -1,0 +1,253 @@
+{
+  "key": "PATIENT_HUB",
+  "slug": "metiv-patient-hub",
+  "kind": "single",
+  "rows": [
+    {
+      "_key": "PATIENT_HUB",
+      "title": "PATIENT_HUB",
+      "sortOrder": 0,
+      "content": {
+        "_key": "PATIENT_HUB",
+        "_col": "metiv-patient-hub",
+        "hero": {
+          "brand": "Metiv - Centre israélien de psychotraumatologie",
+          "eyebrow": "Stress post-traumatique",
+          "headline": "Vous n'êtes pas seuls",
+          "subtitle": "Informations, outils et soutien, réunis en un seul endroit, dans un langage clair.",
+          "ctaLabel": "Qu'est-ce qui vous amène ici ?",
+          "image": "/images/set1/home_hero.webp",
+          "about": "Le trouble de stress post-traumatique (TSPT) est une réaction psychologique à un événement traumatique, que le cerveau et le corps continuent de traiter longtemps après que le danger est passé.",
+          "aboutLinkLabel": "En savoir plus",
+          "aboutRoute": "/patient/ptsd-info"
+        },
+        "paths": [
+          {
+            "key": "firstCircle",
+            "route": "/patient/first-circle",
+            "title": "Vous vivez avec un TSPT",
+            "subtitle": "Tout ce qu'il faut pour comprendre la situation, commencer un traitement et connaître vos droits, à votre rythme, sans vous perdre.",
+            "image": "/images/illustrations/ptsd_sufferer.webp",
+            "ctaLabel": "Continuer"
+          },
+          {
+            "key": "secondCircle",
+            "route": "/patient/second-circle",
+            "title": "Vous êtes proche d'une personne concernée",
+            "subtitle": "Pour le conjoint, le parent ou l'ami d'une personne concernée : comment la soutenir, la comprendre, et prendre aussi soin de vous en chemin.",
+            "image": "/images/illustrations/supporter.webp",
+            "ctaLabel": "Continuer"
+          },
+          {
+            "key": "questionnaire",
+            "route": "/patient/questionnaire",
+            "title": "Je ne sais pas trop",
+            "subtitle": "Un court questionnaire anonyme (environ 3 minutes) pour vous aider à savoir si vos symptômes justifient un examen plus approfondi.",
+            "image": "/images/illustrations/wondering.webp",
+            "ctaLabel": "Continuer"
+          }
+        ],
+        "quickLinks": [
+          {
+            "key": "ptsdInfo",
+            "label": "Sur le TSPT",
+            "route": "/patient/ptsd-info",
+            "icon": "Brain",
+            "description": "Questions et réponses sur le TSPT."
+          },
+          {
+            "key": "selfHelp",
+            "label": "Outils d'auto-assistance",
+            "route": "/patient/self-help",
+            "icon": "Wind",
+            "description": "Des outils à essayer seul, des applications et des conférences vidéo."
+          },
+          {
+            "key": "treatment",
+            "label": "Les voies de traitement",
+            "route": "/patient/treatment",
+            "icon": "Heart",
+            "description": "La feuille de route du traitement, étape par étape."
+          },
+          {
+            "key": "whereToGetHelp",
+            "label": "Où se faire soigner",
+            "route": "/patient/where-to-get-help",
+            "icon": "MapPin",
+            "description": "Les structures de soin et leurs coordonnées, présentées de la même façon pour toutes."
+          },
+          {
+            "key": "freeTreatment",
+            "label": "Traitements gratuits et études",
+            "route": "/patient/free-treatment-and-research",
+            "icon": "HandHeart",
+            "description": "Dispositifs gratuits et études qui recrutent des participants."
+          },
+          {
+            "key": "rights",
+            "label": "Droits et démarches administratives",
+            "route": "/patient/rights",
+            "icon": "FileText",
+            "description": "Les droits selon le type d'atteinte, et comment faire la demande."
+          },
+          {
+            "key": "community",
+            "label": "Communautés et rencontres",
+            "route": "/patient/community",
+            "icon": "Users",
+            "description": "Groupes de soutien et rencontres dans tout le pays."
+          },
+          {
+            "key": "secondCircleTools",
+            "label": "Outils pour faire face",
+            "route": "/patient/second-circle-tools",
+            "icon": "Shield",
+            "description": "Des outils pour les membres de la famille et les proches."
+          },
+          {
+            "key": "children",
+            "label": "Contenus pour les enfants",
+            "route": "/patient/children",
+            "icon": "Baby",
+            "description": "Comment parler aux enfants, selon leur âge."
+          },
+          {
+            "key": "calming",
+            "label": "Exercices d'apaisement",
+            "route": "/patient/calming",
+            "icon": "Wind",
+            "description": "Respiration, ancrage et relaxation musculaire."
+          },
+          {
+            "key": "questionnaire",
+            "label": "Questionnaire d'auto-évaluation",
+            "route": "/patient/questionnaire",
+            "icon": "ClipboardList",
+            "description": "Un questionnaire anonyme d'auto-évaluation. Ce n'est pas un diagnostic."
+          },
+          {
+            "key": "sources",
+            "label": "Sources",
+            "route": "/patient/sources",
+            "icon": "Library",
+            "description": "Les sources sur lesquelles reposent ces informations."
+          }
+        ],
+        "additions": [
+          {
+            "key": "whereToGetHelp",
+            "label": "Où se faire soigner",
+            "route": "/patient/where-to-get-help",
+            "icon": "MapPin",
+            "description": "Structures publiques, associations et cliniques de Metiv, avec leurs coordonnées."
+          },
+          {
+            "key": "freeTreatment",
+            "label": "Traitements gratuits et participation à des études",
+            "route": "/patient/free-treatment-and-research",
+            "icon": "HandHeart",
+            "description": "Pour qui, ce que cela comprend et comment s'adresser."
+          },
+          {
+            "key": "veterans",
+            "label": "Soldats démobilisés et réservistes",
+            "route": "/patient/community#veterans",
+            "icon": "Compass",
+            "description": "Peace of Mind, groupes pour les familles de réservistes et groupes parents-enfants."
+          },
+          {
+            "key": "parentChildGroups",
+            "label": "Groupes pour parents et enfants",
+            "route": "/patient/children#parent-child-groups",
+            "icon": "Baby",
+            "description": "PANDA, NAMAL et une séance de jeu gratuite."
+          },
+          {
+            "key": "reservistFamilies",
+            "label": "Pour les familles de réservistes",
+            "route": "/patient/second-circle-tools#reservist-families",
+            "icon": "Users",
+            "description": "PANDA en famille et NAMAL en famille."
+          },
+          {
+            "key": "metivBooks",
+            "label": "Livres des équipes de Metiv",
+            "route": "/patient/sources#metiv-books",
+            "icon": "Library",
+            "description": "Des livres écrits ou dirigés par des membres de Metiv."
+          },
+          {
+            "key": "videoLectures",
+            "label": "Conférences vidéo",
+            "route": "/patient/self-help#video-lectures",
+            "icon": "Youtube",
+            "description": "La chaîne YouTube de Metiv."
+          },
+          {
+            "key": "consultation",
+            "label": "Vous hésitez à nous contacter ?",
+            "route": "/patient/where-to-get-help#consultation",
+            "icon": "MessageCircle",
+            "description": "Vous vous demandez s'il faut entreprendre une thérapie, et quand ? Vous pouvez appeler Metiv pour vous renseigner sur les possibilités."
+          }
+        ],
+        "crisisLines": [
+          {
+            "key": "eranPhone",
+            "label": "Ligne d'urgence - ERAN",
+            "value": "1201",
+            "href": "tel:1201",
+            "icon": "Phone"
+          },
+          {
+            "key": "eranWhatsapp",
+            "label": "ERAN sur WhatsApp",
+            "value": "WhatsApp",
+            "href": "https://api.whatsapp.com/send?phone=9720528451201",
+            "icon": "MessageCircle"
+          }
+        ],
+        "consultation": {
+          "title": "Vous hésitez à nous contacter ?",
+          "text": "Vous vous demandez s'il faut entreprendre une thérapie, et quand ? Vous pouvez appeler Metiv pour vous renseigner sur les possibilités.",
+          "phone": "02-6449666",
+          "route": "/patient/where-to-get-help#consultation",
+          "linkLabel": "Consulter Metiv"
+        },
+        "metivServices": [
+          {
+            "id": "adults-clinic",
+            "title": "La clinique pour adultes de Metiv",
+            "icon": "HeartHandshake",
+            "route": "/patient/where-to-get-help#adults-clinic"
+          },
+          {
+            "id": "kids-clinic",
+            "title": "Metiv Enfants - Centre de régulation émotionnelle",
+            "icon": "Baby",
+            "route": "/patient/where-to-get-help#kids-clinic"
+          },
+          {
+            "id": "migdalor",
+            "title": "Clinique Migdalor",
+            "icon": "Shield",
+            "route": "/patient/where-to-get-help#migdalor"
+          },
+          {
+            "id": "release-journey",
+            "title": "Peace of Mind",
+            "icon": "Compass",
+            "route": "/patient/where-to-get-help#release-journey"
+          },
+          {
+            "id": "free-treatments",
+            "title": "Traitements gratuits via Metiv",
+            "icon": "HandHeart",
+            "route": "/patient/where-to-get-help#free-treatments"
+          }
+        ],
+        "disclaimer": "Ce site ne fournit pas d'avis médical. En cas d'urgence, consultez un médecin ou appelez ERAN : 1201"
+      }
+    }
+  ]
+}

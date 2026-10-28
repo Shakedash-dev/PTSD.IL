@@ -3,25 +3,27 @@ import { useLocation } from 'react-router-dom';
 import { ChevronLeft } from 'lucide-react';
 import { DemoLink } from '@/pages/metiv-demos/shared/DemoChrome';
 import { cn } from '@/lib/utils';
-import { resolveRoute, trailFor, SHORT_VERSIONS } from '../meta';
+import { useCopy, useMetiv } from '../content/MetivContent';
+import { resolveRoute, trailFor } from '../meta';
 import { ShortVersion, FOCUS } from './kit';
 
 /**
- * Plain-language trail: "את/ה כאן: מטיב › למטופלים ולמשפחות › זכויות".
+ * Plain-language trail: "you are here: Metiv > patients and families > rights".
  * @param {{ onDark?: boolean }} props
  */
 export function Trail({ onDark = false }) {
   const { pathname } = useLocation();
   const { key, params } = resolveRoute(pathname);
   const trail = trailFor(key, params);
+  const copy = useCopy('pageHeader');
   if (!trail.length) return null;
   return (
-    <nav aria-label="את/ה כאן" className="mb-5">
+    <nav aria-label={copy.trailLabel} className="mb-5">
       <ol className={cn('flex flex-wrap items-center gap-x-1.5 gap-y-1 text-sm', onDark ? 'text-sanctuary-foreground/85' : 'text-muted-foreground')}>
-        <li className="font-medium">את/ה כאן:</li>
+        <li className="font-medium">{copy.trailPrefix}</li>
         {trail.map((item, i) => (
           <li key={i} className="flex items-center gap-1.5">
-            {i > 0 && <ChevronLeft className="w-3.5 h-3.5 opacity-60" aria-hidden="true" />}
+            {i > 0 && <ChevronLeft className="w-3.5 h-3.5 opacity-60 ltr:-scale-x-100" aria-hidden="true" />}
             {item.to ? (
               <DemoLink to={item.to} className={cn('underline-offset-4 hover:underline rounded-sm', FOCUS, onDark ? 'hover:text-sanctuary-foreground' : 'hover:text-foreground')}>
                 {item.label}
@@ -51,7 +53,7 @@ const TITLE = {
 
 /**
  * V3 page header. Accepts the patterns/PageHeader contract, plus V3 extras:
- * `illustration` (hand-drawn art, shown whole), `short` (the "בקצרה" items,
+ * `illustration` (hand-drawn art, shown whole), `short` (the "short version" items,
  * defaults to the patient-kit entry for the current route) and `meta` (a row
  * under the subtitle).
  * @param {{
@@ -77,7 +79,8 @@ export default function PageHeaderV3({
 }) {
   const { pathname } = useLocation();
   const { key } = resolveRoute(pathname);
-  const shortItems = short ?? (key ? SHORT_VERSIONS[key] : undefined);
+  const { SHORT_VERSIONS } = useMetiv();
+  const shortItems = short ?? (key ? SHORT_VERSIONS?.[key] : undefined);
   const onDark = tone === 'dark';
   const art = illustration || image;
   const centered = align === 'center' && !art;

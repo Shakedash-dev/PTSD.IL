@@ -1,0 +1,77 @@
+{
+  "key": "SHORT_VERSIONS",
+  "slug": "metiv-short-versions",
+  "kind": "single",
+  "rows": [
+    {
+      "_key": "SHORT_VERSIONS",
+      "title": "SHORT_VERSIONS",
+      "sortOrder": 0,
+      "content": {
+        "_key": "SHORT_VERSIONS",
+        "_col": "metiv-short-versions",
+        "firstCircle": [
+          "A path for people who have been through a hard event themselves.",
+          "Information about PTSD, tools you can try on your own, and rights.",
+          "How to start treatment, support communities, and how to talk with children."
+        ],
+        "secondCircle": [
+          "A path for partners, parents, children and friends of someone who is struggling.",
+          "What the person close to you is going through, and how you can support them.",
+          "How to take care of yourself, too, along the way."
+        ],
+        "secondCircleTools": [
+          "Practical tools for family members and loved ones.",
+          "You can open only what is relevant right now.",
+          "At the bottom of the page: services for reservists' families."
+        ],
+        "questionnaire": [
+          "An anonymous questionnaire, about 3 minutes.",
+          "The questionnaire is not a diagnosis.",
+          "At the end you'll find options for next steps, including a consultation call."
+        ],
+        "ptsdInfo": [
+          "Questions and answers about PTSD, in plain language.",
+          "You can open only the questions that interest you."
+        ],
+        "selfHelp": [
+          "Tools you can try on your own, at your own pace.",
+          "Apps and ideas for everyday life.",
+          "Video lectures from Metiv's YouTube channel."
+        ],
+        "treatment": [
+          "The roadmap to treatment, step by step.",
+          "What happens at each stage and what you can ask.",
+          "At the end: where to get treatment."
+        ],
+        "whereToGetHelp": [
+          "Public treatment services, nonprofits and Metiv clinics.",
+          "Each service is shown in the same format: who it's for, what it includes, cost and how to apply.",
+          "Not sure whether to reach out? A consultation call is available."
+        ],
+        "freeTreatment": [
+          "Free treatment programs.",
+          "Studies recruiting participants.",
+          "For each program: who it's for and how to apply."
+        ],
+        "rights": [
+          "Rights by type of injury.",
+          "Choose a category, and open only the question that interests you.",
+          "Some answers include a step-by-step explanation and links."
+        ],
+        "community": [
+          "Support groups and meetups across Israel.",
+          "Services for veterans and reservists."
+        ],
+        "children": [
+          "How to talk with children, by age.",
+          "Groups for parents and children."
+        ],
+        "sources": [
+          "The sources the information in this area is based on.",
+          "Books written or edited by Metiv staff."
+        ]
+      }
+    }
+  ]
+}

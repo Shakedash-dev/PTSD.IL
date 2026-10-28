@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, afterEach } from "vitest";
-import { fetchAllItems, fetchAllCommunities, fetchItem } from "../src/lib/api";
+import { fetchAllItems, fetchAllCommunities, fetchItem, fetchMetivItems } from "../src/lib/api";
 
 afterEach(() => vi.restoreAllMocks());
 
@@ -55,6 +55,17 @@ describe("fetchAllItems", () => {
     vi.spyOn(globalThis, "fetch").mockResolvedValue(new Response(JSON.stringify(rows), { status: 200 }));
     const items = await fetchAllItems("https://api/x");
     expect(items[0].categorySlug).toBe("rights");
+  });
+
+  it("keeps every category slug and routes a Metiv row by its collection, not the parent", async () => {
+    const rows = [{
+      id: "6", groupId: "g", type: "article", langId: "he", title: "F", content: "{}", isPublished: true,
+      categories: [{ slug: "metiv" }, { slug: "metiv-veterans" }],
+    }];
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(new Response(JSON.stringify(rows), { status: 200 }));
+    const items = await fetchAllItems("https://api/x");
+    expect(items[0].categorySlug).toBe("metiv-veterans");
+    expect(items[0].categorySlugs).toEqual(["metiv", "metiv-veterans"]);
   });
 
   it("leaves categorySlug undefined when the item has no categories", async () => {
@@ -132,5 +143,35 @@ describe("fetchItem", () => {
     vi.spyOn(globalThis, "fetch").mockResolvedValue(new Response(JSON.stringify(row), { status: 200 }));
     const item = await fetchItem("https://api/x", "1");
     expect(item?.categorySlug).toBe("ptsd-info");
+  });
+});
+
+describe("normalize ageGroups / audiences", () => {
+  it("keeps their names, and adds nothing when they are empty", async () => {
+    const rows = [
+      { id: "k", groupId: "g", type: "article", langId: "he", title: "הנחיות", content: "{}", isPublished: true,
+        ageGroups: [{ slug: "4-6", name: "4-6" }], audiences: [{ slug: "hostilities", name: "נפגעי פעולות איבה" }] },
+      { id: "p", groupId: "g", type: "faq", langId: "he", title: "P", content: "{}", isPublished: true, ageGroups: [], audiences: [] },
+    ];
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(new Response(JSON.stringify(rows), { status: 200 }));
+    const items = await fetchAllItems("https://api/x");
+    expect(items[0].ageGroups).toEqual(["4-6"]);
+    expect(items[0].audiences).toEqual(["נפגעי פעולות איבה"]);
+    expect("ageGroups" in items[1] || "audiences" in items[1]).toBe(false);
+  });
+});
+
+describe("fetchMetivItems", () => {
+  it("fetches one language of the metiv parent and keeps only that language's Metiv rows", async () => {
+    const rows = [
+      { id: "1", langId: "en", title: "A", content: "{}", categories: [{ slug: "metiv" }, { slug: "metiv-team" }] },
+      { id: "2", langId: "he", title: "B", content: "{}", categories: [{ slug: "metiv" }, { slug: "metiv-team" }] },
+      { id: "3", langId: "en", title: "C", content: "{}", categories: [{ slug: "rights" }] },
+      { id: "4", langId: "en", title: "D", content: "{}", isPublished: false, categories: [{ slug: "metiv" }] },
+    ];
+    const spy = vi.spyOn(globalThis, "fetch").mockResolvedValue(new Response(JSON.stringify(rows), { status: 200 }));
+    const items = await fetchMetivItems("https://api/x", "en");
+    expect(spy).toHaveBeenCalledWith("https://api/x/articles?categorySlug=metiv&langId=en");
+    expect(items.map((i) => i.id)).toEqual(["1"]);
   });
 });

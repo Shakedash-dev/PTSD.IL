@@ -1,0 +1,40 @@
+{
+  "key": "COURSE_CATEGORIES",
+  "slug": "metiv-course-categories",
+  "kind": "list",
+  "rows": [
+    {
+      "_key": "adults",
+      "title": "علاج الصدمة لدى البالغين",
+      "sortOrder": 0,
+      "content": {
+        "_key": "adults",
+        "_col": "metiv-course-categories",
+        "key": "adults",
+        "label": "علاج الصدمة لدى البالغين"
+      }
+    },
+    {
+      "_key": "children-family",
+      "title": "الأطفال والعائلة",
+      "sortOrder": 1,
+      "content": {
+        "_key": "children-family",
+        "_col": "metiv-course-categories",
+        "key": "children-family",
+        "label": "الأطفال والعائلة"
+      }
+    },
+    {
+      "_key": "organizations",
+      "title": "للمنظمات",
+      "sortOrder": 2,
+      "content": {
+        "_key": "organizations",
+        "_col": "metiv-course-categories",
+        "key": "organizations",
+        "label": "للمنظمات"
+      }
+    }
+  ]
+}

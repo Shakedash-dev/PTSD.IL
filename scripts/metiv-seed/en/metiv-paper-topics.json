@@ -1,0 +1,25 @@
+{
+  "key": "PAPER_TOPICS",
+  "slug": "metiv-paper-topics",
+  "kind": "single",
+  "rows": [
+    {
+      "_key": "PAPER_TOPICS",
+      "title": "PAPER_TOPICS",
+      "sortOrder": 0,
+      "content": {
+        "_key": "PAPER_TOPICS",
+        "_col": "metiv-paper-topics",
+        "veterans": "Combat soldiers, reservists and veterans",
+        "children-family": "Children and families",
+        "adolescents": "Adolescents",
+        "schools-resilience": "Resilience and schools",
+        "growth": "Post-traumatic growth",
+        "terror-war": "Terror and war",
+        "treatment": "Treatment methods",
+        "policy": "Policy and funding",
+        "other": "Other"
+      }
+    }
+  ]
+}

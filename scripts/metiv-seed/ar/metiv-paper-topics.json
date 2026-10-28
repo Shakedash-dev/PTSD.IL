@@ -1,0 +1,25 @@
+{
+  "key": "PAPER_TOPICS",
+  "slug": "metiv-paper-topics",
+  "kind": "single",
+  "rows": [
+    {
+      "_key": "PAPER_TOPICS",
+      "title": "PAPER_TOPICS",
+      "sortOrder": 0,
+      "content": {
+        "_key": "PAPER_TOPICS",
+        "_col": "metiv-paper-topics",
+        "veterans": "المقاتلون وجنود الاحتياط والجنود المسرّحون",
+        "children-family": "الأطفال والعائلات",
+        "adolescents": "المراهقون",
+        "schools-resilience": "المناعة النفسية والمدارس",
+        "growth": "النمو ما بعد الصدمة",
+        "terror-war": "الإرهاب والحرب",
+        "treatment": "أساليب العلاج",
+        "policy": "السياسات والتمويل",
+        "other": "أخرى"
+      }
+    }
+  ]
+}

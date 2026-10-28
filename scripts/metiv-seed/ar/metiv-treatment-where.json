@@ -1,0 +1,20 @@
+{
+  "key": "TREATMENT_WHERE_BLOCK",
+  "slug": "metiv-treatment-where",
+  "kind": "single",
+  "rows": [
+    {
+      "_key": "TREATMENT_WHERE_BLOCK",
+      "title": "TREATMENT_WHERE_BLOCK",
+      "sortOrder": 0,
+      "content": {
+        "_key": "TREATMENT_WHERE_BLOCK",
+        "_col": "metiv-treatment-where",
+        "title": "أين يمكن الحصول على العلاج",
+        "text": "قائمة بالأطر التي يُقدَّم فيها العلاج: صناديق المرضى، ومراكز المناعة النفسية، وقسم التأهيل، والجمعيات، وعيادات ميتيف، مع تفاصيل التوجّه لكل منها.",
+        "linkLabel": "إلى قائمة الأطر",
+        "route": "/patient/where-to-get-help"
+      }
+    }
+  ]
+}

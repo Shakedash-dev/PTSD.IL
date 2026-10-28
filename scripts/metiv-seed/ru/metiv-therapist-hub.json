@@ -1,0 +1,80 @@
+{
+  "key": "THERAPIST_HUB",
+  "slug": "metiv-therapist-hub",
+  "kind": "single",
+  "rows": [
+    {
+      "_key": "THERAPIST_HUB",
+      "title": "THERAPIST_HUB",
+      "sortOrder": 0,
+      "content": {
+        "_key": "THERAPIST_HUB",
+        "_col": "metiv-therapist-hub",
+        "title": "Для специалистов",
+        "intro": "Курсы, обучение, супервизия и исследования в области терапии травмы от Метива - Израильского центра психотравмы. Здесь вы найдёте ближайшие учебные потоки, обучение по работе с детьми и семьями, индивидуальную и групповую супервизию, программы для организаций, а также исследования и публикации сотрудников Метива.",
+        "sections": [
+          {
+            "key": "courses",
+            "title": "Курсы и обучение",
+            "description": "КПТ травмы, «Дорожная карта», комплексная травма, дни повышения квалификации и летний курс.",
+            "route": "/therapist/courses",
+            "icon": "GraduationCap"
+          },
+          {
+            "key": "childrenFamily",
+            "title": "Дети и семья",
+            "description": "Основы терапии травмы у детей и подготовка ведущих групп ПАНДА и НАМАЛЬ.",
+            "route": "/therapist/children-and-family",
+            "icon": "Baby"
+          },
+          {
+            "key": "supervision",
+            "title": "Супервизия",
+            "description": "Индивидуальная супервизия, супервизионные группы и супервизия для команд в организациях.",
+            "route": "/therapist/supervision",
+            "icon": "Users"
+          },
+          {
+            "key": "organizations",
+            "title": "Для организаций",
+            "description": "«Пространство Метив», построение организации, учитывающей травму, семинары и обучение под заказ.",
+            "route": "/therapist/organizations",
+            "icon": "Building2"
+          },
+          {
+            "key": "research",
+            "title": "Исследования",
+            "description": "Исследования, которые сейчас ведёт исследовательский отдел, включая исследования, набирающие участников.",
+            "route": "/therapist/research",
+            "icon": "Microscope"
+          },
+          {
+            "key": "publications",
+            "title": "Публикации",
+            "description": "Книги, статьи и главы, опубликованные сотрудниками Метива.",
+            "route": "/therapist/publications",
+            "icon": "Library"
+          },
+          {
+            "key": "articles",
+            "title": "Статьи",
+            "description": "Статьи и профессиональные тексты команды Метива.",
+            "route": "/therapist/articles",
+            "icon": "FileText"
+          },
+          {
+            "key": "events",
+            "title": "Мероприятия и новости",
+            "description": "Потоки курсов, семинары и конференции - предстоящие и прошедшие.",
+            "route": "/therapist/events",
+            "icon": "CalendarDays"
+          }
+        ],
+        "cta": {
+          "label": "Форма запроса на обучение или супервизию",
+          "url": "https://docs.google.com/forms/d/e/1FAIpQLScc90IWpEglRpTtKqwmeBToTCGXeZpZXwvcjE6UHaLR4YKxuw/viewform"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,72 @@
+{
+  "key": "FACTS",
+  "slug": "metiv-facts",
+  "kind": "list",
+  "rows": [
+    {
+      "_key": "metiv-facts-0",
+      "title": "Год основания",
+      "sortOrder": 0,
+      "content": {
+        "_key": "metiv-facts-0",
+        "_col": "metiv-facts",
+        "value": "1989",
+        "label": "Год основания",
+        "source": "עמוד אודות",
+        "sourceUrl": "https://metiv.org/אודות/"
+      }
+    },
+    {
+      "_key": "metiv-facts-1",
+      "title": "Психотерапевтов подготовлено по всей стране",
+      "sortOrder": 1,
+      "content": {
+        "_key": "metiv-facts-1",
+        "_col": "metiv-facts",
+        "value": "+2,000",
+        "label": "Психотерапевтов подготовлено по всей стране",
+        "source": "דף הבית ועמוד ההכשרות",
+        "sourceUrl": "https://metiv.org/"
+      }
+    },
+    {
+      "_key": "metiv-facts-2",
+      "title": "Учителей подготовлено в рамках Национальной школьной программы жизнестойкости",
+      "sortOrder": 2,
+      "content": {
+        "_key": "metiv-facts-2",
+        "_col": "metiv-facts",
+        "value": "+5,000",
+        "label": "Учителей подготовлено в рамках Национальной школьной программы жизнестойкости",
+        "source": "עמוד אודות",
+        "sourceUrl": "https://metiv.org/אודות/"
+      }
+    },
+    {
+      "_key": "metiv-facts-3",
+      "title": "Клиентов в год в клинике для взрослых",
+      "sortOrder": 3,
+      "content": {
+        "_key": "metiv-facts-3",
+        "_col": "metiv-facts",
+        "value": "~300",
+        "label": "Клиентов в год в клинике для взрослых",
+        "source": "עמוד מרפאת המבוגרים",
+        "sourceUrl": "https://metiv.org/מרפאת-מבוגרים/"
+      }
+    },
+    {
+      "_key": "metiv-facts-4",
+      "title": "Психотерапевтов в команде клиники для взрослых",
+      "sortOrder": 4,
+      "content": {
+        "_key": "metiv-facts-4",
+        "_col": "metiv-facts",
+        "value": "~20",
+        "label": "Психотерапевтов в команде клиники для взрослых",
+        "source": "עמוד מרפאת המבוגרים",
+        "sourceUrl": "https://metiv.org/מרפאת-מבוגרים/"
+      }
+    }
+  ]
+}

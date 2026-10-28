@@ -1,0 +1,83 @@
+{
+  "key": "PARENT_CHILD_GROUPS",
+  "slug": "metiv-parent-child",
+  "kind": "list",
+  "rows": [
+    {
+      "_key": "panda-groups",
+      "title": "פנד\"ה - פה נלמד דרכי התמודדות",
+      "sortOrder": 0,
+      "content": {
+        "_key": "panda-groups",
+        "_col": "metiv-parent-child",
+        "id": "panda-groups",
+        "title": "פנד\"ה - פה נלמד דרכי התמודדות",
+        "provider": "מטיב ילדים",
+        "icon": "Users",
+        "who": "פנד\"ה לילדים: ילדים בכיתות ב'-ו' שמתקשים בוויסות רגשות על רקע עומס רגשי, קשיי קשב, חרדה או קושי חברתי. פנד\"ה להורים (מיומנויות DBT): הורים לילדים בכל הגילאים. פנד\"ה במשפחה: משפחות עם לפחות 2 ילדים.",
+        "ages": "ילדים בגילאי 7-12, והורים",
+        "what": "תכנית קבוצתית לחיזוק ויסות רגשות ולפיתוח דרכי התמודדות, שמשלבת טכניקות קשיבות וטכניקות קוגניטיביות-התנהגותיות עם משחק. פנד\"ה לילדים: 8 מפגשים לילדים ו-3 מפגשים להורים. פנד\"ה להורים: 8 מפגשים (או 6). פנד\"ה במשפחה: בדרך כלל 6 פגישות משפחה ו-6 פגישות הדרכה להורים.",
+        "location": "מטיב ילדים, ירושלים",
+        "process": "ממלאים שאלון ובקשה להשתתפות, מקיימים שיחת היכרות עם מנחה, ומשובצים לקבוצה לפי הגיל.",
+        "contacts": [
+          {
+            "kind": "link",
+            "label": "טופס פנייה למטיב ילדים",
+            "href": "https://docs.google.com/forms/d/e/1FAIpQLSfiUHfJ4UDrpSUPQxtPKWmQuZGKg7lfL1c21D_JAsmwxlYLJA/viewform"
+          },
+          {
+            "kind": "email",
+            "label": "דוא\"ל",
+            "value": "Kids@metiv.org"
+          }
+        ],
+        "source": "https://metiv.org/תכנית-פנדה-לילדים/"
+      }
+    },
+    {
+      "_key": "namal-groups",
+      "title": "נמ\"ל - נעשה מקום למשחק",
+      "sortOrder": 1,
+      "content": {
+        "_key": "namal-groups",
+        "_col": "metiv-parent-child",
+        "id": "namal-groups",
+        "title": "נמ\"ל - נעשה מקום למשחק",
+        "provider": "מטיב ילדים",
+        "icon": "Baby",
+        "who": "צמדי הורה-פעוט החשופים למצבי לחץ, משבר או טראומה, וגם צמדים המתמודדים עם קשיים שמאפיינים את הגיל.",
+        "ages": "פעוטות בגילאי 2-5 והוריהם",
+        "what": "קבוצת משחק להורים ולפעוטות עם פעילויות משחק, מוזיקה, אמנות, דרמה ותנועה, ומפגשים להורים בלבד. 8 מפגשים, אחת לשבוע בין 16:30 ל-18:00.",
+        "location": "מטיב ילדים, גבעת שאול, בניין המרפאות של המרכז הרפואי הרצוג, ירושלים",
+        "contacts": [
+          {
+            "kind": "link",
+            "label": "טופס הרשמה",
+            "href": "https://www.surveyhero.com/c/kybdaa97"
+          },
+          {
+            "kind": "phone",
+            "label": "אפרת, רכזת התכנית",
+            "value": "054-2189188"
+          },
+          {
+            "kind": "email",
+            "label": "דוא\"ל",
+            "value": "efrath@metiv.org"
+          }
+        ],
+        "source": "https://metiv.org/תוכנית-נמל/"
+      }
+    },
+    {
+      "_key": "kids-space",
+      "title": "מרחב מטיב לילדים",
+      "sortOrder": 2,
+      "content": {
+        "_key": "kids-space",
+        "_col": "metiv-parent-child",
+        "$ref": "FREE_TREATMENTS#kids-space"
+      }
+    }
+  ]
+}

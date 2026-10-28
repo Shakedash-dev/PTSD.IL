@@ -2,29 +2,28 @@ import React, { useState } from 'react';
 import { ArrowLeft, Coins, MapPin } from 'lucide-react';
 import Disclosure from '@/components/patterns/Disclosure';
 import { DemoLink } from '@/pages/metiv-demos/shared/DemoChrome';
-import { EVENTS, PAST_EVENTS, UPCOMING_EVENTS, THERAPIST_HUB } from '@/pages/metiv-demos/shared/therapist';
 import { cn } from '@/lib/utils';
 import PageHeaderV3 from '../components/PageHeaderV3';
-import { Band, ChipQuestion, EmptyState, ExternalLink, PILL_OUTLINE, SectionHeading, StatusPill, TEXT_LINK } from '../components/kit';
+import { Band, ChipQuestion, EmptyState, ExternalLink, FWD, PILL_OUTLINE, SectionHeading, StatusPill, TEXT_LINK } from '../components/kit';
+import { fmt, useCopy, useMetiv } from '../content/MetivContent';
 
 /** @typedef {import('@/pages/metiv-demos/shared/therapist/articles.js').MetivEvent} MetivEvent */
 
-const TYPES = ['מחזור קורס', 'סדנה', 'כנס', 'חדשות'];
-
 /** @param {{ event: MetivEvent }} props */
 function EventCard({ event }) {
+  const c = useCopy('events');
   const [d, m] = (event.dateISO || '').split('-').slice(1).reverse();
   return (
     <li className={cn('flex gap-4 rounded-super bg-card border p-5 sm:p-6', event.isPast ? 'border-border' : 'border-primary/40 shadow-card')}>
       <div className={cn('w-16 flex-shrink-0 self-start rounded-2xl text-center py-2', event.isPast ? 'bg-muted text-muted-foreground' : 'bg-primary text-primary-foreground')} aria-hidden="true">
         <span className="block font-heading font-semibold text-2xl leading-none">{d || '·'}</span>
-        <span className="block text-xs mt-1">{m ? `חודש ${Number(m)}` : ''}</span>
+        <span className="block text-xs mt-1">{m ? fmt(c.month, { n: Number(m) }) : ''}</span>
         <span className="block text-xs">{(event.dateISO || '').slice(0, 4)}</span>
       </div>
       <div className="min-w-0 flex-1">
         <div className="flex flex-wrap items-center gap-2">
           <StatusPill tone="primary">{event.type}</StatusPill>
-          {!event.isPast && <StatusPill tone="success">בקרוב</StatusPill>}
+          {!event.isPast && <StatusPill tone="success">{c.soon}</StatusPill>}
           <span className="text-sm text-muted-foreground">{event.date}</span>
         </div>
         <h3 className="mt-2 font-heading font-semibold text-xl text-foreground leading-snug">{event.title}</h3>
@@ -36,16 +35,16 @@ function EventCard({ event }) {
           </p>
         )}
         {event.body && (
-          <Disclosure label="פרטים נוספים" variant="plain" size="tight" className="mt-3">
+          <Disclosure label={c.moreDetails} variant="plain" size="tight" className="mt-3">
             <p className="text-foreground leading-relaxed whitespace-pre-line">{event.body}</p>
           </Disclosure>
         )}
         {event.link && (
           <div className="mt-3">
             {event.external ? (
-              <ExternalLink href={event.link} className={TEXT_LINK}>לפרטים באתר מטיב</ExternalLink>
+              <ExternalLink href={event.link} className={TEXT_LINK}>{c.detailsOnMetiv}</ExternalLink>
             ) : (
-              <DemoLink to={event.link} className={cn('inline-flex items-center gap-1', TEXT_LINK)}>לפרטים <ArrowLeft className="w-4 h-4" aria-hidden="true" /></DemoLink>
+              <DemoLink to={event.link} className={cn('inline-flex items-center gap-1', TEXT_LINK)}>{c.details} <ArrowLeft className={cn('w-4 h-4', FWD)} aria-hidden="true" /></DemoLink>
             )}
           </div>
         )}
@@ -55,6 +54,12 @@ function EventCard({ event }) {
 }
 
 export default function Events() {
+  const { EVENTS, PAST_EVENTS, UPCOMING_EVENTS, THERAPIST_HUB } = useMetiv();
+  const c = useCopy('events');
+  // Event types in order of first appearance. They are display strings, the
+  // same in every item of a language, so items group by plain equality.
+  /** @type {string[]} */
+  const TYPES = [...new Set(EVENTS.map((/** @type {MetivEvent} */ e) => e.type).filter(Boolean))];
   const [type, setType] = useState('all');
   const filter = (/** @type {MetivEvent[]} */ list) => list.filter((e) => type === 'all' || e.type === type);
   const upcoming = filter(UPCOMING_EVENTS);
@@ -65,37 +70,37 @@ export default function Events() {
     <div className="bg-background">
       <PageHeaderV3
         tone="muted"
-        eyebrow="אירועים ועדכונים"
-        title="מה קרוב, ומה כבר היה"
-        subtitle="מחזורי קורסים, סדנאות, כנסים וחדשות מטיב."
-        short={[`${UPCOMING_EVENTS.length} אירועים קרובים ו-${PAST_EVENTS.length} שהתקיימו.`, 'אפשר לסנן לפי סוג.', 'לאירועים שקשורים לקורס יש קישור לעמוד הקורס.']}
+        eyebrow={c.eyebrow}
+        title={c.title}
+        subtitle={c.subtitle}
+        short={[fmt(c.shortCount, { upcoming: UPCOMING_EVENTS.length, past: PAST_EVENTS.length }), c.shortFilter, c.shortCourseLink]}
       />
       <Band tone="canvas" width="default" labelledBy="ev-upcoming">
-        <p className="text-sm font-semibold text-muted-foreground mb-2">איזה סוג מעניין אותך?</p>
+        <p className="text-sm font-semibold text-muted-foreground mb-2">{c.typePrompt}</p>
         <ChipQuestion
-          legend="סוג אירוע"
+          legend={c.typeLegend}
           value={type}
           onChange={setType}
           className="mb-10"
-          options={[{ key: 'all', label: 'הכל', count: EVENTS.length }, ...TYPES.map((t) => ({ key: t, label: t, count: EVENTS.filter((e) => e.type === t).length }))]}
+          options={[{ key: 'all', label: c.all, count: EVENTS.length }, ...TYPES.map((t) => ({ key: t, label: t, count: EVENTS.filter((/** @type {MetivEvent} */ e) => e.type === t).length }))]}
         />
 
-        <SectionHeading id="ev-upcoming" as="h2" title="בקרוב" className="mb-5" />
+        <SectionHeading id="ev-upcoming" as="h2" title={c.upcomingTitle} className="mb-5" />
         {upcoming.length ? (
-          <ul className="space-y-4">{upcoming.map((e) => <EventCard key={e.slug} event={e} />)}</ul>
+          <ul className="space-y-4">{upcoming.map((/** @type {MetivEvent} */ e) => <EventCard key={e.slug} event={e} />)}</ul>
         ) : (
-          <EmptyState title="אין כרגע אירועים קרובים מהסוג הזה" text="אפשר להשאיר פרטים ולקבל עדכון." action={<ExternalLink href={THERAPIST_HUB.cta.url} className={PILL_OUTLINE}>{THERAPIST_HUB.cta.label}</ExternalLink>} />
+          <EmptyState title={c.upcomingEmptyTitle} text={c.upcomingEmptyText} action={<ExternalLink href={THERAPIST_HUB.cta.url} className={PILL_OUTLINE}>{THERAPIST_HUB.cta.label}</ExternalLink>} />
         )}
 
-        <SectionHeading id="ev-past" as="h2" title="התקיימו" className="mt-16 mb-5" />
-        {past.length === 0 && <EmptyState title="אין אירועים קודמים מהסוג הזה" />}
+        <SectionHeading id="ev-past" as="h2" title={c.pastTitle} className="mt-16 mb-5" />
+        {past.length === 0 && <EmptyState title={c.pastEmptyTitle} />}
         {years.map((y) => (
-          <section key={y} aria-label={y || 'ללא שנה'} className="mb-8">
+          <section key={y} aria-label={y || c.noYear} className="mb-8">
             <h3 className="font-heading font-semibold text-lg text-muted-foreground mb-3 flex items-center gap-3">
-              {y || 'ללא שנה'}
+              {y || c.noYear}
               <span aria-hidden="true" className="flex-1 border-t-2 border-dashed border-border" />
             </h3>
-            <ul className="space-y-3">{past.filter((e) => (e.dateISO || '').slice(0, 4) === y).map((e) => <EventCard key={e.slug} event={e} />)}</ul>
+            <ul className="space-y-3">{past.filter((/** @type {MetivEvent} */ e) => (e.dateISO || '').slice(0, 4) === y).map((/** @type {MetivEvent} */ e) => <EventCard key={e.slug} event={e} />)}</ul>
           </section>
         ))}
       </Band>

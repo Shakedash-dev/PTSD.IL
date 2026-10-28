@@ -1,0 +1,146 @@
+{
+  "key": "PUBLIC_OPTIONS",
+  "slug": "metiv-public-options",
+  "kind": "list",
+  "rows": [
+    {
+      "_key": "health-funds",
+      "title": "Больничные кассы",
+      "sortOrder": 0,
+      "content": {
+        "_key": "health-funds",
+        "_col": "metiv-public-options",
+        "id": "health-funds",
+        "title": "Больничные кассы",
+        "provider": "«Маккаби», «Клалит», «Меухедет», «Леумит»",
+        "icon": "Stethoscope",
+        "what": "Больничные кассы предоставляют психологическую и психиатрическую помощь.",
+        "process": "Обратитесь к семейному врачу в больничной кассе и попросите направление к психологу или психиатру.",
+        "contacts": [
+          {
+            "kind": "text",
+            "label": "«Маккаби»",
+            "value": "3555"
+          },
+          {
+            "kind": "text",
+            "label": "«Клалит» (центр психического здоровья)",
+            "value": "8703*"
+          },
+          {
+            "kind": "text",
+            "label": "«Меухедет»",
+            "value": "3833"
+          },
+          {
+            "kind": "text",
+            "label": "«Леумит»",
+            "value": "507"
+          }
+        ]
+      }
+    },
+    {
+      "_key": "resilience-centers",
+      "title": "Центры жизнестойкости",
+      "sortOrder": 1,
+      "content": {
+        "_key": "resilience-centers",
+        "_col": "metiv-public-options",
+        "id": "resilience-centers",
+        "title": "Центры жизнестойкости",
+        "provider": "Министерство здравоохранения",
+        "icon": "Building2",
+        "who": "Пострадавшие от враждебных действий (терактов).",
+        "process": "Обратитесь в ближайший к месту жительства центр жизнестойкости из списка центров.",
+        "contacts": [
+          {
+            "kind": "link",
+            "label": "Список центров жизнестойкости - gov.il",
+            "href": "https://www.gov.il/he/Departments/DynamicCollectors/resilience-centers-list?skip=0"
+          },
+          {
+            "kind": "link",
+            "label": "Центры жизнестойкости - Министерство здравоохранения",
+            "href": "https://me.health.gov.il/mental-health/therapy-rehabilitation/public-care/community-treatment/resilience-center/"
+          }
+        ]
+      }
+    },
+    {
+      "_key": "mod-rehabilitation",
+      "title": "Отдел реабилитации",
+      "sortOrder": 2,
+      "content": {
+        "_key": "mod-rehabilitation",
+        "_col": "metiv-public-options",
+        "id": "mod-rehabilitation",
+        "title": "Отдел реабилитации",
+        "provider": "Министерство обороны",
+        "icon": "Shield",
+        "who": "Военнослужащие и сотрудники силовых структур, получившие психическую травму в связи со службой.",
+        "cost": "Помощь определяется в зависимости от признания и процента инвалидности. Разрешение на медицинскую и психологическую помощь можно получить ещё во время рассмотрения заявления.",
+        "process": "Заявление о признании инвалидности подаётся через цифровую форму. Центр «Бе-ядаим товот» («В надёжных руках») Отдела реабилитации помогает заполнить заявление.",
+        "contacts": [
+          {
+            "kind": "link",
+            "label": "Цифровая форма - заявление о признании инвалидности",
+            "href": "https://shikum.mod.gov.il/recognition/request/apply"
+          },
+          {
+            "kind": "link",
+            "label": "Медицинская помощь во время процесса признания",
+            "href": "https://shikum.mod.gov.il/recognition/request/medical-care"
+          },
+          {
+            "kind": "link",
+            "label": "«Бе-ядаим товот» - помощь в подаче заявления",
+            "href": "https://shikum.mod.gov.il/ContactUs/goodhands"
+          },
+          {
+            "kind": "internal",
+            "label": "Подробно о правах",
+            "href": "/patient/rights"
+          }
+        ]
+      }
+    },
+    {
+      "_key": "national-insurance",
+      "title": "Битуах Леуми",
+      "sortOrder": 3,
+      "content": {
+        "_key": "national-insurance",
+        "_col": "metiv-public-options",
+        "id": "national-insurance",
+        "title": "Битуах Леуми",
+        "provider": "Битуах Леуми (Институт национального страхования)",
+        "icon": "Landmark",
+        "who": "Пострадавшие от враждебных действий (терактов), пострадавшие на производстве и люди, которым установлена психическая инвалидность.",
+        "what": "Выплаты и признание, профессиональная реабилитация, а также реабилитационная корзина Министерства здравоохранения для тех, кому установлена психическая инвалидность не менее 40%.",
+        "contacts": [
+          {
+            "kind": "text",
+            "label": "Помощь в заполнении заявления на общую инвалидность",
+            "value": "3928*"
+          },
+          {
+            "kind": "link",
+            "label": "Битуах Леуми - психическая и общая инвалидность",
+            "href": "https://www.btl.gov.il/ZcuyotAsdience/MitmoddiNefesh/Pages/NecotNafsitNecotKlalit.aspx"
+          },
+          {
+            "kind": "link",
+            "label": "Пострадавшие от враждебных действий - Битуах Леуми",
+            "href": "https://www.btl.gov.il/benefits/Victims_of_Hostilities/Pages/default.aspx"
+          },
+          {
+            "kind": "internal",
+            "label": "Подробно о правах",
+            "href": "/patient/rights"
+          }
+        ]
+      }
+    }
+  ]
+}

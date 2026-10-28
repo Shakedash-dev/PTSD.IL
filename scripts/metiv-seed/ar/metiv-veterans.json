@@ -1,0 +1,60 @@
+{
+  "key": "VETERANS_PROGRAMS",
+  "slug": "metiv-veterans",
+  "kind": "list",
+  "rows": [
+    {
+      "_key": "release-journey",
+      "title": "Peace of Mind (راحة البال)",
+      "sortOrder": 0,
+      "content": {
+        "_key": "release-journey",
+        "_col": "metiv-veterans",
+        "$ref": "METIV_SERVICES#release-journey"
+      }
+    },
+    {
+      "_key": "panda-family",
+      "title": "باندا للعائلة",
+      "sortOrder": 1,
+      "content": {
+        "_key": "panda-family",
+        "_col": "metiv-veterans",
+        "$ref": "RESERVIST_FAMILY_PROGRAMS#panda-family"
+      }
+    },
+    {
+      "_key": "namal-family",
+      "title": "نامال للعائلة - لنُفسح مكانًا للّعب",
+      "sortOrder": 2,
+      "content": {
+        "_key": "namal-family",
+        "_col": "metiv-veterans",
+        "$ref": "RESERVIST_FAMILY_PROGRAMS#namal-family"
+      }
+    },
+    {
+      "_key": "reservist-fathers",
+      "title": "مجموعة ثنائية لجنود الاحتياط وأطفالهم",
+      "sortOrder": 3,
+      "content": {
+        "_key": "reservist-fathers",
+        "_col": "metiv-veterans",
+        "id": "reservist-fathers",
+        "title": "مجموعة ثنائية لجنود الاحتياط وأطفالهم",
+        "provider": "ميتيف",
+        "icon": "Users",
+        "who": "جنود الاحتياط مع أطفالهم.",
+        "process": "التسجيل عبر نموذج في موقع ميتيف، محدود بـ8 مشاركين ويشمل مرحلة دفع.",
+        "contacts": [
+          {
+            "kind": "link",
+            "label": "إلى نموذج التسجيل",
+            "href": "https://metiv.org/אבות-וילדים-מילואים/"
+          }
+        ],
+        "source": "https://metiv.org/אבות-וילדים-מילואים/"
+      }
+    }
+  ]
+}

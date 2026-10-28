@@ -1,0 +1,12 @@
+{
+  "_area": "patient",
+  "_label": "אזור המטופלים: דף הבית",
+  "logoAlt": "Метив",
+  "whereToGetHelpChip": "Где можно получить терапию",
+  "freeTreatmentChip": "Бесплатная терапия и участие в исследованиях",
+  "validateHeroTagline": "Главный заголовок - главная страница",
+  "validateHeroSubtitle": "Подзаголовок - главная страница",
+  "validatePathTitle": "Карточка раздела {n} - заголовок",
+  "validatePathSubtitle": "Карточка раздела {n} - подзаголовок",
+  "validateAbout": "Краткое описание ПТСР"
+}

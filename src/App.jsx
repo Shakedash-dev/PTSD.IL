@@ -81,6 +81,8 @@ function App() {
                 <Route path="/metiv-site-demo" element={<Suspense fallback={null}><MetivDemoChooser /></Suspense>} />
                 <Route path="/metiv-site-demo-v1/*" element={<Suspense fallback={null}><MetivDemoV1 /></Suspense>} />
                 <Route path="/metiv-site-demo-v2/*" element={<Suspense fallback={null}><MetivDemoV2 /></Suspense>} />
+                {/* The Metiv content admin. More specific than the v3 splat, so it wins. */}
+                <Route path="/metiv-site-demo-v3/admin" element={<AdminGate variant="metiv" />} />
                 <Route path="/metiv-site-demo-v3/*" element={<Suspense fallback={null}><MetivDemoV3 /></Suspense>} />
                 <Route path="/metiv-site-demo-v4/*" element={<Suspense fallback={null}><MetivDemoV4 /></Suspense>} />
                 <Route path="*" element={<PageNotFound />} />

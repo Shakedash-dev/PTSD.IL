@@ -1,0 +1,103 @@
+{
+  "key": "CHILDREN_FAMILY_INTRO",
+  "slug": "metiv-children-family",
+  "kind": "single",
+  "rows": [
+    {
+      "_key": "CHILDREN_FAMILY_INTRO",
+      "title": "CHILDREN_FAMILY_INTRO",
+      "sortOrder": 0,
+      "content": {
+        "_key": "CHILDREN_FAMILY_INTRO",
+        "_col": "metiv-children-family",
+        "title": "Metiv Children - A Center for Emotion Regulation in Children and Parents",
+        "paragraphs": [
+          "Metiv Children is Metiv's center for emotion regulation in children and parents. The focus on emotion regulation grows out of years of experience in treating crisis and trauma, and from the understanding that difficulties in emotion regulation are an important component both in treatment after traumatic events and in preventive care.",
+          "The center offers individual, dyadic and family therapy for children up to age 18, as well as groups for learning regulation skills and strengthening the parent-child bond. Metiv also researches children's emotional development and develops intervention programs. Metiv Children offers training workshops for professionals and institutions that want to implement the programs in children's natural environments (such as schools, kindergartens and even at home).",
+          "Trainings are held from time to time. You can register your interest using the Metiv Children form and receive an update ahead of upcoming trainings."
+        ],
+        "periodicTrainings": [
+          "PANDA group facilitator training",
+          "NAMAL facilitator training",
+          "Basic training in trauma therapy - children"
+        ],
+        "trainingInterestFormUrl": "https://forms.office.com/r/kZgEs8kpbq",
+        "programSiteUrl": "https://panda-school.my.canva.site/",
+        "models": [
+          {
+            "key": "panda",
+            "title": "PANDA for Children",
+            "fullName": "PANDA - \"Here We Learn Ways of Coping\"",
+            "ages": "7-12 (grades 2-6)",
+            "structure": "8 group sessions for children, with 3 parallel group sessions for parents",
+            "developedBy": "Prof. Ruth Pat-Horenczyk and Sarit Schramm-Yavin, at Metiv",
+            "description": "A group program for strengthening emotion regulation and developing coping skills in children. The program focuses on acquiring tools for coping with a range of emotional states, and on preventing difficulties in emotion regulation or the worsening of existing difficulties. It combines mindfulness techniques and cognitive-behavioral techniques, with an emphasis on playfulness and enjoyment. The program has been implemented in settings such as residential facilities, foster families, therapeutic after-school centers and schools across Israel, as well as in Singapore, Italy and the US, and has been translated into Arabic.",
+            "trainingSlug": "panda-training",
+            "sourceUrl": "https://metiv.org/תכנית-פנדה-לילדים/"
+          },
+          {
+            "key": "panda-parents",
+            "title": "PANDA for Parents",
+            "fullName": "PANDA for Parents - DBT Skills",
+            "ages": "Parents of children of all ages",
+            "structure": "8 sessions (a shortened 6-session program is available)",
+            "developedBy": "Sarit Schramm-Yavin and Tzipora Hayat",
+            "description": "Groups for parents who want to develop awareness of themselves and their parenting, and to acquire tools for emotional and behavioral regulation together with other parents. The program is based on the dialectical behavior therapy (DBT) approach and includes exercises from the PANDA for Children program. Dedicated groups are opened from time to time, for example for parents of children who went through the events of the Iron Swords war.",
+            "trainingSlug": "panda-parents-training",
+            "sourceUrl": "https://metiv.org/מטיב-ילדים-טראומה/"
+          },
+          {
+            "key": "panda-family",
+            "title": "PANDA in the Family",
+            "ages": "0-14",
+            "structure": "Usually 6 family sessions and 6 parent guidance sessions (at home or at Metiv)",
+            "developedBy": "Metiv Children",
+            "description": "Family activities for developing coping skills and regulation abilities, including for reservists and their families.",
+            "sourceUrl": "https://metiv.org/טיפולים-ללא-עלות-דרך-מטיב/"
+          },
+          {
+            "key": "panda-two",
+            "title": "PANDA for Two",
+            "ages": "2-3 (parent-toddler pairs)",
+            "structure": "6 parent-and-child sessions for about 8 dyads",
+            "developedBy": "A reworking of the NAMAL program, developed by Prof. Esther Cohen and Prof. Ruth Pat-Horenczyk for Metiv",
+            "description": "A model of play-focused group work for pairs of parents and young children, aimed at developing parents' playfulness and capacity for abstraction so they can help develop regulation abilities in their children. Each session has a psychoeducational message expressed in a short saying and conveyed through play, music, drama and movement activities.",
+            "keyMessages": [
+              "The parent-child bond as a protective, secure base",
+              "Encouraging independence and self-confidence",
+              "Playfulness, humor and creativity",
+              "Reflecting actions and intentions",
+              "Expressing and reflecting emotions"
+            ],
+            "trainingSlug": "panda-two-training",
+            "sourceUrl": "https://metiv.org/הכשרה-למטפלים-פנדה-בשניים/"
+          },
+          {
+            "key": "namal",
+            "title": "NAMAL",
+            "fullName": "Let's Make Room for Play",
+            "ages": "2-5 (parent-toddler pairs)",
+            "structure": "8 sessions, once a week, 16:30-18:00",
+            "developedBy": "Prof. Esther Cohen and Prof. Ruth Pat-Horenczyk, for Metiv",
+            "description": "A model of play-focused group work for pairs of parents and young children. The sessions are organized around psychoeducational and developmental messages aimed at parents, which are translated into experiences through play, music, art, drama and movement. Alongside the joint sessions, there are parent-only sessions. The program has been running in the field for about a decade, especially among communities along the confrontation line and in the Gaza border area.",
+            "keyMessages": [
+              "The parent-child bond as a protective, secure base",
+              "Encouraging independence and self-confidence",
+              "Playfulness, humor and creativity",
+              "Reflecting actions and intentions",
+              "Expressing and reflecting emotions",
+              "Play in the shadow of trauma (post-traumatic play)"
+            ],
+            "trainingSlug": "namal-training",
+            "sourceUrl": "https://metiv.org/תוכנית-נמל/"
+          }
+        ],
+        "contact": {
+          "email": "kids@metiv.org",
+          "phone": "02-6294858"
+        },
+        "sourceUrl": "https://metiv.org/מטיב-ילדים-טראומה/"
+      }
+    }
+  ]
+}

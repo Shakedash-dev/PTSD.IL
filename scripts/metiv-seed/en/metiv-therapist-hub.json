@@ -1,0 +1,80 @@
+{
+  "key": "THERAPIST_HUB",
+  "slug": "metiv-therapist-hub",
+  "kind": "single",
+  "rows": [
+    {
+      "_key": "THERAPIST_HUB",
+      "title": "THERAPIST_HUB",
+      "sortOrder": 0,
+      "content": {
+        "_key": "THERAPIST_HUB",
+        "_col": "metiv-therapist-hub",
+        "title": "For therapists and professionals",
+        "intro": "Courses, training, supervision and research in trauma therapy from Metiv - The Israel Psychotrauma Center. Here you can find upcoming cohorts, trainings in work with children and families, individual and group supervision, programs for organizations, and studies and publications by Metiv staff.",
+        "sections": [
+          {
+            "key": "courses",
+            "title": "Courses and trainings",
+            "description": "CBT for trauma, The Roadmap, complex trauma, professional development days and a summer course.",
+            "route": "/therapist/courses",
+            "icon": "GraduationCap"
+          },
+          {
+            "key": "childrenFamily",
+            "title": "Children and family",
+            "description": "Foundations of treating trauma in children, and trainings for PANDA and NAMAL facilitators.",
+            "route": "/therapist/children-and-family",
+            "icon": "Baby"
+          },
+          {
+            "key": "supervision",
+            "title": "Supervision",
+            "description": "Individual supervision, supervision groups and supervision for teams in organizations.",
+            "route": "/therapist/supervision",
+            "icon": "Users"
+          },
+          {
+            "key": "organizations",
+            "title": "For organizations",
+            "description": "Metiv Space, building a trauma-informed organization, and customized workshops and trainings.",
+            "route": "/therapist/organizations",
+            "icon": "Building2"
+          },
+          {
+            "key": "research",
+            "title": "Research",
+            "description": "The studies currently being conducted in the research unit, including studies recruiting participants.",
+            "route": "/therapist/research",
+            "icon": "Microscope"
+          },
+          {
+            "key": "publications",
+            "title": "Publications",
+            "description": "Books, papers and chapters published by Metiv staff.",
+            "route": "/therapist/publications",
+            "icon": "Library"
+          },
+          {
+            "key": "articles",
+            "title": "Articles",
+            "description": "Articles and professional writing by the Metiv team.",
+            "route": "/therapist/articles",
+            "icon": "FileText"
+          },
+          {
+            "key": "events",
+            "title": "Events and updates",
+            "description": "Course cohorts, workshops and conferences, upcoming and past.",
+            "route": "/therapist/events",
+            "icon": "CalendarDays"
+          }
+        ],
+        "cta": {
+          "label": "Training or supervision inquiry form",
+          "url": "https://docs.google.com/forms/d/e/1FAIpQLScc90IWpEglRpTtKqwmeBToTCGXeZpZXwvcjE6UHaLR4YKxuw/viewform"
+        }
+      }
+    }
+  ]
+}

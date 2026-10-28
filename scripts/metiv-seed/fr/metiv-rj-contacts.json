@@ -1,0 +1,31 @@
+{
+  "key": "RELEASE_JOURNEY_CONTACTS",
+  "slug": "metiv-rj-contacts",
+  "kind": "single",
+  "rows": [
+    {
+      "_key": "RELEASE_JOURNEY_CONTACTS",
+      "title": "RELEASE_JOURNEY_CONTACTS",
+      "sortOrder": 0,
+      "content": {
+        "_key": "RELEASE_JOURNEY_CONTACTS",
+        "_col": "metiv-rj-contacts",
+        "applications": {
+          "$ref": "TEAM#יאיר ברין"
+        },
+        "followUp": {
+          "$ref": "TEAM#הלל מאירסון"
+        },
+        "communities": {
+          "$ref": "TEAM#יעל רוזנפלד כהן"
+        },
+        "external": {
+          "$ref": "TEAM#יהודה לפיאן"
+        },
+        "director": {
+          "$ref": "TEAM#רחלי ברוקס"
+        }
+      }
+    }
+  ]
+}

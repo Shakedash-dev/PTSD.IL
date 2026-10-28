@@ -6,6 +6,7 @@ import Navbar from './PatientNavbar';
 import ChatbotFAB from '@/components/ChatbotFAB';
 import { Footer } from '../components/Chrome';
 import { PtsdIlLinks, usePtsdIlPathname, VersionLinks } from './PtsdIlRouting';
+import { useCopy } from '../content/MetivContent';
 
 // Metiv demo (V3): a copy of src/components/Layout.jsx for the patient area.
 // Changes only: the footer is the V3 site footer (owner decision), the path is
@@ -31,9 +32,7 @@ export default function Layout() {
       </main>
       {!isSanctuary && (
         <VersionLinks>
-          <div dir="rtl" lang="he">
-            <Footer />
-          </div>
+          <Footer />
         </VersionLinks>
       )}
       <ChatbotFAB />
@@ -47,13 +46,14 @@ export default function Layout() {
 function SanctuaryNav() {
   const pathname = usePtsdIlPathname();
   const { lang } = useLang();
+  const c = useCopy('patientLayout');
   const backTo = pathname === '/calming' ? '/' : '/calming';
   return (
     <header className="fixed top-0 inset-x-0 z-50 px-5 h-14 flex items-center justify-between bg-background border-b border-border">
       <Link to={backTo} className="text-muted-foreground hover:text-foreground text-sm transition-colors duration-300">
         {t(lang, 'back')}
       </Link>
-      <a href="tel:1201" className="text-muted-foreground hover:text-foreground text-xs transition-colors duration-300">ער״ן: 1201</a>
+      <a href="tel:1201" className="text-muted-foreground hover:text-foreground text-xs transition-colors duration-300">{c.sanctuaryCrisisLine}</a>
     </header>
   );
 }

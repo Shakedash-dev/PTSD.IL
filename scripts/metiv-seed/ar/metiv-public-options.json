@@ -1,0 +1,146 @@
+{
+  "key": "PUBLIC_OPTIONS",
+  "slug": "metiv-public-options",
+  "kind": "list",
+  "rows": [
+    {
+      "_key": "health-funds",
+      "title": "صناديق المرضى",
+      "sortOrder": 0,
+      "content": {
+        "_key": "health-funds",
+        "_col": "metiv-public-options",
+        "id": "health-funds",
+        "title": "صناديق المرضى",
+        "provider": "مكابي، كلاليت، مئوحيدت، لئوميت",
+        "icon": "Stethoscope",
+        "what": "تقدّم صناديق المرضى خدمات نفسية وطبية نفسية.",
+        "process": "تتوجّه إلى طبيب العائلة في صندوق المرضى وتطلب تحويلًا إلى أخصائي نفسي أو طبيب نفسي.",
+        "contacts": [
+          {
+            "kind": "text",
+            "label": "مكابي",
+            "value": "3555"
+          },
+          {
+            "kind": "text",
+            "label": "كلاليت (مركز الاتصال للصحة النفسية)",
+            "value": "8703*"
+          },
+          {
+            "kind": "text",
+            "label": "مئوحيدت",
+            "value": "3833"
+          },
+          {
+            "kind": "text",
+            "label": "لئوميت",
+            "value": "507"
+          }
+        ]
+      }
+    },
+    {
+      "_key": "resilience-centers",
+      "title": "مراكز المناعة النفسية",
+      "sortOrder": 1,
+      "content": {
+        "_key": "resilience-centers",
+        "_col": "metiv-public-options",
+        "id": "resilience-centers",
+        "title": "مراكز المناعة النفسية",
+        "provider": "وزارة الصحة",
+        "icon": "Building2",
+        "who": "متضرّرو الأعمال العدائية.",
+        "process": "تتوجّه إلى مركز المناعة النفسية الأقرب إلى منطقة سكنك، من قائمة المراكز.",
+        "contacts": [
+          {
+            "kind": "link",
+            "label": "قائمة مراكز المناعة النفسية - gov.il",
+            "href": "https://www.gov.il/he/Departments/DynamicCollectors/resilience-centers-list?skip=0"
+          },
+          {
+            "kind": "link",
+            "label": "مراكز المناعة النفسية - وزارة الصحة",
+            "href": "https://me.health.gov.il/mental-health/therapy-rehabilitation/public-care/community-treatment/resilience-center/"
+          }
+        ]
+      }
+    },
+    {
+      "_key": "mod-rehabilitation",
+      "title": "قسم التأهيل",
+      "sortOrder": 2,
+      "content": {
+        "_key": "mod-rehabilitation",
+        "_col": "metiv-public-options",
+        "id": "mod-rehabilitation",
+        "title": "قسم التأهيل",
+        "provider": "وزارة الأمن",
+        "icon": "Shield",
+        "who": "الجنود وأفراد قوات الأمن الذين أصيبوا نفسيًا بسبب الخدمة.",
+        "cost": "تُحدَّد المساعدة وفق الاعتراف ونسبة العجز. يمكن الحصول على موافقة للعلاج الطبي والنفسي حتى خلال فحص الطلب.",
+        "process": "تقدّم طلبًا للاعتراف بالعجز عبر نموذج رقمي. ويساعد مركز \"بأيدٍ أمينة\" التابع لقسم التأهيل في تعبئة الطلب.",
+        "contacts": [
+          {
+            "kind": "link",
+            "label": "نموذج رقمي - طلب الاعتراف بالعجز",
+            "href": "https://shikum.mod.gov.il/recognition/request/apply"
+          },
+          {
+            "kind": "link",
+            "label": "العلاج الطبي خلال عملية الاعتراف",
+            "href": "https://shikum.mod.gov.il/recognition/request/medical-care"
+          },
+          {
+            "kind": "link",
+            "label": "بأيدٍ أمينة - مساعدة في تقديم الطلب",
+            "href": "https://shikum.mod.gov.il/ContactUs/goodhands"
+          },
+          {
+            "kind": "internal",
+            "label": "الحقوق بالتفصيل",
+            "href": "/patient/rights"
+          }
+        ]
+      }
+    },
+    {
+      "_key": "national-insurance",
+      "title": "مؤسسة التأمين الوطني",
+      "sortOrder": 3,
+      "content": {
+        "_key": "national-insurance",
+        "_col": "metiv-public-options",
+        "id": "national-insurance",
+        "title": "مؤسسة التأمين الوطني",
+        "provider": "مؤسسة التأمين الوطني",
+        "icon": "Landmark",
+        "who": "متضرّرو الأعمال العدائية، ومصابو العمل، ومن حُدِّدت له نسبة عجز نفسي.",
+        "what": "مخصّصات واعتراف، وتأهيل مهني، وسلة التأهيل من وزارة الصحة لمن حُدِّدت له نسبة عجز نفسي لا تقل عن 40%.",
+        "contacts": [
+          {
+            "kind": "text",
+            "label": "المساعدة في تعبئة دعوى العجز العام",
+            "value": "3928*"
+          },
+          {
+            "kind": "link",
+            "label": "مؤسسة التأمين الوطني - العجز النفسي والعجز العام",
+            "href": "https://www.btl.gov.il/ZcuyotAsdience/MitmoddiNefesh/Pages/NecotNafsitNecotKlalit.aspx"
+          },
+          {
+            "kind": "link",
+            "label": "متضرّرو الأعمال العدائية - مؤسسة التأمين الوطني",
+            "href": "https://www.btl.gov.il/benefits/Victims_of_Hostilities/Pages/default.aspx"
+          },
+          {
+            "kind": "internal",
+            "label": "الحقوق بالتفصيل",
+            "href": "/patient/rights"
+          }
+        ]
+      }
+    }
+  ]
+}

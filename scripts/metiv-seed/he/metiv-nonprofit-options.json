@@ -1,0 +1,110 @@
+{
+  "key": "NONPROFIT_OPTIONS",
+  "slug": "metiv-nonprofit-options",
+  "kind": "list",
+  "rows": [
+    {
+      "_key": "eran",
+      "title": "ער\"ן",
+      "sortOrder": 0,
+      "content": {
+        "_key": "eran",
+        "_col": "metiv-nonprofit-options",
+        "id": "eran",
+        "title": "ער\"ן",
+        "provider": "קו חירום",
+        "icon": "Phone",
+        "what": "קו טלפוני ווואטסאפ לשיחה במצוקה.",
+        "contacts": [
+          {
+            "kind": "phone",
+            "label": "טלפון",
+            "value": "1201"
+          },
+          {
+            "kind": "link",
+            "label": "WhatsApp",
+            "href": "https://api.whatsapp.com/send?phone=9720528451201"
+          }
+        ]
+      }
+    },
+    {
+      "_key": "amcha-jerusalem",
+      "title": "מרכז חוסן - ירושלים (עמך)",
+      "sortOrder": 1,
+      "content": {
+        "_key": "amcha-jerusalem",
+        "_col": "metiv-nonprofit-options",
+        "id": "amcha-jerusalem",
+        "title": "מרכז חוסן - ירושלים (עמך)",
+        "provider": "עמותת עמך",
+        "icon": "Users",
+        "who": "נפגעי פעולות איבה, טראומה וחרדה ומשפחותיהם.",
+        "what": "טיפול פרטני, קבוצתי ומשפחתי.",
+        "location": "ירושלים. בטלפון, בזום או פנים אל פנים.",
+        "contacts": [
+          {
+            "kind": "link",
+            "label": "אתר עמך",
+            "href": "https://www.amcha.org/"
+          }
+        ]
+      }
+    },
+    {
+      "_key": "natal",
+      "title": "נט\"ל",
+      "sortOrder": 2,
+      "content": {
+        "_key": "natal",
+        "_col": "metiv-nonprofit-options",
+        "id": "natal",
+        "title": "נט\"ל",
+        "provider": "עמותת נט\"ל",
+        "icon": "Users",
+        "who": "נפגעי טראומה ופוסט-טראומה על רקע מלחמה וטרור ובני משפחותיהם.",
+        "what": "קבוצות תמיכה וקבוצות טיפוליות, כולל קבוצות לבנות ובני זוג.",
+        "contacts": [
+          {
+            "kind": "link",
+            "label": "קבוצות התמיכה של נט\"ל",
+            "href": "https://www.natal.org.il/תמיכה-וטיפול-נפשי/קבוצות-טיפוליות-וקבוצות-תמיכה/"
+          }
+        ]
+      }
+    },
+    {
+      "_key": "sexual-assault-centers",
+      "title": "מרכזי הסיוע לנפגעות ולנפגעי תקיפה מינית",
+      "sortOrder": 3,
+      "content": {
+        "_key": "sexual-assault-centers",
+        "_col": "metiv-nonprofit-options",
+        "id": "sexual-assault-centers",
+        "title": "מרכזי הסיוע לנפגעות ולנפגעי תקיפה מינית",
+        "provider": "איגוד מרכזי הסיוע",
+        "icon": "Heart",
+        "who": "נפגעות ונפגעי תקיפה מינית ומשפחותיהם.",
+        "what": "קווי סיוע ארציים (1202 לנשים, 1203 לגברים), צ'אט ורשת מרכזי סיוע אזוריים.",
+        "contacts": [
+          {
+            "kind": "phone",
+            "label": "לנשים",
+            "value": "1202"
+          },
+          {
+            "kind": "phone",
+            "label": "לגברים",
+            "value": "1203"
+          },
+          {
+            "kind": "link",
+            "label": "אתר האיגוד",
+            "href": "https://www.1202.org.il/"
+          }
+        ]
+      }
+    }
+  ]
+}

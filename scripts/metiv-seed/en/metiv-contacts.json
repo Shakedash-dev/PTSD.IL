@@ -1,0 +1,21 @@
+{
+  "key": "CONTACTS",
+  "slug": "metiv-contacts",
+  "kind": "single",
+  "rows": [
+    {
+      "_key": "CONTACTS",
+      "title": "CONTACTS",
+      "sortOrder": 0,
+      "content": {
+        "_key": "CONTACTS",
+        "_col": "metiv-contacts",
+        "METIV_PHONE": "02-6449666",
+        "METIV_KIDS_PHONE": "02-6294858",
+        "METIV_YOUTUBE": "https://www.youtube.com/channel/UCBKOBQp0BFFp7uX9qiwUp8w",
+        "ERAN_PHONE": "1201",
+        "ERAN_WHATSAPP": "https://api.whatsapp.com/send?phone=9720528451201"
+      }
+    }
+  ]
+}

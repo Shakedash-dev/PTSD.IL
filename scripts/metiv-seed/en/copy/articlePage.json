@@ -1,0 +1,11 @@
+{
+  "_area": "therapist",
+  "_label": "עמוד מאמר",
+  "notFoundTitle": "Article not found",
+  "notFoundEmpty": "We couldn't find the article",
+  "allArticles": "All articles",
+  "eyebrow": "Opinion piece",
+  "authorsJoin": " and ",
+  "readingMinutes": "{n} min read",
+  "onMetivSite": "The article on the Metiv website"
+}

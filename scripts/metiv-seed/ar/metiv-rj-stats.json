@@ -1,0 +1,51 @@
+{
+  "key": "RELEASE_JOURNEY_STATS",
+  "slug": "metiv-rj-stats",
+  "kind": "list",
+  "rows": [
+    {
+      "_key": "metiv-rj-stats-0",
+      "title": "عامًا على تأسيس Peace of Mind (راحة البال)، نحتفي بها هذا العام",
+      "sortOrder": 0,
+      "content": {
+        "_key": "metiv-rj-stats-0",
+        "_col": "metiv-rj-stats",
+        "value": "20",
+        "label": "عامًا على تأسيس Peace of Mind (راحة البال)، نحتفي بها هذا العام"
+      }
+    },
+    {
+      "_key": "metiv-rj-stats-1",
+      "title": "طواقم أتمّت العملية",
+      "sortOrder": 1,
+      "content": {
+        "_key": "metiv-rj-stats-1",
+        "_col": "metiv-rj-stats",
+        "value": "250",
+        "label": "طواقم أتمّت العملية"
+      }
+    },
+    {
+      "_key": "metiv-rj-stats-2",
+      "title": "خرّيجو البرنامج",
+      "sortOrder": 2,
+      "content": {
+        "_key": "metiv-rj-stats-2",
+        "_col": "metiv-rj-stats",
+        "value": "3,500",
+        "label": "خرّيجو البرنامج"
+      }
+    },
+    {
+      "_key": "metiv-rj-stats-3",
+      "title": "جاليات في العالم استضافت رحلة",
+      "sortOrder": 3,
+      "content": {
+        "_key": "metiv-rj-stats-3",
+        "_col": "metiv-rj-stats",
+        "value": "80",
+        "label": "جاليات في العالم استضافت رحلة"
+      }
+    }
+  ]
+}

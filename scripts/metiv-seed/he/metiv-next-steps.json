@@ -1,0 +1,146 @@
+{
+  "key": "NEXT_STEPS",
+  "slug": "metiv-next-steps",
+  "kind": "single",
+  "rows": [
+    {
+      "_key": "NEXT_STEPS",
+      "title": "NEXT_STEPS",
+      "sortOrder": 0,
+      "content": {
+        "_key": "NEXT_STEPS",
+        "_col": "metiv-next-steps",
+        "firstCircle": [
+          {
+            "label": "לשאלון האנונימי",
+            "to": "/patient/questionnaire"
+          },
+          {
+            "label": "איפה מקבלים טיפול",
+            "to": "/patient/where-to-get-help"
+          }
+        ],
+        "secondCircle": [
+          {
+            "label": "כלים לבני משפחה",
+            "to": "/patient/second-circle-tools"
+          },
+          {
+            "label": "לדבר עם ילדים",
+            "to": "/patient/children"
+          }
+        ],
+        "secondCircleTools": [
+          {
+            "label": "קהילות תמיכה",
+            "to": "/patient/community"
+          },
+          {
+            "label": "איפה מקבלים טיפול",
+            "to": "/patient/where-to-get-help"
+          }
+        ],
+        "questionnaire": [
+          {
+            "label": "מה זה פוסט-טראומה",
+            "to": "/patient/ptsd-info"
+          },
+          {
+            "label": "איפה מקבלים טיפול",
+            "to": "/patient/where-to-get-help"
+          }
+        ],
+        "ptsdInfo": [
+          {
+            "label": "עזרה עצמית",
+            "to": "/patient/self-help"
+          },
+          {
+            "label": "המסע הטיפולי",
+            "to": "/patient/treatment"
+          }
+        ],
+        "selfHelp": [
+          {
+            "label": "תרגילי הרגעה",
+            "to": "/patient/calming"
+          },
+          {
+            "label": "קהילות תמיכה",
+            "to": "/patient/community"
+          }
+        ],
+        "treatment": [
+          {
+            "label": "איפה מקבלים טיפול",
+            "to": "/patient/where-to-get-help"
+          },
+          {
+            "label": "זכויות",
+            "to": "/patient/rights"
+          }
+        ],
+        "whereToGetHelp": [
+          {
+            "label": "טיפולים ללא עלות ומחקרים",
+            "to": "/patient/free-treatment-and-research"
+          },
+          {
+            "label": "זכויות",
+            "to": "/patient/rights"
+          }
+        ],
+        "freeTreatment": [
+          {
+            "label": "איפה מקבלים טיפול",
+            "to": "/patient/where-to-get-help"
+          },
+          {
+            "label": "זכויות",
+            "to": "/patient/rights"
+          }
+        ],
+        "rights": [
+          {
+            "label": "טיפולים ללא עלות ומחקרים",
+            "to": "/patient/free-treatment-and-research"
+          },
+          {
+            "label": "המסע הטיפולי",
+            "to": "/patient/treatment"
+          }
+        ],
+        "community": [
+          {
+            "label": "לדבר עם ילדים",
+            "to": "/patient/children"
+          },
+          {
+            "label": "עזרה עצמית",
+            "to": "/patient/self-help"
+          }
+        ],
+        "children": [
+          {
+            "label": "כלים לבני משפחה",
+            "to": "/patient/second-circle-tools"
+          },
+          {
+            "label": "קהילות תמיכה",
+            "to": "/patient/community"
+          }
+        ],
+        "sources": [
+          {
+            "label": "מה זה פוסט-טראומה",
+            "to": "/patient/ptsd-info"
+          },
+          {
+            "label": "חזרה לכל הנושאים",
+            "to": "/patient"
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,1392 @@
+{
+  "key": "COURSES",
+  "slug": "metiv-courses",
+  "kind": "list",
+  "rows": [
+    {
+      "_key": "cbt-trauma",
+      "title": "Formation à la TCC du traumatisme",
+      "sortOrder": 0,
+      "content": {
+        "_key": "cbt-trauma",
+        "_col": "metiv-courses",
+        "slug": "cbt-trauma",
+        "title": "Formation à la TCC du traumatisme",
+        "subtitle": "Cursus de deux ans - formation de thérapeutes du traumatisme à la thérapie cognitivo-comportementale (TCC)",
+        "category": "adults",
+        "tags": [
+          "CBT",
+          "Programme de deux ans",
+          "Traumatisme complexe",
+          "Reconnu pour la prime de formation continue"
+        ],
+        "summary": "Un programme de deux ans en thérapie cognitivo-comportementale du traumatisme : la première année porte sur le traumatisme simple, la deuxième sur le traumatisme complexe.",
+        "description": "Les participants acquerront les compétences nécessaires pour évaluer et traiter au moyen de la thérapie cognitivo-comportementale, selon le modèle en trois phases.\n\n## Première année - traumatisme simple\n\nLe cours portera sur le traitement du traumatisme simple, c'est-à-dire un traumatisme causé par l'exposition à un événement unique à l'âge adulte. Au cours de la première année, nous enseignons les outils d'évaluation dans le domaine du traumatisme, la structuration du traitement et la conceptualisation de cas selon les principes de la TCC, ainsi que le modèle en trois phases du traitement du traumatisme, y compris la régulation émotionnelle, différentes techniques d'exposition et des interventions cognitives.\n\n## Deuxième année - traitement du traumatisme complexe\n\nLe trouble de stress post-traumatique complexe est causé par l'exposition à des événements traumatiques multiples ou prolongés, comme la captivité, des combats prolongés, la violence domestique, la maltraitance ou la négligence dans l'enfance.\n\nLes thérapeutes rencontrent souvent des symptômes tels que la difficulté à faire confiance, une tendance à l'autodestruction, l'alexithymie (difficulté à exprimer ses émotions par des mots), la dépression chronique, des symptômes liés au trouble de la personnalité borderline ou des symptômes dissociatifs. Beaucoup de ces symptômes peuvent être attribués à un traumatisme complexe et résistent souvent aux traitements conventionnels.\n\nPierre Janet a élaboré au XIXe siècle le modèle en trois phases du traitement de ces troubles. Son modèle a depuis été repris et développé par des cliniciens modernes (par exemple van der Hart). Beaucoup de personnes confrontées à un traumatisme complexe souffrent d'un large éventail de troubles associés, comme l'abus de substances, des compétences sociales déficientes et des troubles anxieux, qu'il faut traiter avant de pouvoir aborder le traitement du traumatisme lui-même. Cela rend le traitement du traumatisme complexe plus long et plus difficile que d'habitude. Cette formation enseigne des méthodes de traitement des troubles graves de la personnalité.\n\nAu cours de la deuxième année, nous nous concentrons sur le traumatisme complexe, souvent accompagné de troubles anxieux, de dépression, de troubles complexes de la personnalité comme le trouble de la personnalité borderline et de troubles dissociatifs, de difficultés de contrôle des impulsions et de difficultés de fonctionnement autonome. La deuxième année offre un cadre théorique pour comprendre ces troubles dans le contexte traumatique et dans d'autres contextes, avec une formation pratique à des outils thérapeutiques tels que la pleine conscience, la DBT, la thérapie des schémas et l'ACT.\n\n## Détail du programme\n\nNotre formation associe des méthodes issues de la thérapie cognitivo-comportementale classique (méthodes d'exposition, par exemple Foa et d'autres ; thérapie cognitive, par exemple Clark, Ehlers et d'autres) en les intégrant au modèle en trois phases du traitement du traumatisme (Janet, van der Hart). Ce modèle ordonne les interventions de sorte que le patient ne soit pas submergé par des souvenirs douloureux avant d'avoir appris à réguler son niveau d'activation. Notre formation met l'accent sur les approches corps-esprit et inclut des modèles de la troisième vague de la TCC, comme la pleine conscience, la DBT et la thérapie d'acceptation et d'engagement.\n\nLes méthodes d'enseignement comprennent des cours magistraux, la lecture et la discussion d'articles universitaires, des démonstrations en direct et des films, la pratique des techniques apprises et une supervision clinique de cas. Les méthodes thérapeutiques enseignées sont utilisées dans le traitement du traumatisme ainsi que dans celui des troubles anxieux, des troubles dissociatifs, de la dépression et d'autres troubles.",
+        "audience": [
+          "Travailleurs sociaux",
+          "Psychologues",
+          "Art-thérapeutes",
+          "Psychiatres",
+          "Médecins",
+          "Ergothérapeutes",
+          "Conseillers scolaires",
+          "Criminologues cliniciens"
+        ],
+        "prerequisites": "Selon la catégorie de membre expert de l'ITA (Association israélienne de thérapie comportementale et cognitive) : https://itacbt.co.il/criteria-for-joining",
+        "format": "En présentiel",
+        "location": "Centre Metiv, Givat Shaul, Jérusalem",
+        "startDate": "14.10.2026",
+        "startDateISO": "2026-10-14",
+        "schedule": "Le lundi, de 13 h à 17 h 30",
+        "duration": "Deux ans",
+        "hours": "212 heures universitaires, dont 158 heures en présentiel",
+        "credits": [
+          "Association israélienne des psychologues",
+          "ITA",
+          "Prime de formation continue"
+        ],
+        "price": "10 350 ₪ par an",
+        "lecturers": [
+          {
+            "name": "Gafnit Agasi",
+            "role": "Directrice des formations"
+          }
+        ],
+        "syllabus": [
+          {
+            "title": "Première année - traumatisme simple",
+            "items": [
+              "Phénoménologie du traumatisme",
+              "Effets cognitifs du traumatisme",
+              "Repérage et évaluation des personnes touchées par un traumatisme",
+              "Adaptation saine et développement du TSPT",
+              "Trouble de stress aigu (TSA)",
+              "Trouble de stress post-traumatique (TSPT)",
+              "Modèles de thérapie cognitivo-comportementale",
+              "Phase de stabilisation : évaluation, psychoéducation, analyse fonctionnelle, élaboration d'un plan de traitement, apprentissage de techniques d'autorégulation",
+              "Phase d'élaboration : méthodes verbales et non verbales",
+              "Phase d'intégration : construction d'un récit continu, recours aux interventions cognitives selon Ellis (REBT) et Beck (CT)"
+            ]
+          },
+          {
+            "title": "Deuxième année - traitement du traumatisme complexe",
+            "items": [
+              "Les origines du traumatisme complexe - étiologie : effets de la violence, des abus sexuels, de la guerre, de la captivité et d'autres facteurs",
+              "Phénoménologie : caractéristiques et évaluation des troubles liés au traumatisme complexe",
+              "Traumatisme complexe et dépression : évaluation et traitement de la dépression et du deuil traumatique",
+              "Traumatisme complexe et anxiété : caractéristiques, évaluation et traitement de l'agoraphobie, du trouble d'anxiété généralisée, de la phobie spécifique, du TOC et de l'anxiété sociale, y compris l'acquisition de compétences sociales et de stratégies de résolution de problèmes",
+              "Traumatisme et destructivité : traitement des problèmes de contrôle des impulsions et d'impulsivité, traitement de l'addiction",
+              "Traumatisme et difficultés à construire l'alliance thérapeutique : stratégies cognitivo-comportementales pour bâtir la confiance, la coopération et l'engagement envers les objectifs thérapeutiques",
+              "Traumatisme et troubles graves de la personnalité : phénoménologie, évaluation et traitement selon le modèle thérapeutique de Linehan (DBT)",
+              "Traumatisme et corps : image du corps, inquiétudes liées à la santé, troubles alimentaires et effets du traumatisme sur la sexualité",
+              "Traumatisme et dissociation : phénoménologie, évaluation et traitement fondés sur le modèle de la dissociation structurelle (Pr van der Hart)",
+              "Traumatisme, crises psychiatriques et psychose",
+              "Parmi les méthodes enseignées dans le cours : la pleine conscience selon Segal et Kabat-Zinn, l'ACT selon Hayes et la thérapie des schémas selon Young"
+            ]
+          }
+        ],
+        "faq": [
+          {
+            "q": "Pourquoi étudier la TCC chez Metiv ?",
+            "a": "Selon Metiv : le premier programme de ce type en Israël ; des contenus renouvelés à partir de l'expérience clinique et de recherche accumulée au centre ; un apprentissage expérientiel et centré sur le processus ; un engagement envers les étudiants ; une accessibilité financière."
+          },
+          {
+            "q": "Quand commencent les cours ?",
+            "a": "Le programme de TCC du traumatisme commence le 14 octobre 2026, le lundi de 13 h à 17 h 30."
+          },
+          {
+            "q": "Combien coûte le cours ?",
+            "a": "Le coût du cursus de deux ans s'élève à 10 350 ₪ par an."
+          },
+          {
+            "q": "À qui s'adresser pour l'inscription et les questions ?",
+            "a": "À la directrice des formations, Gafnit : gafnit@metiv.org"
+          }
+        ],
+        "testimonials": [
+          {
+            "quote": "Je viens de terminer le programme de formation à la TCC du traumatisme et je souhaite partager mon expérience. Le cours m'a été extrêmement utile en tant que thérapeute en cabinet privé. J'ai reçu un riche éventail d'outils et de techniques pour traiter des patients confrontés à un traumatisme ou à l'anxiété, dont je ne disposais pas auparavant, ainsi qu'une compréhension théorique plus approfondie du traumatisme. Apprendre avec Gafnit Agasi a été un privilège. La partie la plus importante de l'apprentissage passe par les démonstrations de différentes techniques et approches qu'elle réalise avec des participants en classe (oui, il faudra apporter de vraies questions de votre propre vie). Ensuite, nous travaillons en binômes ou en petits groupes, de sorte que chacun fait l'expérience, à de nombreuses reprises, à la fois du rôle de thérapeute et de celui de patient.",
+            "name": "Miriam Friedman",
+            "role": "MSW"
+          },
+          {
+            "quote": "Quelques mots sur la formation à la TCC centrée sur le traumatisme. Quand des amis me demandent ce que le cours m'a apporté, je leur réponds que c'est plus que de la TCC. La manière dont il a été animé, ainsi que les nombreuses démonstrations en direct et les exercices, nous ont permis à tous de vivre les différentes étapes du processus thérapeutique et de le comprendre à un niveau profond et personnel. Résultat : les modèles et les concepts théoriques sont devenus très clairs et concrets.",
+            "name": "Miri Drabkin",
+            "role": "Conseillère scolaire principale, Institut Magen Avraham - études Lachem pour l'éducation spécialisée"
+          },
+          {
+            "quote": "Tout professionnel qui traite le TSPT connaît la frustration qu'impliquent souvent ces traitements complexes. En ce sens, la formation à la TCC centrée sur le traumatisme, animée par Gafnit Agasi, m'a ouvert les yeux sur un monde nouveau. Les techniques et les approches thérapeutiques ont imprégné mes autres traitements, sans lien avec le TSPT.",
+            "name": "Dr Oren Tene",
+            "role": "Psychiatre principal, responsable de la clinique de traitement des soldats invalides de Tsahal, Centre médical Sourasky de Tel-Aviv"
+          },
+          {
+            "quote": "J'aimerais partager quelques-unes de mes réflexions et de mes expériences au cours de la formation à la TCC centrée sur le traumatisme pour thérapeutes de la communauté éthiopienne. La partie théorique du cours s'est articulée naturellement avec la pratique et les démonstrations en classe. La pratique expérientielle dans le rôle de la patiente m'a permis de comprendre en profondeur ce que l'on ressent face à différentes interventions, et ce que c'est que d'être dans une relation thérapeutique respectueuse.",
+            "name": "Rachel Mann",
+            "role": "Centre Marian pour la petite enfance, Kiryat Gat"
+          }
+        ],
+        "registration": {
+          "url": "https://docs.google.com/forms/d/e/1FAIpQLScBrmrkMiK2aR1lNedwi_hi-VULcSTbUe1GIewBZNFfhF_p_A/viewform?usp=header",
+          "label": "Inscription et paiement",
+          "status": "open"
+        },
+        "contact": {
+          "name": "Gafnit Agasi",
+          "role": "Directrice des formations",
+          "email": "gafnit@metiv.org"
+        },
+        "sourceUrl": "https://metiv.org/קורס-cbt-לטראומה/",
+        "isPast": false
+      }
+    },
+    {
+      "_key": "roadmap",
+      "title": "La feuille de route du traitement du traumatisme",
+      "sortOrder": 1,
+      "content": {
+        "_key": "roadmap",
+        "_col": "metiv-courses",
+        "slug": "roadmap",
+        "title": "La feuille de route du traitement du traumatisme",
+        "subtitle": "Des outils pratiques pour traiter le traumatisme - un cours pour thérapeutes, en présentiel et sur Zoom",
+        "category": "adults",
+        "tags": [
+          "Cours de base",
+          "En présentiel",
+          "Zoom",
+          "Boussoles thérapeutiques"
+        ],
+        "summary": "Un cours de quatre séances sur les processus traumatiques, les boussoles thérapeutiques et les composantes du travail dans le traitement du traumatisme. Il a lieu par sessions, en présentiel et sur Zoom.",
+        "description": "Chez Metiv, le centre de traitement du traumatisme psychique, nous traitons, étudions et enseignons le traitement du traumatisme depuis 30 ans. Au cours de ces années, la conception du traumatisme psychique et de son traitement a évolué, et les dernières années en Israël mettent encore davantage ces approches à l'épreuve : nous rencontrons de nombreuses manifestations des effets du traumatisme. Il existe de nombreux protocoles de traitement du traumatisme, mais souvent, en clinique, la magie attendue ne se produit pas.\n\nDans notre travail avec les personnes touchées par un traumatisme, nous constatons qu'il faut une compréhension profonde et large des effets du traumatisme sur le cerveau et le corps, et une application réfléchie et souple de cette compréhension. Le traitement du traumatisme engendre souvent de l'impuissance et des situations de blocage, et les outils auxquels nous sommes habitués ne suffisent pas à faire avancer le changement.\n\nLe cours « La feuille de route du traitement du traumatisme » :\n\n- est issu de notre longue et riche expérience, et trace des lignes directrices, des boussoles et une boîte à outils qui, ensemble, aident le thérapeute à s'orienter dans l'enchevêtrement du traumatisme et à prendre des décisions qui font avancer le traitement (que faire, et à quel moment), en tenant compte aussi de la posture thérapeutique du thérapeute à chaque étape du traitement.\n- pose des bases solides et profondes, qui donnent une compréhension de la direction et du chemin, des étapes et du travail avec différentes situations traumatiques.\n- comprend des connaissances théoriques et une riche expérience clinique, ainsi que des exercices qui ancrent la compréhension dans la pratique.\n\nCe cours est pratique et pas seulement théorique : il permet aux thérapeutes de comprendre en profondeur, d'acquérir des compétences, de renforcer leur sentiment d'assurance dans leur travail et de développer leur capacité à travailler de façon variée dans le champ complexe du traumatisme.\n\nÀ la suite du cours, il est possible de rejoindre un groupe de supervision de 5 séances, où les participants pourront apporter des cas de leur pratique pour les discuter, construire un plan de travail et s'enrichir des cas des autres. Moyennant un coût supplémentaire, et selon le nombre de participants.",
+        "audience": [
+          "Psychologues",
+          "Travailleurs sociaux",
+          "Psychiatres",
+          "Art-thérapeutes",
+          "Thérapeutes ayant déjà étudié le traitement du traumatisme dans d'autres cadres",
+          "Équipes thérapeutiques d'organisations"
+        ],
+        "prerequisites": "Diplôme universitaire d'un établissement reconnu. Les thérapeutes sans diplôme universitaire sont invités à vérifier la possibilité de s'inscrire auprès de Michal Zmora (michal@metiv.org).",
+        "format": "En présentiel et sur Zoom (sessions distinctes)",
+        "location": "Centre Metiv, Centre médical Herzog, Jérusalem",
+        "startDate": "29.10.2026",
+        "startDateISO": "2026-10-29",
+        "schedule": "29 octobre et 5, 12, 19 novembre 2026, de 9 h à 15 h",
+        "duration": "4 séances",
+        "hours": "28 heures",
+        "price": "1,700 ₪",
+        "lecturers": [
+          {
+            "name": "Michal Zmora",
+            "role": "Psychothérapeute, titulaire d'un master en travail social clinique, directrice de l'unité des cours et des supervisions pour thérapeutes chez Metiv"
+          },
+          {
+            "name": "Carmit Rubin",
+            "role": "Travailleuse sociale clinicienne, psychothérapeute intégrative, spécialisée dans les situations de deuil et de crise, animatrice de groupes et professeure de méditation"
+          }
+        ],
+        "syllabus": [
+          {
+            "title": "Les processus traumatiques",
+            "items": [
+              "Un regard large sur le mécanisme de survie et ses effets (dissociation, désorientation, etc.)",
+              "Processus de rétablissement naturel et diverses situations de non-rétablissement",
+              "Ce que cela implique pour le traitement psychologique adapté aux personnes touchées par un traumatisme (y compris les questions d'orientation, de présence et de rythme du travail)"
+            ]
+          },
+          {
+            "title": "Les 3 boussoles qui aident dans le traitement du traumatisme",
+            "items": [
+              "Le modèle en trois phases",
+              "Repérer la « fenêtre de tolérance » et travailler avec elle",
+              "Des orientations utiles dans le traitement du traumatisme"
+            ]
+          },
+          {
+            "title": "Les 5 composantes essentielles du traitement du traumatisme",
+            "items": [
+              "La psychoéducation comme outil thérapeutique",
+              "Compétences d'attention et de régulation (y compris l'attention bifocale et l'attention multicanal, la régulation dans toutes ses composantes, y compris l'activation et la régulation cognitive)",
+              "Principes du travail d'exposition aux contenus non digérables (exposition in vivo et exposition au souvenir)",
+              "Travail d'intégration, d'élaboration et de liaison de toutes les composantes de l'expérience, avec une attention particulière à la dimension corporelle",
+              "Travail sur le sens et sur les cognitions entravantes"
+            ]
+          },
+          {
+            "title": "Les défis et les obstacles, et comment les surmonter",
+            "items": [
+              "Le thérapeute du traumatisme et ses rôles dans différentes situations",
+              "Les défis et obstacles typiques, et les points auxquels il faut être attentif pour éviter autant que possible des dommages secondaires"
+            ]
+          }
+        ],
+        "faq": [
+          {
+            "q": "À quels thérapeutes ce cours peut-il convenir ?",
+            "a": "Psychologues, travailleurs sociaux, thérapeutes et spécialistes du traitement du traumatisme ; thérapeutes qui souhaitent approfondir des approches pratiques ; toute personne qui souhaite se sentir plus sûre d'elle dans son travail thérapeutique."
+          },
+          {
+            "q": "Je n'ai pas de diplôme universitaire. Puis-je m'inscrire ?",
+            "a": "Les thérapeutes sans diplôme universitaire sont invités à vérifier la possibilité de s'inscrire auprès de Michal, responsable des formations chez Metiv : michal@metiv.org"
+          },
+          {
+            "q": "Que se passe-t-il après le cours ?",
+            "a": "Après le cours, il est possible de rejoindre une supervision individuelle ou un groupe de supervision de 5 séances (moyennant un supplément, et selon le nombre de participants) pour bénéficier de soutien et de conseils dans le travail clinique concret."
+          },
+          {
+            "q": "Y a-t-il des réductions ?",
+            "a": "Pour la session de juin 2025, une réduction était indiquée pour les thérapeutes du sud et du nord du pays, les réservistes et les conjointes de réservistes, sur demande par WhatsApp au 02-5952235."
+          }
+        ],
+        "testimonials": [
+          {
+            "quote": "Merci vraiment beaucoup ! Et merci de manière générale pour un cours passionnant, professionnel, plein d'exemples tirés du terrain, avec une immense expérience portée avec humilité face à un savoir en perpétuelle évolution. Merci à vous deux pour le dialogue fécond entre vous et pour ce que j'ai appris au-delà du savoir professionnel. Je serais heureuse d'apprendre encore auprès de vous à l'avenir",
+            "name": "Aluma Givoli",
+            "role": "Participante au cours « La feuille de route »"
+          },
+          {
+            "quote": "Un excellent cours, grâce à une animation précise, intelligente et sensible. J'ai énormément appris, mais surtout à travers l'approche, l'énergie, la manière de tenir l'espace, la détermination et le courage de mener sur un chemin bienveillant. Vous avez réussi à réunir des univers variés en une méthode thérapeutique et une approche d'accompagnement très riches et pratiques. Merci beaucoup.",
+            "name": "Limor Bornstein",
+            "role": "Participante à la formation « La feuille de route »"
+          }
+        ],
+        "formats": [
+          {
+            "key": "frontal-2026-10",
+            "label": "Session en présentiel - octobre 2026",
+            "format": "En présentiel",
+            "location": "Centre Metiv, Centre médical Herzog, Jérusalem",
+            "startDate": "29.10.2026",
+            "startDateISO": "2026-10-29",
+            "schedule": "29 octobre et 5, 12, 19 novembre 2026, de 9 h à 15 h",
+            "hours": "28 heures",
+            "price": "1,700 ₪",
+            "registration": {
+              "url": "https://pay.sumit.co.il/1i0fvg/48qims/95xqwv/payment/",
+              "label": "Inscription et paiement",
+              "status": "open"
+            },
+            "isPast": false,
+            "sourceUrl": "https://metiv.org/יסודות-הטיפול-בטראומה/"
+          },
+          {
+            "key": "zoom-2026-01",
+            "label": "Session sur Zoom - janvier 2026",
+            "format": "Zoom",
+            "location": "Cours en ligne sur Zoom",
+            "startDate": "1.1.2026",
+            "startDateISO": "2026-01-01",
+            "schedule": "1er, 8, 15 et 22 janvier 2026, le jeudi, de 9 h à 15 h",
+            "price": "1,700 ₪",
+            "registration": {
+              "url": "https://pay.sumit.co.il/1i0fvg/a7cisu/hcgqzq/payment/",
+              "label": "S'inscrire",
+              "status": "closed"
+            },
+            "isPast": true,
+            "sourceUrl": "https://metiv.org/קורס-מפת-הדרכים-zoom/"
+          },
+          {
+            "key": "frontal-2025-06",
+            "label": "Session en présentiel - juin 2025",
+            "format": "En présentiel",
+            "location": "Association Metiv - Centre médical Herzog, Givat Shaul, Jérusalem",
+            "startDate": "5.6.2025",
+            "startDateISO": "2025-06-05",
+            "schedule": "Les jeudis 5, 12, 19 et 26 juin 2025, de 8 h 30 à 15 h 30",
+            "hours": "Environ 28 heures",
+            "price": "Environ 1 500 ₪",
+            "lecturers": [
+              {
+                "name": "Michal Zmora"
+              },
+              {
+                "name": "Carmit Rubin"
+              }
+            ],
+            "note": "Thérapeutes du sud et du nord du pays, réservistes et conjointes de réservistes : réduction sur demande par WhatsApp au 02-5952235.",
+            "registration": {
+              "url": "https://pay.sumit.co.il/1i0fvg/48qims/",
+              "label": "S'inscrire à « La feuille de route »",
+              "status": "closed"
+            },
+            "isPast": true,
+            "sourceUrl": "https://metiv.org/מפת-הדרכים-קורס-למטפלים-בטראומה/"
+          }
+        ],
+        "registration": {
+          "url": "https://pay.sumit.co.il/1i0fvg/48qims/95xqwv/payment/",
+          "label": "Inscription et paiement",
+          "status": "open"
+        },
+        "contact": {
+          "email": "shimrit@metiv.org",
+          "phone": "02-6337635",
+          "whatsapp": "02-5952235"
+        },
+        "relatedSlugs": [
+          "skills-day",
+          "complex-trauma"
+        ],
+        "sourceUrl": "https://metiv.org/מפת-הדרכים-קורס-למטפלים-בטראומה/",
+        "relatedSourceUrls": [
+          "https://metiv.org/יסודות-הטיפול-בטראומה/",
+          "https://metiv.org/יסודות-הטיפול-בטראומה-3/",
+          "https://metiv.org/קורס-מפת-הדרכים-zoom/",
+          "https://metiv.org/jet-popup/מפת-הדרכים-יוני/"
+        ],
+        "isPast": false
+      }
+    },
+    {
+      "_key": "complex-trauma",
+      "title": "Les fondements du traitement du traumatisme complexe",
+      "sortOrder": 2,
+      "content": {
+        "_key": "complex-trauma",
+        "_col": "metiv-courses",
+        "slug": "complex-trauma",
+        "title": "Les fondements du traitement du traumatisme complexe",
+        "subtitle": "Quand le traumatisme s'inscrit dans le corps et dans la relation, il faut une autre feuille de route thérapeutique. Un cours avancé pour thérapeutes.",
+        "category": "adults",
+        "tags": [
+          "Cours avancé",
+          "Traumatisme complexe",
+          "En présentiel"
+        ],
+        "summary": "Un cours avancé de 6 séances pour les thérapeutes qui reçoivent des personnes touchées par un traumatisme complexe, dans le prolongement du cours « La feuille de route » ou de cours équivalents.",
+        "description": "Le traumatisme complexe est un phénomène bien connu, tant en clinique que dans la littérature professionnelle. Il résulte le plus souvent d'une exposition prolongée ou répétée à des événements traumatiques dans l'enfance, souvent au sein de relations importantes. Contrairement au traumatisme unique, il s'entremêle aux processus centraux du développement et influe sur la construction de l'identité, l'image de soi, les relations aux autres et l'expérience du monde en général.\n\nDans ces situations, nous observons une perturbation profonde des systèmes de régulation, des déconnexions entre le corps et la conscience, des phénomènes dissociatifs complexes, une somatisation, une atteinte à l'image et au fonctionnement sexuels, et parfois aussi une absence de mémoire narrative du traumatisme. Tout cela rend le processus d'élaboration plus difficile et ébranle aussi la relation thérapeutique.\n\nDans ce cours, nous proposerons une feuille de route clinique et thérapeutique pour faire face à ce défi. Forts d'une riche expérience auprès de patients souffrant de traumatisme complexe, nous avons élaboré un modèle thérapeutique intégré qui s'appuie sur des outils de l'approche psychodynamique, de la troisième vague de la TCC et du travail corporel et par le mouvement. Cette intégration permet de prendre en compte les systèmes de régulation émotionnels et corporels, de renforcer la capacité de contenance, d'améliorer les relations et d'élargir l'interprétation intérieure des stimuli, sur le chemin d'une vie dotée de sens.",
+        "audience": [
+          "Thérapeutes en santé mentale",
+          "Psychologues",
+          "Travailleurs sociaux",
+          "Art-thérapeutes",
+          "Criminologues cliniciens"
+        ],
+        "prerequisites": "Diplômés du cours « La feuille de route du traitement du traumatisme » ou de cours équivalents, qui reçoivent des personnes touchées par un traumatisme complexe.",
+        "format": "En présentiel",
+        "location": "Centre Metiv, Centre médical Herzog, Jérusalem",
+        "startDate": "5.3.2026",
+        "startDateISO": "2026-03-05",
+        "schedule": "5, 12, 19, 26 mars et 16, 23 avril 2026, le jeudi, de 9 h à 15 h",
+        "duration": "6 séances",
+        "price": "2,500 ₪",
+        "lecturers": [
+          {
+            "name": "Dr Danny Brom",
+            "role": "Directeur du centre Metiv, expert international du traitement du traumatisme, doté de vastes connaissances et d'une riche expérience des traitements du traumatisme complexe"
+          },
+          {
+            "name": "Michal Zmora",
+            "role": "M.S.W, psychothérapeute, thérapeute de longue date chez Metiv, responsable des formations et des supervisions chez Metiv"
+          },
+          {
+            "name": "Shir Elias",
+            "role": "Psychologue en cours de spécialisation en psychologie clinique, directrice du département de recherche de Metiv"
+          },
+          {
+            "name": "Gil Shemesh",
+            "role": "Psychologue et chargé de cours principal à l'unité des cours et des formations de Metiv"
+          }
+        ],
+        "registration": {
+          "url": "https://pay.sumit.co.il/1i0fvg/a7cisu/hch9cp/payment/",
+          "label": "S'inscrire",
+          "status": "closed"
+        },
+        "contact": {
+          "email": "info@metiv.org"
+        },
+        "relatedSlugs": [
+          "roadmap"
+        ],
+        "sourceUrl": "https://metiv.org/טראומה-מורכבת-קורס/",
+        "relatedSourceUrls": [
+          "https://metiv.org/מידע-כללי-טראומה/"
+        ],
+        "isPast": true
+      }
+    },
+    {
+      "_key": "kaleidoscope",
+      "title": "Kaléidoscope - journées de formation continue pour thérapeutes",
+      "sortOrder": 3,
+      "content": {
+        "_key": "kaleidoscope",
+        "_col": "metiv-courses",
+        "slug": "kaleidoscope",
+        "title": "Kaléidoscope - journées de formation continue pour thérapeutes",
+        "subtitle": "Une palette de formations pour thérapeutes : des modules indépendants les uns des autres",
+        "category": "adults",
+        "tags": [
+          "Journées de formation continue",
+          "Modules",
+          "En présentiel",
+          "Zoom"
+        ],
+        "summary": "Des journées de formation continue mensuelles sur différents thèmes du traitement du traumatisme. Chaque module est indépendant : vous pouvez en choisir un, plusieurs ou tous.",
+        "description": "**Kaléidoscope**, le programme de formations de l'association Metiv, vous invite à des études enrichissantes et actuelles dans le domaine du traitement du traumatisme.\n\nRejoignez le programme Kaléidoscope et construisez votre propre parcours d'approfondissement, souple et riche, selon le rythme et les thèmes qui vous intéressent.\n\n- Des modèles actuels, des outils pratiques, une communauté professionnelle bienveillante\n- Des journées de formation mensuelles avec les intervenants de Metiv, sous des angles nouveaux du travail avec le traumatisme\n- Chaque module est indépendant : vous pouvez en choisir un, plusieurs ou tous\n- Il est aussi possible de rejoindre une supervision individuelle ou de groupe, pour la durée qui vous convient\n\nComposez le parcours adapté à vos besoins.",
+        "audience": [
+          "Thérapeutes",
+          "Professionnels et organisations souhaitant approfondir leurs connaissances et enrichir leur boîte à outils"
+        ],
+        "format": "Mixte (modules au centre Metiv et modules sur Zoom)",
+        "location": "Centre Metiv, Jérusalem / Zoom",
+        "startDate": "6.2.2025",
+        "startDateISO": "2025-02-06",
+        "schedule": "Un module par mois, selon les dates de chaque module",
+        "price": "Module : 400 ₪",
+        "priceOptions": [
+          "Un module Kaléidoscope - 400 ₪",
+          "Deux modules Kaléidoscope - 700 ₪ (350 ₪ par module)",
+          "Trois modules ou plus - 900 ₪ (300 ₪ par module)"
+        ],
+        "lecturers": [
+          {
+            "name": "Danny Brom"
+          },
+          {
+            "name": "Nili Lavie"
+          },
+          {
+            "name": "Tamara Weiner"
+          },
+          {
+            "name": "Dalia Zivan"
+          },
+          {
+            "name": "Yoel Vardi"
+          },
+          {
+            "name": "Michal Zmora"
+          },
+          {
+            "name": "Michal Simchon"
+          }
+        ],
+        "units": [
+          {
+            "slug": "dissociation",
+            "title": "Dissociation et traumatisme",
+            "tagline": "« Où suis-je ? »",
+            "date": "6 et 13 février 2025",
+            "dateISO": "2025-02-06",
+            "hours": "14:00-17:00",
+            "format": "Zoom",
+            "lecturers": [
+              {
+                "name": "Danny Brom",
+                "role": "Initiateur et fondateur du centre de psychotraumatologie, expert international du traitement du traumatisme"
+              }
+            ],
+            "description": "La dissociation est un mécanisme particulier, inhérent au traumatisme, qui aide la personne en situation de survie à éviter la confrontation avec une terreur insoutenable. Parfois, la situation se complique et, avec le temps, crée des clivages de différentes formes, qui perturbent la vie quotidienne et lui portent atteinte.\n\nDanny Brom parlera de la manière de repérer les états dissociatifs et de travailler avec eux.",
+            "status": "ended",
+            "registrationUrl": "https://pay.sumit.co.il/1i0fvg/ae8vtc/",
+            "sourceUrl": "https://metiv.org/jet-popup/קליידוסקופ-דיסוציאציה-וטראומה/"
+          },
+          {
+            "slug": "traumatic-grief",
+            "title": "Au cœur de la brisure - le traitement du deuil traumatique",
+            "tagline": "La perte d'un proche est une déchirure dans la trame personnelle de notre vie.",
+            "date": "26.3.2025",
+            "dateISO": "2025-03-26",
+            "hours": "10:00-16:00",
+            "format": "Zoom",
+            "lecturers": [
+              {
+                "name": "Nili Lavie",
+                "role": "Psychologue clinicienne spécialisée"
+              }
+            ],
+            "description": "Lorsqu'une perte survient dans des circonstances soudaines, violentes, traumatiques, il s'agit d'une expérience qui ébranle le psychisme et les liens de la personne avec elle-même et avec autrui, une expérience qui crée une complexité et des difficultés particulières dans le processus de deuil.\n\nSous la conduite de Nili Lavie, nous plongerons au cours de la journée dans l'expérience du deuil traumatique et de son traitement, afin d'approfondir la compréhension professionnelle et le courage d'entrer en contact avec l'une des expériences les plus douloureuses que nous rencontrons en tant que thérapeutes et en tant qu'êtres humains, et peut-être aussi d'ouvrir une voie vers le lien et le sens.",
+            "status": "closed",
+            "sourceUrl": "https://metiv.org/jet-popup/קליידוסקופ-אבל/"
+          },
+          {
+            "slug": "art-for-non-art-therapists",
+            "title": "Atelier sur l'utilisation de l'art pour les thérapeutes qui ne sont pas art-thérapeutes",
+            "tagline": "« Là où il n'y a pas de mots, il y a la matière, la couleur, la tache et le trait »",
+            "date": "3.4.2025",
+            "dateISO": "2025-04-03",
+            "hours": "15:00-20:00",
+            "format": "En présentiel",
+            "location": "Metiv - Centre de psychotraumatologie, Jérusalem",
+            "lecturers": [
+              {
+                "name": "Tamara Weiner",
+                "role": "Art-thérapeute et psychothérapeute selon l'approche du focusing, enseignante de focusing, thérapeute et superviseuse au centre de psychotraumatologie"
+              }
+            ],
+            "description": "L'état de survie nous coupe des parties du cerveau responsables du langage ; c'est pourquoi nous rencontrons souvent des personnes touchées par un traumatisme qui ont du mal à parler et à s'exprimer avec des mots. Les matériaux de création offrent un langage riche et ancré pour exprimer l'expérience traumatique, et favorisent les processus de régulation, d'élaboration et d'intégration dans le traitement du traumatisme.\n\nTamara Weiner présentera des possibilités d'aborder le traumatisme par l'art, même lorsque votre spécialité n'est pas l'art-thérapie.",
+            "status": "ended",
+            "registrationUrl": "https://pay.sumit.co.il/1i0fvg/ae8vtc/",
+            "sourceUrl": "https://metiv.org/jet-popup/קליידוסקופ-סדנה-באומנות/"
+          },
+          {
+            "slug": "act-for-trauma",
+            "title": "L'ACT dans le traitement du traumatisme",
+            "tagline": "Comment intégrer l'acceptation et l'engagement dans le traitement des personnes ayant vécu un traumatisme ?",
+            "date": "7.5.2025",
+            "dateISO": "2025-05-07",
+            "hours": "9:00-16:00",
+            "format": "En présentiel",
+            "location": "Centre Metiv",
+            "lecturers": [
+              {
+                "name": "Dalia Zivan",
+                "role": "Thérapeute du traumatisme, chargée de cours et superviseuse. Directrice clinique de l'étude MDMA/SEA-IT chez Metiv"
+              }
+            ],
+            "description": "Dans ce cours, nous apprendrons les principes de base de l'approche ACT (Acceptance and Commitment Therapy) et découvrirons les possibilités de les intégrer dans le travail avec des personnes ayant vécu un traumatisme. Le cours constitue une introduction et une première découverte de l'approche, en se concentrant sur les schémas d'évitement liés au traumatisme, le travail avec les émotions douloureuses et l'utilisation des valeurs comme outil central pour favoriser le changement.\n\nLe cours s'adresse aux professionnels du soin qui souhaitent découvrir l'approche ACT et élargir leurs outils de travail avec le traumatisme.",
+            "status": "ended",
+            "registrationUrl": "https://pay.sumit.co.il/1i0fvg/ae8vtc/",
+            "sourceUrl": "https://metiv.org/jet-popup/קליידוסקופ-act-לטיפול-בטראומה/"
+          },
+          {
+            "slug": "not-by-words-alone",
+            "title": "« Pas seulement par la parole »",
+            "tagline": "Un atelier expérientiel où nous apprendrons à intégrer les différentes modalités de l'expérience dans le traitement du traumatisme",
+            "date": "22.5.2025",
+            "dateISO": "2025-05-22",
+            "hours": "15:00-19:00",
+            "format": "En présentiel",
+            "location": "Centre Metiv",
+            "lecturers": [
+              {
+                "name": "Yoel Vardi"
+              },
+              {
+                "name": "Michal Zmora"
+              }
+            ],
+            "description": "Dans les situations extrêmes, nous voyons les composantes de l'expérience se déconnecter les unes des autres, par exemple une émotion qui se déconnecte du fonctionnement, etc., et parfois des couplages excessifs se forment entre certaines composantes, comme une image ou une situation toujours accompagnée d'une peur intense.\n\nCe processus impose au traitement du traumatisme de prendre en compte chaque composante de l'expérience séparément et de permettre entre elles des liaisons adaptées, afin de restaurer la capacité d'intégration atteinte par le traumatisme et de distinguer ce qui appartient au présent de ce qui relève des événements passés.\n\nDans l'atelier, nous apprendrons des outils et des techniques pour intégrer ce travail aux différentes modalités de l'expérience (sens, images, mouvements, etc.) dans le traitement des personnes touchées par un traumatisme.",
+            "status": "closed",
+            "registrationUrl": "https://pay.sumit.co.il/1i0fvg/ae8vtc/",
+            "sourceUrl": "https://metiv.org/jet-popup/קליידוסקופ-לא-על-הדיבור-לבדו/"
+          },
+          {
+            "slug": "sexual-trauma",
+            "title": "Le traitement des violences sexuelles",
+            "tagline": "Sur le traitement du traumatisme sexuel",
+            "date": "12.6.2025",
+            "dateISO": "2025-06-12",
+            "hours": "17:00-21:00",
+            "format": "En présentiel",
+            "location": "Metiv - Centre de psychotraumatologie, Jérusalem",
+            "lecturers": [
+              {
+                "name": "Michal Zmora",
+                "role": "Directrice de l'unité des cours, thérapeute du traumatisme, chargée de cours et superviseuse"
+              }
+            ],
+            "description": "Le traumatisme sexuel est un sujet particulièrement sensible et complexe. Au-delà du danger de mort qu'il comporte parfois, il comporte aussi une violation de la confiance fondamentale envers les êtres humains, et la culpabilité et la honte s'y attachent le plus souvent.\n\nMichal Zmora parlera de cette situation complexe et de son traitement.",
+            "status": "ended",
+            "registrationUrl": "https://pay.sumit.co.il/1i0fvg/ae8vtc/",
+            "sourceUrl": "https://metiv.org/jet-popup/קליידוסקופ-טיפול-בפגיעות-מיניות/"
+          },
+          {
+            "slug": "birth-stories",
+            "title": "Accouchements - « Récits de naissance »",
+            "date": "22.6.2025",
+            "dateISO": "2025-06-22",
+            "hours": "16:00-21:00",
+            "format": "En présentiel",
+            "location": "Centre Metiv",
+            "description": "Les accouchements, les « récits de naissance », bénéficient le plus souvent d'une image d'événement avant tout exaltant et joyeux. Pourtant, et parfois justement pour cette raison, environ un tiers des femmes vivront leur accouchement comme traumatique.\n\nNous étudierons ensemble l'accompagnement thérapeutique des jeunes mères, ainsi que des orientations pour l'élaboration et le travail autour des accouchements de toutes sortes (y compris le travail autour des pertes de grossesse et des mortinaissances). Nous approfondirons les différentes expériences, la signification de ces chiffres élevés, leurs causes et leurs conséquences multiples.",
+            "status": "closed",
+            "registrationUrl": "https://pay.sumit.co.il/1i0fvg/ae8vtc/",
+            "sourceUrl": "https://metiv.org/jet-popup/קליידוסקופ-לידות-בידיים-מלאות/"
+          },
+          {
+            "slug": "narrative-work",
+            "title": "Le travail narratif avec le TSPT",
+            "tagline": "Le travail narratif dans le traitement du traumatisme",
+            "date": "6.7.2025",
+            "dateISO": "2025-07-06",
+            "hours": "9:00-16:00",
+            "format": "Zoom",
+            "lecturers": [
+              {
+                "name": "Dr Michal Simchon",
+                "role": "Docteure en bibliothérapie, ancienne directrice du département de bibliothérapie du Collège David Yellin, thérapeute de longue date chez Metiv"
+              }
+            ],
+            "description": "La thérapie narrative s'attache à élargir les récits enfermants que la personne se raconte parfois sur elle-même et sur le monde.\n\nDans les cas de traumatisme et de perte, au-delà de la douleur, de la souffrance et du tourment, le sentiment d'identité est lui aussi atteint. La personne se sent faible, impuissante, désespérée et parfois aussi coupable. De plus, l'événement traumatique demeure dans le corps et dans le psychisme comme fait de lambeaux, et les souvenirs se dispersent et restent sans continuité narrative.\n\nDans ce cours, nous apprendrons les principes de la thérapie narrative et découvrirons différents moyens narratifs qui permettent de rendre à la personne sa dignité, son identité et son histoire. Le cours associera enseignement théorique, exemples cliniques et expériences personnelles. Michal Simchon présentera des outils pour recoudre et élargir le récit post-traumatique, et pour travailler avec le récit lorsqu'il est figé et blessant.",
+            "status": "closed",
+            "registrationUrl": "https://pay.sumit.co.il/1i0fvg/ae8vtc/",
+            "sourceUrl": "https://metiv.org/jet-popup/קליידוסקופ-טיפול-בפגיעות-מיניות-2/"
+          },
+          {
+            "slug": "trauma-on-the-spectrum",
+            "title": "Le traumatisme sur un continuum",
+            "status": "soon",
+            "sourceUrl": "https://metiv.org/תכנית-שנתית/"
+          },
+          {
+            "slug": "moral-injury",
+            "title": "Blessure morale",
+            "status": "soon",
+            "sourceUrl": "https://metiv.org/תכנית-שנתית/"
+          },
+          {
+            "slug": "psychedelics-and-trauma",
+            "title": "Psychédéliques et traitement du traumatisme",
+            "status": "soon",
+            "sourceUrl": "https://metiv.org/תכנית-שנתית/"
+          },
+          {
+            "slug": "compassion-fatigue",
+            "title": "La fatigue de compassion : le thérapeute et son rôle",
+            "status": "soon",
+            "sourceUrl": "https://metiv.org/תכנית-שנתית/"
+          }
+        ],
+        "testimonials": [
+          {
+            "quote": "Le cours était précis et m'a apporté énormément de connaissances, en théorie, mais surtout en pratique. Merci beaucoup pour votre patience, votre chaleur et votre dévouement à l'enseignement",
+            "name": "Participante au cours"
+          },
+          {
+            "quote": "Michal, c'était excellent, grâce à une animation précise et à un soutien émotionnel. J'ai énormément appris, sur les processus et les contenus, mais surtout sur ta manière de faire. Tu as réussi à relier des contenus théoriques et des univers thérapeutiques tout en créant un dialogue qui a permis un apprentissage profond et large.",
+            "name": "Participante au cours"
+          }
+        ],
+        "registration": {
+          "label": "Les inscriptions aux ateliers sont closes",
+          "status": "closed"
+        },
+        "contact": {
+          "email": "shimrit@metiv.org",
+          "phone": "02-6449666"
+        },
+        "sourceUrl": "https://metiv.org/kaleidoscope-course/",
+        "relatedSourceUrls": [
+          "https://metiv.org/תכנית-שנתית/"
+        ],
+        "isPast": true
+      }
+    },
+    {
+      "_key": "skills-day",
+      "title": "Journée de pratique des compétences en traitement du traumatisme",
+      "sortOrder": 4,
+      "content": {
+        "_key": "skills-day",
+        "_col": "metiv-courses",
+        "slug": "skills-day",
+        "title": "Journée de pratique des compétences en traitement du traumatisme",
+        "subtitle": "Pour les diplômés du cours « La feuille de route du traitement du traumatisme »",
+        "category": "adults",
+        "tags": [
+          "Journée de pratique",
+          "Pour les diplômés de « La feuille de route »",
+          "En présentiel"
+        ],
+        "summary": "Une journée de pratique des compétences apprises dans le cours « La feuille de route », pour les diplômés du cours.",
+        "description": "Le traitement du traumatisme exige du thérapeute des compétences variées et la capacité de les mobiliser avec souplesse face au patient singulier qu'il reçoit et à sa situation particulière. Le passage d'un cadre d'apprentissage au travail clinique sur le terrain n'est pas simple, et de nombreux thérapeutes ont du mal à intégrer les nouvelles connaissances acquises dans les différentes situations cliniques.\n\nPour soutenir les compétences des thérapeutes et une utilisation adaptée des outils enseignés dans notre cours, nous ouvrons une journée entièrement consacrée à la pratique des compétences acquises dans le cours : psychoéducation, ancrage, compétences d'attention et de régulation, et liaison intégrative des composantes de l'expérience, y compris la composante corporelle.",
+        "audience": [
+          "Diplômés du cours « La feuille de route du traitement du traumatisme »"
+        ],
+        "prerequisites": "Avoir terminé le cours « La feuille de route du traitement du traumatisme ».",
+        "format": "En présentiel",
+        "location": "Centre Metiv, Centre médical Herzog, Jérusalem",
+        "startDate": "16.4.2026",
+        "startDateISO": "2026-04-16",
+        "schedule": "16 avril 2026, de 9 h à 15 h",
+        "hours": "6 heures de pratique",
+        "price": "500 ₪",
+        "syllabus": [
+          {
+            "title": "Les compétences pratiquées",
+            "items": [
+              "Psychoéducation",
+              "Ancrage",
+              "Compétences d'attention et de régulation",
+              "Liaison intégrative des composantes de l'expérience, y compris la composante corporelle"
+            ]
+          }
+        ],
+        "registration": {
+          "url": "https://pay.sumit.co.il/1i0fvg/a7cisu/hcihuz/payment/",
+          "label": "Inscription et paiement",
+          "status": "closed"
+        },
+        "contact": {
+          "email": "info@metiv.org"
+        },
+        "relatedSlugs": [
+          "roadmap"
+        ],
+        "sourceUrl": "https://metiv.org/תרגול-מיומנויות/",
+        "isPast": true
+      }
+    },
+    {
+      "_key": "annual-program",
+      "title": "Le programme annuel des cours de Metiv",
+      "sortOrder": 5,
+      "content": {
+        "_key": "annual-program",
+        "_col": "metiv-courses",
+        "slug": "annual-program",
+        "title": "Le programme annuel des cours de Metiv",
+        "subtitle": "L'unité des cours de Metiv présente le programme d'études 2025",
+        "category": "adults",
+        "tags": [
+          "Programme annuel",
+          "Informations générales",
+          "Communauté apprenante"
+        ],
+        "summary": "Une vue d'ensemble des cours, des modules, des supervisions et de la communauté apprenante que Metiv a publiés pour 2025, et des informations générales sur l'inscription.",
+        "description": "Vous êtes invités à nous rejoindre, en présentiel et à distance, pour des cours sur le traumatisme. Le programme comprend des cours pour un apprentissage approfondi et complet, des cours avancés sur le traitement du traumatisme, des possibilités de supervision et l'accès à la communauté apprenante de Metiv.\n\nMetiv agit depuis plus de 20 ans comme centre de formation et forme des professionnels du soin, des organisations et des professionnels de domaines variés. Les programmes reposent sur des connaissances et une vaste expérience clinique, associées à des méthodes thérapeutiques d'Israël et du monde entier. À ce jour, plus de 2 000 thérapeutes ont été formés. Les formations sont également proposées en ligne.\n\n## Ce que comprend le programme 2025\n\n- **Cours avancés, approfondissement et modules** - modules Kaléidoscope : le travail narratif avec le TSPT, « Pas seulement par la parole », l'ACT dans le traitement du traumatisme. Prochainement : le traumatisme sur un continuum, la blessure morale, psychédéliques et traitement du traumatisme, la fatigue de compassion (le thérapeute et son rôle).\n- **Cours courts, ciblés et pratiques** - « La feuille de route » (juin), « La feuille de route » pour les organismes publics et les associations (sur demande à shir@metiv.org), cours d'une journée : construire une organisation adaptée au traumatisme.\n- **Communauté apprenante** - Journal Club : une communauté apprenante autour de la recherche et du traitement du traumatisme, gratuite. Supervision individuelle (450 ₪) et groupe de supervision.",
+        "audience": [
+          "Psychologues",
+          "Travailleurs sociaux",
+          "Psychiatres",
+          "Art-thérapeutes",
+          "Autres professionnels du soin",
+          "Organisations souhaitant une formation professionnelle pour leurs équipes"
+        ],
+        "format": "Mixte",
+        "startDate": "2025",
+        "faq": [
+          {
+            "q": "À qui cela s'adresse-t-il ?",
+            "a": "Aux psychologues, travailleurs sociaux, psychiatres, art-thérapeutes et autres professionnels du soin qui souhaitent élargir leurs connaissances, acquérir de nouvelles compétences et renforcer leur assurance dans le travail avec le traumatisme. Convient aussi aux organisations qui souhaitent une formation professionnelle pour leurs équipes."
+          },
+          {
+            "q": "Comment s'inscrire ?",
+            "a": "Vous prenez contact via le site ou par téléphone, recevez toutes les informations sur la structure du cours et les dates de démarrage, puis vous vous inscrivez. Le contenu peut être adapté aux besoins d'une organisation. Un groupe de supervision de 5 séances est ensuite proposé pour approfondir, moyennant un coût supplémentaire et selon le nombre de participants."
+          },
+          {
+            "q": "Qu'est-ce que le Journal Club ?",
+            "a": "Une communauté apprenante autour de la recherche et du traitement du traumatisme, gratuite. Les conférences précédentes sont disponibles sur YouTube : https://youtube.com/playlist?list=PL7kR2brVa2aHQOHC1realKQBf6950Yip1"
+          }
+        ],
+        "contact": {
+          "email": "shimrit@metiv.org",
+          "whatsapp": "02-5952235"
+        },
+        "relatedSlugs": [
+          "kaleidoscope",
+          "roadmap",
+          "complex-trauma",
+          "cbt-trauma"
+        ],
+        "sourceUrl": "https://metiv.org/תכנית-שנתית/",
+        "relatedSourceUrls": [
+          "https://metiv.org/מידע-כללי-טראומה/"
+        ],
+        "isPast": true
+      }
+    },
+    {
+      "_key": "summer-course",
+      "title": "Cours d'été international",
+      "sortOrder": 6,
+      "content": {
+        "_key": "summer-course",
+        "_col": "metiv-courses",
+        "slug": "summer-course",
+        "title": "Cours d'été international",
+        "subtitle": "Traumatisme et résilience, le point de vue israélien - théorie et pratique",
+        "category": "adults",
+        "tags": [
+          "En anglais",
+          "Université hébraïque",
+          "Crédits universitaires"
+        ],
+        "summary": "Un cours d'été en anglais, en partenariat avec l'Université hébraïque, sur le traumatisme et la résilience dans le contexte israélien, avec une troisième semaine optionnelle de formation clinique pour thérapeutes.",
+        "description": "Le programme d'été, d'une durée de deux à trois semaines, est organisé en partenariat avec l'Université hébraïque et offre aux participants un panorama complet des évolutions récentes dans le domaine du traumatisme en général, et dans le contexte israélien en particulier. Le cours comprend des cours théoriques, un apprentissage expérientiel et des visites d'étude sur le terrain.\n\nLes étudiants découvrent les facteurs de risque de développement d'un trouble de stress post-traumatique (TSPT), les symptômes de détresse associés et les facteurs de protection potentiels. Le cours présente des théories et des recherches sur les effets du traumatisme, les processus d'adaptation sains et les conséquences pathologiques possibles. Les principes directeurs du traitement des troubles post-traumatiques sont également abordés.\n\nLes visites d'étude et les cours comprennent des rencontres avec des chercheurs et des professionnels du domaine du traumatisme.\n\n## Semaine complémentaire optionnelle : formation clinique à la thérapie cognitivo-comportementale des troubles post-traumatiques\n\nEn complément du cours, une troisième semaine optionnelle de formation clinique est proposée aux thérapeutes qui souhaitent se spécialiser dans le traitement du traumatisme (40 heures universitaires, 2 crédits). Cette formation repose sur le modèle en trois phases du traitement du traumatisme. La première phase, la stabilisation, porte sur les techniques d'autorégulation. La deuxième phase, l'élaboration du traumatisme, comprend des techniques d'exposition et de construction du récit. La troisième phase, l'intégration, fait appel à des techniques cognitives. Au cours de la semaine de formation, les étudiants passeront en revue la littérature du domaine, discuteront du modèle thérapeutique, assisteront à des démonstrations des techniques et les pratiqueront entre eux en travaillant sur leurs expériences personnelles.\n\n**Attention : le cours se déroule en anglais. La troisième semaine est réservée aux thérapeutes.**",
+        "audience": [
+          "Psychologie clinique et psychologie de l'éducation",
+          "Neuropsychologie",
+          "Travail social",
+          "Psychiatrie",
+          "Soins infirmiers",
+          "Médecine",
+          "Droit et santé publique",
+          "Fonctionnaires et responsables religieux"
+        ],
+        "prerequisites": "Professionnels et étudiants avancés du monde entier. La troisième semaine est réservée aux thérapeutes.",
+        "format": "En présentiel, en anglais",
+        "location": "École internationale Rothberg, Université hébraïque, campus du mont Scopus",
+        "startDate": "28.6.2026",
+        "startDateISO": "2026-06-28",
+        "schedule": "Cours théorique : du 28 juin au 9 juillet 2026. Formation clinique : du 12 au 16 juillet 2026",
+        "duration": "Deux semaines, plus une troisième semaine optionnelle",
+        "hours": "64 heures universitaires (troisième semaine : 40 heures universitaires)",
+        "credits": [
+          "4 crédits de l'Université hébraïque de Jérusalem",
+          "Troisième semaine optionnelle : 2 crédits"
+        ],
+        "lecturers": [
+          {
+            "name": "Dr Danny Brom",
+            "role": "Directeur général, directeur du programme"
+          },
+          {
+            "name": "Pr Ruth Pat-Horenczyk",
+            "role": "Directrice de l'unité de recherche, directrice du programme"
+          },
+          {
+            "name": "Dr Naomi Baum",
+            "role": "Directrice des programmes de résilience"
+          },
+          {
+            "name": "Yoel Vardi",
+            "role": "Directeur de la clinique Metiv"
+          },
+          {
+            "name": "Gafnit Agasi",
+            "role": "Directrice de l'unité des formations"
+          },
+          {
+            "name": "Sarit Schramm-Yavin",
+            "role": "Directrice de la clinique Metiv pour enfants"
+          },
+          {
+            "name": "Alon Weltman",
+            "role": "Coordinateur du projet Peace of Mind"
+          },
+          {
+            "name": "Asher Mekuanent Rahamim",
+            "role": "Directeur du service pour la communauté des Israéliens d'origine éthiopienne"
+          }
+        ],
+        "syllabus": [
+          {
+            "title": "Le cours porte sur cinq thèmes",
+            "items": [
+              "Le traumatisme psychologique : conséquences et adaptation",
+              "La résilience : concepts théoriques et application sur le terrain",
+              "La préparation des communautés face au terrorisme et aux catastrophes",
+              "Les enfants et le traumatisme : aspects développementaux et liés au genre",
+              "Interventions cliniques"
+            ]
+          },
+          {
+            "title": "Activités",
+            "items": [
+              "Une visite d'étude pour découvrir un programme d'intervention municipal de renforcement de la résilience de la population civile en temps de guerre",
+              "L'occasion de pratiquer des méthodes d'intervention immédiate et de traitement des personnes touchées par un traumatisme",
+              "Une présentation de programmes mis en œuvre en Israël, destinés à renforcer la résilience et à prévenir les effets pathologiques du traumatisme"
+            ]
+          }
+        ],
+        "faq": [
+          {
+            "q": "Un hébergement est-il proposé ?",
+            "a": "Un hébergement simple est proposé dans les résidences du village étudiant du campus du mont Scopus. Chaque étudiant dispose d'une chambre individuelle climatisée dans un appartement meublé comprenant 5 chambres, un salon, une cuisine et une salle de bains. Le village étudiant dispose d'un supermarché, d'une laverie et d'autres services."
+          },
+          {
+            "q": "En quelle langue se déroule le cours ?",
+            "a": "Le cours se déroule en anglais."
+          },
+          {
+            "q": "Le cours donne-t-il droit à des crédits ?",
+            "a": "Les étudiants qui termineront le cours de deux semaines pourront obtenir 4 crédits universitaires de l'Université hébraïque de Jérusalem. La troisième semaine donne droit à 2 crédits supplémentaires."
+          }
+        ],
+        "registration": {
+          "url": "https://overseas.huji.ac.il/academics/summer-and-short-term-programs/summer-courses/trauma-summer/",
+          "label": "Registration & Payment",
+          "status": "closed"
+        },
+        "sourceUrl": "https://metiv.org/קורס-קיץ-בינלאומי/",
+        "relatedSourceUrls": [
+          "https://metiv.org/en/international-summer-course/"
+        ],
+        "isPast": true
+      }
+    },
+    {
+      "_key": "kids-trauma-basics",
+      "title": "Les bases du traitement du traumatisme chez l'enfant",
+      "sortOrder": 7,
+      "content": {
+        "_key": "kids-trauma-basics",
+        "_col": "metiv-courses",
+        "slug": "kids-trauma-basics",
+        "title": "Les bases du traitement du traumatisme chez l'enfant",
+        "subtitle": "Un cours intensif pour les professionnels du soin chez Metiv - Centre israélien de psychotraumatologie",
+        "category": "children-family",
+        "tags": [
+          "Enfants",
+          "Cours intensif",
+          "Zoom",
+          "TF-CBT",
+          "CPP",
+          "SE"
+        ],
+        "summary": "Un cours intensif sur les étapes de la prise en charge du traumatisme chez l'enfant : du repérage au traitement et à la prévention, jusqu'à l'implication des parents.",
+        "description": "Le cours offre des bases à la fois théoriques et pratiques. Nous passerons en revue les différentes étapes de la prise en charge du traumatisme chez l'enfant : du repérage, en passant par le traitement et la prévention, jusqu'à l'implication des parents dans le processus thérapeutique.\n\nEn parallèle, nous apprendrons des modes de traitement fondés sur la combinaison de différentes approches (TF-CBT, CPP, SE) et sur l'association des approches thérapeutiques et du jeu.\n\nLe cours sera donné par Sarit Schramm-Yavin, psychologue scolaire spécialisée et directrice de Metiv Enfants.",
+        "audience": [
+          "Professionnels du soin titulaires d'un diplôme reconnu et ayant une expérience du travail avec les enfants"
+        ],
+        "prerequisites": "Diplôme reconnu et expérience du travail avec les enfants. Aucune expérience du travail avec le traumatisme n'est requise.",
+        "format": "Zoom",
+        "location": "Zoom",
+        "startDate": "9 janvier 2024",
+        "startDateISO": "2024-01-09",
+        "schedule": "Les jeudis 9, 16, 23 et 30 janvier, de 9 h à 12 h 30",
+        "duration": "4 séances",
+        "hours": "16 heures universitaires",
+        "price": "1 500 ₪",
+        "lecturers": [
+          {
+            "name": "Sarit Schramm-Yavin",
+            "role": "Psychologue scolaire spécialisée et directrice de Metiv Enfants"
+          }
+        ],
+        "faq": [
+          {
+            "q": "À qui s'adresse le cours ?",
+            "a": "Aux professionnels du soin titulaires d'un diplôme reconnu et ayant une expérience du travail avec les enfants. Aucune expérience du travail avec le traumatisme n'est requise."
+          },
+          {
+            "q": "À quoi s'attendre ?",
+            "a": "Le cours offre des bases à la fois théoriques et pratiques : repérage, traitement et prévention, et implication des parents dans le processus thérapeutique. Nous apprendrons des modes de traitement qui combinent TF-CBT, CPP et SE, et qui associent les approches thérapeutiques et le jeu."
+          },
+          {
+            "q": "Quand ?",
+            "a": "Les 9, 16, 23 et 30 janvier, de 9 h à 12 h 30."
+          },
+          {
+            "q": "Où ?",
+            "a": "Zoom"
+          },
+          {
+            "q": "À qui s'adresser ?",
+            "a": "Pour plus d'informations et pour vous inscrire : Stav - 0547466538 ou par e-mail à stav@metiv.org"
+          }
+        ],
+        "formats": [
+          {
+            "key": "zoom-january",
+            "label": "Session sur Zoom - janvier",
+            "format": "Zoom",
+            "location": "Zoom",
+            "startDate": "9 janvier 2024",
+            "schedule": "Les jeudis 9, 16, 23 et 30 janvier, de 9 h à 12 h 30",
+            "hours": "16 heures universitaires",
+            "price": "1 500 ₪",
+            "registration": {
+              "label": "Informations et inscription : Stav",
+              "status": "closed"
+            },
+            "isPast": true,
+            "sourceUrl": "https://metiv.org/הכשרה-למטפלים-פנדה-יסודי-2/"
+          },
+          {
+            "key": "frontal-2024-09",
+            "label": "Session en présentiel - septembre 2024",
+            "format": "En présentiel",
+            "location": "Bureaux de Metiv, bâtiment des consultations, Centre médical Herzog, Jérusalem",
+            "startDate": "11.9.2024",
+            "startDateISO": "2024-09-11",
+            "schedule": "11, 12 et 15 septembre, de 9 h à 15 h",
+            "registration": {
+              "label": "Informations et inscription : Stav",
+              "status": "closed"
+            },
+            "isPast": true,
+            "sourceUrl": "https://metiv.org/news/מחזור-חדש-לקורס-יסודות-הטיפול-בטראומה/"
+          }
+        ],
+        "registration": {
+          "label": "Informations et inscription",
+          "status": "closed"
+        },
+        "contact": {
+          "name": "Stav",
+          "email": "stav@metiv.org",
+          "phone": "0547466538"
+        },
+        "sourceUrl": "https://metiv.org/הכשרה-למטפלים-פנדה-יסודי-2/",
+        "relatedSourceUrls": [
+          "https://metiv.org/news/מחזור-חדש-לקורס-יסודות-הטיפול-בטראומה/"
+        ],
+        "isPast": true
+      }
+    },
+    {
+      "_key": "panda-training",
+      "title": "Formation pour thérapeutes : PANDA pour l'école primaire",
+      "sortOrder": 8,
+      "content": {
+        "_key": "panda-training",
+        "_col": "metiv-courses",
+        "slug": "panda-training",
+        "title": "Formation pour thérapeutes : PANDA pour l'école primaire",
+        "subtitle": "Un parcours de formation pour animateurs de groupes PANDA pour les 7-12 ans",
+        "category": "children-family",
+        "tags": [
+          "PANDA",
+          "Régulation émotionnelle",
+          "Groupes",
+          "Zoom"
+        ],
+        "summary": "Une formation à l'animation de groupes de régulation émotionnelle selon le modèle PANDA, pour les enfants d'âge primaire.",
+        "description": "Le cours s'adresse aux professionnels du soin qui souhaitent se spécialiser dans l'animation de groupes de régulation émotionnelle selon le modèle des groupes PANDA (« Ici, nous apprenons des façons de faire face »). Le cours associera apprentissage théorique et pratique expérientielle d'exercices tirés du programme, de sorte qu'à la fin du cours, les participants pourront animer des groupes PANDA dans divers cadres destinés aux enfants d'âge primaire.\n\n## Le programme PANDA en bref\n\nLe programme PANDA, « Ici, nous apprenons des façons de faire face », aide les enfants et les parents à développer leur capacité de régulation émotionnelle et leurs façons de faire face. Le programme se déroule en groupe, s'adresse aux enfants de 7 à 12 ans et comprend 8 séances pour les enfants et 3 séances pour les parents. Il associe des techniques de pleine conscience (mindfulness), des techniques cognitivo-comportementales et des interventions narratives, toutes intégrées au programme de manière créative et ludique.\n\nLa particularité du programme PANDA par rapport aux programmes similaires est qu'il s'adresse à tous les enfants, et pas seulement à ceux qui présentent des comportements préoccupants ou qui vivent des difficultés marquées. Le postulat de base du programme est que tout le monde peut tirer profit des outils de régulation émotionnelle, et que ces outils continueront de l'accompagner tout au long de sa vie.\n\nLe programme PANDA a été développé par la Pr Ruth Pat-Horenczyk et Sarit Schramm-Yavin au sein de « Metiv - Centre israélien de psychotraumatologie ».",
+        "audience": [
+          "Travailleurs sociaux",
+          "Psychologues",
+          "Conseillers scolaires",
+          "Art-thérapeutes",
+          "Thérapeutes par le mouvement"
+        ],
+        "prerequisites": "Professionnels du soin travaillant avec des enfants.",
+        "format": "Zoom",
+        "location": "Zoom",
+        "startDate": "3.2.2025",
+        "startDateISO": "2025-02-03",
+        "schedule": "Les lundis 3, 10, 17 et 24 février, de 9 h à 15 h",
+        "duration": "4 séances",
+        "hours": "30 heures universitaires",
+        "price": "2 000 ₪ (une réduction sera accordée aux thérapeutes résidant dans les zones de la ligne de front)",
+        "lecturers": [
+          {
+            "name": "Sarit Schramm-Yavin",
+            "role": "Psychologue scolaire spécialisée et directrice de Metiv Enfants. Elle a co-développé le programme PANDA avec la Pr Ruth Pat-Horenczyk. Elle enseigne dans de nombreux cadres, notamment à l'administration de l'éducation de la municipalité de Jérusalem et à l'École de travail social de l'Université hébraïque."
+          }
+        ],
+        "syllabus": [
+          {
+            "title": "Programme du cours",
+            "items": [
+              "Présentation du groupe et du programme PANDA",
+              "Au fond, qu'est-ce que la régulation émotionnelle ?",
+              "Régulation émotionnelle - théorie",
+              "Le développement de la régulation émotionnelle",
+              "Comment constituer un groupe PANDA ?",
+              "Ressources d'adaptation - le modèle BASIC Ph",
+              "La pleine conscience : qu'est-ce que c'est et pourquoi est-ce important ?",
+              "Régulation émotionnelle - démonstrations tirées du programme",
+              "Régulation corporelle - démonstrations tirées du programme",
+              "Régulation des pensées - démonstrations tirées du programme",
+              "PANDA pour les parents et les équipes éducatives",
+              "Synthèse"
+            ]
+          }
+        ],
+        "registration": {
+          "label": "Inscription au cours et paiement (formulaire sur le site de Metiv)",
+          "status": "closed"
+        },
+        "contact": {
+          "name": "Stav Nisser",
+          "email": "stav@metiv.org"
+        },
+        "relatedSlugs": [
+          "panda-parents-training",
+          "panda-two-training",
+          "panda-arts-training"
+        ],
+        "sourceUrl": "https://metiv.org/הכשרה-למטפלים-פנדה-יסודי/",
+        "isPast": true
+      }
+    },
+    {
+      "_key": "panda-parents-training",
+      "title": "PANDA parents - parcours de formation pour thérapeutes",
+      "sortOrder": 9,
+      "content": {
+        "_key": "panda-parents-training",
+        "_col": "metiv-courses",
+        "slug": "panda-parents-training",
+        "title": "PANDA parents - parcours de formation pour thérapeutes",
+        "category": "children-family",
+        "tags": [
+          "PANDA",
+          "Parents",
+          "DBT"
+        ],
+        "summary": "Un cours de 12 heures universitaires pour les thérapeutes qui travaillent avec des parents, pour animer des groupes PANDA pour parents.",
+        "description": "Le cours s'adresse aux thérapeutes en santé mentale qui accompagnent des parents et travaillent sur la parentalité, et qui souhaitent enrichir leur boîte à outils professionnelle et animer des groupes PANDA pour parents.\n\nLe cours comprend trois séances de quatre heures universitaires, soit 12 heures universitaires au total. Le programme comprend des contenus portant sur le traumatisme, la régulation émotionnelle et la parentalité, une introduction aux compétences DBT, ainsi que la pratique des compétences de pleine conscience, de régulation émotionnelle, de tolérance à la détresse et des compétences interpersonnelles. Le cours abordera aussi la constitution d'un groupe, le recrutement des participants et l'évaluation du programme.\n\n## Le programme PANDA parents en bref\n\nLes groupes PANDA pour parents ont été développés par Sarit Schramm-Yavin et Tzipora Hayat dans le prolongement du programme PANDA (« Ici, nous apprenons des façons de faire face ») pour les 7-12 ans, à partir du constat que la parentalité peut mettre à l'épreuve notre capacité à gérer le stress et accentuer les fluctuations de l'humeur. Par nature, la parentalité confronte les parents à des situations de frustration, d'incertitude, d'impuissance, voire de désespoir. Le programme vise à enseigner des outils pratiques de régulation émotionnelle qui peuvent aider à faire face aux situations parentales difficiles. Il s'appuie sur l'approche dialectique et comportementale (DBT), qui comprend des outils pratiques pour réguler les émotions, faire face aux situations de stress et gérer les relations avec les autres, et il intègre des exercices du programme PANDA pour enfants.",
+        "audience": [
+          "Thérapeutes en santé mentale qui accompagnent des parents et travaillent sur la parentalité"
+        ],
+        "format": "En présentiel",
+        "location": "Centre Metiv de psychotraumatologie",
+        "startDate": "Sera communiqué ultérieurement",
+        "duration": "3 séances de 4 heures universitaires",
+        "hours": "12 heures universitaires",
+        "syllabus": [
+          {
+            "title": "Contenus du cours",
+            "items": [
+              "Traumatisme, régulation émotionnelle et parentalité",
+              "Introduction aux compétences DBT",
+              "Pratique des compétences de pleine conscience, de régulation émotionnelle, de tolérance à la détresse et des compétences interpersonnelles",
+              "Constitution d'un groupe, recrutement des participants et évaluation du programme"
+            ]
+          }
+        ],
+        "registration": {
+          "url": "https://www.myofficeguy.com/p/1i0fvg/1iqgrk/1iqgou/payment/",
+          "label": "Inscription et paiement",
+          "status": "unknown"
+        },
+        "contact": {
+          "email": "stav@metiv.org"
+        },
+        "relatedSlugs": [
+          "panda-training",
+          "panda-two-training"
+        ],
+        "sourceUrl": "https://metiv.org/הכשרה-למטפלים-פנדה-הורים/",
+        "isPast": false
+      }
+    },
+    {
+      "_key": "panda-two-training",
+      "title": "PANDA à deux - parcours de formation pour animateurs de groupes parents-enfants",
+      "sortOrder": 10,
+      "content": {
+        "_key": "panda-two-training",
+        "_col": "metiv-courses",
+        "slug": "panda-two-training",
+        "title": "PANDA à deux - parcours de formation pour animateurs de groupes parents-enfants",
+        "category": "children-family",
+        "tags": [
+          "PANDA",
+          "Petite enfance",
+          "Dyadique",
+          "NAMAL"
+        ],
+        "summary": "Une formation pour les professionnels de la petite enfance à l'animation de groupes dyadiques de parents et de tout-petits, dans une nouvelle version du programme NAMAL.",
+        "description": "Le cours s'adresse aux professionnels de la petite enfance qui souhaitent se spécialiser dans l'animation de groupes PANDA à deux (anciennement NAMAL, « Faisons place au jeu »). Le cours associera apprentissage théorique et pratique expérientielle d'exercices tirés du programme, de sorte qu'à la fin du cours, les participants pourront animer des groupes PANDA dans divers cadres.\n\n## Les étapes de la formation\n\n- Partie 1 : cours PANDA à deux, 24 heures universitaires.\n- Partie 2 : mise en œuvre du modèle PANDA à deux avec l'accompagnement d'une supervision de Metiv Enfants, 6 séances de supervision en groupe.\n\n## Le programme PANDA à deux en bref\n\nLe programme PANDA à deux est une nouvelle version du programme « Faisons place au jeu » (NAMAL), développé par la Pr Esther Cohen et la Pr Ruth Pat-Horenczyk pour Metiv. Il s'agit d'un modèle de travail de groupe centré sur le jeu, destiné aux binômes parent-jeune enfant, qui vise à développer la capacité de jeu et de symbolisation des parents afin qu'ils puissent favoriser et soutenir le développement des capacités de régulation chez leurs enfants.\n\nLe programme s'adresse aux binômes parent-tout-petit de 2 à 3 ans confrontés à des difficultés typiques de cet âge et/ou exposés à des situations de stress, de crise ou de traumatisme. Il comprend 6 séances parent-enfant pour environ 8 dyades. Chaque séance porte un message psychoéducatif destiné aux parents, représenté par une maxime courte et facile à retenir. Les messages sont transmis par des activités communes de jeu, de musique, de théâtre et de mouvement adaptées aux 2-3 ans.\n\n## Les messages clés du programme\n\n- **Le lien parent-enfant** comme base protectrice et sécurisante\n- **Favoriser l'autonomie et la confiance en soi**\n- **Le jeu**, l'humour et la créativité\n- **Refléter** les actions et les intentions\n- **Exprimer et refléter les émotions**",
+        "audience": [
+          "Travailleurs sociaux",
+          "Psychologues",
+          "Art-thérapeutes",
+          "Thérapeutes par le mouvement"
+        ],
+        "prerequisites": "Professionnels du soin travaillant avec des enfants en bas âge.",
+        "format": "En présentiel",
+        "location": "Centre Metiv de psychotraumatologie",
+        "startDate": "Sera communiqué ultérieurement",
+        "duration": "Un cours de 24 heures universitaires et 6 séances de supervision en groupe",
+        "hours": "24 heures universitaires",
+        "syllabus": [
+          {
+            "title": "Programme du cours",
+            "items": [
+              "Présentation du groupe et du programme PANDA",
+              "Au fond, qu'est-ce que la régulation émotionnelle ?",
+              "Régulation émotionnelle - théorie",
+              "Le développement de la régulation émotionnelle",
+              "Comment constituer un groupe PANDA ?",
+              "Ressources d'adaptation - le modèle BASIC Ph",
+              "La pleine conscience : qu'est-ce que c'est et pourquoi est-ce important ?",
+              "Régulation émotionnelle - démonstrations tirées du programme",
+              "Régulation corporelle - démonstrations tirées du programme",
+              "Régulation des pensées - démonstrations tirées du programme",
+              "PANDA pour les parents et les équipes éducatives",
+              "Synthèse"
+            ]
+          }
+        ],
+        "registration": {
+          "label": "Inscription et paiement",
+          "status": "unknown"
+        },
+        "contact": {
+          "email": "stav@metiv.org"
+        },
+        "relatedSlugs": [
+          "namal-training",
+          "panda-training"
+        ],
+        "sourceUrl": "https://metiv.org/הכשרה-למטפלים-פנדה-בשניים/",
+        "isPast": false
+      }
+    },
+    {
+      "_key": "panda-arts-training",
+      "title": "Formation PANDA pour art-thérapeutes",
+      "sortOrder": 11,
+      "content": {
+        "_key": "panda-arts-training",
+        "_col": "metiv-courses",
+        "slug": "panda-arts-training",
+        "title": "Formation PANDA pour art-thérapeutes",
+        "subtitle": "Dans le cadre des programmes de formation de YAHAT",
+        "category": "children-family",
+        "tags": [
+          "PANDA",
+          "Art-thérapeutes",
+          "YAHAT (Association israélienne des thérapies créatives et expressives)",
+          "Prime de formation continue"
+        ],
+        "summary": "Un cours PANDA dans le cadre des programmes de formation de YAHAT, adapté aux art-thérapeutes.",
+        "description": "Nous sommes heureux d'annoncer l'ouverture d'un cours PANDA dans le cadre des programmes de formation de YAHAT. Tous les contenus de la formation PANDA sont adaptés aux art-thérapeutes, avec la possibilité d'obtenir la prime de formation continue.",
+        "audience": [
+          "Art-thérapeutes"
+        ],
+        "credits": [
+          "Possibilité de prime de formation continue"
+        ],
+        "registration": {
+          "url": "https://www.yahat.org/news/news.aspx?newsId=316",
+          "label": "Informations et inscription (site de YAHAT)",
+          "status": "unknown"
+        },
+        "relatedSlugs": [
+          "panda-training"
+        ],
+        "sourceUrl": "https://metiv.org/הכשרת-פנדה-ייעודית-למטפלים-באמנויות-כ/",
+        "isPast": false
+      }
+    },
+    {
+      "_key": "namal-training",
+      "title": "Formation NAMAL pour thérapeutes",
+      "sortOrder": 12,
+      "content": {
+        "_key": "namal-training",
+        "_col": "metiv-courses",
+        "slug": "namal-training",
+        "title": "Formation NAMAL pour thérapeutes",
+        "subtitle": "Faisons place au jeu",
+        "category": "children-family",
+        "tags": [
+          "NAMAL",
+          "Petite enfance",
+          "Dyadique"
+        ],
+        "summary": "Une formation pour thérapeutes à l'animation de groupes NAMAL pour parents et tout-petits. Les détails de la session n'ont pas été publiés sur la page.",
+        "description": "« Faisons place au jeu » (NAMAL) est un modèle de travail de groupe centré sur le jeu, destiné aux binômes parent-jeune enfant. Les séances s'organisent autour de messages psychoéducatifs et développementaux destinés aux parents. Ces messages sont traduits en expériences d'activités de jeu, de musique, d'art, de théâtre et de mouvement, adaptées aux jeunes enfants et à leurs parents.\n\nLe programme a été développé par la Pr Esther Cohen et la Pr Ruth Pat-Horenczyk pour Metiv.\n\nLa page de la formation sur le site de Metiv ne comprend qu'un formulaire d'inscription et de paiement. Pour plus d'informations et pour toute question : stav@metiv.org",
+        "audience": [
+          "Professionnels du soin travaillant avec des parents et des enfants en bas âge"
+        ],
+        "registration": {
+          "label": "Inscription et paiement (formulaire sur le site de Metiv)",
+          "status": "unknown"
+        },
+        "contact": {
+          "email": "stav@metiv.org"
+        },
+        "relatedSlugs": [
+          "panda-two-training"
+        ],
+        "sourceUrl": "https://metiv.org/הכשרת-נמל-למטפלים/",
+        "relatedSourceUrls": [
+          "https://metiv.org/תוכנית-נמל/"
+        ],
+        "isPast": false
+      }
+    },
+    {
+      "_key": "org-therapist-training",
+      "title": "Formation de thérapeutes du traumatisme pour les organisations de soin",
+      "sortOrder": 13,
+      "content": {
+        "_key": "org-therapist-training",
+        "_col": "metiv-courses",
+        "slug": "org-therapist-training",
+        "title": "Formation de thérapeutes du traumatisme pour les organisations de soin",
+        "subtitle": "Des connaissances pratiques, des outils et un langage thérapeutique commun pour votre équipe",
+        "category": "organizations",
+        "tags": [
+          "Pour les organisations",
+          "Équipes thérapeutiques",
+          "Sur mesure"
+        ],
+        "summary": "Une formation au traitement du traumatisme adaptée à l'équipe thérapeutique d'une organisation et à son domaine d'activité.",
+        "description": "Le traitement du traumatisme est complexe, fluctuant, et exige compréhension et souplesse professionnelle. Votre équipe est en première ligne du soin. Notre formation apporte à vos thérapeutes des connaissances actuelles, une expérience clinique, des outils applicables et une compréhension des processus thérapeutiques centrés sur le traumatisme.\n\n## Ce que l'organisation y gagne\n\n- Des connaissances professionnelles approfondies\n- Des outils pratiques pour le travail de terrain\n- Un langage thérapeutique commun\n- Une adaptation au domaine d'activité de votre organisation\n\nL'association Metiv, Centre israélien de traitement et de recherche sur le traumatisme, intervient dans le domaine du traitement du traumatisme depuis plus de 20 ans et associe soin clinique, formations professionnelles et recherche. Construisons ensemble la formation adaptée à votre équipe.\n\nLe cours « La feuille de route » est également proposé aux organismes publics et aux associations, sur demande à shir@metiv.org.",
+        "audience": [
+          "Thérapeutes ayant une expérience du traumatisme",
+          "Thérapeutes sans expérience préalable souhaitant acquérir des outils dans ce domaine",
+          "Équipes pluridisciplinaires qui accompagnent des personnes touchées par un traumatisme"
+        ],
+        "format": "Sur mesure pour l'organisation",
+        "testimonials": [
+          {
+            "quote": "Je voulais vous dire que nous avons terminé aujourd'hui le cours avec Gil et que ce fut une expérience formidable pour toute l'équipe. Nous avons eu la chance de rencontrer un formateur professionnel, sérieux, d'une qualité d'écoute rare, précis dans ses explications, qui a transmis le message de telle façon que nous n'avions plus de questions. Merci beaucoup pour ce cours et pour l'occasion d'apprendre des choses importantes pour notre travail au quotidien.",
+            "name": "Association Misholim",
+            "role": "Formations pour les organisations"
+          }
+        ],
+        "registration": {
+          "label": "Laissez vos coordonnées et nous vous recontacterons",
+          "status": "unknown"
+        },
+        "contact": {
+          "email": "shir@metiv.org"
+        },
+        "relatedSlugs": [
+          "roadmap"
+        ],
+        "sourceUrl": "https://metiv.org/הכשרות-לארגונים/",
+        "isPast": false
+      }
+    },
+    {
+      "_key": "trauma-informed-org-day",
+      "title": "Construire une organisation adaptée au traumatisme",
+      "sortOrder": 14,
+      "content": {
+        "_key": "trauma-informed-org-day",
+        "_col": "metiv-courses",
+        "slug": "trauma-informed-org-day",
+        "title": "Construire une organisation adaptée au traumatisme",
+        "subtitle": "Un cours d'une journée pour les responsables des ressources humaines et les consultants en organisation",
+        "category": "organizations",
+        "tags": [
+          "Pour les organisations",
+          "Journée d'étude",
+          "Espace Metiv",
+          "Ressources humaines"
+        ],
+        "summary": "Un cours d'une journée dans le cadre d'« Espace Metiv » sur les effets du traumatisme sur les employés, les clients et les organisations, et sur l'adaptation des procédures et des processus.",
+        "description": "La catastrophe du 7 octobre, la guerre « Épées de fer » et la réalité bouleversante que nous vivons depuis nous affectent en tant qu'individus et en tant que société. Cet impact se fait sentir aussi sur les lieux de travail.\n\nVous aussi, vous constatez l'impact du traumatisme dans votre organisation ?\n\n- Des difficultés à reprendre le cours normal des choses chez les employés revenus de leur période de réserve\n- Une anxiété accrue et des difficultés de fonctionnement chez les employés et les clients\n- Des réactions extrêmes de clients face à des situations qui réactivent le traumatisme, comme l'attitude du personnel en contact avec le public\n- De l'impatience, de la colère et des réactions disproportionnées face aux situations de frustration, de la part des employés comme des clients\n\nMetiv, le Centre israélien de traitement du traumatisme, vous invite à un cours intensif d'une journée : « Espace Metiv », pour développer une organisation adaptée au traumatisme. Dans ce cours, vous approfondirez votre compréhension du traumatisme et de ses effets sur les employés et les clients, et vous recevrez des outils pour conduire votre organisation à devenir adaptée au traumatisme.\n\nUne collation légère sera servie au cours de la journée. Les dates des prochains cours seront publiées le moment venu.",
+        "audience": [
+          "Responsables des ressources humaines",
+          "Consultants en organisation"
+        ],
+        "format": "En présentiel",
+        "location": "8, rue Eliezer Kaplan, société fiverr (15 minutes à pied de la gare HaShalom). Pas de parking sur place.",
+        "startDate": "15.7.2025",
+        "startDateISO": "2025-07-15",
+        "schedule": "Mardi, de 9 h 15 à 15 h 30",
+        "duration": "Une journée",
+        "hours": "6 heures",
+        "price": "300 ₪",
+        "lecturers": [
+          {
+            "name": "Bella Poni",
+            "role": "Psychologue spécialisée dans le traumatisme"
+          },
+          {
+            "name": "Yonit Efrati",
+            "role": "Travailleuse sociale, spécialiste de la conduite de processus complexes, directrice de la promotion des politiques et du développement des services communautaires chez Metiv"
+          }
+        ],
+        "syllabus": [
+          {
+            "title": "Dans ce cours, vous recevrez",
+            "items": [
+              "Une compréhension des manifestations du traumatisme dans l'environnement de travail",
+              "Des principes pour créer un environnement organisationnel adapté",
+              "Des outils pour adapter les procédures, les processus et les politiques",
+              "Des compétences pratiques d'autorégulation et de gestion des situations extrêmes",
+              "Des moyens d'ancrer le changement vers une organisation adaptée au traumatisme"
+            ]
+          }
+        ],
+        "registration": {
+          "label": "S'inscrire au cours d'une journée",
+          "status": "closed"
+        },
+        "contact": {
+          "name": "Yonit Efrati",
+          "email": "yonit@metiv.org"
+        },
+        "sourceUrl": "https://metiv.org/בניית-ארגון-מותאם-טראומה/",
+        "isPast": true
+      }
+    }
+  ]
+}

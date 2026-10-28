@@ -8,6 +8,9 @@ SITE_ORIGIN = "https://ptsd-il.site,https://www.ptsd-il.site,https://ptsd-il-44y
 API_BASE = "https://ptsd-il-api.onrender.com/api"
 GEMINI_MODEL = "gemini-flash-latest"
 ADMIN_VERIFY_URL = "https://ptsd-il-api.onrender.com/api/admin/articles"
+TRANSLATE_MODEL = "gemini-4-argon"
+QA_STRONG = "0.80"
+QA_WEAK = "0.72"
 
 [ai]
 binding = "AI"

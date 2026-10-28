@@ -1,0 +1,104 @@
+{
+  "key": "SUPERVISION",
+  "slug": "metiv-supervision",
+  "kind": "single",
+  "rows": [
+    {
+      "_key": "SUPERVISION",
+      "title": "SUPERVISION",
+      "sortOrder": 0,
+      "content": {
+        "_key": "SUPERVISION",
+        "_col": "metiv-supervision",
+        "title": "Supervision pour thérapeutes et organisations",
+        "intro": "Le traitement du traumatisme est complexe, et les thérapeutes se heurtent parfois à toutes sortes de difficultés et de dilemmes. Dans ces situations, le soutien et la supervision professionnelle sont particulièrement importants : il ne faut pas y faire face seul. Nous proposons aux thérapeutes qui reçoivent des personnes touchées par un traumatisme une supervision individuelle, une supervision en petits groupes ou une supervision pour des équipes constituées au sein d'organisations.",
+        "challenges": [
+          "Comment naviguer entre submersion et déconnexion ?",
+          "Comment faire face aux états dissociatifs ?",
+          "Manque de coopération et d'implication dans le traitement",
+          "Situations de blocage et de désespoir",
+          "Fatigue de compassion et traumatisation secondaire du thérapeute"
+        ],
+        "options": [
+          {
+            "key": "individual",
+            "title": "Supervision individuelle",
+            "format": "Individuel",
+            "price": "450 ₪ de l'heure",
+            "description": "Une supervision individuelle pour le thérapeute qui reçoit des personnes touchées par un traumatisme.",
+            "contact": {
+              "email": "gil@metiv.org"
+            },
+            "sourceUrl": "https://metiv.org/הדרכות/"
+          },
+          {
+            "key": "organizations",
+            "title": "Supervision pour les organisations",
+            "format": "En groupe, pour les équipes d'organisations",
+            "price": "250 ₪ par thérapeute, dans un groupe de 3 à 5 thérapeutes",
+            "description": "Une supervision pour des équipes constituées au sein d'organisations, en groupe de 3 à 5 thérapeutes.",
+            "contact": {
+              "email": "shimrit@metiv.org"
+            },
+            "sourceUrl": "https://metiv.org/הדרכות/"
+          },
+          {
+            "key": "supervision-group",
+            "title": "Groupe de supervision",
+            "format": "En groupe, sur Zoom",
+            "price": "Environ 1 200 ₪ par participant",
+            "facilitator": "Uri Birnbaum",
+            "description": "Le traumatisme suscite des sentiments d'isolement, une difficulté à raconter son histoire, des situations de blocage et d'impuissance. Dans un processus parallèle, le thérapeute du traumatisme vit lui-même une grande partie de ces mêmes états dans son travail avec les personnes touchées par un traumatisme. Un groupe de supervision permet de s'appuyer sur le regard professionnel et expérimenté d'un animateur et de pairs : remettre du mouvement là où il y a blocage, mettre des mots là où il y a incompréhension, et élargir la perspective au-delà de l'expérience professionnelle et des séances en cabinet. Un groupe de supervision permet un regard en profondeur, le partage et la résonance, le soutien des pairs, la rencontre avec des postures thérapeutiques variées et des liens professionnels et personnels.",
+            "details": [
+              "Une supervision en petit groupe d'environ 5 thérapeutes",
+              "Six séances d'une heure et quart",
+              "Une séance par semaine, sur Zoom, à partir du 14 mai 2025",
+              "Le mercredi à 14 h"
+            ],
+            "suitableFor": [
+              "Thérapeutes débutants",
+              "Thérapeutes expérimentés qui débutent dans le traitement du traumatisme"
+            ],
+            "notSuitableFor": [
+              "Les personnes qui souhaitent une supervision sur des cas de traumatisme complexe"
+            ],
+            "startDate": "14.5.2025",
+            "isPast": true,
+            "registrationUrl": "https://pay.sumit.co.il/1i0fvg/a99vjw/a99vam/payment/",
+            "sourceUrl": "https://metiv.org/jet-popup/קבוצת-הדרכה/"
+          },
+          {
+            "key": "after-roadmap",
+            "title": "Groupe de supervision pour les diplômés de « La feuille de route »",
+            "format": "En groupe",
+            "price": "Moyennant un coût supplémentaire, et selon le nombre de participants",
+            "description": "À la suite du cours « La feuille de route », il est possible de rejoindre un groupe de supervision de 5 séances, où les participants apportent des cas de leur pratique pour les discuter et construire un plan de travail, et s'enrichissent des cas des autres.",
+            "sourceUrl": "https://metiv.org/יסודות-הטיפול-בטראומה/"
+          },
+          {
+            "key": "kids-clinic",
+            "title": "Supervision dans le domaine de l'enfance (Metiv Enfants)",
+            "format": "Individuelle ou accompagnement au long cours, à Jérusalem ou sur Zoom",
+            "description": "Metiv Enfants propose une supervision professionnelle assurée par des psychologues et des travailleurs sociaux spécialisés dans le traumatisme. Vous pouvez demander une supervision ponctuelle ou un accompagnement au long cours.",
+            "contact": {
+              "email": "kids@metiv.org"
+            },
+            "sourceUrl": "https://metiv.org/מטיב-ילדים-טראומה/"
+          }
+        ],
+        "clientList": [
+          "Ministère de la Défense",
+          "Ministère des Finances",
+          "Bureau du Premier ministre",
+          "Caisse de maladie Clalit",
+          "Hôpital Shaare Zedek",
+          "Caisse de maladie Leumit"
+        ],
+        "contact": {
+          "email": "gil@metiv.org"
+        },
+        "sourceUrl": "https://metiv.org/הדרכות/"
+      }
+    }
+  ]
+}

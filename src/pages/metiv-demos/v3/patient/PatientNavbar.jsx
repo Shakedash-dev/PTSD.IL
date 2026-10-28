@@ -9,6 +9,7 @@ import { Menu, X } from 'lucide-react';
 import { DemoLink } from '@/pages/metiv-demos/shared/DemoChrome';
 import { usePtsdIlPathname, VersionLinks } from './PtsdIlRouting';
 import { HelpNow } from '../components/Chrome';
+import { useCopy } from '../content/MetivContent';
 
 // Metiv demo (V3): a copy of src/components/Navbar.jsx for the patient area.
 // Changes only: the Metiv logo replaces the PTSD.IL wordmark (and leads to the
@@ -59,8 +60,8 @@ const SECOND_CIRCLE_LINKS = [
 ];
 
 // Metiv demo: מסע שחרור has a page of its own in the patient area, and a tab on
-// every page that shows tabs. The name is the programme's, the same in every language.
-const RELEASE_JOURNEY_LINK = { label: 'מסע שחרור', path: '/release-journey' };
+// every page that shows tabs. Its label comes from the `patientNavbar` copy.
+const RELEASE_JOURNEY_PATH = '/release-journey';
 
 const PATH_PICKER_ROUTES = ['/first-circle', '/second-circle', '/questionnaire'];
 
@@ -70,12 +71,14 @@ const PATH_PICKER_ROUTES = ['/first-circle', '/second-circle', '/questionnaire']
 // If we don't know the user type yet (e.g. they deep-linked into /ptsd-info
 // without picking a path first) we fall back to the three path links so they
 // can identify themselves.
-function selectLinks(pathname, userType) {
+/** @returns {{ labelKey?: string, label?: string, path: string }[]} */
+function selectLinks(pathname, userType, releaseJourneyLabel) {
   if (pathname === '/') return [];
-  if (PATH_PICKER_ROUTES.includes(pathname)) return [...PATH_LINKS, RELEASE_JOURNEY_LINK];
-  if (userType === 'first_circle') return [...FIRST_CIRCLE_LINKS, RELEASE_JOURNEY_LINK];
-  if (userType === 'second_circle') return [...SECOND_CIRCLE_LINKS, RELEASE_JOURNEY_LINK];
-  return [...PATH_LINKS, RELEASE_JOURNEY_LINK];
+  const releaseJourney = { label: releaseJourneyLabel, path: RELEASE_JOURNEY_PATH };
+  if (PATH_PICKER_ROUTES.includes(pathname)) return [...PATH_LINKS, releaseJourney];
+  if (userType === 'first_circle') return [...FIRST_CIRCLE_LINKS, releaseJourney];
+  if (userType === 'second_circle') return [...SECOND_CIRCLE_LINKS, releaseJourney];
+  return [...PATH_LINKS, releaseJourney];
 }
 
 export default function Navbar() {
@@ -84,7 +87,8 @@ export default function Navbar() {
   const location = useLocation();
   const pathname = usePtsdIlPathname();
   const [menuOpen, setMenuOpen] = useState(false);
-  const navItems = selectLinks(pathname, userType);
+  const c = useCopy('patientNavbar');
+  const navItems = selectLinks(pathname, userType, c.releaseJourneyTab);
 
   useEffect(() => {
     const matched = PATH_TO_TYPE[pathname];
@@ -104,7 +108,7 @@ export default function Navbar() {
         {/* Metiv logo (replaces the PTSD.IL wordmark) */}
         <VersionLinks>
           <DemoLink to="/" className="flex items-center flex-shrink-0">
-            <img src={METIV_LOGO} alt="מטיב - המרכז הישראלי לטיפול בפסיכוטראומה" className="h-9 w-auto" />
+            <img src={METIV_LOGO} alt={c.logoAlt} className="h-9 w-auto" />
           </DemoLink>
         </VersionLinks>
 

@@ -1,0 +1,29 @@
+{
+  "key": "PARTNERS",
+  "slug": "metiv-partners",
+  "kind": "strings",
+  "rows": [
+    {
+      "_key": "PARTNERS",
+      "title": "PARTNERS",
+      "sortOrder": 0,
+      "content": {
+        "_key": "PARTNERS",
+        "_col": "metiv-partners",
+        "items": [
+          "Ministère de l'Éducation - district Nord",
+          "Association Misholim",
+          "Institut Feuerstein",
+          "Enosh",
+          "Kidoum Noar (services de soutien aux jeunes)",
+          "Ministère de la Défense",
+          "Ministère des Finances",
+          "Bureau du Premier ministre",
+          "Caisse de maladie Clalit",
+          "Caisse de maladie Leumit",
+          "Hôpital Shaare Zedek"
+        ]
+      }
+    }
+  ]
+}

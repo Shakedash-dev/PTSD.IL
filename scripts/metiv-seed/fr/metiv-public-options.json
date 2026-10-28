@@ -1,0 +1,146 @@
+{
+  "key": "PUBLIC_OPTIONS",
+  "slug": "metiv-public-options",
+  "kind": "list",
+  "rows": [
+    {
+      "_key": "health-funds",
+      "title": "Les caisses de maladie (koupot holim)",
+      "sortOrder": 0,
+      "content": {
+        "_key": "health-funds",
+        "_col": "metiv-public-options",
+        "id": "health-funds",
+        "title": "Les caisses de maladie (koupot holim)",
+        "provider": "Maccabi, Clalit, Meuhedet, Leumit",
+        "icon": "Stethoscope",
+        "what": "Les caisses de maladie proposent des services de psychologie et de psychiatrie.",
+        "process": "Adressez-vous à votre médecin traitant de la caisse et demandez une orientation vers un psychologue ou un psychiatre.",
+        "contacts": [
+          {
+            "kind": "text",
+            "label": "Maccabi",
+            "value": "3555"
+          },
+          {
+            "kind": "text",
+            "label": "Clalit (centre d'appels santé mentale)",
+            "value": "8703*"
+          },
+          {
+            "kind": "text",
+            "label": "Meuhedet",
+            "value": "3833"
+          },
+          {
+            "kind": "text",
+            "label": "Leumit",
+            "value": "507"
+          }
+        ]
+      }
+    },
+    {
+      "_key": "resilience-centers",
+      "title": "Les centres de résilience",
+      "sortOrder": 1,
+      "content": {
+        "_key": "resilience-centers",
+        "_col": "metiv-public-options",
+        "id": "resilience-centers",
+        "title": "Les centres de résilience",
+        "provider": "Ministère de la Santé",
+        "icon": "Building2",
+        "who": "Victimes d'actes d'hostilité (victimes du terrorisme).",
+        "process": "Adressez-vous au centre de résilience le plus proche de votre lieu de résidence, à partir de la liste des centres.",
+        "contacts": [
+          {
+            "kind": "link",
+            "label": "Liste des centres de résilience - gov.il",
+            "href": "https://www.gov.il/he/Departments/DynamicCollectors/resilience-centers-list?skip=0"
+          },
+          {
+            "kind": "link",
+            "label": "Centres de résilience - ministère de la Santé",
+            "href": "https://me.health.gov.il/mental-health/therapy-rehabilitation/public-care/community-treatment/resilience-center/"
+          }
+        ]
+      }
+    },
+    {
+      "_key": "mod-rehabilitation",
+      "title": "Le Département de réadaptation",
+      "sortOrder": 2,
+      "content": {
+        "_key": "mod-rehabilitation",
+        "_col": "metiv-public-options",
+        "id": "mod-rehabilitation",
+        "title": "Le Département de réadaptation",
+        "provider": "Ministère de la Défense",
+        "icon": "Shield",
+        "who": "Soldats et membres des forces de sécurité atteints psychologiquement du fait de leur service.",
+        "cost": "L'aide est déterminée selon la reconnaissance et le taux d'invalidité. Il est possible d'obtenir une autorisation de soins médicaux et psychologiques dès la phase d'examen de la demande.",
+        "process": "La demande de reconnaissance d'invalidité se fait via un formulaire numérique. Le centre « Bidayim Tovot » (Entre de bonnes mains) du Département de réadaptation aide à remplir la demande.",
+        "contacts": [
+          {
+            "kind": "link",
+            "label": "Formulaire numérique - demande de reconnaissance d'invalidité",
+            "href": "https://shikum.mod.gov.il/recognition/request/apply"
+          },
+          {
+            "kind": "link",
+            "label": "Soins médicaux pendant la procédure de reconnaissance",
+            "href": "https://shikum.mod.gov.il/recognition/request/medical-care"
+          },
+          {
+            "kind": "link",
+            "label": "Bidayim Tovot - aide au dépôt de la demande",
+            "href": "https://shikum.mod.gov.il/ContactUs/goodhands"
+          },
+          {
+            "kind": "internal",
+            "label": "Les droits en détail",
+            "href": "/patient/rights"
+          }
+        ]
+      }
+    },
+    {
+      "_key": "national-insurance",
+      "title": "Institut national d'assurance (Bituach Leumi)",
+      "sortOrder": 3,
+      "content": {
+        "_key": "national-insurance",
+        "_col": "metiv-public-options",
+        "id": "national-insurance",
+        "title": "Institut national d'assurance (Bituach Leumi)",
+        "provider": "Institut national d'assurance",
+        "icon": "Landmark",
+        "who": "Victimes d'actes d'hostilité, victimes d'accidents du travail et personnes à qui une invalidité psychique a été reconnue.",
+        "what": "Prestations et reconnaissance, réadaptation professionnelle, et panier de réadaptation du ministère de la Santé pour les personnes à qui une invalidité psychique d'au moins 40 % a été reconnue.",
+        "contacts": [
+          {
+            "kind": "text",
+            "label": "Aide pour remplir une demande d'invalidité générale",
+            "value": "3928*"
+          },
+          {
+            "kind": "link",
+            "label": "Bituach Leumi - invalidité psychique et invalidité générale",
+            "href": "https://www.btl.gov.il/ZcuyotAsdience/MitmoddiNefesh/Pages/NecotNafsitNecotKlalit.aspx"
+          },
+          {
+            "kind": "link",
+            "label": "Victimes d'actes d'hostilité - Bituach Leumi",
+            "href": "https://www.btl.gov.il/benefits/Victims_of_Hostilities/Pages/default.aspx"
+          },
+          {
+            "kind": "internal",
+            "label": "Les droits en détail",
+            "href": "/patient/rights"
+          }
+        ]
+      }
+    }
+  ]
+}

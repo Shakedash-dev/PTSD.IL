@@ -1,0 +1,110 @@
+{
+  "key": "NONPROFIT_OPTIONS",
+  "slug": "metiv-nonprofit-options",
+  "kind": "list",
+  "rows": [
+    {
+      "_key": "eran",
+      "title": "ERAN - Premiers secours émotionnels (1201)",
+      "sortOrder": 0,
+      "content": {
+        "_key": "eran",
+        "_col": "metiv-nonprofit-options",
+        "id": "eran",
+        "title": "ERAN - Premiers secours émotionnels (1201)",
+        "provider": "Ligne d'urgence",
+        "icon": "Phone",
+        "what": "Une ligne téléphonique et WhatsApp pour parler en cas de détresse.",
+        "contacts": [
+          {
+            "kind": "phone",
+            "label": "Téléphone",
+            "value": "1201"
+          },
+          {
+            "kind": "link",
+            "label": "WhatsApp",
+            "href": "https://api.whatsapp.com/send?phone=9720528451201"
+          }
+        ]
+      }
+    },
+    {
+      "_key": "amcha-jerusalem",
+      "title": "Centre de résilience - Jérusalem (AMCHA)",
+      "sortOrder": 1,
+      "content": {
+        "_key": "amcha-jerusalem",
+        "_col": "metiv-nonprofit-options",
+        "id": "amcha-jerusalem",
+        "title": "Centre de résilience - Jérusalem (AMCHA)",
+        "provider": "Association AMCHA",
+        "icon": "Users",
+        "who": "Victimes d'actes d'hostilité (victimes du terrorisme), personnes souffrant de traumatisme et d'anxiété, et leurs familles.",
+        "what": "Thérapie individuelle, de groupe et familiale.",
+        "location": "Jérusalem. Par téléphone, sur Zoom ou en personne.",
+        "contacts": [
+          {
+            "kind": "link",
+            "label": "Site d'AMCHA",
+            "href": "https://www.amcha.org/"
+          }
+        ]
+      }
+    },
+    {
+      "_key": "natal",
+      "title": "NATAL - Centre israélien du traumatisme et de la résilience",
+      "sortOrder": 2,
+      "content": {
+        "_key": "natal",
+        "_col": "metiv-nonprofit-options",
+        "id": "natal",
+        "title": "NATAL - Centre israélien du traumatisme et de la résilience",
+        "provider": "Association NATAL",
+        "icon": "Users",
+        "who": "Personnes souffrant de traumatisme et de TSPT liés à la guerre et au terrorisme, et leurs proches.",
+        "what": "Groupes de soutien et groupes thérapeutiques, y compris des groupes pour conjointes et conjoints.",
+        "contacts": [
+          {
+            "kind": "link",
+            "label": "Les groupes de soutien de NATAL",
+            "href": "https://www.natal.org.il/תמיכה-וטיפול-נפשי/קבוצות-טיפוליות-וקבוצות-תמיכה/"
+          }
+        ]
+      }
+    },
+    {
+      "_key": "sexual-assault-centers",
+      "title": "Centres d'aide aux victimes d'agressions sexuelles",
+      "sortOrder": 3,
+      "content": {
+        "_key": "sexual-assault-centers",
+        "_col": "metiv-nonprofit-options",
+        "id": "sexual-assault-centers",
+        "title": "Centres d'aide aux victimes d'agressions sexuelles",
+        "provider": "Fédération des centres d'aide",
+        "icon": "Heart",
+        "who": "Victimes d'agressions sexuelles, femmes et hommes, et leurs familles.",
+        "what": "Lignes d'aide nationales (1202 pour les femmes, 1203 pour les hommes), chat et réseau de centres d'aide régionaux.",
+        "contacts": [
+          {
+            "kind": "phone",
+            "label": "Pour les femmes",
+            "value": "1202"
+          },
+          {
+            "kind": "phone",
+            "label": "Pour les hommes",
+            "value": "1203"
+          },
+          {
+            "kind": "link",
+            "label": "Site de la fédération",
+            "href": "https://www.1202.org.il/"
+          }
+        ]
+      }
+    }
+  ]
+}

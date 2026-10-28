@@ -1,0 +1,55 @@
+{
+  "key": "ORG",
+  "slug": "metiv-org",
+  "kind": "single",
+  "rows": [
+    {
+      "_key": "ORG",
+      "title": "ORG",
+      "sortOrder": 0,
+      "content": {
+        "_key": "ORG",
+        "_col": "metiv-org",
+        "name": "מטיב - המרכז הישראלי לטיפול בפסיכוטראומה",
+        "shortName": "מטיב",
+        "legalName": "עמותת מטיב - המרכז הישראלי לטיפול בפסיכוטראומה",
+        "legalEntity": "ע\"ר 580313926",
+        "tagline": "אחרי טראומה",
+        "headline": "אנשים זקוקים לאנשים",
+        "vision": "חברה שנותנת מקום לטראומה נפשית, דואגת לסובלים ממנה ומחויבת להעצמתם.",
+        "mission": "המטרה שלנו היא לספק שירות איכותי, אנושי ואכפתי לקהילות וליחידים לפני, במהלך ואחרי טראומה. להפיץ את הידע המקיף שלנו בנושא טראומה נפשית באמצעות מחקר אקדמי והכשרות על מנת שאחרים יוכלו להטמיע את הידע הזה בקהילותיהם.",
+        "intro": "במטיב, אנחנו מבינים שההתמודדות עם טראומה בעת מלחמה וטרור היא מסע מורכב. זהו מסע שיכול להשפיע על כל תחומי החיים, ולכן אנו כאן כדי ללוות אתכם. אנו מציעים מרחב בטוח ורגיש, שבו תוכלו לקבל תמיכה מקצועית וליצור יחד איתנו את הדרך להתמודדות והתחזקות. כי אתם לא לבד.",
+        "address": "גבעת שאול, המרכז הרפואי הרצוג, ירושלים",
+        "mail": "ת.ד. 3900, ירושלים 91035",
+        "phones": {
+          "main": "02-6449666",
+          "footer": "02-595-2234",
+          "kids": "02-6294858",
+          "fax": "02-644-9777",
+          "coursesWhatsapp": "02-5952235",
+          "researchWhatsapp": "02-5952240",
+          "accessibilityCoordinator": "02-595-2236"
+        },
+        "emails": {
+          "general": "info@metiv.org",
+          "kids": "kids@metiv.org",
+          "courses": "shimrit@metiv.org",
+          "research": "shir@metiv.org",
+          "registration": "stav@metiv.org",
+          "partnerships": "Chaim@metiv.org"
+        },
+        "social": {
+          "facebook": "https://www.facebook.com/metivtraumacenter",
+          "facebookKids": "https://www.facebook.com/Metivkids",
+          "youtube": "https://www.youtube.com/channel/UCBKOBQp0BFFp7uX9qiwUp8w",
+          "linktree": "https://linktr.ee/metivkids"
+        },
+        "donateUrl": "https://www.jgive.com/new/en/ils/charity-organizations/1179",
+        "trainingsFormUrl": "https://docs.google.com/forms/d/e/1FAIpQLScc90IWpEglRpTtKqwmeBToTCGXeZpZXwvcjE6UHaLR4YKxuw/viewform",
+        "adultsClinicFormUrl": "https://docs.google.com/forms/d/e/1FAIpQLSfz5ougCVnY1LFHJhyrBFrlICf2gQivumOzstI3YHor8_y0yg/viewform",
+        "kidsClinicFormUrl": "https://docs.google.com/forms/d/e/1FAIpQLSfiUHfJ4UDrpSUPQxtPKWmQuZGKg7lfL1c21D_JAsmwxlYLJA/viewform",
+        "sourceUrl": "https://metiv.org/"
+      }
+    }
+  ]
+}

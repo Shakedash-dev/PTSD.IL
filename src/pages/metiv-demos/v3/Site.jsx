@@ -2,7 +2,6 @@ import React from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { DemoChromeProvider } from '@/pages/metiv-demos/shared/DemoChrome';
 import { ROUTES } from '@/pages/metiv-demos/shared/routes';
-import { PATIENT_PAGES } from '@/pages/metiv-demos/shared/patient';
 import { BASE, V3_ROUTES, VERSION } from './meta';
 import PageHeaderV3 from './components/PageHeaderV3';
 import { DocumentMeta, ScrollManager, SiteShell } from './components/Chrome';
@@ -16,6 +15,7 @@ import ReleaseJourneyPro from './pages/ReleaseJourneyPro';
 import Donate from './pages/Donate';
 import Contact from './pages/Contact';
 import Accessibility from './pages/Accessibility';
+import Legal from './pages/Legal';
 import TherapistHub from './pages/TherapistHub';
 import Courses from './pages/Courses';
 import CourseDetail from './pages/CourseDetail';
@@ -51,7 +51,9 @@ import Children from './patient/Children';
 import Sources from './patient/Sources';
 import ReleaseJourney from './patient/ReleaseJourney';
 import WhereToGetHelp from './patient/WhereToGetHelp';
+import FreeTreatmentAndResearch from './patient/FreeTreatmentAndResearch';
 import { VersionLinks } from './patient/PtsdIlRouting';
+import { MetivContentProvider } from './content/MetivContent';
 
 // V3 "Guided Journey". Mounted by App.jsx at /metiv-site-demo-v3/*.
 // Paths below are relative to that base (leading slash stripped).
@@ -59,9 +61,6 @@ import { VersionLinks } from './patient/PtsdIlRouting';
 /** @param {string} path */
 const rel = (path) => path.replace(/^\//, '');
 
-const FreeTreatmentAndResearch = PATIENT_PAGES.freeTreatment;
-const PrivacyPolicy = PATIENT_PAGES.privacy;
-const TermsOfUse = PATIENT_PAGES.terms;
 
 /** A shared-kit page inside the patient area: version links, the site's standard page header. */
 function KitPage({ children }) {
@@ -74,6 +73,7 @@ function KitPage({ children }) {
 
 export default function Site() {
   return (
+    <MetivContentProvider>
     <DemoChromeProvider base={BASE} version={VERSION} PageHeader={PageHeaderV3}>
       <div className="min-h-screen bg-background text-foreground font-body">
         <ScrollManager />
@@ -84,8 +84,8 @@ export default function Site() {
             <Route path={rel(ROUTES.donate)} element={<Donate />} />
             <Route path={rel(ROUTES.contact)} element={<Contact />} />
             <Route path={rel(ROUTES.accessibility)} element={<Accessibility />} />
-            <Route path={rel(ROUTES.privacy)} element={<PrivacyPolicy />} />
-            <Route path={rel(ROUTES.terms)} element={<TermsOfUse />} />
+            <Route path={rel(ROUTES.privacy)} element={<Legal doc="privacy" />} />
+            <Route path={rel(ROUTES.terms)} element={<Legal doc="terms" />} />
           </Route>
 
           <Route element={<PatientLayout />}>
@@ -123,7 +123,7 @@ export default function Site() {
             <Route path={rel(ROUTES.article)} element={<ArticlePage />} />
             <Route path={rel(ROUTES.events)} element={<Events />} />
             <Route path={rel(V3_ROUTES.releaseJourneyPro)} element={<ReleaseJourneyPro />} />
-            {/* "על מטיב" lives in the professional area (owner feedback). */}
+            {/* "About Metiv" lives in the professional area (owner feedback). */}
             <Route path={rel(ROUTES.about)} element={<About />} />
             <Route path={rel(V3_ROUTES.aboutHistory)} element={<AboutHistory />} />
             <Route path={rel(V3_ROUTES.aboutTeam)} element={<AboutTeam />} />
@@ -135,5 +135,6 @@ export default function Site() {
         </Routes>
       </div>
     </DemoChromeProvider>
+    </MetivContentProvider>
   );
 }

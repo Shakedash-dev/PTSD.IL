@@ -1,0 +1,58 @@
+{
+  "key": "RESERVIST_FAMILY_PROGRAMS",
+  "slug": "metiv-reservist-family",
+  "kind": "list",
+  "rows": [
+    {
+      "_key": "panda-family",
+      "title": "ПАНДА для семьи",
+      "sortOrder": 0,
+      "content": {
+        "_key": "panda-family",
+        "_col": "metiv-reservist-family",
+        "id": "panda-family",
+        "title": "ПАНДА для семьи",
+        "provider": "Метив - дети",
+        "icon": "Users",
+        "who": "Резервисты и их семьи.",
+        "ages": "Дети 0-14 лет",
+        "what": "Семейные занятия для развития способов совладания и навыков регуляции: 6 консультаций для родителей и 6 семейных встреч.",
+        "location": "Дома или в Метиве",
+        "cost": "Бесплатно",
+        "contacts": [
+          {
+            "kind": "link",
+            "label": "Форма обращения в программы для семей",
+            "href": "https://tinyurl.com/metivkids"
+          }
+        ],
+        "source": "https://metiv.org/טיפולים-ללא-עלות-דרך-מטיב/"
+      }
+    },
+    {
+      "_key": "namal-family",
+      "title": "НАМАЛЬ для семьи - «Освободим место для игры»",
+      "sortOrder": 1,
+      "content": {
+        "_key": "namal-family",
+        "_col": "metiv-reservist-family",
+        "id": "namal-family",
+        "title": "НАМАЛЬ для семьи - «Освободим место для игры»",
+        "provider": "Метив - дети",
+        "icon": "Baby",
+        "who": "Резервисты и их семьи. Среди групп: группа для родителей, вернувшихся с резервистской службы, вместе с ребёнком, финансируемая Министерством обороны.",
+        "ages": "Родители детей 2-4 лет",
+        "what": "Групповые встречи с совместными занятиями для родителей и детей.",
+        "cost": "Бесплатно",
+        "contacts": [
+          {
+            "kind": "link",
+            "label": "Форма обращения в программы для семей",
+            "href": "https://tinyurl.com/metivkids"
+          }
+        ],
+        "source": "https://metiv.org/טיפולים-ללא-עלות-דרך-מטיב/"
+      }
+    }
+  ]
+}

@@ -4,7 +4,8 @@ import { renderAdmin } from './renderAdmin';
 
 // "Save all" against an API that accepts writes: reads come from the preview
 // fixtures, every write is recorded. Pins that a batch sends exactly the staged
-// writes, then one unpublished edit-log row describing them.
+// writes - including the AI translations a Hebrew edit stages (the preview's
+// fake translator) - then one unpublished edit-log row describing them.
 
 const calls = [];
 vi.mock('@/api/adminClient', async () => {
@@ -56,26 +57,38 @@ describe('admin: save all', () => {
 
     fireEvent.click(screen.getByRole('button', { name: /סקירה ושמירה/ }));
     const dialog = await screen.findByRole('dialog');
+    const save = await within(dialog).findByRole('button', { name: /שמירה סופית/ }, { timeout: 4000 });
     fireEvent.click(within(dialog).getByRole('checkbox'));
-    fireEvent.click(within(dialog).getByRole('button', { name: /שמירה סופית/ }));
+    fireEvent.click(save);
 
-    await waitFor(() => expect(calls.some(c => c.method === 'POST')).toBe(true));
+    await waitFor(() => expect(calls.some(c => c.body?.categoryIds?.[0] === 'cat-admin-log')).toBe(true));
     await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull());
 
-    const [patch, del, log] = calls;
+    const [patch, ...rest] = calls;
     expect(patch).toMatchObject({ method: 'PATCH', path: '/admin/articles/a1' });
     expect(patch.body.title).toBe('שאלה ערוכה');
+    // The fixtures have no translations of a1, so each language is created,
+    // linked to the Hebrew row's group.
+    const siblings = rest.slice(0, 4);
+    expect(siblings.map(c => c.body.langId)).toEqual(['ar', 'en', 'ru', 'fr']);
+    for (const c of siblings) {
+      expect(c).toMatchObject({ method: 'POST', path: '/admin/articles' });
+      expect(c.body).toMatchObject({ type: 'faq', groupId: 'grp-a1', categoryIds: ['cat-ptsd-info'], title: `[${c.body.langId}] שאלה ערוכה` });
+      expect(JSON.parse(c.body.content)._tr).toMatchObject({ by: 'ai', model: 'preview' });
+    }
+    const [del, log] = rest.slice(4);
     expect(del).toMatchObject({ method: 'DELETE', path: '/admin/articles/a2' });
 
     expect(log.path).toBe('/admin/articles');
     expect(log.body).toMatchObject({ type: 'article', categoryIds: ['cat-admin-log'], isPublished: false });
     const entry = JSON.parse(log.body.content);
     expect(entry.user).toHaveProperty('id');
-    expect(entry.changes).toEqual([
+    expect(entry.changes[0]).toEqual(
       { section: 'שאלות PTSD', action: 'update', title: 'שאלה ערוכה', fields: [{ label: 'שאלה', before: FAQ1, after: 'שאלה ערוכה' }] },
-      { section: 'שאלות PTSD', action: 'delete', title: FAQ2, fields: [] },
-    ]);
-    expect(calls).toHaveLength(3);
+    );
+    expect(entry.changes.slice(1, 5).map(c => c.action)).toEqual(['create', 'create', 'create', 'create']);
+    expect(entry.changes[5]).toEqual({ section: 'שאלות PTSD', action: 'delete', title: FAQ2, fields: [] });
+    expect(calls).toHaveLength(7);
     expect(screen.queryByText(/ממתין לשמירה/)).toBeNull();
   });
 });

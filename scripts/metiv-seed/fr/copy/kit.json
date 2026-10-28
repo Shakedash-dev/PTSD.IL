@@ -1,0 +1,18 @@
+{
+  "_area": "general",
+  "_label": "רכיבים משותפים (כפתורים, קישורים, \"האם זה עזר?\")",
+  "newTab": "(s'ouvre dans un nouvel onglet)",
+  "shortVersion": "En bref",
+  "continue": "Continuer",
+  "details": "Détails",
+  "toPage": "Voir la page",
+  "whatsapp": "WhatsApp",
+  "helpfulQuestion": "Cette page vous a-t-elle été utile ?",
+  "helpfulYes": "Oui, merci",
+  "helpfulNo": "Pas vraiment",
+  "helpfulThanks": "Merci pour votre retour. Sur le site de démonstration, rien n'est enregistré.",
+  "helpfulSorry": "Désolés. Vous pouvez demander {consultation} ou revenir à {topics}.",
+  "helpfulConsultation": "un entretien de conseil",
+  "helpfulTopics": "Tous les thèmes",
+  "nextStep": "L'étape suivante, si cela vous convient"
+}

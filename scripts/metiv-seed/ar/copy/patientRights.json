@@ -1,0 +1,11 @@
+{
+  "_area": "patient",
+  "_label": "אזור המטופלים: זכויות",
+  "fieldWho": "لمن",
+  "fieldAges": "الأعمار",
+  "fieldWhat": "ماذا يشمل",
+  "fieldLocation": "أين",
+  "fieldCost": "التكلفة",
+  "fieldProcess": "كيف نتوجّه",
+  "fullDetails": "للتفاصيل الكاملة"
+}

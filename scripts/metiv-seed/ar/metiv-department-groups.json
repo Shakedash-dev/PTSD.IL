@@ -1,0 +1,231 @@
+{
+  "key": "DEPARTMENT_GROUPS",
+  "slug": "metiv-department-groups",
+  "kind": "list",
+  "rows": [
+    {
+      "_key": "treatment",
+      "title": "العلاج",
+      "sortOrder": 0,
+      "content": {
+        "_key": "treatment",
+        "_col": "metiv-department-groups",
+        "key": "treatment",
+        "title": "العلاج",
+        "intro": "العيادات والبرامج التي يقدّم فيها ميتيف العلاج.",
+        "departments": [
+          {
+            "key": "adults-clinic",
+            "title": "عيادة البالغين",
+            "icon": "HeartHandshake",
+            "forWhom": "المتوجّهون من سن 17 فما فوق ممن مرّوا بصدمة أو فقدان.",
+            "what": "علاج فردي في العيادة في القدس، وكذلك علاج عن بُعد عبر زوم.",
+            "contact": {
+              "name": "أرئيل بن أهارون",
+              "role": "مدير عيادة البالغين",
+              "phone": "02-6449666"
+            },
+            "links": [
+              {
+                "label": "نموذج التوجّه إلى العيادة",
+                "href": "https://docs.google.com/forms/d/e/1FAIpQLSfz5ougCVnY1LFHJhyrBFrlICf2gQivumOzstI3YHor8_y0yg/viewform"
+              },
+              {
+                "label": "التفاصيل في قسم المتعالجين",
+                "to": "/patient/where-to-get-help#adults-clinic"
+              }
+            ]
+          },
+          {
+            "key": "kids-clinic",
+            "title": "ميتيف للأطفال",
+            "icon": "Baby",
+            "forWhom": "الأطفال حتى سن 18 وأهاليهم.",
+            "what": "مركز لتنظيم المشاعر: علاج فردي وثنائي وعائلي، ومجموعات باندا ونامال.",
+            "contact": {
+              "name": "ساريت شرام-يافين",
+              "role": "مديرة عيادة الأطفال (ميتيف للأطفال)",
+              "email": "kids@metiv.org",
+              "phone": "02-6294858"
+            },
+            "links": [
+              {
+                "label": "نموذج التوجّه إلى ميتيف للأطفال",
+                "href": "https://docs.google.com/forms/d/e/1FAIpQLSfiUHfJ4UDrpSUPQxtPKWmQuZGKg7lfL1c21D_JAsmwxlYLJA/viewform"
+              },
+              {
+                "label": "التفاصيل في قسم المتعالجين",
+                "to": "/patient/where-to-get-help#kids-clinic"
+              }
+            ]
+          },
+          {
+            "key": "migdalor",
+            "title": "عيادة ميغدالور",
+            "icon": "Shield",
+            "forWhom": "متعالجون معترف بهم لدى قسم التأهيل في وزارة الأمن، لواء القدس.",
+            "what": "عيادة في مركز هرتسوغ الطبي، تابعة لميتيف ولمركز هرتسوغ الطبي.",
+            "note": "يتم التوجّه عبر قسم التأهيل، والقسم هو الذي يحيل إلى العيادة.",
+            "links": [
+              {
+                "label": "التفاصيل في قسم المتعالجين",
+                "to": "/patient/where-to-get-help#migdalor"
+              }
+            ]
+          },
+          {
+            "key": "release-journey",
+            "title": "Peace of Mind (راحة البال)",
+            "icon": "Compass",
+            "forWhom": "الجنود المسرّحون الذين تعرّضوا لأحداث قتالية خلال الخدمة.",
+            "what": "رحلات جماعية للطواقم الأصلية التي خدمت معًا، في البلاد وخارجها، وعلاجات فردية.",
+            "contact": {
+              "name": "راحيلي بروكس",
+              "role": "مديرة Peace of Mind (راحة البال)"
+            },
+            "links": [
+              {
+                "label": "إلى صفحة Peace of Mind (راحة البال)",
+                "to": "/therapist/release-journey"
+              },
+              {
+                "label": "التسجيل في Peace of Mind (راحة البال)",
+                "href": "https://wkf.ms/4i9R9bO"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "_key": "training",
+      "title": "التأهيل والمرافقة المهنية",
+      "sortOrder": 1,
+      "content": {
+        "_key": "training",
+        "_col": "metiv-department-groups",
+        "key": "training",
+        "title": "التأهيل والمرافقة المهنية",
+        "intro": "للعاملين في العلاج وللطواقم وللمنظمات.",
+        "departments": [
+          {
+            "key": "training-unit",
+            "title": "وحدة التأهيلات",
+            "icon": "GraduationCap",
+            "forWhom": "المهنيون في مجال الصحة النفسية.",
+            "what": "دورات وأيام استكمال وتأهيلات في علاج الصدمة، وإشراف مهني فردي وجماعي.",
+            "contact": {
+              "name": "غفنيت أغاسي",
+              "role": "مديرة وحدة التأهيلات",
+              "email": "gafnit@metiv.org"
+            },
+            "links": [
+              {
+                "label": "الدورات والتأهيلات",
+                "to": "/therapist/courses"
+              },
+              {
+                "label": "الإشراف المهني",
+                "to": "/therapist/supervision"
+              },
+              {
+                "label": "نموذج التوجّه للتأهيل أو الإشراف المهني",
+                "href": "https://docs.google.com/forms/d/e/1FAIpQLScc90IWpEglRpTtKqwmeBToTCGXeZpZXwvcjE6UHaLR4YKxuw/viewform"
+              }
+            ]
+          },
+          {
+            "key": "organizations",
+            "title": "المنظمات والمجتمع",
+            "icon": "Building2",
+            "forWhom": "المنظمات والطواقم والسلطات والمجتمعات.",
+            "what": "تأهيلات للمنظمات، ومساحة ميتيف، وبناء منظمة مراعية للصدمة، وورشات حسب الطلب.",
+            "contact": {
+              "name": "يونيت إفراتي",
+              "role": "مديرة تعزيز السياسات وتطوير الخدمات المجتمعية",
+              "email": "yonit@metiv.org"
+            },
+            "links": [
+              {
+                "label": "للمنظمات",
+                "to": "/therapist/organizations"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "_key": "research",
+      "title": "البحث",
+      "sortOrder": 2,
+      "content": {
+        "_key": "research",
+        "_col": "metiv-department-groups",
+        "key": "research",
+        "title": "البحث",
+        "intro": "وحدة الأبحاث في ميتيف.",
+        "departments": [
+          {
+            "key": "research-unit",
+            "title": "وحدة الأبحاث",
+            "icon": "Microscope",
+            "forWhom": "الباحثون، والجهات الراغبة في التعاون، والمهتمون بالمشاركة في الأبحاث.",
+            "what": "أبحاث جارية، وبحث في برامج العلاج وتقييمها، ومنشورات العاملين في ميتيف.",
+            "contact": {
+              "name": "شير إلياس",
+              "role": "مديرة قسم الأبحاث",
+              "email": "shir@metiv.org"
+            },
+            "links": [
+              {
+                "label": "أبحاث جارية",
+                "to": "/therapist/research"
+              },
+              {
+                "label": "المنشورات",
+                "to": "/therapist/publications"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "_key": "partnerships",
+      "title": "الشراكات والدعم",
+      "sortOrder": 3,
+      "content": {
+        "_key": "partnerships",
+        "_col": "metiv-department-groups",
+        "key": "partnerships",
+        "title": "الشراكات والدعم",
+        "intro": "للصناديق والمتبرعين والجهات الراغبة في العمل مع ميتيف.",
+        "departments": [
+          {
+            "key": "development",
+            "title": "التطوير والشراكات",
+            "icon": "Handshake",
+            "forWhom": "الصناديق والمتبرعون والهيئات العامة والمنظمات.",
+            "what": "شراكات، ودعم برنامج معيّن، وأوجه تعاون جديدة.",
+            "contact": {
+              "name": "حاييم لانداو",
+              "role": "مسؤول التطوير والشراكات",
+              "email": "Chaim@metiv.org"
+            },
+            "links": [
+              {
+                "label": "شركاؤنا",
+                "to": "/about/partners"
+              },
+              {
+                "label": "التبرّع لميتيف",
+                "to": "/donate"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

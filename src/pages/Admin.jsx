@@ -1,38 +1,47 @@
 import React, { useState, useEffect } from 'react';
-import { Users, UserCog, FileText, BookOpen, HelpCircle, Wrench, Heart, Baby, Shield, ClipboardList, Pencil, Trash2, Plus, Check, X, Undo2, ChevronUp, ChevronDown, Info, History } from 'lucide-react';
+import { Users, UserCog, FileText, BookOpen, HelpCircle, Wrench, Heart, Baby, Shield, ClipboardList, MessageCircle, Pencil, Trash2, Plus, Check, X, ChevronUp, ChevronDown, Info, History } from 'lucide-react';
 import { toast } from 'sonner';
 import RichTextEditor from '@/components/RichTextEditor';
 import { Button } from '@/components/ui/button';
 import ChoiceChip from '@/components/patterns/ChoiceChip';
 import AdminGuide from '@/components/admin/AdminGuide';
 import EditLogPanel from '@/components/admin/EditLogPanel';
+import { AddNewButton, Badge, DiscardButton, IconBtn, LoadingRow, Section, STATUS_BADGES } from '@/components/admin/AdminUi';
+import { AdminLangProvider, LanguageTabs, useAdminLang } from '@/components/admin/AdminLang';
+import { MetivContentView } from '@/components/admin/MetivAdmin';
+import ChatbotQaPanel, { QA_SCOPE, QA_SECTION } from '@/components/admin/ChatbotQaAdmin';
 import { SaveAllBar, fieldsDiff, runWrite, usePendingChanges } from '@/components/admin/PendingChanges';
+import { stageSiblingDeletes, useStageTranslations } from '@/components/admin/translationStaging';
 import { hasAdminAccess, hasUserManagementAccess, getCurrentUserId } from '@/lib/auth';
 import {
-  loadPtsdFaq, savePtsdFaq, removePtsdFaq,
-  loadRightsFaq, saveRightsFaq, removeRightsFaq,
-  loadSecondCircle, saveSecondCircle, removeSecondCircle,
-  loadSelfHelp, saveSelfHelp, removeSelfHelp,
-  loadTreatment, saveTreatment, removeTreatment,
-  loadSource, saveSource, removeSource,
+  loadPtsdFaq, savePtsdFaq, removePtsdFaq, buildPtsdFaq,
+  loadRightsFaq, saveRightsFaq, removeRightsFaq, buildRightsFaq,
+  loadSecondCircle, saveSecondCircle, removeSecondCircle, buildSecondCircle,
+  loadSelfHelp, saveSelfHelp, removeSelfHelp, buildSelfHelp,
+  loadTreatment, saveTreatment, removeTreatment, buildTreatment,
+  loadSource, saveSource, removeSource, buildSource,
   loadCommunity, saveCommunity, removeCommunity,
-  loadChildrenGuidelines, saveChildrenGuidelines,
-  loadChildrenResource, saveChildrenResource, removeChildrenResource,
+  loadChildrenGuidelines, saveChildrenGuidelines, buildChildrenGuidelines,
+  loadChildrenResource, saveChildrenResource, removeChildrenResource, buildChildrenResource,
   loadQuestionnaires, loadQuestionnaireDetail,
   createQuestionnaire, updateQuestionnaire, removeQuestionnaire,
   addQuestion, updateQuestion, removeQuestion,
+  loadArticleSiblings, writeArticleSibling,
 } from '@/api/adminSource';
 import { listUsers, createUser, updateUserRoles, deleteUser } from '@/api/adminUsers';
+import { AREA_LABELS } from '@/pages/metiv-demos/v3/content/registry';
 
-// /admin. Every content panel below edits through the staged-changes layer in
+// /admin (and /metiv-site-demo-v3/admin, the `metiv` variant). Every content
+// panel below edits through the staged-changes layer in
 // src/components/admin/PendingChanges.jsx: "אישור" stages, and the only write
 // path is the save-all review dialog. User management is the exception - role
 // and account changes write immediately (they are access control, not site
 // content, and are not part of the edit log).
-
-function LoadingRow() {
-  return <p className="text-sm text-muted-foreground py-6 text-center">טוען...</p>;
-}
+//
+// Every panel edits the language picked in the tabs at the top (AdminLang.jsx).
+// A Hebrew edit of an article-backed panel also stages its AI translations into
+// the other four languages (translationStaging.js); an edit in another tab
+// writes only that language's row, stamped as edited by hand.
 
 // ─── Hebrew label maps for values that are stored in English internally (filter
 // keys, category ids, etc.) so admins never see raw English tokens. ──────────
@@ -143,10 +152,12 @@ function displayName(user) {
   return [user.firstName, user.lastName].filter(n => n && n !== '-').join(' ');
 }
 
-// The editable site pages, in the order the panel shows them. Site copy (page
-// headings) and the legal documents are deliberately NOT here: they are not
-// editable from /admin. The public site still honours any override row stored
-// before that (src/api/source.js fetchSiteCopy/fetchLegalDoc).
+// The editable site pages, in the order the panel shows them, then the
+// chatbot's curated Q&A (`shared`: the chatbot serves both sites, so the Metiv
+// variant lists it under a heading of its own). Site copy (page headings) and
+// the legal documents are deliberately NOT here: they are not editable from
+// /admin. The public site still honours any override row stored before that
+// (src/api/source.js fetchSiteCopy/fetchLegalDoc).
 const CONTENT_TABS = [
   { key: 'ptsd_faqs',     label: 'שאלות PTSD',        icon: HelpCircle },
   { key: 'self_help',     label: 'כלים עצמיים',        icon: Wrench },
@@ -157,69 +168,12 @@ const CONTENT_TABS = [
   { key: 'second_circle', label: 'מעגל שני',           icon: Shield },
   { key: 'children',      label: 'ילדים',              icon: Baby },
   { key: 'questionnaire', label: 'שאלון PCL-5',        icon: ClipboardList },
+  { key: QA_SCOPE,        label: QA_SECTION,           icon: MessageCircle, shared: true },
 ];
 
 // masteradmin-only sections (hasUserManagementAccess()).
 const USERS_VIEW = { key: 'users', label: 'ניהול משתמשים', icon: UserCog };
 const LOG_VIEW = { key: 'log', label: 'יומן עריכות', icon: History };
-
-function Badge({ children, color = 'bg-muted text-muted-foreground' }) {
-  return (
-    <span className={`inline-block px-2 py-0.5 rounded-full text-xs font-medium ${color}`}>
-      {children}
-    </span>
-  );
-}
-
-function Section({ title, count }) {
-  return (
-    <div className="flex items-center justify-between mb-5">
-      <h2 className="font-heading font-semibold text-lg text-foreground">{title}</h2>
-      <Badge color="bg-primary/10 text-primary">{count} פריטים</Badge>
-    </div>
-  );
-}
-
-/**
- * @param {Object} props
- * @param {React.ComponentType<{className?: string}>} props.icon
- * @param {() => void} props.onClick
- * @param {string} props.title
- * @param {'danger'} [props.tone]
- */
-function IconBtn({ icon: Icon, onClick, title, tone }) {
-  return (
-    <Button
-      type="button"
-      variant="outline-subtle"
-      size="none"
-      onClick={onClick}
-      title={title}
-      className={`p-1.5 rounded-lg bg-card text-muted-foreground ${
-        tone === 'danger'
-          ? 'hover:text-destructive hover:border-destructive/30'
-          : 'hover:text-primary hover:border-primary/30'
-      }`}
-    >
-      <Icon className="w-3.5 h-3.5" />
-    </Button>
-  );
-}
-
-function AddNewButton({ onClick, label }) {
-  return (
-    <Button
-      type="button"
-      variant="dashed"
-      radius="xl"
-      size="none"
-      onClick={onClick}
-      className="w-full gap-1.5 px-4 py-2.5 text-sm font-medium"
-    >
-      <Plus className="w-4 h-4" /> {label}
-    </Button>
-  );
-}
 
 function LinksField({ value, onChange }) {
   const links = value || [];
@@ -453,21 +407,6 @@ function FieldInput({ field, value, onChange }) {
   }
 }
 
-// What a card shows while it carries a staged change.
-const STATUS_BADGES = {
-  update: { label: 'נערך · ממתין לשמירה', color: 'bg-warning/20 text-foreground' },
-  create: { label: 'חדש · ממתין לשמירה', color: 'bg-warning/20 text-foreground' },
-  delete: { label: 'יימחק בשמירה', color: 'bg-destructive/10 text-destructive' },
-};
-
-function DiscardButton({ onClick }) {
-  return (
-    <Button type="button" variant="quiet" size="none" onClick={onClick} className="gap-1 text-xs">
-      <Undo2 className="w-3.5 h-3.5" /> ביטול השינוי
-    </Button>
-  );
-}
-
 // Generic view/edit card used by every content list below. "אישור" hands the
 // draft to `onSave`, which in a content panel only STAGES it (see
 // src/components/admin/PendingChanges.jsx) - nothing is written until the
@@ -583,12 +522,66 @@ function useAdminData(load, deps, errorMessage, empty) {
   return [data, loading];
 }
 
+// Translation of the PTSD-IL panels' Hebrew edits. The panels edit page-shaped
+// drafts; adminSource's build* serializes a draft into the row's content JSON
+// and title, and that serialized form is what is compared, translated and
+// written to the siblings - so the leaves sent match what the DB stores.
+// Every non-content column of a sibling (categories, audiences, age groups,
+// url, sortOrder) comes from the Hebrew row's payload.
+function useArticleTranslations() {
+  const stageTranslations = useStageTranslations();
+  const { stage, changes } = usePendingChanges();
+
+  /**
+   * @param {{ heKey: string, scope: string, section: string, title: string, item: any, draft: any, build: (d: any) => Promise<any>, groupRef?: { groupId?: string } }} args
+   */
+  function translate({ heKey, scope, section, title, item, draft, build, groupRef }) {
+    stageTranslations({
+      heKey, scope, section, title,
+      context: `${AREA_LABELS.patient} / ${section}: ${title}`,
+      handEdited: (lang, sib) => changes.some(c => c.itemId === sib.id),
+      prepare: async () => {
+        const [oldP, newP] = await Promise.all([item ? build(item) : null, build(draft)]);
+        const siblings = item?.groupId ? await loadArticleSiblings(item.groupId, newP.type) : {};
+        return {
+          oldContent: oldP ? JSON.parse(oldP.content) : null,
+          newContent: JSON.parse(newP.content),
+          oldTitle: oldP?.title,
+          newTitle: newP.title,
+          siblings,
+          write: (lang, built, sib) => writeArticleSibling(newP, lang, built, sib, item?.groupId ?? groupRef?.groupId),
+        };
+      },
+    });
+  }
+
+  /** Stages the deletion of a deleted Hebrew item's translations. */
+  async function deleteSiblings({ heKey, scope, section, title, item, build, remove }) {
+    if (!item.groupId) return;
+    try {
+      const payload = await build(item);
+      const siblings = await loadArticleSiblings(item.groupId, payload.type);
+      stageSiblingDeletes(stage, { heKey, scope, section, title, siblings, remove });
+    } catch (err) {
+      toast.error(err?.message || 'שגיאה באיתור התרגומים של הפריט');
+    }
+  }
+
+  return { translate, deleteSiblings };
+}
+
 // A list of content items whose edits, additions and deletions are staged
 // rather than written. Every content panel renders through this: it overlays
 // the panel's staged changes on the server's rows (an edited row shows its
 // draft, a deleted one is struck through, a new one is appended), and turns
 // "אישור" / the trash icon into staged changes carrying the panel's own
 // save/remove call for the save-all batch to run.
+//
+// In the Hebrew tab a panel that passes `build` also gets its edits translated
+// (and its deletes applied to every language). In another language tab the
+// list edits that language's rows only; adding and deleting stay in Hebrew,
+// where the item's translations follow - unless `perLanguage` (communities,
+// whose rows are not linked across languages).
 /**
  * @param {Object} props
  * @param {string} props.scope       which list; staged changes are matched on it
@@ -598,30 +591,52 @@ function useAdminData(load, deps, errorMessage, empty) {
  * @param {(item: any) => React.ReactNode} props.renderView
  * @param {(item: any) => string} props.describe  an item's display name
  * @param {any} props.blank          a new item's starting value
- * @param {(draft: any) => Promise<any>} props.save
+ * @param {(draft: any, ctx?: any) => Promise<any>} props.save  ctx: { human } / { onSaved }
  * @param {(id: string) => Promise<any>} [props.remove]
+ * @param {(draft: any) => Promise<any>} [props.build]  the article payload a save would send
+ * @param {boolean} [props.perLanguage]
  * @param {string} props.addLabel
  */
-function StagedList({ scope, section, items, fields, renderView, describe, blank, save, remove, addLabel }) {
+function StagedList({ scope, section, items, fields, renderView, describe, blank, save, remove, build, perLanguage = false, addLabel }) {
   const { changes, stage, discard, newKey } = usePendingChanges();
+  const { id: lang } = useAdminLang();
+  const { translate, deleteSiblings } = useArticleTranslations();
+  const hebrew = lang === 'he';
+  const structural = hebrew || perLanguage;
   const [creating, setCreating] = useState(false);
-  const pending = changes.filter(c => c.scope === scope);
+  const pending = changes.filter(c => c.scope === scope && !c.linkedTo);
   const byItem = new Map(pending.filter(c => c.itemId).map(c => [c.itemId, c]));
-  const creates = pending.filter(c => c.action === 'create');
+  const creates = pending.filter(c => c.action === 'create' && (c.lang || 'he') === lang);
+  const langOf = hebrew ? {} : { lang };
 
   function stageUpdate(item, draft) {
     const key = `${scope}:${item.id}`;
     const diff = fieldsDiff(fields, item, draft);
     if (!diff.length) { discard(key); return; } // edited back to what the server has
-    stage({ key, scope, section, action: 'update', itemId: item.id, title: describe(draft) || describe(item) || 'פריט', draft, diff, run: () => save(draft) });
+    const title = describe(draft) || describe(item) || 'פריט';
+    if (!hebrew) {
+      stage({ key, scope, section, ...langOf, action: 'update', itemId: item.id, title, draft, diff, run: () => save(draft, { human: true }) });
+      return;
+    }
+    stage({ key, scope, section, action: 'update', itemId: item.id, title, draft, diff, run: () => save(draft) });
+    if (build) translate({ heKey: key, scope, section, title, item, draft, build });
   }
 
   function stageCreate(key, draft) {
-    stage({ key, scope, section, action: 'create', title: describe(draft) || 'פריט חדש', draft, diff: fieldsDiff(fields, {}, draft), run: () => save(draft) });
+    const title = describe(draft) || 'פריט חדש';
+    const groupRef = {};
+    stage({
+      key, scope, section, ...langOf, action: 'create', title, draft, diff: fieldsDiff(fields, {}, draft),
+      run: () => save(draft, { onSaved: saved => { groupRef.groupId = saved?.groupId; } }),
+    });
+    if (hebrew && build) translate({ heKey: key, scope, section, title, item: null, draft, build, groupRef });
   }
 
   function stageDelete(item) {
-    stage({ key: `${scope}:${item.id}`, scope, section, action: 'delete', itemId: item.id, title: describe(item) || 'פריט', diff: [], run: () => remove(item.id) });
+    const key = `${scope}:${item.id}`;
+    const title = describe(item) || 'פריט';
+    stage({ key, scope, section, ...langOf, action: 'delete', itemId: item.id, title, diff: [], run: () => remove(item.id) });
+    if (hebrew && build) deleteSiblings({ heKey: key, scope, section, title, item, build, remove });
   }
 
   return (
@@ -638,7 +653,7 @@ function StagedList({ scope, section, items, fields, renderView, describe, blank
               status={p?.action}
               onDiscard={p ? () => discard(p.key) : undefined}
               onSave={draft => stageUpdate(item, draft)}
-              onDelete={remove ? () => stageDelete(item) : undefined}
+              onDelete={remove && structural ? () => stageDelete(item) : undefined}
             />
           );
         })}
@@ -664,16 +679,18 @@ function StagedList({ scope, section, items, fields, renderView, describe, blank
           />
         )}
       </div>
-      <div className="mt-3">
-        <AddNewButton label={addLabel} onClick={() => setCreating(true)} />
-      </div>
+      {structural && (
+        <div className="mt-3">
+          <AddNewButton label={addLabel} onClick={() => setCreating(true)} />
+        </div>
+      )}
     </>
   );
 }
 
 function PTSDFaqsPanel() {
-  const lang = 'he'; // Hebrew-only: the admin panel manages Hebrew content only.
-  const [faqs, loading] = useAdminData(() => loadPtsdFaq({ lang }), [], 'שגיאה בטעינת השאלות', []);
+  const { id: lang } = useAdminLang();
+  const [faqs, loading] = useAdminData(() => loadPtsdFaq({ lang }), [lang], 'שגיאה בטעינת השאלות', []);
 
   const fields = [
     { key: 'q', label: 'שאלה', type: 'text' },
@@ -694,6 +711,7 @@ function PTSDFaqsPanel() {
       <Section title="שאלות ותשובות על PTSD" count={faqs.length} />
       {loading ? <LoadingRow /> : (
         <StagedList
+          key={lang}
           scope="ptsd_faqs"
           section="שאלות PTSD"
           items={faqs}
@@ -701,7 +719,8 @@ function PTSDFaqsPanel() {
           renderView={renderView}
           describe={f => f.q}
           blank={{ q: '', a: '' }}
-          save={draft => savePtsdFaq(draft, { lang })}
+          save={(draft, x) => savePtsdFaq(draft, { lang, ...x })}
+          build={draft => buildPtsdFaq(draft, { lang })}
           remove={removePtsdFaq}
           addLabel="הוספת שאלה חדשה"
         />
@@ -711,7 +730,8 @@ function PTSDFaqsPanel() {
 }
 
 function SelfHelpPanel() {
-  const [tools, loading] = useAdminData(() => loadSelfHelp(), [], 'שגיאה בטעינת הכלים', []);
+  const { id: lang } = useAdminLang();
+  const [tools, loading] = useAdminData(() => loadSelfHelp({ lang }), [lang], 'שגיאה בטעינת הכלים', []);
 
   const fields = [
     { key: 'category', label: 'קטגוריה', type: 'select', options: toOptions(SELF_HELP_CATEGORY_LABELS) },
@@ -736,6 +756,7 @@ function SelfHelpPanel() {
       <Section title="כלים לעזרה עצמית" count={tools.length} />
       {loading ? <LoadingRow /> : (
         <StagedList
+          key={lang}
           scope="self_help"
           section="כלים עצמיים"
           items={tools}
@@ -743,7 +764,8 @@ function SelfHelpPanel() {
           renderView={renderView}
           describe={t => t.title_he}
           blank={{ category: 'sleep', title_he: '', content_he: '' }}
-          save={draft => saveSelfHelp(draft)}
+          save={(draft, x) => saveSelfHelp(draft, { lang, ...x })}
+          build={draft => buildSelfHelp(draft, { lang })}
           remove={removeSelfHelp}
           addLabel="הוספת כלי חדש"
         />
@@ -753,8 +775,8 @@ function SelfHelpPanel() {
 }
 
 function TreatmentPanel() {
-  const lang = 'he'; // Hebrew-only, like every other panel.
-  const [steps, loading] = useAdminData(() => loadTreatment({ lang }), [], 'שגיאה בטעינת שלבי הטיפול', []);
+  const { id: lang } = useAdminLang();
+  const [steps, loading] = useAdminData(() => loadTreatment({ lang }), [lang], 'שגיאה בטעינת שלבי הטיפול', []);
 
   const fields = [
     { key: 'step_number', label: 'מספר שלב', type: 'number' },
@@ -799,6 +821,7 @@ function TreatmentPanel() {
       <Section title="שלבי טיפול" count={steps.length} />
       {loading ? <LoadingRow /> : (
         <StagedList
+          key={lang}
           scope="treatment"
           section="שלבי טיפול"
           items={steps}
@@ -806,7 +829,8 @@ function TreatmentPanel() {
           renderView={renderView}
           describe={s => s.title_he}
           blank={{ step_number: steps.length + 1, title_he: '', description_he: '', how_to_start_he: '', methods: [], links: [] }}
-          save={draft => saveTreatment(draft, { lang })}
+          save={(draft, x) => saveTreatment(draft, { lang, ...x })}
+          build={draft => buildTreatment(draft, { lang })}
           remove={removeTreatment}
           addLabel="הוספת שלב חדש"
         />
@@ -816,7 +840,8 @@ function TreatmentPanel() {
 }
 
 function CommunitiesPanel() {
-  const [communities, loading] = useAdminData(() => loadCommunity(), [], 'שגיאה בטעינת הקהילות', []);
+  const { id: lang } = useAdminLang();
+  const [communities, loading] = useAdminData(() => loadCommunity({ lang }), [lang], 'שגיאה בטעינת הקהילות', []);
 
   const fields = [
     { key: 'name', label: 'שם הקהילה', type: 'text' },
@@ -855,8 +880,13 @@ function CommunitiesPanel() {
   return (
     <div>
       <Section title="קהילות תמיכה" count={communities.length} />
+      <p className="text-xs text-muted-foreground mb-4">
+        לקהילות אין קישור בין שפות, ולכן הן אינן מתורגמות אוטומטית: כל שפה נערכת, מתווספת ונמחקת בלשונית שלה.
+      </p>
       {loading ? <LoadingRow /> : (
         <StagedList
+          key={lang}
+          perLanguage
           scope="communities"
           section="קהילות"
           items={communities}
@@ -864,7 +894,7 @@ function CommunitiesPanel() {
           renderView={renderView}
           describe={c => c.name}
           blank={{ name: '', organization: '', description_he: '', target_audience: [], location: 'center', meeting_type: 'frontal', contact_url: '' }}
-          save={draft => saveCommunity(draft)}
+          save={draft => saveCommunity(draft, { lang })}
           remove={removeCommunity}
           addLabel="הוספת קהילה חדשה"
         />
@@ -874,9 +904,10 @@ function CommunitiesPanel() {
 }
 
 function RightsPanel() {
+  const { id: lang } = useAdminLang();
   const [cat, setCat] = useState(RIGHTS_CATEGORIES[0]);
   const [items, loading] = useAdminData(
-    () => loadRightsFaq({ lang: 'he', audienceSlug: cat }), [cat], 'שגיאה בטעינת הזכויות', []
+    () => loadRightsFaq({ lang, audienceSlug: cat }), [cat, lang], 'שגיאה בטעינת הזכויות', []
   );
 
   const fields = [
@@ -919,7 +950,7 @@ function RightsPanel() {
       <Section title={`זכויות - ${labelFor(RIGHTS_CATEGORY_LABELS, cat)}`} count={items.length} />
       {loading ? <LoadingRow /> : (
         <StagedList
-          key={cat}
+          key={`${cat}:${lang}`}
           scope={`rights:${cat}`}
           section={`זכויות - ${labelFor(RIGHTS_CATEGORY_LABELS, cat)}`}
           items={items}
@@ -927,7 +958,8 @@ function RightsPanel() {
           renderView={renderView}
           describe={i => i.q}
           blank={{ q: '', a: '', steps: '', links: [] }}
-          save={draft => saveRightsFaq(draft, { lang: 'he', audienceSlug: cat })}
+          save={(draft, x) => saveRightsFaq(draft, { lang, audienceSlug: cat, ...x })}
+          build={draft => buildRightsFaq(draft, { lang, audienceSlug: cat })}
           remove={removeRightsFaq}
           addLabel="הוספת שאלה חדשה"
         />
@@ -937,7 +969,8 @@ function RightsPanel() {
 }
 
 function SourcesPanel() {
-  const [sources, loading] = useAdminData(() => loadSource(), [], 'שגיאה בטעינת המקורות', []);
+  const { id: lang } = useAdminLang();
+  const [sources, loading] = useAdminData(() => loadSource({ lang }), [lang], 'שגיאה בטעינת המקורות', []);
   const categoryColors = {
     research: 'bg-category-1/10 text-category-1',
     clinical: 'bg-category-2/10 text-category-2',
@@ -980,6 +1013,7 @@ function SourcesPanel() {
       <Section title="מקורות ומידע" count={sources.length} />
       {loading ? <LoadingRow /> : (
         <StagedList
+          key={lang}
           scope="sources"
           section="מקורות"
           items={sources}
@@ -987,7 +1021,8 @@ function SourcesPanel() {
           renderView={renderView}
           describe={s => s.title}
           blank={{ title: '', authors: '', year: '', url: '', description_he: '', category: 'research' }}
-          save={draft => saveSource(draft)}
+          save={(draft, x) => saveSource(draft, { lang, ...x })}
+          build={draft => buildSource(draft, { lang })}
           remove={removeSource}
           addLabel="הוספת מקור חדש"
         />
@@ -997,8 +1032,8 @@ function SourcesPanel() {
 }
 
 function SecondCirclePanel() {
-  const lang = 'he'; // Hebrew-only: the admin panel manages Hebrew content only.
-  const [tools, loading] = useAdminData(() => loadSecondCircle({ lang }), [], 'שגיאה בטעינת התכנים', []);
+  const { id: lang } = useAdminLang();
+  const [tools, loading] = useAdminData(() => loadSecondCircle({ lang }), [lang], 'שגיאה בטעינת התכנים', []);
 
   const fields = [
     { key: 'q', label: 'שאלה', type: 'text' },
@@ -1025,6 +1060,7 @@ function SecondCirclePanel() {
       <Section title="כלים למעגל השני" count={tools.length} />
       {loading ? <LoadingRow /> : (
         <StagedList
+          key={lang}
           scope="second_circle"
           section="מעגל שני"
           items={tools}
@@ -1032,7 +1068,8 @@ function SecondCirclePanel() {
           renderView={renderView}
           describe={t => t.q}
           blank={{ q: '', intro: '', sections: [], closing: '', callout: '' }}
-          save={draft => saveSecondCircle(draft, { lang })}
+          save={(draft, x) => saveSecondCircle(draft, { lang, ...x })}
+          build={draft => buildSecondCircle(draft, { lang })}
           remove={removeSecondCircle}
           addLabel="הוספת פריט חדש"
         />
@@ -1045,16 +1082,18 @@ const GUIDELINES_FIELDS = [{ key: 'guidelines', label: 'הנחיות', type: 'ri
 
 function ChildrenPanel() {
   const { changes, stage, discard } = usePendingChanges();
+  const { id: lang } = useAdminLang();
+  const { translate } = useArticleTranslations();
   const [ageGroup, setAgeGroup] = useState(AGE_GROUPS[0]);
   const [data, loading] = useAdminData(
     async () => {
       const [guidelines, resources] = await Promise.all([
-        loadChildrenGuidelines({ ageGroupSlug: ageGroup }),
-        loadChildrenResource({ ageGroupSlug: ageGroup }),
+        loadChildrenGuidelines({ ageGroupSlug: ageGroup, lang }),
+        loadChildrenResource({ ageGroupSlug: ageGroup, lang }),
       ]);
       return { guidelines, resources };
     },
-    [ageGroup], 'שגיאה בטעינת התכנים לילדים', { guidelines: null, resources: [] }
+    [ageGroup, lang], 'שגיאה בטעינת התכנים לילדים', { guidelines: null, resources: [] }
   );
   const [editingGuidelines, setEditingGuidelines] = useState(false);
   const [guidelinesDraft, setGuidelinesDraft] = useState('');
@@ -1064,7 +1103,10 @@ function ChildrenPanel() {
   const section = `ילדים - גיל ${ageGroup}`;
   // Its own scope (not `children:<age>`), so StagedList never mistakes a staged
   // guidelines row for one of the resources.
-  const guidelinesKey = `children:guidelines:${ageGroup}`;
+  const guidelinesKey = `children:guidelines:${ageGroup}:${lang}`;
+  // A missing translation of the guidelines is created by translating the
+  // Hebrew; there is nothing to link a hand-written one to.
+  const canEditGuidelines = lang === 'he' || Boolean(guidelinesItem?.id);
   const guidelinesPending = changes.find(c => c.key === guidelinesKey);
   const shownGuidelines = guidelinesPending ? guidelinesPending.draft.guidelines : (guidelinesItem?.guidelines || '');
 
@@ -1096,17 +1138,29 @@ function ChildrenPanel() {
       discard(guidelinesKey);
     } else {
       const slug = ageGroup;
+      const title = `הנחיות לגיל ${slug}`;
+      const groupRef = {};
       stage({
         key: guidelinesKey,
         scope: `children:guidelines:${slug}`,
         section,
+        ...(lang === 'he' ? {} : { lang }),
         action: guidelinesItem?.id ? 'update' : 'create',
         itemId: guidelinesItem?.id,
-        title: `הנחיות לגיל ${slug}`,
+        title,
         draft,
         diff,
-        run: () => saveChildrenGuidelines(draft, { ageGroupSlug: slug }),
+        run: () => saveChildrenGuidelines(draft, {
+          ageGroupSlug: slug, lang, human: lang !== 'he', onSaved: saved => { groupRef.groupId = saved?.groupId; },
+        }),
       });
+      if (lang === 'he') {
+        translate({
+          heKey: guidelinesKey, scope: `children:guidelines:${slug}`, section, title,
+          item: guidelinesItem?.id ? guidelinesItem : null, draft, groupRef,
+          build: d => buildChildrenGuidelines(d, { ageGroupSlug: slug, lang }),
+        });
+      }
     }
     setEditingGuidelines(false);
   }
@@ -1166,15 +1220,19 @@ function ChildrenPanel() {
             ) : (
               <>
                 <div className="text-sm text-foreground pe-10" dangerouslySetInnerHTML={{ __html: shownGuidelines }} />
-                <div className="absolute top-3 end-3">
-                  <IconBtn icon={Pencil} title="עריכת הנחיות" onClick={() => { setGuidelinesDraft(shownGuidelines); setEditingGuidelines(true); }} />
-                </div>
+                {canEditGuidelines ? (
+                  <div className="absolute top-3 end-3">
+                    <IconBtn icon={Pencil} title="עריכת הנחיות" onClick={() => { setGuidelinesDraft(shownGuidelines); setEditingGuidelines(true); }} />
+                  </div>
+                ) : (
+                  <p className="text-xs text-muted-foreground">אין עדיין הנחיות בשפה הזו. הן ייווצרו כשההנחיות בעברית ייערכו ויתורגמו.</p>
+                )}
               </>
             )}
           </div>
 
           <StagedList
-            key={ageGroup}
+            key={`${ageGroup}:${lang}`}
             scope={`children:${ageGroup}`}
             section={section}
             items={resources}
@@ -1182,7 +1240,8 @@ function ChildrenPanel() {
             renderView={renderView}
             describe={r => r.title_he}
             blank={{ type: 'book', title_he: '', description_he: '', content_he: '', cta_label: '', cta_url: '' }}
-            save={draft => saveChildrenResource(draft, { ageGroupSlug: ageGroup })}
+            save={(draft, x) => saveChildrenResource(draft, { ageGroupSlug: ageGroup, lang, ...x })}
+            build={draft => buildChildrenResource(draft, { ageGroupSlug: ageGroup, lang })}
             remove={removeChildrenResource}
             addLabel="הוספת תוכן חדש"
           />
@@ -1411,12 +1470,12 @@ function flatQuestion(q) {
 function QuestionnairePanel() {
   const { changes, stage, discard, newKey } = usePendingChanges();
   const [creating, setCreating] = useState(false);
-  // Hebrew-only for now: the questionnaire is managed in Hebrew from this
-  // panel. Other-language rows still exist in the DB but are hidden here so
-  // the admin never sees language sections or non-Hebrew items.
+  const { id: lang } = useAdminLang();
+  // Each language's questionnaire is its own row (no groupId), so the panel
+  // lists the tab's language and nothing is translated automatically.
   const [items, loading] = useAdminData(
-    async () => (await loadQuestionnaires()).filter(q => q.langId === 'he'),
-    [], 'שגיאה בטעינת השאלונים', []
+    async () => (await loadQuestionnaires()).filter(q => q.langId === lang),
+    [lang], 'שגיאה בטעינת השאלונים', []
   );
 
   const scope = 'questionnaire';
@@ -1434,7 +1493,7 @@ function QuestionnairePanel() {
     <div>
       <Section title="שאלונים" count={items.length} />
       <p className="text-xs text-muted-foreground mb-4">
-        השאלון נערך בעברית בלבד. totalQuestions מנוהל בשרת ומתעדכן אוטומטית עם הוספת/מחיקת שאלות.
+        השאלון אינו מתורגם אוטומטית: כל שפה נערכת בלשונית שלה, ושינוי בעברית לא משנה את השפות האחרות. totalQuestions מנוהל בשרת ומתעדכן אוטומטית עם הוספת/מחיקת שאלות.
       </p>
 
       <div className="space-y-3 mt-3">
@@ -1471,7 +1530,7 @@ function QuestionnairePanel() {
         {creating && (
           <div className="rounded-xl border border-primary/40 bg-background p-4">
             <QuestionnaireMetaForm
-              initial={{ langId: 'he', slug: 'pcl-5', name: '', description: '', maxScore: 80, cutoffScore: 33, isActive: true, sortOrder: 0 }}
+              initial={{ langId: lang, slug: 'pcl-5', name: '', description: '', maxScore: 80, cutoffScore: 33, isActive: true, sortOrder: 0 }}
               onCancel={() => setCreating(false)}
               onSave={draft => { stageCreate(newKey(scope), draft); setCreating(false); }}
             />
@@ -1553,7 +1612,7 @@ function QuestionnaireRow({ q, status, onStage, onDelete, onDiscard }) {
 // Metadata form for create/edit.
 function QuestionnaireMetaForm({ initial, onSave, onCancel }) {
   const [draft, setDraft] = useState({
-    langId: 'he', // Hebrew-only for now; langId is fixed and not editable here.
+    langId: initial.langId ?? 'he', // the language tab's; not editable here
     slug: initial.slug ?? '',
     name: initial.name ?? '',
     description: initial.description ?? '',
@@ -1770,6 +1829,7 @@ const PANELS = {
   second_circle: <SecondCirclePanel />,
   children:      <ChildrenPanel />,
   questionnaire: <QuestionnairePanel />,
+  [QA_SCOPE]:    <ChatbotQaPanel />,
 };
 
 // Staged changes carry their list's scope (`rights:general`,
@@ -1784,7 +1844,12 @@ function tabOfScope(scope) {
 // the exact-match role checks in src/lib/auth.js: content needs
 // admin/moderator, users and the log need masteradmin. AdminGate
 // (src/App.jsx) guarantees at least one of them for anyone who gets here.
-export default function Admin() {
+//
+// `variant="metiv"` (/metiv-site-demo-v3/admin) swaps the content view for the
+// Metiv groups (MetivAdmin.jsx), which hold the nine panels below in their
+// patient group. Users, the log and the guide are the same.
+/** @param {{ variant?: 'ptsd'|'metiv' }} props */
+export default function Admin({ variant = 'ptsd' }) {
   const showContent = hasAdminAccess();
   const showUsers = hasUserManagementAccess();
   const { changes } = usePendingChanges();
@@ -1795,7 +1860,9 @@ export default function Admin() {
   ];
   const [view, setView] = useState('guide');
   const [activeTab, setActiveTab] = useState(CONTENT_TABS[0].key);
+  const [lang, setLang] = useState('he');
 
+  /** @type {Record<string, number>} */
   const pendingByTab = {};
   for (const c of changes) {
     const tab = tabOfScope(c.scope);
@@ -1803,7 +1870,7 @@ export default function Admin() {
   }
 
   return (
-    <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8 pb-28">
+    <div className={`${variant === 'metiv' ? 'max-w-6xl' : 'max-w-5xl'} mx-auto px-4 sm:px-6 py-8 pb-28`}>
       <nav aria-label="אזורי ממשק הניהול" className="flex flex-wrap gap-2 mb-8 border-b border-border pb-4">
         {views.map(v => {
           const Icon = v.icon;
@@ -1827,8 +1894,16 @@ export default function Admin() {
 
       {view === 'guide' && <AdminGuide canEdit={showContent} onStart={() => setView('content')} />}
 
-      {view === 'content' && showContent && (
-        <>
+      {view === 'content' && showContent && variant === 'metiv' && (
+        <AdminLangProvider lang={lang}>
+          <LanguageTabs lang={lang} onChange={setLang} />
+          <MetivContentView ptsdTabs={CONTENT_TABS} renderPtsd={key => PANELS[key]} ptsdPending={pendingByTab} />
+        </AdminLangProvider>
+      )}
+
+      {view === 'content' && showContent && variant !== 'metiv' && (
+        <AdminLangProvider lang={lang}>
+          <LanguageTabs lang={lang} onChange={setLang} />
           <h2 className="text-xs font-semibold text-muted-foreground mb-2">עמודי האתר הניתנים לעריכה</h2>
           <div className="flex flex-wrap gap-2 mb-6">
             {CONTENT_TABS.map(tab => {
@@ -1853,7 +1928,7 @@ export default function Admin() {
           <div className="bg-card rounded-super border border-border p-6 shadow-card">
             {PANELS[activeTab]}
           </div>
-        </>
+        </AdminLangProvider>
       )}
 
       {view === 'users' && showUsers && (

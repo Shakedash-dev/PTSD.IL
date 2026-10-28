@@ -54,15 +54,18 @@ describe("handleChat", () => {
     expect(body).toContain("vectorize down");
   });
 
-  it("emits a crisis frame AND grounded refusal when a distress message has no retrieval hits", async () => {
+  it("answers a distress message with no retrieval hits instead of refusing", async () => {
+    const fetchSpy = vi.spyOn(globalThis, "fetch").mockResolvedValue(geminiSSE("You are not alone. ERAN 1201."));
     const env = baseEnv();
     env.VECTORIZE.query = async () => ({ matches: [] });
     const res = await handleChat(env, { messages: [{ role: "user", content: "I want to kill myself" }], lang: "en", sessionId: "s" });
     const body = await readSSE(res);
     expect(body).toContain("event: crisis");
-    expect(body).toContain("event: token"); // refusal text
+    expect(body).toContain("ERAN 1201");
+    expect(body).not.toContain("I can only help with topics");
     expect(body).toContain("event: done");
     expect(body).not.toContain("event: sources");
+    expect(fetchSpy).toHaveBeenCalled();
   });
 
   it("drops an English-langId hit for a lang:he request when Hebrew hits exist", async () => {

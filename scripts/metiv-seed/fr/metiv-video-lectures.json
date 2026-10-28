@@ -1,0 +1,21 @@
+{
+  "key": "VIDEO_LECTURES",
+  "slug": "metiv-video-lectures",
+  "kind": "single",
+  "rows": [
+    {
+      "_key": "VIDEO_LECTURES",
+      "title": "VIDEO_LECTURES",
+      "sortOrder": 0,
+      "content": {
+        "_key": "VIDEO_LECTURES",
+        "_col": "metiv-video-lectures",
+        "id": "video-lectures",
+        "title": "Conférences vidéo",
+        "text": "Des conférences filmées des équipes de Metiv sont publiées sur la chaîne YouTube de Metiv.",
+        "linkLabel": "Accéder à la chaîne YouTube de Metiv",
+        "url": "https://www.youtube.com/channel/UCBKOBQp0BFFp7uX9qiwUp8w"
+      }
+    }
+  ]
+}
