@@ -27,8 +27,9 @@ describe("METIV_COLLECTION_KEYS", () => {
 });
 
 describe("isIndexable", () => {
-  it("keeps PTSD-IL rows and rows with no category", () => {
+  it("keeps PTSD-IL rows (legal included) and rows with no category", () => {
     expect(isIndexable(it_(["rights"]))).toBe(true);
+    expect(isIndexable(it_(["legal"]))).toBe(true);
     expect(isIndexable({})).toBe(true);
     expect(isIndexable({ categorySlug: "community" })).toBe(true);
   });
@@ -41,9 +42,19 @@ describe("isIndexable", () => {
   it("keeps a Metiv row only when one of its collections is chatbot-flagged", () => {
     expect(isIndexable(it_(["metiv", "metiv-services"]))).toBe(true);
     expect(isIndexable(it_(["metiv-veterans", "metiv"]))).toBe(true);
-    expect(isIndexable(it_(["metiv", "metiv-courses"]))).toBe(false);
+    for (const s of ["metiv-courses", "metiv-events", "metiv-papers", "metiv-team", "metiv-about", "metiv-legal-docs", "metiv-therapist-hub"]) {
+      expect(isIndexable(it_(["metiv", s]))).toBe(true);
+    }
+    expect(isIndexable(it_(["metiv", "metiv-nav"]))).toBe(false);
     expect(isIndexable(it_(["metiv"]))).toBe(false);
-    expect(isIndexable(it_(["metiv-team"]))).toBe(false); // child without the parent is still Metiv
+    expect(isIndexable(it_(["metiv-route-meta"]))).toBe(false); // child without the parent is still Metiv
+  });
+
+  it("leaves only navigation and taxonomy collections out", async () => {
+    const url = new URL("../../src/pages/metiv-demos/v3/content/registry.js", (import.meta as unknown as { url: string }).url).href;
+    const reg = (await import(url)) as { COLLECTIONS: Array<{ key: string; slug: string }> };
+    const out = reg.COLLECTIONS.filter((c) => !METIV_CHATBOT_SLUGS.includes(c.slug)).map((c) => c.key).sort();
+    expect(out).toEqual(["COURSE_CATEGORIES", "NAV", "NEXT_STEPS", "PAPER_TOPICS", "PATIENT_NAV", "ROUTE_META", "TEAM_GROUPS"]);
   });
 
   it("isQaItem matches chatbot-qa only", () => {
@@ -61,7 +72,7 @@ describe("reindexItem on an excluded row", () => {
   it("deletes its vectors and upserts nothing", async () => {
     const v = vectorizeMock();
     const env = { AI: aiMock(), VECTORIZE: v } as any;
-    const item: Item = { id: "c1", groupId: "g", type: "article", langId: "he", title: "קורס", content: JSON.stringify({ body: "טקסט" }), ...it_(["metiv", "metiv-courses"]) };
+    const item: Item = { id: "c1", groupId: "g", type: "article", langId: "he", title: "תפריט", content: JSON.stringify({ label: "טקסט" }), ...it_(["metiv", "metiv-nav"]) };
     expect(await reindexItem(env, item)).toEqual({ upserted: 0 });
     expect(v.deleteByIds).toHaveBeenCalledTimes(1);
     expect(v.upsert).not.toHaveBeenCalled();
@@ -79,7 +90,8 @@ describe("reindexAll exclusions + QA index", () => {
     const articles = [
       row("ptsd", ["rights"], { answer: "זכויות" }),
       row("svc", ["metiv", "metiv-services"], { _key: "svc-key", title: "טיפול", $ref: "X#y", body: "שירות" }),
-      row("course", ["metiv", "metiv-courses"], { body: "קורס" }),
+      row("course", ["metiv", "metiv-courses"], { _key: "cbt-trauma", slug: "cbt-trauma", body: "קורס" }),
+      row("nav", ["metiv", "metiv-nav"], { label: "תפריט" }),
       row("copy", ["metiv", "metiv-copy"], { hello: "שלום" }),
       row("log", ["admin-log"], { entry: "edit" }),
       row("qa", ["chatbot-qa"], { question: "איך מקבלים טיפול?", paraphrases: ["איפה יש טיפול?"], guidance: "קודם X ואז Y", crisis: false }),
@@ -94,7 +106,10 @@ describe("reindexAll exclusions + QA index", () => {
 
     const upserted = (v.upsert.mock.calls[0] as unknown[])[0] as Array<{ id: string; metadata: any }>;
     const ids = new Set(upserted.map((r) => r.metadata.itemId));
-    expect([...ids].sort()).toEqual(["ptsd", "svc"]);
+    expect([...ids].sort()).toEqual(["course", "ptsd", "svc"]);
+    const course = upserted.find((r) => r.metadata.itemId === "course")!;
+    expect(course.metadata.key).toBe("cbt-trauma"); // `_key` in metadata, for chip deep links
+    expect(upserted.find((r) => r.metadata.itemId === "ptsd")!.metadata.key).toBeUndefined();
     const svc = upserted.find((r) => r.metadata.itemId === "svc")!;
     expect(svc.metadata.categorySlug).toBe("metiv-services");
     expect(svc.metadata.categorySlugs).toEqual(["metiv", "metiv-services"]);
@@ -102,8 +117,8 @@ describe("reindexAll exclusions + QA index", () => {
     expect(svc.metadata.text).not.toContain("X#y"); // $ref skipped
 
     const deleted = (v.deleteByIds.mock.calls.flat() as string[][]).flat();
-    for (const id of ["course", "copy", "log", "qa"]) expect(deleted).toContain(`${id}:0`);
-    expect(deleted.some((d) => d.startsWith("ptsd:") || d.startsWith("svc:"))).toBe(false);
+    for (const id of ["nav", "copy", "log", "qa"]) expect(deleted).toContain(`${id}:0`);
+    expect(deleted.some((d) => d.startsWith("ptsd:") || d.startsWith("svc:") || d.startsWith("course:"))).toBe(false);
 
     expect(out).toMatchObject({ excluded: 4, qa: 1 });
     const qa = JSON.parse(rl.store.get(QA_INDEX_KEY)!);
@@ -178,7 +193,7 @@ describe("Metiv $ref resolution during ingest", () => {
 
     expect(fetchSpy).toHaveBeenCalledTimes(2); // articles + communities, no extra ref fetch
     const rows = (v.upsert.mock.calls[0] as unknown[])[0] as Array<{ metadata: any }>;
-    expect(rows.some((r) => r.metadata.itemId.startsWith("team-"))).toBe(false); // TEAM itself stays unindexed
+    expect(rows.some((r) => r.metadata.itemId.startsWith("team-"))).toBe(true); // TEAM is indexed on its own too
     const he = rows.find((r) => r.metadata.itemId === "rj-he")!.metadata.text;
     expect(he).toContain("רכז פניות");
     expect(he).toContain("מנהלת מסע שחרור");

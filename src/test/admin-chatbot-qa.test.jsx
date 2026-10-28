@@ -116,8 +116,8 @@ async function openPtsd() {
 async function openMetiv() {
   renderAdmin({ variant: 'metiv' });
   fireEvent.click(screen.getByRole('button', { name: 'עריכת תוכן' }));
-  fireEvent.click(await screen.findByRole('button', { name: 'מטופלים' }));
-  const nav = screen.getByRole('navigation', { name: 'הסעיפים של מטופלים' });
+  const nav = await screen.findByRole('navigation', { name: 'עמודי האתר' });
+  fireEvent.click(within(nav).getByRole('button', { name: 'כלים' }));
   fireEvent.click(within(nav).getByRole('button', { name: SECTION }));
   return nav;
 }
@@ -180,9 +180,9 @@ describe('chatbot Q&A admin', () => {
     expect(screen.getByText('3 פריטים')).toBeInTheDocument(); // Hebrew rows only
   });
 
-  it('lists the questions in the Metiv variant, under its own heading in the patient group', async () => {
+  it('lists the questions in the Metiv variant, as a page of the tools at the end of the tree', async () => {
     const nav = await openMetiv();
-    expect(within(nav).getByText('צ׳אטבוט (משותף לשני האתרים)')).toBeInTheDocument();
+    expect(within(nav).getByRole('button', { name: SECTION })).toHaveAttribute('aria-current', 'page');
     expect(await card(Q1.question)).toBeTruthy();
     expect(within(await card(CRISIS.question)).getByText('שאלת חירום')).toBeInTheDocument();
   });

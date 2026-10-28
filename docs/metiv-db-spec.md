@@ -93,11 +93,22 @@ only when the page renders it through `DemoMarkdown`/`Markdown`. Seed files:
 `/metiv-site-demo-v3/admin` renders the shared admin (`AdminGate` / `Admin.jsx`)
 in Metiv mode. `/admin` keeps working for PTSD-IL.
 
-- Three top-level groups: **כללי / על מטיב**, **מטופלים**, **מטפלים**.
-  The patient group holds the 9 existing PTSD-IL panels plus the patient-area
-  Metiv collections. Metiv collections and copy namespaces are edited with one
-  generic, schema-less JSON editor (strings, long text/Markdown, string lists,
-  repeatable object lists with add/remove/reorder, numbers, booleans).
+- A page tree that mirrors the site (`src/components/admin/metivSiteMap.js`):
+  the general pages, the patient area in menu order, the professional area in
+  tab order (a page per course and per article), then the chatbot Q&A, users and
+  the edit log. Each node is one site page and lists its sections in site
+  order: Metiv collections (or the part of a singleton that page shows), the
+  page's editable texts, the PTSD-IL panels it shows, and pointers to data edited
+  on its main page. מסע שחרור is one page for both areas. A search box above the
+  tree searches every editable text of the current language and opens the item.
+  The page is in the URL (`?page=`).
+- Content only: of a copy namespace only the content keys
+  (`copyContentKeys.js`) are editable; collection fields hide ids, routes, icons,
+  category keys, provenance and layout headings (`metivFieldRules.js`). NAV,
+  PATIENT_NAV, ROUTE_META, NEXT_STEPS, COURSE_CATEGORIES, PAPER_TOPICS and
+  TEAM_GROUPS are not edited. Everything is edited with one generic, schema-less
+  JSON editor (strings, long text/Markdown, string lists, repeatable object
+  lists with add/remove/reorder, numbers, booleans, selects, dates).
 - Every write goes through the existing staged flow (`PendingChanges`,
   review-and-save dialog, edit log).
 - Language tabs (he default, ar, en, ru, fr). Editing a non-Hebrew row writes
@@ -147,11 +158,19 @@ used.
 
 ## 5. Chatbot
 
-- General Vectorize index: excludes `admin-log`, `site-copy`, `legal`,
-  `chatbot-qa`, and every `metiv` row whose collection is not flagged
-  `chatbot: true` in the registry (patient-facing services, programs, Metiv
-  contact info and the patient release-journey page are indexed; courses,
-  events, papers, team, page copy and legal are not).
+- General Vectorize index: excludes `admin-log`, `site-copy`, `chatbot-qa`,
+  `metiv-copy` (UI strings), and every `metiv` row whose collection is not
+  flagged `chatbot: true` in the registry. Every collection of all three areas
+  is flagged (courses, events, papers, books, studies, team, about, partners,
+  programs, supervision, legal docs, accessibility, donate, the hubs and the
+  rest) except pure navigation and taxonomy: `NAV`, `PATIENT_NAV`, `ROUTE_META`,
+  `NEXT_STEPS`, `TEAM_GROUPS`, `COURSE_CATEGORIES`, `PAPER_TOPICS`. The PTSD-IL
+  `legal` rows (privacy policy, terms of use) are indexed too. Every chunk starts
+  with the row's title; a Metiv row's `_key` goes into the vector metadata as
+  `key`, for chip deep links (docs/chatbot-guide.md section 14).
+- The chat request carries the site area (`patient` / `therapist` / `metiv`)
+  so the bot answers survivors and professionals in their own register
+  (docs/chatbot-guide.md section 2).
 - Curated Q&A: category `chatbot-qa` (top level), one row per question per
   language, content `{ question, paraphrases: string[], guidance, answer?,
   crisis: boolean }`. `guidance` says what a good answer contains and in which

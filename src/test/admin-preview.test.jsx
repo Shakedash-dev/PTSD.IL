@@ -48,6 +48,11 @@ describe('admin preview: safety', () => {
       'preview-admin@example.org',
       'cat-ptsd-info',
       '\u05EA\u05D5\u05DB\u05DF \u05DC\u05D3\u05D5\u05D2\u05DE\u05D4', // "sample content"
+      // The live read-only mode and the pasted-token sign-in.
+      'adminLiveRead',
+      'previewTranslate',
+      '\u05D4\u05EA\u05D7\u05D1\u05E8\u05D5\u05EA \u05E2\u05DD \u05D8\u05D5\u05E7\u05DF', // "sign in with a token"
+      '\u05DC\u05E7\u05E8\u05D9\u05D0\u05D4 \u05D1\u05DC\u05D1\u05D3', // "read-only"
     ]) {
       expect(bundle.includes(needle), `production bundle contains "${needle}"`).toBe(false);
     }

@@ -5,6 +5,7 @@ import { handleChat } from "./lib/chat";
 import { verifyAdmin, verifyAdminCached, tokenHash } from "./lib/auth";
 import { checkLimit } from "./lib/ratelimit";
 import { translate, validateTranslateRequest } from "./lib/translate";
+import { parseArea } from "./lib/prompt";
 
 export type Env = {
   AI: Ai;
@@ -18,6 +19,7 @@ export type Env = {
   TRANSLATE_MODEL?: string;
   QA_STRONG?: string; // playbook "follow it" cosine threshold, default 0.80
   QA_WEAK?: string; // playbook "possibly relevant" threshold, default 0.72
+  QA_INDEX_KEY?: string; // KV key of the playbook index, default qa:index:v1 (staging sets its own)
 };
 
 // Per admin token. One Hebrew save sends 4 requests (one per target language),
@@ -79,9 +81,10 @@ app.post("/translate", async (c) => {
 });
 
 app.post("/chat", async (c) => {
-  const body = await c.req.json<{ messages: { role: "user" | "assistant"; content: string }[]; lang: string; sessionId: string }>();
+  const body = await c.req.json<{ messages: { role: "user" | "assistant"; content: string }[]; lang: string; sessionId: string; area?: unknown }>();
   if (!(await checkLimit(c.env, body.sessionId))) return c.json({ error: "rate_limited" }, 429);
-  return handleChat(c.env, body);
+  // `area` is optional (older clients, the mobile app): unknown values are dropped.
+  return handleChat(c.env, { ...body, area: parseArea(body.area) });
 });
 
 export default app;

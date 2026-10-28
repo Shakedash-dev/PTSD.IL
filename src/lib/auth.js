@@ -88,20 +88,66 @@ export function getClaims() {
 }
 
 // Token present AND not expired (exp is seconds since epoch, per JWT spec).
-export function isAuthenticated() {
-  // Local design preview opens the panel with no session - see
-  // src/lib/adminPreview.js. Compiled out of production builds.
-  if (ADMIN_PREVIEW) return true;
+function hasLiveSession() {
   const claims = getClaims();
   if (!claims || typeof claims.exp !== 'number') return false;
   return claims.exp * 1000 > Date.now();
+}
+
+// The dev server's read-only view of the live data (src/lib/adminPreview.js):
+// on unless a pasted admin token is in the session (loginWithToken below).
+// Every call site keeps the literal `ADMIN_PREVIEW &&` in front, so a
+// production build folds it to false and drops the branch.
+export function inReadOnlyPreview() {
+  return ADMIN_PREVIEW && !hasLiveSession();
+}
+
+// Dev server only: the panel signed in with an admin JWT pasted by hand (the
+// owner copies sessionStorage ptsd_admin_token from the signed-in deployed
+// admin). Saves then go to the live API like on the deployed site.
+export function inDevTokenSession() {
+  return ADMIN_PREVIEW && hasLiveSession();
+}
+
+const SESSION_ROLES = ['admin', 'moderator', 'masteradmin'];
+
+/**
+ * Dev server only (Google sign-in does not work on localhost): sign in with a
+ * pasted admin JWT. Checks its shape, expiry and roles client-side only - the
+ * backend re-checks it on every call, as always.
+ * @param {string} raw
+ */
+export function loginWithToken(raw) {
+  if (!ADMIN_PREVIEW) throw new Error('token sign-in exists only on a dev server');
+  const token = String(raw || '').trim().replace(/^Bearer\s+/i, '').replace(/^"|"$/g, '');
+  const previous = getToken();
+  sessionStorage.setItem(TOKEN_KEY, token);
+  const claims = getClaims();
+  let error = '';
+  if (!claims) error = 'זה לא נראה כמו טוקן JWT';
+  else if (typeof claims.exp !== 'number' || claims.exp * 1000 <= Date.now()) error = 'פג תוקף הטוקן. יש להעתיק טוקן חדש מממשק הניהול באתר החי';
+  else if (!(claims.roles || []).some(r => SESSION_ROLES.includes(r))) error = 'לטוקן הזה אין הרשאת עריכה';
+  if (error) {
+    if (previous) sessionStorage.setItem(TOKEN_KEY, previous);
+    else sessionStorage.removeItem(TOKEN_KEY);
+    throw new Error(error);
+  }
+  notifyAuthChange();
+  return { ok: true };
+}
+
+export function isAuthenticated() {
+  // The dev server opens the panel with no session - see
+  // src/lib/adminPreview.js. Compiled out of production builds.
+  if (ADMIN_PREVIEW && inReadOnlyPreview()) return true;
+  return hasLiveSession();
 }
 
 // Roles are exact-match per docs/api.md - article CRUD needs admin/moderator.
 const ADMIN_PANEL_ROLES = ['admin', 'moderator'];
 
 export function hasAdminAccess() {
-  if (ADMIN_PREVIEW) return true;
+  if (ADMIN_PREVIEW && inReadOnlyPreview()) return true;
   if (!isAuthenticated()) return false;
   const roles = getClaims()?.roles || [];
   return roles.some(r => ADMIN_PANEL_ROLES.includes(r));
@@ -115,7 +161,7 @@ export function hasAdminAccess() {
 const USER_MANAGEMENT_ROLES = ['masteradmin'];
 
 export function hasUserManagementAccess() {
-  if (ADMIN_PREVIEW) return true;
+  if (ADMIN_PREVIEW && inReadOnlyPreview()) return true;
   if (!isAuthenticated()) return false;
   const roles = getClaims()?.roles || [];
   return roles.some(r => USER_MANAGEMENT_ROLES.includes(r));

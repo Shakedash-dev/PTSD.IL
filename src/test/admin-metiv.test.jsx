@@ -3,7 +3,7 @@ import { screen, waitFor, fireEvent, cleanup, within } from '@testing-library/re
 import coursesSeed from '../../scripts/metiv-seed/he/metiv-courses.json';
 import orgSeed from '../../scripts/metiv-seed/he/metiv-org.json';
 import { applyLeaves, extractLeaves } from '@/lib/translatable';
-import { COLLECTIONS, AREA_LABELS } from '@/pages/metiv-demos/v3/content/registry';
+import { COLLECTIONS } from '@/pages/metiv-demos/v3/content/registry';
 import { renderAdmin } from './renderAdmin';
 
 // /metiv-site-demo-v3/admin against an in-memory API (with the live API's
@@ -124,16 +124,24 @@ const translateFor = target => translateCalls.find(c => c.target === target);
 
 // ─── UI helpers ──────────────────────────────────────────────────────────────
 
-async function openSection(group, label) {
+/** Opens a page of the tree: expands every collapsed area and parent, then picks the page. */
+async function openPage(label) {
   fireEvent.click(screen.getByRole('button', { name: 'עריכת תוכן' }));
-  fireEvent.click(await screen.findByRole('button', { name: group }));
-  const nav = screen.getByRole('navigation', { name: `הסעיפים של ${group}` });
-  fireEvent.click(within(nav).getByRole('button', { name: label }));
+  const nav = await screen.findByRole('navigation', { name: 'עמודי האתר' });
+  await waitFor(() => {
+    for (let collapsed = within(nav).queryAllByRole('button', { expanded: false }); collapsed.length; collapsed = within(nav).queryAllByRole('button', { expanded: false })) {
+      for (const b of collapsed) fireEvent.click(b);
+    }
+    expect(within(nav).getAllByRole('button', { name: label }).length).toBeGreaterThan(0);
+  });
+  fireEvent.click(within(nav).getAllByRole('button', { name: label }).find(b => b.hasAttribute('aria-pressed')));
+  return nav;
 }
 
+/** An item card in the page (not the tree entry of the same name). */
 async function card(title) {
-  const el = await screen.findByText(title, {}, { timeout: 4000 });
-  return el.closest('.relative');
+  await screen.findAllByText(title, {}, { timeout: 4000 });
+  return screen.getAllByText(title).map(el => el.closest('section') && el.closest('.relative')).find(Boolean);
 }
 
 async function editSyllabusTitle(newText) {
@@ -182,32 +190,30 @@ describe('metiv admin', () => {
     localStorage.clear();
   });
 
-  it('shows the three groups, with the registry sections and the PTSD-IL panels under patients', async () => {
+  it('shows the site as a tree, each page with its sections in site order, the current page in the URL', async () => {
     renderAdmin({ variant: 'metiv' });
-    fireEvent.click(screen.getByRole('button', { name: 'עריכת תוכן' }));
-    const groups = screen.getByRole('group', { name: 'אזורי התוכן' });
-    expect(within(groups).getAllByRole('button').map(b => b.textContent)).toEqual(Object.values(AREA_LABELS));
-
-    for (const area of ['general', 'patient', 'therapist']) {
-      fireEvent.click(within(groups).getByRole('button', { name: AREA_LABELS[area] }));
-      const nav = screen.getByRole('navigation', { name: `הסעיפים של ${AREA_LABELS[area]}` });
-      for (const c of COLLECTIONS.filter(x => x.area === area)) {
-        expect(within(nav).getByRole('button', { name: c.label })).toBeInTheDocument();
-      }
-      if (area === 'patient') {
-        expect(within(nav).getByRole('button', { name: 'שאלות PTSD' })).toBeInTheDocument();
-        expect(within(nav).getByRole('button', { name: 'שאלון PCL-5' })).toBeInTheDocument();
-      } else {
-        expect(within(nav).queryByRole('button', { name: 'שאלות PTSD' })).toBeNull();
-      }
-    }
-    // The language tabs sit above the groups.
+    const nav = await openPage('איפה מקבלים טיפול');
+    // The three areas, then the tools.
+    const text = nav.textContent;
+    const at = ['מטיב: דף הבית ועמודים כלליים', 'אזור המטופלים והמשפחות', 'אזור אנשי הטיפול והמקצוע', 'צ׳אטבוט: שאלות ותשובות מוכנות'].map(a => text.indexOf(a));
+    expect(at.every(i => i >= 0)).toBe(true);
+    expect([...at].sort((a, b) => a - b)).toEqual(at);
+    expect(await screen.findByRole('heading', { level: 2, name: 'איפה מקבלים טיפול' })).toBeInTheDocument();
+    const sections = screen.getAllByRole('region').map(r => r.getAttribute('aria-label'));
+    expect(sections).toEqual(['טקסטים בעמוד', 'תיבת "בקצרה"', 'המערכת הציבורית', 'עמותות וקווי סיוע', 'מרפאות ותוכניות של מטיב', 'לא בטוחים אם לפנות?']);
+    expect(within(nav).getByRole('button', { name: 'איפה מקבלים טיפול' })).toHaveAttribute('aria-current', 'page');
+    // A shared item points to its main page instead of a second editor.
+    fireEvent.click(within(nav).getByRole('button', { name: 'זכויות' }));
+    expect(await screen.findByText('תוכניות מטיב בלשונית כוחות הביטחון')).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: /עריכה בעמוד איפה מקבלים טיפול/ }));
+    expect(await screen.findByRole('heading', { level: 2, name: 'איפה מקבלים טיפול' })).toBeInTheDocument();
+    // The language tabs sit above the tree.
     expect(screen.getByRole('group', { name: 'שפת העריכה' })).toBeInTheDocument();
   });
 
   it('a nested course edit stages one change with a readable before/after, and translates only that leaf', async () => {
     renderAdmin({ variant: 'metiv' });
-    await openSection('מטפלים', 'קורסים והכשרות');
+    await openPage('קורסים והכשרות');
     await editSyllabusTitle('שנה א - טראומה פשוטה');
 
     expect(await screen.findByText('שינוי אחד ממתין לשמירה')).toBeInTheDocument();
@@ -217,7 +223,7 @@ describe('metiv admin', () => {
         source: 'he',
         target,
         items: { 'syllabus.0.title': 'שנה א - טראומה פשוטה' },
-        context: 'מטפלים / קורסים והכשרות: הכשרה לטיפול CBT בטראומה',
+        context: 'אזור אנשי הטיפול והמקצוע / קורסים והכשרות / קורסים והכשרות: הכשרה לטיפול CBT בטראומה',
       });
       expect(Object.keys(translateFor(target).items)).toEqual(['syllabus.0.title']);
       expect(translateFor(target).headers.Authorization).toBe('Bearer tok');
@@ -237,7 +243,7 @@ describe('metiv admin', () => {
 
   it('saves the Hebrew row and the translated siblings with the right PATCH bodies', async () => {
     renderAdmin({ variant: 'metiv' });
-    await openSection('מטפלים', 'קורסים והכשרות');
+    await openPage('קורסים והכשרות');
     await editSyllabusTitle('שנה א - טראומה פשוטה');
     await confirmSave(await openReview());
 
@@ -262,7 +268,7 @@ describe('metiv admin', () => {
 
   it('asks before overwriting a hand-edited language; yes by default, unticking drops it', async () => {
     renderAdmin({ variant: 'metiv' });
-    await openSection('מטפלים', 'קורסים והכשרות');
+    await openPage('קורסים והכשרות');
     await editSyllabusTitle('שנה א - טראומה פשוטה');
     const review = await openReview();
     const ask = within(review.dialog).getByRole('checkbox', { name: /אנגלית נערך ידנית - לתרגם מחדש\?/ });
@@ -281,7 +287,7 @@ describe('metiv admin', () => {
 
   it('adds a list item with a fresh _key, the next sortOrder and both categories, and creates its translations', async () => {
     renderAdmin({ variant: 'metiv' });
-    await openSection('מטפלים', 'קורסים והכשרות');
+    await openPage('קורסים והכשרות');
     await card(COURSE_1.title);
     fireEvent.click(screen.getByRole('button', { name: /הוספת פריט חדש/ }));
     fireEvent.change(screen.getByLabelText('כותרת'), { target: { value: 'קורס Trauma Basics' } });
@@ -310,7 +316,7 @@ describe('metiv admin', () => {
 
   it('deleting a Hebrew item stages the deletion of every translation too', async () => {
     renderAdmin({ variant: 'metiv' });
-    await openSection('מטפלים', 'קורסים והכשרות');
+    await openPage('קורסים והכשרות');
     fireEvent.click(within(await card(COURSE_1.title)).getByTitle('מחיקה'));
     expect(screen.getByText('יימחק בשמירה')).toBeInTheDocument();
     const review = await openReview();
@@ -324,7 +330,7 @@ describe('metiv admin', () => {
 
   it('reorders list items by PATCHing sortOrder only, on every language', async () => {
     renderAdmin({ variant: 'metiv' });
-    await openSection('מטפלים', 'קורסים והכשרות');
+    await openPage('קורסים והכשרות');
     fireEvent.click(within(await card(COURSE_2.title)).getByTitle('הזזה למעלה'));
     const review = await openReview();
     expect(within(review.dialog).getByText('סדר הפריטים', { selector: 'span' })).toBeInTheDocument();
@@ -337,7 +343,7 @@ describe('metiv admin', () => {
 
   it('a nested list inside an item can be added to, removed from and reordered', async () => {
     renderAdmin({ variant: 'metiv' });
-    await openSection('מטפלים', 'קורסים והכשרות');
+    await openPage('קורסים והכשרות');
     fireEvent.click(within(await card(COURSE_1.title)).getByTitle('עריכה'));
     const tags = screen.getByText('תגיות').closest('fieldset');
     // Move the second tag up, drop the last one, add a new one.
@@ -362,8 +368,7 @@ describe('metiv admin', () => {
     renderAdmin({ variant: 'metiv' });
     fireEvent.click(screen.getByRole('button', { name: 'עריכת תוכן' }));
     fireEvent.click(within(screen.getByRole('group', { name: 'שפת העריכה' })).getByRole('button', { name: 'ערבית' }));
-    fireEvent.click(screen.getByRole('button', { name: 'מטפלים' }));
-    fireEvent.click(within(screen.getByRole('navigation', { name: 'הסעיפים של מטפלים' })).getByRole('button', { name: 'קורסים והכשרות' }));
+    await openPage('קורסים והכשרות');
     const arTitle = `[ar] ${COURSE_1.title}`;
     fireEvent.click(within(await card(arTitle)).getByTitle('עריכה'));
     // A translation keeps the Hebrew structure: no adding or reordering here.
@@ -388,7 +393,7 @@ describe('metiv admin', () => {
     const ok = translateImpl;
     translateImpl = body => (body.target === 'ru' ? new Response('boom', { status: 500 }) : ok(body));
     renderAdmin({ variant: 'metiv' });
-    await openSection('מטפלים', 'קורסים והכשרות');
+    await openPage('קורסים והכשרות');
     await editSyllabusTitle('שנה א - טראומה פשוטה');
     const review = await openReview();
     expect(within(review.dialog).getByText(/רוסית: התרגום נכשל/)).toBeInTheDocument();
@@ -417,25 +422,30 @@ describe('metiv admin', () => {
 
   it('a singleton is one form, labelled in Hebrew, staged and translated like a list item', async () => {
     renderAdmin({ variant: 'metiv' });
-    await openSection('כללי / על מטיב', 'פרטי הארגון ויצירת קשר');
-    const tagline = await screen.findByLabelText('סלוגן', {}, { timeout: 4000 });
-    expect(tagline).toHaveValue(orgSeed.rows[0].content.tagline);
-    fireEvent.change(tagline, { target: { value: 'אחרי טראומה, יחד' } });
+    await openPage('יצירת קשר');
+    const address = await screen.findByLabelText('כתובת', {}, { timeout: 4000 });
+    expect(address).toHaveValue(orgSeed.rows[0].content.address);
+    // Only this page's part of ORG: the about texts are edited on the home page.
+    expect(screen.queryByDisplayValue(orgSeed.rows[0].content.vision)).toBeNull();
+    fireEvent.change(address, { target: { value: 'גבעת שאול, ירושלים' } });
     fireEvent.click(screen.getByRole('button', { name: 'אישור' }));
     await waitFor(() => expect(translateCalls).toHaveLength(4));
     // No sibling exists: everything translatable goes, the "ORG" row title does not.
-    expect(translateFor('ru').items).toMatchObject({ tagline: 'אחרי טראומה, יחד' });
+    expect(translateFor('ru').items).toMatchObject({ address: 'גבעת שאול, ירושלים' });
     expect(translateFor('ru').items).not.toHaveProperty('@title');
     await confirmSave(await openReview());
     const ws = articleWrites();
-    expect(ws.find(w => w.path === '/admin/articles/org').body.title).toBe('ORG');
+    const he = ws.find(w => w.path === '/admin/articles/org');
+    expect(he.body.title).toBe('ORG');
+    // The fields this page does not show are saved unchanged.
+    expect(JSON.parse(he.body.content)).toMatchObject({ vision: orgSeed.rows[0].content.vision, tagline: orgSeed.rows[0].content.tagline });
     const ru = ws.find(w => w.method === 'POST' && w.body.langId === 'ru');
     expect(ru.body).toMatchObject({ groupId: 'g-org', title: 'ORG', categoryIds: ['cat-metiv', 'cat-metiv-org'] });
   });
 
   it('a PTSD-IL panel Hebrew edit translates its siblings too, at the content level', async () => {
     renderAdmin({ variant: 'metiv' });
-    await openSection('מטופלים', 'שאלות PTSD');
+    await openPage('מה זה פוסט-טראומה');
     const faq = (await screen.findByText('מהי הפרעת דחק?', {}, { timeout: 4000 })).closest('.group');
     fireEvent.click(within(faq).getByTitle('עריכה'));
     fireEvent.change(screen.getByDisplayValue('מהי הפרעת דחק?'), { target: { value: 'מהי הפרעת דחק פוסט-טראומטית?' } });

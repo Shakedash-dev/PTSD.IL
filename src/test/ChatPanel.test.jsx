@@ -199,6 +199,24 @@ describe("ChatPanel", () => {
     expect(chip).toHaveAttribute("href", "/metiv-site-demo-v3/patient/community");
   });
 
+  it("deep-links a cited course chip by its key, and labels a legal document by its page", () => {
+    setChat({
+      messages: [{
+        role: "assistant",
+        content: "A fact.[[1]][[2]]",
+        sources: [
+          { n: 1, itemId: "c", groupId: "gc", type: "article", categorySlug: "metiv-courses", categorySlugs: ["metiv", "metiv-courses"], key: "cbt-trauma", langId: "he", title: "CBT", text: "x" },
+          { n: 2, itemId: "l", groupId: "gl", type: "article", categorySlug: "metiv-legal-docs", categorySlugs: ["metiv", "metiv-legal-docs"], key: "LEGAL_DOCS", section: "terms", langId: "he", title: "LEGAL_DOCS", text: "y" },
+        ],
+      }],
+      crisisLang: null,
+    });
+    render(<MemoryRouter><ChatPanel /></MemoryRouter>);
+    expect(screen.getByText("CBT").closest("a")).toHaveAttribute("href", "/metiv-site-demo-v3/therapist/courses/cbt-trauma");
+    expect(screen.getByText("terms_of_use").closest("a")).toHaveAttribute("href", "/metiv-site-demo-v3/terms-of-use");
+    expect(screen.queryByText("LEGAL_DOCS")).toBeNull();
+  });
+
   it("shows no chips when no sources were cited", () => {
     setChat({
       messages: [{

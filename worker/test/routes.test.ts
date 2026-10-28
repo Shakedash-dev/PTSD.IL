@@ -51,6 +51,25 @@ describe("/chat route", () => {
     expect(sources[0].text).toBe("grounded");
   });
 
+  it("passes a known `area` to the prompt and ignores an unknown or missing one", async () => {
+    const prompts: string[] = [];
+    vi.spyOn(globalThis, "fetch").mockImplementation(async (_u: any, init: any) => {
+      prompts.push(JSON.parse(init.body).systemInstruction.parts[0].text);
+      return geminiSSE("hi");
+    });
+    for (const area of ["therapist", "bogus", undefined]) {
+      const res = await app.request("/chat", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ messages: [{ role: "user", content: "x" }], lang: "en", sessionId: `a-${area}`, ...(area ? { area } : {}) }),
+      }, baseEnv());
+      await readSSE(res);
+    }
+    expect(prompts[0]).toMatch(/area for mental-health professionals/);
+    expect(prompts[1]).toMatch(/Judge from the question/);
+    expect(prompts[2]).toMatch(/Judge from the question/);
+  });
+
   it("returns 429 when the session is already over the rate limit", async () => {
     const res = await app.request("/chat", {
       method: "POST",

@@ -3,6 +3,7 @@ import { Outlet, useLocation } from 'react-router-dom';
 import { ArrowRight, GraduationCap, HeartHandshake, LifeBuoy, LogOut, Menu, MessageCircle, Phone } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
+import ChatbotFAB from '@/components/ChatbotFAB';
 import { DemoLink } from '@/pages/metiv-demos/shared/DemoChrome';
 import { ROUTES } from '@/pages/metiv-demos/shared/routes';
 import { useLang } from '@/lib/LanguageContext';
@@ -330,7 +331,11 @@ function AreaNav({ area }) {
 
 // ── Footer ──────────────────────────────────────────────────────────────────
 
-/** The site footer, used by every part of V3 (Metiv pages, patient area, therapist area). */
+/**
+ * The site footer, used by every part of V3 (Metiv pages, patient area, therapist area).
+ * The extra bottom padding keeps its last line clear of the chat button
+ * (ChatbotFAB, fixed at the bottom-left corner) when scrolled to the end.
+ */
 export function Footer() {
   const c = useCopy('chrome');
   const { ORG, PATIENT_HUB, ROUTE_META } = useMetiv();
@@ -338,7 +343,7 @@ export function Footer() {
   return (
     <footer className="bg-muted text-foreground border-t border-border">
       <div>
-        <div className="max-w-6xl mx-auto px-5 sm:px-8 pt-8 pb-10 grid gap-8 md:grid-cols-[minmax(0,1fr)_auto]">
+        <div className="max-w-6xl mx-auto px-5 sm:px-8 pt-8 pb-24 grid gap-8 md:grid-cols-[minmax(0,1fr)_auto]">
           <div className="space-y-3">
             <img src={LOGO} alt={c.brand} className="h-12 w-auto" />
             <p className="text-sm text-muted-foreground">{fmt(c.footerOrg, { name: ORG.name, legalEntity: ORG.legalEntity, address: ORG.address })}</p>
@@ -381,7 +386,12 @@ function SkipLink() {
 
 // ── Shells ──────────────────────────────────────────────────────────────────
 
-/** Page shell for the Metiv general pages and the two areas. @param {{ area: Area }} props */
+/**
+ * Page shell for the Metiv general pages and the therapist area (the patient
+ * area has its own layout). Both carry the chat button, in the same corner as
+ * the patient area's.
+ * @param {{ area: Area }} props
+ */
 export function SiteShell({ area }) {
   const { pathname } = useLocation();
   const { key } = resolveRoute(pathname);
@@ -404,6 +414,7 @@ export function SiteShell({ area }) {
         )}
       </main>
       <Footer />
+      <ChatbotFAB />
     </div>
   );
 }

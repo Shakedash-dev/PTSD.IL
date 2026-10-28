@@ -127,3 +127,7 @@ Batch 21 (3 changes):
 
 ### Verdict
 Publication-grade after these fixes. Old and new strings of each row now read consistently, and the crisis rows are safe.
+
+## Batch 22
+
+3 strings reviewed (therapist-courses guidance, who-are-you guidance + answer), 0 changed. The translations change only the lines the Hebrew changed (course-specific questions answered from SOURCES; privacy parenthetical dropped; "or in SOURCES"; answer now mentions Metiv's courses for professionals). Page names, phone numbers and terminology match the existing en rows. Check: 0 errors.

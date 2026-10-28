@@ -9,7 +9,7 @@
 // Which strings are text, and how a translation is written back, comes from
 // src/lib/translatable.js, shared with the one-time bulk translation scripts.
 
-import { getToken } from '@/lib/auth';
+import { getToken, inReadOnlyPreview } from '@/lib/auth';
 import { ADMIN_PREVIEW } from '@/lib/adminPreview';
 import { applyLeaves, changedLeaves, extractLeaves, TITLE_PATH } from '@/lib/translatable';
 
@@ -48,9 +48,9 @@ export class TranslateError extends Error {
  */
 export async function requestTranslation({ target, items, context }) {
   const body = { source: 'he', target, items, context };
-  if (ADMIN_PREVIEW) {
+  if (ADMIN_PREVIEW && inReadOnlyPreview()) {
     // Dynamic so the fake translator is not part of a production build.
-    const { previewTranslate } = await import('./adminPreviewFixtures');
+    const { previewTranslate } = await import('./adminLiveRead');
     return previewTranslate(body);
   }
   const chatbotUrl = import.meta.env.VITE_CHATBOT_URL;

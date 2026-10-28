@@ -8,7 +8,7 @@
 // error is thrown so the UI can show "insufficient role" rather than a
 // generic failure.
 
-import { getToken, logout } from '@/lib/auth';
+import { getToken, inReadOnlyPreview, logout } from '@/lib/auth';
 import { ADMIN_PREVIEW } from '@/lib/adminPreview';
 
 const API = import.meta.env.VITE_API_URL;
@@ -23,7 +23,7 @@ export class UnauthorizedError extends Error {
 // Thrown when the read-only preview is asked to write. Never occurs in a
 // production build - the preview branch is compiled out entirely.
 export class ReadOnlyPreviewError extends Error {
-  constructor(message = 'תצוגה מקדימה בלבד - עריכה מושבתת') {
+  constructor(message = 'קריאה בלבד - כדי לשמור יש להתחבר עם טוקן') {
     super(message);
     this.name = 'ReadOnlyPreviewError';
   }
@@ -40,15 +40,22 @@ export class ForbiddenError extends Error {
 // path: e.g. '/admin/articles' (joined onto VITE_API_URL)
 // body: optional plain object, JSON-encoded
 export async function adminApi(method, path, body) {
-  if (ADMIN_PREVIEW) {
+  // Dev server without a pasted token (src/lib/adminPreview.js): read-only.
+  // The dev server reads the live data through the public endpoints; the test
+  // run reads the fixtures, so the suite never touches the network. Both
+  // modules are dynamic imports, so neither is part of a production build.
+  if (ADMIN_PREVIEW && inReadOnlyPreview()) {
     if (method !== 'GET') throw new ReadOnlyPreviewError();
-    // Dynamic so the fixtures are not part of a production build.
-    const { previewGet } = await import('./adminPreviewFixtures');
-    const data = previewGet(path);
-    if (data === undefined) {
-      throw new Error(`admin preview has no sample data for ${path} - add one in src/api/adminPreviewFixtures.js`);
+    if (import.meta.env.MODE === 'test') {
+      const { previewGet } = await import('./adminPreviewFixtures');
+      const data = previewGet(path);
+      if (data === undefined) {
+        throw new Error(`admin preview has no sample data for ${path} - add one in src/api/adminPreviewFixtures.js`);
+      }
+      return JSON.parse(JSON.stringify(data));
     }
-    return JSON.parse(JSON.stringify(data));
+    const { liveGet } = await import('./adminLiveRead');
+    return liveGet(path);
   }
 
   const token = getToken();

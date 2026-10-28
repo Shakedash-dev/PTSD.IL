@@ -127,3 +127,15 @@ describe("loadQaIndex", () => {
     expect(await loadQaIndex({ RL: fakeKV() } as any)).toBeNull();
   });
 });
+
+describe("QA_INDEX_KEY var (staging)", () => {
+  it("builds and loads the index under the env's own key", async () => {
+    const rl = fakeKV();
+    const env = { AI: ai(), RL: rl, QA_INDEX_KEY: "qa:index:staging:v1" } as any;
+    await buildQaIndex(env, ROWS);
+    expect(rl.store.has("qa:index:staging:v1")).toBe(true);
+    expect(rl.store.has(QA_INDEX_KEY)).toBe(false);
+    expect(Object.keys((await loadQaIndex(env))!.rows).sort()).toEqual(["c-he", "r-he", "t-en", "t-he"]);
+    expect(await loadQaIndex({ RL: rl } as any)).toBeNull(); // the default key is separate, cache included
+  });
+});

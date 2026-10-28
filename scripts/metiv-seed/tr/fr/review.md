@@ -127,3 +127,9 @@ Rows 0-2 and the suicide/self-harm branches in rows 3-11, 24-26, 29-31: every an
 
 ## Verdict
 After these fixes the chatbot rows read as one consistent set and are publication-ready; the legal texts were already good (3 small fixes).
+
+## Batch 22
+
+3 strings reviewed, 1 changed. The new lines (course-specific questions answered from SOURCES; privacy parenthetical dropped; "ni ici ni dans les SOURCES"; answer now mentions Metiv's courses) are accurate and consistent with the existing fr rows.
+- ce6adef944 (pre-existing line carried over): "Si un épuisement ou une détresse du thérapeute est décrit" -> "... sont décrits" (agreement). The same slip remains in 18.json and chatbot-qa/fr.json for the older version of this string; it is superseded by batch 22.
+Check: 0 errors.

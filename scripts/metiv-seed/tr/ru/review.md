@@ -121,3 +121,7 @@ suicidal-thoughts, self-harm, someone-else-suicidal: checked line by line. No me
 
 ### Verdict
 The chatbot set is good: natural user paraphrases (including deliberate typos and slang), precise guidance, and warm, safe answers. Its main weakness was page-name inconsistency between the two translators, now fixed. The legal texts are publication grade after the small register fixes. Final check: `node scripts/metiv-seed/check-translations.mjs ru` -> 2469 strings, 0 errors, 21 warnings (localized digit groups only, plus 5741 for the Hebrew year of the Privacy Protection Law, 21/7626ef041f).
+
+## Batch 22
+
+3 strings reviewed (therapist-courses guidance, who-are-you guidance + answer), 0 changed. Only the lines changed in the Hebrew were retranslated; terminology (баллы повышения квалификации, Супервизия, Метив/Метиве), page names and phone numbers match the existing ru rows. Check: 0 errors.

@@ -97,4 +97,18 @@ describe("ChatProvider", () => {
     expect(streamChat).toHaveBeenCalledTimes(1); // ref guard blocked the second
     await act(async () => { resolveStream(); });
   });
+
+  it("sends the site area of the current path", async () => {
+    streamChat.mockImplementation(async (_req, h) => { h.onDone(); });
+    const at = (path) => window.history.pushState({}, "", path);
+    render(<ChatProvider><Probe /></ChatProvider>);
+    at("/metiv-site-demo-v3/therapist/courses/cbt-trauma");
+    await act(async () => { screen.getByText("go").click(); });
+    at("/rights");
+    await act(async () => { screen.getByText("go").click(); });
+    at("/");
+    const areas = streamChat.mock.calls.slice(-2).map((c) => c[0].area);
+    expect(areas).toEqual(["therapist", undefined]);
+  });
 });
+

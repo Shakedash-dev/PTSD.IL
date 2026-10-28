@@ -289,3 +289,7 @@ Privacy policy, terms of use and the מרחב מטיב program description are i
 ### Verdict (chatbot + legal)
 
 The second-pass chatbot translation (14-19) is good: faithful, safe-messaging compliant, with natural colloquial Levantine paraphrases. Its systematic weakness was page names taken from stale seed labels instead of what v3 renders, plus a handful of meaning slips (listed above). The first-pass strings (07-10) still current are clean question/paraphrase strings and now read consistently with the new guidance/answers of the same rows. After this round I consider the Arabic chatbot rows and batches 20-21 publishable, pending the i18n fixes above, which a native speaker should also confirm.
+
+## Batch 22
+
+3 strings reviewed (therapist-courses guidance, who-are-you guidance + answer), 0 changed. Only the lines changed in the Hebrew were retranslated; wording (نقاط الاعتماد، الإشراف المهني، ميتيف masculine agreement), page names and phone numbers match the existing ar rows. Check: 0 errors.

@@ -9,6 +9,7 @@ import { UserTypeProvider } from '@/contexts/UserTypeContext';
 import Site from '@/pages/metiv-demos/v3/Site';
 import { metivQueryOptions } from '@/pages/metiv-demos/v3/content/MetivContent';
 import { metivSeedData } from '@/test/fixtures/metivSeed';
+import { t } from '@/lib/i18n';
 
 // The V3 patient area renders the real PTSD-IL pages, which read content through
 // these hooks. Stub them the way test/pages-render.test.jsx does.
@@ -161,6 +162,14 @@ describe('metiv demo v3 (Guided Journey)', () => {
       expect(text).not.toMatch(/חזרה להתחלה|גם וגם|עדיין מחפשים/);
       expect(container.querySelector('nav[aria-label="שני האזורים באתר"]')).toBeNull();
       expect(screen.getAllByRole('button', { name: /עזרה עכשיו/ }).length).toBeGreaterThan(0);
+      unmount();
+    }
+  });
+
+  it('chat button on every shell: Metiv pages, therapist area and patient area, once each', () => {
+    for (const path of ['/', '/donate', '/privacy-policy', '/about/team', '/therapist', '/therapist/courses/cbt-trauma', '/patient', '/patient/rights']) {
+      const { unmount } = renderAt(path);
+      expect(screen.getAllByRole('button', { name: t('he', 'chat_tooltip') }), path).toHaveLength(1);
       unmount();
     }
   });

@@ -117,4 +117,23 @@ describe("handleChat", () => {
     expect(iToken).toBeLessThan(iSources);
     expect(iSources).toBeLessThan(iDone);
   });
+
+  it("carries a Metiv row's key and section in the sources frame", async () => {
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(geminiSSE("hi"));
+    const env = baseEnv();
+    env.VECTORIZE.query = async () => ({
+      matches: [
+        { score: 0.9, metadata: { itemId: "c", groupId: "g", type: "article", langId: "en", title: "CBT", text: "course", chunkIndex: 0, categorySlug: "metiv-courses", categorySlugs: ["metiv", "metiv-courses"], key: "cbt-trauma" } },
+        { score: 0.8, metadata: { itemId: "l", groupId: "g2", type: "article", langId: "en", title: "LEGAL_DOCS", text: "terms", chunkIndex: 3, categorySlug: "metiv-legal-docs", categorySlugs: ["metiv", "metiv-legal-docs"], key: "LEGAL_DOCS", section: "terms" } },
+        { score: 0.7, metadata: { itemId: "p", groupId: "g3", type: "faq", langId: "en", title: "T", text: "x", chunkIndex: 0, categorySlug: "rights" } },
+      ],
+    });
+    const body = await readSSE(await handleChat(env, { messages: [{ role: "user", content: "hi" }], lang: "en", sessionId: "s", area: "therapist" }));
+    const line = body.split("\n").find((l) => l.startsWith("data:") && l.includes("itemId"));
+    const sources = JSON.parse(line!.slice(5).trim());
+    expect(sources[0]).toMatchObject({ key: "cbt-trauma" });
+    expect(sources[0].section).toBeUndefined();
+    expect(sources[1]).toMatchObject({ key: "LEGAL_DOCS", section: "terms" });
+    expect("key" in sources[2]).toBe(false);
+  });
 });

@@ -43,3 +43,41 @@ describe("buildContents", () => {
     expect(outFr.systemInstruction.parts[0].text).toMatch(/French/);
   });
 });
+
+describe("buildContents audience", () => {
+  const sys = (area?: "patient" | "therapist" | "metiv") =>
+    buildContents([{ role: "user", content: "q" }], [hit("x", 1)], "he", [], area).systemInstruction.parts[0].text;
+
+  it("describes both audiences and Metiv itself, in every area", () => {
+    for (const s of [sys(), sys("patient"), sys("therapist"), sys("metiv")]) {
+      expect(s).toMatch(/trauma survivors and their families, and mental-health professionals/);
+      expect(s).toMatch(/information about Metiv/);
+      expect(s).toMatch(/FOR SURVIVORS AND FAMILIES/);
+      expect(s).toMatch(/FOR PROFESSIONALS/);
+      expect(s).toMatch(/self-help-first rule above does not apply to professionals/);
+      expect(s).toMatch(/Never give clinical advice on a specific patient or case/);
+      expect(s).toMatch(/ABOUT METIV/);
+      expect(s).not.toMatch(/patient topics/i);
+    }
+  });
+
+  it("picks the audience default from the area", () => {
+    expect(sys("patient")).toMatch(/area for trauma survivors and families\. Treat them as a survivor/);
+    expect(sys("therapist")).toMatch(/area for mental-health professionals\. Treat them as a professional/);
+    expect(sys("metiv")).toMatch(/general pages about Metiv/);
+    expect(sys()).toMatch(/Judge from the question whether the user is a survivor or family member or a professional; when unclear, treat them as a survivor/);
+    expect(sys()).not.toMatch(/The user is in the site's area/);
+  });
+});
+
+describe("parseArea", () => {
+  it("keeps the three areas and drops anything else", async () => {
+    const { parseArea } = await import("../src/lib/prompt");
+    expect(parseArea("patient")).toBe("patient");
+    expect(parseArea("therapist")).toBe("therapist");
+    expect(parseArea("metiv")).toBe("metiv");
+    expect(parseArea(undefined)).toBeUndefined();
+    expect(parseArea("admin")).toBeUndefined();
+    expect(parseArea(3)).toBeUndefined();
+  });
+});

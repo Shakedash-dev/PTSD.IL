@@ -34,7 +34,8 @@ whoever owns the Worker.
 ## 1. What it is (only what affects the app)
 
 A chatbot that answers **only** from the site's own vetted content, in the user's
-language, and cites its sources. It never gives medical advice, and it flags user
+language, and cites its sources. The content covers both audiences of the site
+(trauma survivors and families, and mental-health professionals) and Metiv itself. It never gives medical advice, and it flags user
 distress so the app can show the crisis helpline. Three things this means for your
 UI:
 
@@ -62,7 +63,8 @@ You don't need to know how retrieval or generation works to integrate it.
     { "role": "user", "content": "ומה עם דיור?" }
   ],
   "lang": "he",
-  "sessionId": "a1b2c3d4-...."
+  "sessionId": "a1b2c3d4-....",
+  "area": "patient"
 }
 ```
 
@@ -71,6 +73,7 @@ You don't need to know how retrieval or generation works to integrate it.
 | `messages` | array of `{ role, content }` | The full conversation so far. `role` is `"user"` or `"assistant"`. Send the whole history each turn (the server keeps no state) - but **not** the empty assistant turn you're about to fill. |
 | `lang` | `"he" \| "ar" \| "en" \| "ru" \| "fr"` | The user's current UI language. The bot answers in this language. |
 | `sessionId` | string (UUID) | Client-generated, kept in memory. Used for rate limiting. One per app session ([§6](#6-rate-limiting--sessions)). |
+| `area` | `"patient" \| "therapist" \| "metiv"`, optional | The part of the site the user is on. `patient` (survivors and families) keeps the self-help-first rules as the default, `therapist` (professionals) answers in a professional register about courses, supervision, programs, research and events, `metiv` (the general pages about Metiv) lets the question decide. Missing or unknown: the question decides, and an unclear one is treated as a survivor's. The website derives it from the path ([`chatArea`](../src/lib/citations.jsx)): `/metiv-site-demo-v3/patient/*` is `patient`, `/metiv-site-demo-v3/therapist/*` is `therapist`, every other v3 page (home, about, contact, donate, legal) is `metiv`, and outside the v3 demo it is not sent. The app should send `patient` from its survivor screens. |
 
 **Response** - a stream (`text/event-stream`). Status codes:
 
@@ -116,13 +119,16 @@ event: error     data: { "message": "..." }                        (on failure)
   "title": "זכויות נפגעי פעולות איבה",
   "text": "the exact passage the answer drew from",
   "categorySlug": "rights",     // primary category, used to route the link
-  "categorySlugs": ["rights"]   // every category of the item (Metiv rows: ["metiv", "metiv-veterans"])
+  "categorySlugs": ["rights"],  // every category of the item (Metiv rows: ["metiv", "metiv-veterans"])
+  "key": "cbt-trauma",          // Metiv rows only: the row's `_key` (a course's or article's slug)
+  "section": "terms"            // sectioned Metiv singletons only: "privacy" / "terms" of LEGAL_DOCS, a page key of SHORT_VERSIONS
 }
 ```
 
 `categorySlug` is the first category that is not the `metiv` parent, so a Metiv
-row routes by its collection. `categorySlugs` is absent on vectors indexed before
-it existed (until the next full reindex); fall back to `categorySlug`.
+row routes by its collection. `categorySlugs`, `key` and `section` are absent on
+vectors indexed before they existed (until the next full reindex); fall back to
+`categorySlug` and the collection's list page.
 
 ---
 
@@ -138,18 +144,41 @@ that used a source. These are **internal** - the user never sees the raw markers
    `(destination, title)` so the same source doesn't repeat.
 
 Each source links to the screen for that content type. Map `type` (+ `categorySlug`
-for `faq`, + `categorySlugs` for Metiv rows) to **your in-app navigation**.
+for `faq` and `legal`, + `categorySlugs`, `key` and `section` for Metiv rows) to
+**your in-app navigation**. The legal documents' titles are a slug
+(`privacy-policy`) or a collection key (`LEGAL_DOCS`), so label those chips with
+the page name instead (the website uses the `privacy_policy` / `terms_of_use`
+strings, [`sourceTitle`](../src/lib/citations.jsx)).
 Reference logic (from the website, [`src/lib/citations.jsx`](../src/lib/citations.jsx)):
 
 ```js
-function destinationFor(type, categorySlug, categorySlugs = []) {
+function destinationFor(type, categorySlug, categorySlugs = [], { key, section, title } = {}) {
   // Metiv rows route by collection first (v3 demo pages):
+  //   patient area:
   //   metiv-services / -public-options / -nonprofit-options / -consultation -> where-to-get-help
   //   metiv-free-treatments / -research-studies -> free-treatment-and-research
   //   metiv-veterans -> community, metiv-parent-child -> children,
-  //   metiv-reservist-family -> second-circle-tools, metiv-patient-books -> sources,
-  //   metiv-video-lectures -> self-help, metiv-release-journey / metiv-rj-* -> release-journey,
-  //   metiv-org / metiv-contacts -> contact, any other metiv slug -> patient hub
+  //   metiv-reservist-family -> second-circle-tools, metiv-patient-books / -books-note -> sources,
+  //   metiv-video-lectures -> self-help, metiv-treatment-where -> treatment,
+  //   metiv-release-journey / metiv-rj-* -> release-journey, metiv-patient-hub -> patient hub,
+  //   metiv-short-versions -> the patient page named by `section` (else the hub)
+  //   therapist area:
+  //   metiv-therapist-hub -> therapist hub, metiv-courses -> courses/<key> (else courses),
+  //   metiv-course-categories -> courses, metiv-supervision -> supervision,
+  //   metiv-org-programs -> organizations#<key>, metiv-children-family -> children-and-family,
+  //   metiv-research-intro -> research, metiv-studies -> research#<key>,
+  //   metiv-books / -papers / -paper-topics -> publications,
+  //   metiv-articles -> articles/<key> (else articles), metiv-events -> events
+  //   Metiv itself:
+  //   metiv-org / metiv-contacts -> contact, metiv-about / -facts -> about/history,
+  //   metiv-team -> about/team, metiv-department-groups -> about#about-<key>,
+  //   metiv-funders / -partner-groups -> about/partners,
+  //   metiv-partners / -collaboration-groups / -collaboration-contact -> about/collaborations,
+  //   metiv-donate -> donate, metiv-legal-docs -> terms-of-use when section is "terms", else privacy-policy,
+  //   metiv-legal -> privacy-policy when section is "privacy", else accessibility,
+  //   any other metiv slug -> patient hub
+  // PTSD-IL privacy policy / terms of use (category "legal", titled with the page slug):
+  if (categorySlug === "legal") return title === "terms-of-use" ? "terms screen" : "privacy screen";
   if (type === "faq") {
     if (categorySlug === "ptsd-info")     return "ptsd-info screen";
     if (categorySlug === "second-circle") return "second-circle-tools screen";
@@ -320,8 +349,8 @@ Reminder: CORS must be opened first ([§0](#0-prerequisite---cors-must-be-opened
 - [ ] Add the Worker base URL to app config.
 - [ ] Generate a `sessionId` (UUID) per session; keep it in memory.
 - [ ] Build the chat UI: message list, input, send, "thinking" indicator.
-- [ ] POST `{ messages, lang, sessionId }` on send (history minus the empty
-      assistant placeholder).
+- [ ] POST `{ messages, lang, sessionId, area }` on send (history minus the empty
+      assistant placeholder; `area` optional, [§2](#2-the-endpoint-post-chat)).
 - [ ] Parse the SSE stream - pick a mobile approach ([§10](#10-reference-client--mobile-streaming-caveat)).
 - [ ] Handle events: `crisis` → banner, `token` → append, `sources` → attach,
       `done`/`error` → stop indicator.
@@ -364,19 +393,35 @@ index). `scope: "item"` returns `{ ok, upserted }`, plus `qa` when the item was
 The general Vectorize index holds every published article and active community
 **except** rows in these categories:
 
-- `admin-log`, `site-copy`, `legal`, `chatbot-qa`, `metiv-copy`;
+- `admin-log`, `site-copy`, `chatbot-qa`, `metiv-copy` (the PTSD-IL `legal`
+  rows, privacy policy and terms of use, are indexed);
 - `metiv` (or any `metiv-*` child) unless one of the row's categories is in
   `METIV_CHATBOT_SLUGS` ([`worker/src/lib/api.ts`](../worker/src/lib/api.ts)),
   which must equal the `chatbot: true` collections of
   [`registry.js`](../src/pages/metiv-demos/v3/content/registry.js)
-  (`worker/test/exclusions.test.ts` fails when they drift).
+  (`worker/test/exclusions.test.ts` fails when they drift). That is every Metiv
+  collection of all three areas (courses, events, papers, books, studies, team,
+  about, partners, programs, supervision, legal docs, accessibility, donate, the
+  hubs and the rest) except pure navigation and taxonomy: `NAV`, `PATIENT_NAV`,
+  `ROUTE_META`, `NEXT_STEPS`, `TEAM_GROUPS`, `COURSE_CATEGORIES`, `PAPER_TOPICS`.
 
 Content keys starting with `_` (`_key`, `_tr`, `_area`, `_label`) are never
 indexed as text.
 
 **Indexed text** ([`worker/src/lib/content.ts`](../worker/src/lib/content.ts)
-`extractText`) is the title, then a header line per relation the row has, then
-the string leaves of `content`:
+`extractParts`, chunked by `chunkItem` in
+[`ingest.ts`](../worker/src/lib/ingest.ts)) is the title, then a header line per
+relation the row has, then the string leaves of `content`. The title and the
+relation lines are the chunk **header**: every chunk starts with it, not only
+the first, so the fifth chunk of a long course still names the course. A Metiv
+singleton row is titled with its collection key (`SUPERVISION`); when its
+content has a `title` that is used instead. A Metiv singleton whose top-level
+fields are all objects or lists (`LEGAL_DOCS`: `privacy` + `terms`, `LEGAL`:
+`accessibility` + `privacy`, `SHORT_VERSIONS`: one list per page) is chunked
+per field: the field's `title` (else its key) joins the header, a chunk never
+mixes two of them, and the field key goes into the vector metadata as
+`section`. Metiv rows also carry their `_key` in the metadata as `key` (chip
+deep links). The leaves:
 
 - `ageGroups` / `audiences` names, labelled in the row's language
   (`קבוצת גיל: 4-6`, `קהל יעד: נפגעי פעולות איבה`), so same-titled rows (the
@@ -385,9 +430,10 @@ the string leaves of `content`:
   `links`, `id`, `slug`, `year`, `image`, `icon` (and similar) are skipped.
 - Metiv rows: values that do not describe themselves (no letters, emails,
   URLs and numbers) keep the nearest meaningful key: `phones.fax: 02-644-9777`,
-  `ERAN_WHATSAPP: https://api.whatsapp.com/...`, and a `{ label, value }` /
-  `{ label, href }` pair becomes `label: value`. URL leaves are kept (only id and
-  media keys are skipped). Prose leaves stay bare.
+  `ERAN_WHATSAPP: https://api.whatsapp.com/...`, `year: 2025`, and a
+  `{ label, value }` / `{ label, href }` pair becomes `label: value`. URL leaves
+  and `year` are kept (only id and media keys are skipped). Prose leaves stay
+  bare.
 - Metiv `{ "$ref": "KEY#_key" }` (or `"KEY"` for a singleton) is replaced by the
   referenced item's text, looked up among the Metiv rows of the same language,
   else Hebrew; a ref to a ref resolves to nothing, like the v3 provider. A full
@@ -419,7 +465,8 @@ question per language, siblings sharing a `groupId`. `content`:
 
 **Index.** Not in Vectorize. A full reindex, an item reindex of a Q&A row, and an
 item reindex of an id that was a Q&A row (deleted or unpublished) rebuild one KV
-value, `qa:index:v1` in the `RL` namespace: every `question` and `paraphrase` of
+value, `qa:index:v1` in the `RL` namespace (or the `QA_INDEX_KEY` var, which
+staging sets, [§19](#19-staging)): every `question` and `paraphrase` of
 every published Q&A row embedded with `@cf/baai/bge-m3` (the retrieval model),
 stored as L2-normalized base64 Float32 vectors, plus each row's text. About 5.5KB
 per embedded text; the KV value limit is 25MB (roughly 4,000 texts). A chat
@@ -536,6 +583,7 @@ and the key in the `x-goog-api-key` header. The glossary of names and terms is
 | `TRANSLATE_MODEL` | `gemini-4-argon` | `/translate` model. Must accept `thinkingLevel` |
 | `QA_STRONG` | `0.80` | Playbook "follow it" threshold |
 | `QA_WEAK` | `0.72` | Playbook "possibly relevant" threshold |
+| `QA_INDEX_KEY` | `qa:index:v1` (unset) | KV key of the playbook index. Only staging sets it ([§19](#19-staging)) |
 
 Secret: `GEMINI_API_KEY` (`npx wrangler secret put GEMINI_API_KEY`), used by chat
 and `/translate`. Bindings: `AI`, `VECTORIZE` (`ptsd-chatbot`), `RL` (KV: rate
@@ -547,9 +595,11 @@ limits `rl:*`, auth cache `auth:*`, playbook index `qa:index:v1`).
 cd worker
 npx vitest run && npx tsc --noEmit
 npx wrangler deploy
-# Then ONE full reindex, required after this deploy: it drops the vectors of
-# newly excluded rows, adds categorySlugs to every vector, and builds the
-# playbook index (chat has no playbooks until it runs).
+# Then ONE full reindex, required after this deploy: it indexes every Metiv
+# collection (courses, events, papers, team, about, legal...) and the PTSD-IL
+# legal rows, rewrites every chunk with its title header, adds categorySlugs /
+# key / section to the vectors, drops the vectors of excluded rows, and builds
+# the playbook index (chat has no playbooks until it runs).
 curl -X POST https://ptsd-chatbot-worker.ptsd-il.workers.dev/reindex \
   -H "Authorization: Bearer $ADMIN_JWT" -H "content-type: application/json" \
   -d '{"scope":"all"}'
@@ -557,4 +607,66 @@ curl -X POST https://ptsd-chatbot-worker.ptsd-il.workers.dev/reindex \
 
 A full reindex makes about `2 + ceil(chunks / 50) + ceil(vectors / 500) +
 ceil(excluded ids / 500) + ceil(QA texts / 50) + 1` subrequests; on the free plan
-(50 per invocation) a large corpus can hit that cap.
+(50 per invocation) a large corpus can hit that cap. Indexing every Metiv
+collection adds roughly 300 chunks per language from the seed (about 1,500 for
+5 languages, so about 31 more embedding calls and 3 more upserts per full
+reindex).
+
+## 19. Staging
+
+A second Worker, `ptsd-chatbot-worker-staging` (`[env.staging]` in
+[`wrangler.toml`](../worker/wrangler.toml)), for trying chat changes from a
+local dev server before they ship. The live chatbot is not touched:
+
+| | Production | Staging |
+|---|---|---|
+| Worker | `ptsd-chatbot-worker` | `ptsd-chatbot-worker-staging` |
+| Vectorize index | `ptsd-chatbot` | `ptsd-chatbot-staging` (1024 dims, cosine) |
+| KV namespace `RL` | `6167ce06...` | the same namespace |
+| Playbook index key | `qa:index:v1` | `qa:index:staging:v1` (`QA_INDEX_KEY`) |
+| `SITE_ORIGIN` | the site origins | the same plus `http://localhost:5173` |
+| Content | `API_BASE` (live DB) | the same live DB, read only |
+
+Why its own playbook key: KV is shared, and a staging full reindex rebuilds the
+playbook index. On the production key it would overwrite what the live chatbot
+reads, with whatever the staging code builds. Rate-limit keys (`rl:<sessionId>`)
+and the admin auth cache (`auth:<hash>`) stay shared, which is harmless: session
+ids are random UUIDs and the auth cache only says a token is an admin.
+
+The index must match production's: `@cf/baai/bge-m3` embeddings, 1024
+dimensions, cosine. No metadata indexes are needed: `/chat` queries without a
+filter. The admin console reindexes only the production Worker on save, so
+staging is current only after a manual full reindex.
+
+One-time setup (from `worker/`):
+
+```bash
+npx wrangler vectorize create ptsd-chatbot-staging --dimensions=1024 --metric=cosine
+npx wrangler secret put GEMINI_API_KEY --env staging
+```
+
+Each time you want to test:
+
+```bash
+cd worker
+npx vitest run && npx tsc --noEmit
+npx wrangler deploy --env staging
+# Full reindex of the staging index (and the staging playbook key) from the live
+# DB. $ADMIN_JWT: a token from an admin login on the site (the admin keeps it in
+# sessionStorage).
+curl -X POST https://ptsd-chatbot-worker-staging.ptsd-il.workers.dev/reindex \
+  -H "Authorization: Bearer $ADMIN_JWT" -H "content-type: application/json" \
+  -d '{"scope":"all"}'
+```
+
+Then point the local site at it with `src/.env.development.local` (ignored by
+git, read only by `npm run dev`, wins over `src/.env`):
+
+```bash
+VITE_CHATBOT_URL=https://ptsd-chatbot-worker-staging.ptsd-il.workers.dev
+```
+
+and open `http://localhost:5173/metiv-site-demo-v3`. Watch it with
+`npx wrangler tail --env staging`. Delete the file (or the line) to go back to
+the production Worker. Shipping is unchanged: `npx wrangler deploy` (no
+`--env`) and the full reindex against the production URL ([§18](#18-deploy)).

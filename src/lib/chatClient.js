@@ -1,9 +1,10 @@
-export async function streamChat({ base, messages, lang, sessionId }, handlers = {}) {
+// `area` ('patient' | 'therapist' | 'metiv') is optional and only sent when set.
+export async function streamChat({ base, messages, lang, sessionId, area }, handlers = {}) {
   if (!base) { handlers.onError?.("no_backend"); return; }
   const res = await fetch(`${base}/chat`, {
     method: "POST",
     headers: { "content-type": "application/json" },
-    body: JSON.stringify({ messages, lang, sessionId }),
+    body: JSON.stringify({ messages, lang, sessionId, ...(area ? { area } : {}) }),
   });
   if (res.status === 429) { handlers.onError?.("rate_limited"); return; }
   if (!res.ok || !res.body) { handlers.onError?.(`http_${res.status}`); return; }

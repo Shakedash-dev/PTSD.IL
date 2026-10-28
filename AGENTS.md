@@ -31,8 +31,8 @@ Two caveats. `Admin.jsx` is covered only against the preview fixtures and a
 mocked client (`src/test/admin-*.test.jsx`), so a change there still needs
 manual verification against the live API. Google sign-in does not work on
 `npm run dev` (localhost is not an authorised OAuth origin), so the panel's real
-read/write behaviour can only be exercised on the deployed site - the local
-preview shows the UI against sample data, not the real thing.
+read/write behaviour is exercised on the deployed site, or locally by pasting
+an admin token (see the dev-server bullet under "Auth & DB access").
 
 ## Design system
 
@@ -83,7 +83,10 @@ src/components/admin/AdminGuide.jsx    <- /admin home page (how to use, no-rever
 src/components/admin/EditLogPanel.jsx  <- edit log viewer (masteradmin)
 src/components/admin/AdminLang.jsx     <- content-language tabs (he/ar/en/ru/fr)
 src/components/admin/translationStaging.js <- stages AI translations of Hebrew edits
-src/components/admin/MetivAdmin.jsx    <- metiv variant: 3 groups, section sidebar, sections
+src/components/admin/MetivAdmin.jsx    <- metiv variant: page tree, search, the page's sections
+src/components/admin/metivSiteMap.js   <- the tree: one node per v3 page, its sections in site order
+src/components/admin/copyContentKeys.js <- which page-copy keys are content (editable); the rest is UI
+src/components/admin/metivFieldRules.js <- which collection fields show (no ids/routes/icons/headings)
 src/components/admin/ContentEditor.jsx <- schema-less JSON editor (Metiv collections)
 src/components/admin/ChatbotQaAdmin.jsx <- chatbot Q&A playbooks (category chatbot-qa), both variants
 src/pages/Admin.jsx    <- 9 content panels (CRUD UI, react-quill editor) + users
@@ -158,15 +161,24 @@ row stored earlier still applies:
 - **Roles are exact-match** (`docs/api.md`): article CRUD needs `admin` or `moderator`; `masteradmin` manages users but is NOT implicitly admin.
 - **`VITE_GOOGLE_CLIENT_ID`** (the Google OAuth Web Client ID) is required at build time - it's `VITE_*` so it's baked in, not read at runtime; changing it needs a redeploy. Set in `src/.env` (gitignored, for reference) and in the Render dashboard. `VITE_API_URL` lives the same way. Note: localhost is intentionally not an authorized origin on the OAuth client, so Google sign-in only works on the deployed prod URL, not `npm run dev`.
 - Google sign-in is the only login path (no password fallback) - see README "Known limitations".
-- **`/admin` opens without signing in on a dev server**, read-only, against
-  sample data - see `src/lib/adminPreview.js`. It exists because Google is the
-  only login path and localhost is not an authorised OAuth origin, so the panel
-  could not otherwise be opened locally at all. Every write is refused, a banner
-  marks it as sample data, and the whole branch is compiled out of production
-  builds (`import.meta.env.DEV`), which `src/test/admin-preview.test.jsx`
-  asserts against the built bundle. Set `VITE_ADMIN_PREVIEW=off` in `src/.env`
-  for the real login screen. It grants no access: the backend re-checks the JWT
-  on every `/api/admin/*` call, and in preview no request is made at all.
+- **`/admin` opens without signing in on a dev server**, read-only, on the
+  LIVE data - see `src/lib/adminPreview.js`. Its GET calls are answered from
+  the public endpoints (`src/api/adminLiveRead.js`: `/admin/articles` ->
+  `/articles`, `/admin/questionnaires` -> `/questionnaires`; users and the
+  unpublished edit log are not readable this way). It exists because Google is
+  the only login path and localhost is not an authorised OAuth origin. Every
+  write is refused and a banner says it is live data, read-only. Its
+  "התחברות עם טוקן" button takes an admin JWT copied from sessionStorage
+  `ptsd_admin_token` of the signed-in deployed admin and switches to the normal
+  signed-in mode against the live API, under a red banner (saves change the
+  live site); switching mode drops anything staged. The test run reads
+  `src/api/adminPreviewFixtures.js` instead. All of it is compiled out of
+  production builds (`import.meta.env.DEV`), which
+  `src/test/admin-preview.test.jsx` asserts against the built bundle. Set
+  `VITE_ADMIN_PREVIEW=off` in `src/.env` for the real login screen. It grants no
+  access: the backend re-checks the JWT on every `/api/admin/*` call.
+  `ADMIN_LIVE=1 npx vitest run src/test/admin-metiv-live.test.jsx` walks every
+  page of the Metiv admin on the live data.
 
 ## Stack and conventions
 

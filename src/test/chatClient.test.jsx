@@ -149,4 +149,14 @@ describe("streamChat", () => {
     await streamChat({ base: "https://w", messages: [], lang: "en", sessionId: "s" }, { onToken: (t) => tokens.push(t) });
     expect(tokens).toContain("ok"); // loop survived the bad frame and delivered the next
   });
+
+  it("sends `area` only when it is set", async () => {
+    const fetchMock = vi.spyOn(globalThis, "fetch").mockImplementation(async () => sse([`event: done\ndata: {}\n\n`]));
+    await streamChat({ base: "https://w", messages: [], lang: "he", sessionId: "s", area: "therapist" }, {});
+    await streamChat({ base: "https://w", messages: [], lang: "he", sessionId: "s" }, {});
+    const bodies = fetchMock.mock.calls.map((c) => JSON.parse(c[1].body));
+    expect(bodies[0]).toEqual({ messages: [], lang: "he", sessionId: "s", area: "therapist" });
+    expect("area" in bodies[1]).toBe(false);
+  });
 });
+

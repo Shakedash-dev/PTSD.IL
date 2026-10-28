@@ -1,5 +1,5 @@
 import type { Env } from "../index";
-import type { Msg, Playbook } from "./prompt";
+import type { Area, Msg, Playbook } from "./prompt";
 import { recentCrisisMessage } from "./crisis";
 import { detectLang } from "./lang";
 import { embed } from "./embed";
@@ -53,7 +53,7 @@ function sse(event: string, data: unknown): string {
   return `event: ${event}\ndata: ${JSON.stringify(data)}\n\n`;
 }
 
-export function handleChat(env: Env, body: { messages: Msg[]; lang: string; sessionId: string }): Response {
+export function handleChat(env: Env, body: { messages: Msg[]; lang: string; sessionId: string; area?: Area }): Response {
   const enc = new TextEncoder();
   const stream = new ReadableStream<Uint8Array>({
     async start(ctrl) {
@@ -124,7 +124,7 @@ export function handleChat(env: Env, body: { messages: Msg[]; lang: string; sess
           return; // the finally block is the sole closer of the controller
         }
 
-        const payload = buildContents(body.messages, hits, lang, playbooks);
+        const payload = buildContents(body.messages, hits, lang, playbooks, body.area);
         for await (const delta of streamGemini(env, payload)) send("token", { text: delta });
 
         if (hits.length) {
@@ -133,6 +133,8 @@ export function handleChat(env: Env, body: { messages: Msg[]; lang: string; sess
             type: h.meta.type, langId: h.meta.langId, title: h.meta.title, text: h.meta.text,
             categorySlug: h.meta.categorySlug,
             ...(h.meta.categorySlugs ? { categorySlugs: h.meta.categorySlugs } : {}),
+            ...(h.meta.key ? { key: h.meta.key } : {}),
+            ...(h.meta.section ? { section: h.meta.section } : {}),
           })));
         }
         send("done", {});

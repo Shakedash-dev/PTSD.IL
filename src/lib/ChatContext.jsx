@@ -1,9 +1,17 @@
 import React, { createContext, useContext, useState, useRef, useCallback } from "react";
 import { useLang } from "@/lib/LanguageContext";
 import { streamChat } from "@/lib/chatClient";
+import { chatArea } from "@/lib/citations";
+import { BASE_PATH } from "@/base-path";
 
 const ChatCtx = createContext(null);
 const BASE = import.meta.env.VITE_CHATBOT_URL;
+
+/** The current path without the router basename. */
+function routerPath() {
+  const path = window.location.pathname;
+  return path.startsWith(BASE_PATH) ? path.slice(BASE_PATH.length) || "/" : path;
+}
 
 export function ChatProvider({ children }) {
   const { lang } = useLang();
@@ -26,7 +34,8 @@ export function ChatProvider({ children }) {
     const outgoing = next.slice(0, -1); // exclude the empty assistant placeholder
     try {
       await streamChat(
-        { base: BASE, messages: outgoing, lang, sessionId: sessionId.current },
+        // The provider sits above the router, so the area comes from the URL.
+        { base: BASE, messages: outgoing, lang, sessionId: sessionId.current, area: chatArea(routerPath()) },
         {
           onToken: (t) => setMessages((m) => {
             const copy = m.slice();

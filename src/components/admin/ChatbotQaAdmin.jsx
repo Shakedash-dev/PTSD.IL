@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { AddNewButton, Badge, LoadingRow, Section } from '@/components/admin/AdminUi';
 import { useAdminLang } from '@/components/admin/AdminLang';
+import { useAdminFocus } from '@/components/admin/AdminFocus';
 import { ItemCard, TranslationSummary } from '@/components/admin/MetivAdmin';
 import { TRANSLATION_BADGES, usePendingChanges } from '@/components/admin/PendingChanges';
 import { stageSiblingDeletes, useStageTranslations } from '@/components/admin/translationStaging';
@@ -160,6 +161,8 @@ function QaList({ store }) {
   const hebrew = lang.id === 'he';
   const s = useQaStaging(store);
   const { changes, stage, discard, newKey } = s;
+  // A search result in the Metiv admin opens one question's editor.
+  const focus = useAdminFocus();
   const [creating, setCreating] = useState(false);
   const editorProps = hebrew
     ? { labels: QA_LABELS, help: QA_HELP }
@@ -212,13 +215,16 @@ function QaList({ store }) {
       </p>
       <div className="space-y-3">
         {ordered.map((row, i) => {
+          const open = focus?.qaId === row.id;
           if (hebrew) {
             const key = `${QA_SCOPE}:${row.id}`;
             const p = changes.find(c => c.key === key);
             const content = p?.action === 'update' ? p.draft.content : row.content;
             return (
               <ItemCard
-                key={row.id}
+                key={open ? `${row.id}:${focus.nonce}` : row.id}
+                startInEdit={open}
+                reveal={open}
                 content={content}
                 title={qaTitle(content)}
                 summary={<QaSummary content={content} />}
@@ -243,7 +249,9 @@ function QaList({ store }) {
           const translating = changes.some(c => c.linkedTo === `${QA_SCOPE}:${row.id}` && c.lang === lang.id);
           return (
             <ItemCard
-              key={key}
+              key={open ? `${key}:${focus.nonce}` : key}
+              startInEdit={open}
+              reveal={open}
               content={content}
               title={qaTitle(content)}
               summary={<QaSummary content={content} />}

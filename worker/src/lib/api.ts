@@ -19,20 +19,34 @@ type Row = Omit<Partial<Item>, "ageGroups" | "audiences"> & {
 export const METIV_PARENT_SLUG = "metiv";
 export const QA_SLUG = "chatbot-qa";
 
-// Metiv collections the chatbot indexes. Must equal the `chatbot: true` slugs in
-// src/pages/metiv-demos/v3/content/registry.js (src/test/metiv-db-registry.test.js).
+// Metiv collections the chatbot indexes: every collection except pure
+// navigation and taxonomy (NAV, PATIENT_NAV, ROUTE_META, NEXT_STEPS,
+// TEAM_GROUPS, COURSE_CATEGORIES, PAPER_TOPICS). Must equal the `chatbot: true`
+// slugs in src/pages/metiv-demos/v3/content/registry.js
+// (worker/test/exclusions.test.ts).
 export const METIV_CHATBOT_SLUGS = [
-  "metiv-org", "metiv-contacts", "metiv-services",
-  "metiv-public-options", "metiv-nonprofit-options", "metiv-consultation",
-  "metiv-free-treatments", "metiv-research-studies", "metiv-reservist-family",
-  "metiv-veterans", "metiv-parent-child", "metiv-patient-books",
-  "metiv-video-lectures", "metiv-release-journey", "metiv-rj-models",
-  "metiv-rj-contacts",
+  // General / about Metiv
+  "metiv-org", "metiv-contacts", "metiv-about", "metiv-facts", "metiv-team",
+  "metiv-department-groups", "metiv-partners", "metiv-funders", "metiv-partner-groups",
+  "metiv-collaboration-groups", "metiv-collaboration-contact", "metiv-services",
+  "metiv-donate", "metiv-legal", "metiv-legal-docs",
+  // Patient area
+  "metiv-patient-hub", "metiv-short-versions", "metiv-public-options", "metiv-nonprofit-options",
+  "metiv-consultation", "metiv-free-treatments", "metiv-research-studies", "metiv-reservist-family",
+  "metiv-veterans", "metiv-parent-child", "metiv-patient-books", "metiv-books-note",
+  "metiv-video-lectures", "metiv-treatment-where", "metiv-release-journey", "metiv-rj-stats",
+  "metiv-rj-waiting", "metiv-rj-models", "metiv-rj-contacts",
+  // Therapist area
+  "metiv-therapist-hub", "metiv-courses", "metiv-supervision", "metiv-org-programs",
+  "metiv-children-family", "metiv-research-intro", "metiv-studies", "metiv-books",
+  "metiv-papers", "metiv-articles", "metiv-events",
 ];
 
-// Categories that never go into the general Vectorize index. `chatbot-qa` rows
-// feed the playbook KV index instead (lib/qa.ts).
-export const EXCLUDED_SLUGS = ["admin-log", "site-copy", "legal", QA_SLUG, "metiv-copy"];
+// Categories that never go into the general Vectorize index: the admin log, UI
+// strings (`site-copy`, `metiv-copy`) and the Q&A rows, which feed the playbook
+// KV index instead (lib/qa.ts). The PTSD-IL `legal` rows (privacy policy, terms
+// of use) are indexed.
+export const EXCLUDED_SLUGS = ["admin-log", "site-copy", QA_SLUG, "metiv-copy"];
 
 // Collection slug -> registry key, for resolving `{ "$ref": "KEY#_key" }` cross
 // references (docs/metiv-db-spec.md section 1). Must equal registry.js

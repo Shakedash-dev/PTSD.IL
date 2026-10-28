@@ -1,6 +1,6 @@
 import type { Env } from "../index";
 import type { Item } from "./content";
-import { extractText, refsIn, buildRefIndex, refResolver, type RefIndex, type RefResolver } from "./content";
+import { extractParts, dedupe, refsIn, buildRefIndex, refResolver, type RefIndex, type RefResolver } from "./content";
 import { chunk } from "./chunk";
 import { embed } from "./embed";
 import { upsertItemChunks, deleteItem, deleteIds, upsertVectors, type ChunkMeta, type VectorRow } from "./vector";
@@ -20,12 +20,57 @@ const UPSERT_BATCH = 500; // vectors per Vectorize upsert call
 // rows, so it deletes what the current text would chunk into, plus a margin.
 const STALE_CHUNK_MARGIN = 4;
 
-function metaFor(item: Item, title: string, c: { text: string; index: number }): ChunkMeta {
+const CHUNK_MAX = 1600;
+const MIN_BODY = 400; // body room per chunk, however long the header is
+
+export type ItemChunk = { text: string; index: number; title: string; section?: string };
+
+// An item's chunks. Every chunk starts with the item's header (title, age group,
+// audience, and the sub-document title for a sectioned Metiv singleton), so a
+// late chunk of a long course or paper still says what it belongs to.
+export function chunkItem(item: Item, resolve?: RefResolver): ItemChunk[] {
+  const { title, header, sections } = extractParts(item, resolve);
+  const out: ItemChunk[] = [];
+  for (const s of sections) {
+    const label = s.key ? s.title ?? s.key : undefined;
+    const head = dedupe(label ? [...header, label] : header);
+    const all = dedupe([...head, ...s.parts]);
+    const body = all.slice(head.length).join("\n\n");
+    const headText = head.join("\n\n");
+    const extra = { title: s.title ?? title, ...(s.key ? { section: s.key } : {}) };
+    if (!body) {
+      // A sub-document without text is skipped; an item without text is its title.
+      if (!s.key && headText) out.push({ text: headText, index: out.length, ...extra });
+      continue;
+    }
+    const max = Math.max(MIN_BODY, CHUNK_MAX - headText.length - 2);
+    for (const c of chunk(body, { max })) {
+      out.push({ text: headText ? `${headText}\n\n${c.text}` : c.text, index: out.length, ...extra });
+    }
+  }
+  return out;
+}
+
+// `_key` of a Metiv row: the item key the v3 pages use (a course's slug), for
+// chip deep links.
+function metivKey(item: Item): string | undefined {
+  if (!isMetivItem(item)) return undefined;
+  try {
+    const k = (JSON.parse(item.content || "null") as { _key?: unknown } | null)?._key;
+    return typeof k === "string" && k ? k : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
+function metaFor(item: Item, c: ItemChunk, key = metivKey(item)): ChunkMeta {
   return {
     itemId: item.id, groupId: item.groupId, type: item.type,
-    langId: item.langId, title, text: c.text, chunkIndex: c.index,
+    langId: item.langId, title: c.title, text: c.text, chunkIndex: c.index,
     categorySlug: item.categorySlug,
     ...(item.categorySlugs ? { categorySlugs: item.categorySlugs } : {}),
+    ...(key ? { key } : {}),
+    ...(c.section ? { section: c.section } : {}),
   };
 }
 
@@ -47,20 +92,20 @@ async function fetchRefResolver(env: Env, item: Item): Promise<RefResolver | und
 }
 
 export async function reindexItem(env: Env, item: Item, resolve?: RefResolver): Promise<{ upserted: number }> {
-  // Excluded rows (copy, legal, admin log, Q&A, non-chatbot Metiv collections)
+  // Excluded rows (UI copy, admin log, Q&A, Metiv navigation/taxonomy collections)
   // must not be in the index; reindexing one drops whatever it had.
   if (!isIndexable(item)) {
     await deleteItem(env.VECTORIZE, item.id);
     return { upserted: 0 };
   }
-  const { title, text } = extractText(item, resolve ?? (await fetchRefResolver(env, item)));
-  const chunks = chunk(text);
+  const chunks = chunkItem(item, resolve ?? (await fetchRefResolver(env, item)));
   if (chunks.length === 0) {
     await deleteItem(env.VECTORIZE, item.id);
     return { upserted: 0 };
   }
   const vectors = await embed(env.AI, chunks.map((c) => c.text));
-  const metas: ChunkMeta[] = chunks.map((c) => metaFor(item, title, c));
+  const key = metivKey(item);
+  const metas: ChunkMeta[] = chunks.map((c) => metaFor(item, c, key));
   await deleteItem(env.VECTORIZE, item.id); // clear stale chunks first
   await upsertItemChunks(env.VECTORIZE, item.id, vectors, metas);
   return { upserted: chunks.length };
@@ -84,7 +129,7 @@ export async function reindexAll(env: Env): Promise<{ upserted: number; excluded
 
   // Drop vectors excluded rows may hold from before they were excluded.
   const staleIds = excluded.flatMap((item) => {
-    const n = chunk(extractText(item, resolverFor(item)).text).length + STALE_CHUNK_MARGIN;
+    const n = chunkItem(item, resolverFor(item)).length + STALE_CHUNK_MARGIN;
     return Array.from({ length: n }, (_, i) => `${item.id}:${i}`);
   });
   await deleteIds(env.VECTORIZE, staleIds);
@@ -92,8 +137,8 @@ export async function reindexAll(env: Env): Promise<{ upserted: number; excluded
   // Build all chunk metadata across every item - pure, no subrequests.
   const metas: ChunkMeta[] = [];
   for (const item of items) {
-    const { title, text } = extractText(item, resolverFor(item));
-    for (const c of chunk(text)) metas.push(metaFor(item, title, c));
+    const key = metivKey(item);
+    for (const c of chunkItem(item, resolverFor(item))) metas.push(metaFor(item, c, key));
   }
   if (metas.length === 0) return { upserted: 0, excluded: excluded.length, qa };
 

@@ -12,6 +12,11 @@ export type ChunkMeta = {
   // Every category slug of the item (Metiv rows: `metiv` + `metiv-<collection>`),
   // so the frontend can route Metiv chips by collection.
   categorySlugs?: string[];
+  // Metiv rows: the row's `_key` (a course's or article's slug), for chip deep links.
+  key?: string;
+  // Sectioned Metiv singletons: the sub-document the chunk comes from
+  // ("privacy" / "terms" of LEGAL_DOCS, a page key of SHORT_VERSIONS).
+  section?: string;
 };
 
 export type Hit = { score: number; meta: ChunkMeta };

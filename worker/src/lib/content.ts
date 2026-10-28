@@ -28,9 +28,10 @@ const SKIP_KEYS = new Set([
 ]);
 
 // Metiv rows keep their URL leaves (the ERAN WhatsApp link, registration forms),
-// labelled with their key, so only the id/media keys are skipped.
-const URL_KEYS = ["url", "ios_url", "android_url", "cta_url", "contact_url", "link", "links"];
-const METIV_SKIP_KEYS = new Set([...SKIP_KEYS].filter((k) => !URL_KEYS.includes(k)));
+// labelled with their key, and their `year` (papers, books, the history
+// timeline), so only the id/media keys are skipped.
+const METIV_KEEP_KEYS = ["url", "ios_url", "android_url", "cta_url", "contact_url", "link", "links", "year"];
+const METIV_SKIP_KEYS = new Set([...SKIP_KEYS].filter((k) => !METIV_KEEP_KEYS.includes(k)));
 
 // Keys that say nothing about what the value is ("value: 054-...").
 const GENERIC_KEYS = new Set(["value", "href", "url", "link", "text"]);
@@ -116,25 +117,78 @@ const AUDIENCE_LABEL: Record<string, string> = {
   he: "קהל יעד", ar: "الجمهور المستهدف", en: "Audience", ru: "Аудитория", fr: "Public",
 };
 
-export function extractText(item: Item, resolve?: RefResolver): { title: string; text: string } {
+// One part of an item's indexed text. Most items are one section; a Metiv
+// singleton that bundles named sub-documents (LEGAL_DOCS: privacy + terms,
+// SHORT_VERSIONS: one entry per page) is one section per sub-document, so a
+// chunk never mixes two of them and its chip can link to the right page.
+export type Section = { key?: string; title?: string; parts: string[] };
+
+// `header`: the title and relation lines every chunk of the item starts with.
+export type Extracted = { title: string; header: string[]; sections: Section[] };
+
+const REGISTRY_KEYS = new Set(Object.values(METIV_COLLECTION_KEYS));
+const isPlainObject = (v: unknown): v is Record<string, unknown> => !!v && typeof v === "object" && !Array.isArray(v);
+const strOf = (v: unknown) => (typeof v === "string" && v.trim() ? v.trim() : undefined);
+
+// A Metiv singleton row is titled with its collection key ("ORG", "SUPERVISION");
+// its content title, when it has one, says more to the model and on the chip.
+function displayTitle(item: Item, parsed: unknown): string {
   const title = item.title.trim();
-  const parts: string[] = [title].filter(Boolean);
+  if (!isMetivItem(item) || !REGISTRY_KEYS.has(title) || !isPlainObject(parsed)) return title;
+  return strOf(parsed.title) ?? strOf(parsed.name) ?? strOf(parsed.label) ?? title;
+}
+
+// The named sub-documents of a Metiv singleton: at least two top-level keys,
+// every one an object or a list. Null for anything else.
+function subDocuments(item: Item, parsed: unknown): [string, unknown][] | null {
+  if (!isMetivItem(item) || !isPlainObject(parsed) || !REGISTRY_KEYS.has(String(parsed._key ?? ""))) return null;
+  const entries = Object.entries(parsed).filter(([k]) => !k.startsWith("_") && !METIV_SKIP_KEYS.has(k));
+  if (entries.length < 2 || !entries.every(([, v]) => v && typeof v === "object" && !("$ref" in (v as object)))) return null;
+  return entries;
+}
+
+export function extractParts(item: Item, resolve?: RefResolver): Extracted {
+  let parsed: unknown;
+  try {
+    parsed = item.content ? JSON.parse(item.content) : undefined;
+  } catch {
+    parsed = undefined; // unparseable content → title only
+  }
+  const title = displayTitle(item, parsed);
+  const header: string[] = [title].filter(Boolean);
   // Header right after the title: rows with the same title (the children
   // "הנחיות" rows) differ only by their age group.
-  if (item.ageGroups?.length) parts.push(`${AGE_LABEL[item.langId] ?? AGE_LABEL.en}: ${item.ageGroups.join(", ")}`);
-  if (item.audiences?.length) parts.push(`${AUDIENCE_LABEL[item.langId] ?? AUDIENCE_LABEL.en}: ${item.audiences.join(", ")}`);
-  if (item.content) {
-    try {
-      const parsed = JSON.parse(item.content);
-      if (isMetivItem(item)) walkMetiv(parsed, { key: "", depth: 0 }, parts, resolve);
-      else walk(parsed, "", parts);
-    } catch {
-      // unparseable content → title only
-    }
+  if (item.ageGroups?.length) header.push(`${AGE_LABEL[item.langId] ?? AGE_LABEL.en}: ${item.ageGroups.join(", ")}`);
+  if (item.audiences?.length) header.push(`${AUDIENCE_LABEL[item.langId] ?? AUDIENCE_LABEL.en}: ${item.audiences.join(", ")}`);
+  if (parsed === undefined) return { title, header, sections: [{ parts: [] }] };
+  if (!isMetivItem(item)) {
+    const parts: string[] = [];
+    walk(parsed, "", parts);
+    return { title, header, sections: [{ parts }] };
   }
-  // Dedupe consecutive duplicates (title often repeats inside content).
-  const deduped = parts.filter((p, i) => p !== parts[i - 1]);
-  return { title, text: deduped.join("\n\n") };
+  const subs = subDocuments(item, parsed);
+  if (!subs) {
+    const parts: string[] = [];
+    walkMetiv(parsed, { key: "", depth: 0 }, parts, resolve);
+    return { title, header, sections: [{ parts }] };
+  }
+  // Same context the root walk gives a top-level key, so the text is unchanged.
+  return {
+    title, header,
+    sections: subs.map(([key, v]) => {
+      const parts: string[] = [];
+      walkMetiv(v, { key, depth: 1 }, parts, resolve);
+      return { key, title: isPlainObject(v) ? strOf(v.title) : undefined, parts };
+    }),
+  };
+}
+
+// Dedupe consecutive duplicates (title often repeats inside content).
+export const dedupe = (parts: string[]) => parts.filter((p, i) => p !== parts[i - 1]);
+
+export function extractText(item: Item, resolve?: RefResolver): { title: string; text: string } {
+  const { title, header, sections } = extractParts(item, resolve);
+  return { title, text: dedupe([...header, ...sections.flatMap((s) => s.parts)]).join("\n\n") };
 }
 
 // Every `$ref` string anywhere in an item's content.

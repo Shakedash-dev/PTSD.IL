@@ -3,8 +3,8 @@ import { screen, fireEvent, cleanup, within } from '@testing-library/react';
 import qaSeed from '../../scripts/metiv-seed/chatbot-qa/he.json';
 import { renderAdmin } from './renderAdmin';
 
-// /metiv-site-demo-v3/admin in the read-only dev preview: the Hebrew seed as
-// sample data, and the fake /translate so the translation flow shows locally.
+// /metiv-site-demo-v3/admin in the read-only preview, as the test run sees it:
+// the Hebrew seed as fixtures, and the stand-in /translate.
 
 describe('metiv admin preview', () => {
   let errorSpy;
@@ -19,12 +19,14 @@ describe('metiv admin preview', () => {
     renderAdmin({ variant: 'metiv' });
     expect(screen.getByText('מטיב')).toBeInTheDocument();
     fireEvent.click(screen.getByRole('button', { name: 'עריכת תוכן' }));
-    fireEvent.click(screen.getByRole('button', { name: 'מטפלים' }));
-    fireEvent.click(within(screen.getByRole('navigation', { name: 'הסעיפים של מטפלים' })).getByRole('button', { name: 'קורסים והכשרות' }));
-    const course = await screen.findByText('הכשרה לטיפול CBT בטראומה', {}, { timeout: 4000 });
+    const nav = await screen.findByRole('navigation', { name: 'עמודי האתר' });
+    fireEvent.click(within(nav).getByRole('button', { name: 'אזור אנשי הטיפול והמקצוע' }));
+    fireEvent.click(within(nav).getByRole('button', { name: 'קורסים והכשרות' }));
+    const course = await screen.findByText('הכשרה לטיפול CBT בטראומה', { selector: 'section p' }, { timeout: 4000 });
     fireEvent.click(within(course.closest('.relative')).getByTitle('עריכה'));
-    fireEvent.change(screen.getByDisplayValue('הכשרה לטיפול CBT בטראומה'), { target: { value: 'הכשרת CBT בטראומה' } });
-    fireEvent.click(screen.getByRole('button', { name: 'אישור' }));
+    const input = screen.getByDisplayValue('הכשרה לטיפול CBT בטראומה');
+    fireEvent.change(input, { target: { value: 'הכשרת CBT בטראומה' } });
+    fireEvent.click(within(input.closest('section')).getByRole('button', { name: 'אישור' }));
 
     fireEvent.click(screen.getByRole('button', { name: /סקירה ושמירה/ }));
     const dialog = await screen.findByRole('dialog');
@@ -39,7 +41,7 @@ describe('metiv admin preview', () => {
     for (const variant of /** @type {const} */ (['ptsd', 'metiv'])) {
       renderAdmin({ variant });
       fireEvent.click(screen.getByRole('button', { name: 'עריכת תוכן' }));
-      if (variant === 'metiv') fireEvent.click(screen.getByRole('button', { name: 'מטופלים' }));
+      if (variant === 'metiv') fireEvent.click(await screen.findByRole('button', { name: 'כלים' }));
       fireEvent.click(screen.getByRole('button', { name: 'צ׳אטבוט: שאלות ותשובות מוכנות' }));
       expect(await screen.findByText('35 פריטים', {}, { timeout: 4000 })).toBeInTheDocument();
       expect(screen.getByText(qaSeed[0].question)).toBeInTheDocument();

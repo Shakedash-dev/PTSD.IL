@@ -10,6 +10,10 @@ import { fetchQaItems } from "./api";
 // reuses the query embedding). No Vectorize index is involved.
 
 export const QA_INDEX_KEY = "qa:index:v1";
+
+// The staging Worker shares the production KV namespace, so it keeps its
+// playbook index under its own key (wrangler.toml [env.staging] QA_INDEX_KEY).
+export const qaIndexKey = (env: Pick<Env, "QA_INDEX_KEY">) => env.QA_INDEX_KEY || QA_INDEX_KEY;
 const EMBED_BATCH = 50;
 const MEMO_MS = 60_000; // in-isolate cache; KV edge cache adds up to cacheTtl on top
 const KV_CACHE_TTL = 60;
@@ -99,8 +103,8 @@ export async function buildQaIndex(env: Env, items: Item[]): Promise<{ qa: numbe
   const rows: Record<string, QaRow> = {};
   for (const { texts: _texts, ...row } of parsed) rows[row.rowId] = row;
   const stored: StoredIndex = { v: 1, builtAt: new Date().toISOString(), entries, rows };
-  await env.RL.put(QA_INDEX_KEY, JSON.stringify(stored));
-  memo.delete(env.RL);
+  await env.RL.put(qaIndexKey(env), JSON.stringify(stored));
+  memo.get(env.RL)?.delete(qaIndexKey(env));
   return { qa: parsed.length };
 }
 
@@ -108,13 +112,17 @@ export async function rebuildQaIndex(env: Env): Promise<{ qa: number }> {
   return buildQaIndex(env, await fetchQaItems(env.API_BASE));
 }
 
-// Keyed by the KV binding so separate envs (and tests) never share a cache.
-const memo = new WeakMap<object, { at: number; index: QaIndex | null }>();
+// Keyed by the KV binding and the index key so separate envs (and tests) never
+// share a cache.
+const memo = new WeakMap<object, Map<string, { at: number; index: QaIndex | null }>>();
 
 export async function loadQaIndex(env: Env): Promise<QaIndex | null> {
-  const hit = memo.get(env.RL);
+  const key = qaIndexKey(env);
+  const byKey = memo.get(env.RL) ?? new Map<string, { at: number; index: QaIndex | null }>();
+  memo.set(env.RL, byKey);
+  const hit = byKey.get(key);
   if (hit && Date.now() - hit.at < MEMO_MS) return hit.index;
-  const raw = await env.RL.get(QA_INDEX_KEY, { cacheTtl: KV_CACHE_TTL });
+  const raw = await env.RL.get(key, { cacheTtl: KV_CACHE_TTL });
   let index: QaIndex | null = null;
   if (raw) {
     const s = JSON.parse(raw) as StoredIndex;
@@ -126,7 +134,7 @@ export async function loadQaIndex(env: Env): Promise<QaIndex | null> {
       byGroup,
     };
   }
-  memo.set(env.RL, { at: Date.now(), index });
+  byKey.set(key, { at: Date.now(), index });
   return index;
 }
 

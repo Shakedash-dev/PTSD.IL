@@ -2339,7 +2339,7 @@
   "9d0039f5de": "chatbot-qa/therapist-courses :: paraphrases.11",
   "7ca6d770b9": "chatbot-qa/therapist-courses :: paraphrases.12",
   "bbba5734b4": "chatbot-qa/therapist-courses :: paraphrases.13",
-  "9766f57d28": "chatbot-qa/therapist-courses :: guidance",
+  "ce6adef944": "chatbot-qa/therapist-courses :: guidance",
   "9127daa236": "chatbot-qa/therapist-courses :: answer",
   "02e9a24872": "chatbot-qa/who-are-you :: question",
   "21a62a1a7a": "chatbot-qa/who-are-you :: paraphrases.0",
@@ -2354,6 +2354,6 @@
   "630d5b117e": "chatbot-qa/who-are-you :: paraphrases.9",
   "6d65558212": "chatbot-qa/who-are-you :: paraphrases.10",
   "cb18f8487e": "chatbot-qa/who-are-you :: paraphrases.11",
-  "2b3d6dbce3": "chatbot-qa/who-are-you :: guidance",
-  "bc5896d2e0": "chatbot-qa/who-are-you :: answer"
+  "fa846d47bd": "chatbot-qa/who-are-you :: guidance",
+  "fa27017285": "chatbot-qa/who-are-you :: answer"
 }

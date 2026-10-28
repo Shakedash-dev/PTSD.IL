@@ -6,7 +6,7 @@ import { t } from "@/lib/i18n";
 import { Button } from "@/components/ui/button";
 import { useChat } from "@/lib/ChatContext";
 import Markdown from "@/components/Markdown";
-import { sectionRoute, isMetivDemoPath } from "@/lib/citations";
+import { sourceRoute, sourceTitle, isMetivDemoPath } from "@/lib/citations";
 
 // Caps the textarea's growth at roughly 4-5 lines before it starts scrolling.
 // Matches the auto-grow approach used by HeroChatInput.
@@ -107,7 +107,7 @@ export default function ChatPanel() {
                 const refs = (m.sources || [])
                   .filter((s) => cited.has(s.n))
                   .filter((s) => {
-                    const key = `${sectionRoute(s.type, s.categorySlug, s.categorySlugs, inMetivDemo)}|${s.title}`;
+                    const key = `${sourceRoute(s, inMetivDemo)}|${s.title}`;
                     if (seen.has(key)) return false;
                     seen.add(key);
                     return true;
@@ -116,9 +116,9 @@ export default function ChatPanel() {
                 return (
                   <div className="flex flex-wrap gap-2 mt-2 pt-2 border-t border-border/50">
                     {refs.map((s) => (
-                      <Link key={s.itemId} to={sectionRoute(s.type, s.categorySlug, s.categorySlugs, inMetivDemo)}
+                      <Link key={s.itemId} to={sourceRoute(s, inMetivDemo)}
                         className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-primary/10 text-foreground rounded-full text-xs font-medium hover:bg-primary/20 transition-natural">
-                        {s.title}<ExternalLink className="w-3 h-3" />
+                        {sourceTitle(s, lang)}<ExternalLink className="w-3 h-3" />
                       </Link>
                     ))}
                   </div>

@@ -1,18 +1,13 @@
-// Sample data for the read-only admin preview (see src/lib/adminPreview.js).
+// Test fixtures for the read-only admin preview (see src/lib/adminPreview.js).
 //
-// This exists so the admin panel can be opened and designed against locally,
-// where real sign-in is impossible: Google is the only login path and localhost
-// is not an authorised OAuth origin. The rows are invented, in the shape the
-// real API returns, and are never reachable from a production build - the whole
-// preview branch is compiled out (see the guard in src/lib/adminPreview.js).
-//
-// Deliberately NOT real content: this is scaffolding to design against, and it
-// should be obvious in the UI that it is not the live database. The one
-// exception is the Metiv variant (/metiv-site-demo-v3/admin), which shows the
-// Hebrew seed (scripts/metiv-seed/he, copy) - the same rows the DB is seeded
-// with, since a schema-less editor is only worth designing against real shapes.
-// The chatbot Q&A panel (both variants) likewise shows the Hebrew Q&A seed
-// (scripts/metiv-seed/chatbot-qa/he.json).
+// Used only by the test run (`import.meta.env.MODE === 'test'` in adminApi()):
+// the dev server reads the live data through the public endpoints instead
+// (src/api/adminLiveRead.js), so nothing here is ever shown in a browser. The
+// PTSD-IL rows are invented, in the shape the real API returns; the Metiv rows
+// are the Hebrew seed (scripts/metiv-seed/he, copy) and the chatbot Q&A rows the
+// Hebrew Q&A seed (scripts/metiv-seed/chatbot-qa/he.json), since a schema-less
+// editor is only worth testing against real shapes. Never part of a production
+// build - the whole preview branch is compiled out.
 
 import { COLLECTIONS, COPY_SLUG, METIV_PARENT_SLUG } from '@/pages/metiv-demos/v3/content/registry';
 
@@ -214,21 +209,4 @@ export function previewGet(path) {
     );
   }
   return undefined;
-}
-
-/**
- * A stand-in for the chatbot worker's POST /translate, so the translation flow
- * can be seen locally: every text comes back prefixed with its language. French
- * answers "flagged" so the warning state is visible too.
- * @param {{ target: string, items: Record<string, string> }} body
- */
-export async function previewTranslate({ target, items }) {
-  await new Promise(r => setTimeout(r, 400));
-  const flagged = target === 'fr';
-  return {
-    items: Object.fromEntries(Object.entries(items).map(([k, v]) => [k, `[${target}] ${v}`])),
-    status: /** @type {'flagged'|'pass'} */ (flagged ? 'flagged' : 'pass'),
-    notes: flagged ? ['תצוגה מקדימה: דוגמה לתרגום שסומן לבדיקה'] : [],
-    model: 'preview',
-  };
 }

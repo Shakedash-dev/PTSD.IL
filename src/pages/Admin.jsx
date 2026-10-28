@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Users, UserCog, FileText, BookOpen, HelpCircle, Wrench, Heart, Baby, Shield, ClipboardList, MessageCircle, Pencil, Trash2, Plus, Check, X, ChevronUp, ChevronDown, Info, History } from 'lucide-react';
 import { toast } from 'sonner';
 import RichTextEditor from '@/components/RichTextEditor';
@@ -9,6 +9,7 @@ import EditLogPanel from '@/components/admin/EditLogPanel';
 import { AddNewButton, Badge, DiscardButton, IconBtn, LoadingRow, Section, STATUS_BADGES } from '@/components/admin/AdminUi';
 import { AdminLangProvider, LanguageTabs, useAdminLang } from '@/components/admin/AdminLang';
 import { MetivContentView } from '@/components/admin/MetivAdmin';
+import { revealElement, useAdminFocus } from '@/components/admin/AdminFocus';
 import ChatbotQaPanel, { QA_SCOPE, QA_SECTION } from '@/components/admin/ChatbotQaAdmin';
 import { SaveAllBar, fieldsDiff, runWrite, usePendingChanges } from '@/components/admin/PendingChanges';
 import { stageSiblingDeletes, useStageTranslations } from '@/components/admin/translationStaging';
@@ -425,12 +426,16 @@ function FieldInput({ field, value, onChange }) {
  * @param {'create'|'update'|'delete'} [props.status]
  * @param {(item: any) => React.ReactNode} props.renderView
  * @param {boolean} [props.startInEdit]
+ * @param {boolean} [props.reveal]  scroll the open editor into view
  * @param {string} [props.confirmLabel]
  */
-function EditableCard({ item, fields, onSave, onCancel, onDelete, onDiscard, status, renderView, startInEdit = false, confirmLabel = 'אישור' }) {
+function EditableCard({ item, fields, onSave, onCancel, onDelete, onDiscard, status, renderView, startInEdit = false, reveal = false, confirmLabel = 'אישור' }) {
   const [editing, setEditing] = useState(startInEdit);
   const [draft, setDraft] = useState(item);
   const [saving, setSaving] = useState(false);
+  const box = useRef(null);
+  // A search result opened this item (Metiv admin): bring the editor into view.
+  useEffect(() => { if (reveal && editing) revealElement(box.current); }, [reveal, editing]);
   const badge = status && STATUS_BADGES[status];
   const staged = confirmLabel === 'אישור';
 
@@ -462,7 +467,7 @@ function EditableCard({ item, fields, onSave, onCancel, onDelete, onDiscard, sta
   }
 
   return (
-    <div className="p-4 rounded-xl border border-primary/40 bg-background space-y-3">
+    <div ref={box} className="p-4 rounded-xl border border-primary/40 bg-background space-y-3">
       {fields.map(f => (
         <div key={f.key}>
           <label className="text-xs font-semibold text-muted-foreground block mb-1">{f.label}</label>
@@ -601,8 +606,10 @@ function StagedList({ scope, section, items, fields, renderView, describe, blank
   const { changes, stage, discard, newKey } = usePendingChanges();
   const { id: lang } = useAdminLang();
   const { translate, deleteSiblings } = useArticleTranslations();
+  const focus = useAdminFocus();
   const hebrew = lang === 'he';
   const structural = hebrew || perLanguage;
+  const focused = item => focus?.panel === tabOfScope(scope) && focus.itemId === item.id;
   const [creating, setCreating] = useState(false);
   const pending = changes.filter(c => c.scope === scope && !c.linkedTo);
   const byItem = new Map(pending.filter(c => c.itemId).map(c => [c.itemId, c]));
@@ -644,9 +651,12 @@ function StagedList({ scope, section, items, fields, renderView, describe, blank
       <div className="space-y-3">
         {items.map(item => {
           const p = byItem.get(item.id);
+          const open = focused(item);
           return (
             <EditableCard
-              key={item.id}
+              key={open ? `${item.id}:${focus.nonce}` : item.id}
+              startInEdit={open}
+              reveal={open}
               item={p?.action === 'update' ? p.draft : item}
               fields={fields}
               renderView={renderView}
@@ -906,6 +916,8 @@ function CommunitiesPanel() {
 function RightsPanel() {
   const { id: lang } = useAdminLang();
   const [cat, setCat] = useState(RIGHTS_CATEGORIES[0]);
+  const focus = useAdminFocus();
+  useEffect(() => { if (focus?.panel === 'rights' && focus.cat) setCat(focus.cat); }, [focus]);
   const [items, loading] = useAdminData(
     () => loadRightsFaq({ lang, audienceSlug: cat }), [cat, lang], 'שגיאה בטעינת הזכויות', []
   );
@@ -1085,6 +1097,8 @@ function ChildrenPanel() {
   const { id: lang } = useAdminLang();
   const { translate } = useArticleTranslations();
   const [ageGroup, setAgeGroup] = useState(AGE_GROUPS[0]);
+  const focus = useAdminFocus();
+  useEffect(() => { if (focus?.panel === 'children' && focus.age) setAgeGroup(focus.age); }, [focus]);
   const [data, loading] = useAdminData(
     async () => {
       const [guidelines, resources] = await Promise.all([
@@ -1832,11 +1846,57 @@ const PANELS = {
   [QA_SCOPE]:    <ChatbotQaPanel />,
 };
 
+// What the Metiv admin's search looks through in the PTSD-IL panels, for one
+// language: every panel's items as { panel, itemId, title, text }, plus the
+// rights category / children age group an item sits under, so a result can
+// switch the panel to it. Text is the item's HTML; the search strips it.
+async function ptsdSearchEntries(lang) {
+  const ctx = { lang };
+  const join = (...parts) => parts.flat().filter(Boolean).join(' · ');
+  const entry = (panel, item, title, text, extra = {}) => ({ panel, itemId: item.id, title: title || '', text: text || '', ...extra });
+  const [faqs, tools, steps, communities, sources, second, rights, children] = await Promise.all([
+    loadPtsdFaq(ctx),
+    loadSelfHelp(ctx),
+    loadTreatment(ctx),
+    loadCommunity(ctx),
+    loadSource(ctx),
+    loadSecondCircle(ctx),
+    Promise.all(RIGHTS_CATEGORIES.map(cat => loadRightsFaq({ ...ctx, audienceSlug: cat }).then(items => items.map(i => ({ ...i, cat }))))),
+    Promise.all(AGE_GROUPS.map(async age => {
+      const [guidelines, resources] = await Promise.all([
+        loadChildrenGuidelines({ ...ctx, ageGroupSlug: age }),
+        loadChildrenResource({ ...ctx, ageGroupSlug: age }),
+      ]);
+      return { age, guidelines, resources };
+    })),
+  ]);
+  return [
+    ...faqs.map(f => entry('ptsd_faqs', f, f.q, f.a)),
+    ...tools.map(t => entry('self_help', t, t.title_he, t.content_he)),
+    ...steps.map(st => entry('treatment', st, st.title_he, join(st.description_he, st.how_to_start_he, (st.methods || []).map(m => [m.title_he, m.description_he])))),
+    ...communities.map(c => entry('communities', c, c.name, join(c.organization, c.description_he, c.location))),
+    ...sources.map(src => entry('sources', src, src.title, join(src.authors, src.description_he))),
+    ...second.map(t => entry('second_circle', t, t.q, join(t.intro, (t.sections || []).map(x => [x.heading, x.body]), t.closing, t.callout))),
+    ...rights.flat().map(r => entry('rights', r, r.q, join(r.a, r.steps), { cat: r.cat })),
+    ...children.flatMap(({ age, guidelines, resources }) => [
+      ...(guidelines?.guidelines ? [{ panel: 'children', itemId: undefined, title: `הנחיות לגיל ${age}`, text: guidelines.guidelines, age }] : []),
+      ...resources.map(r => entry('children', r, r.title_he, join(r.description_he, r.content_he), { age })),
+    ]),
+  ];
+}
+
 // Staged changes carry their list's scope (`rights:general`,
 // `children:guidelines:0-4`, `questionnaire:<id>` ...); the part before the
 // first colon is always the content tab they belong to.
 function tabOfScope(scope) {
   return scope.split(':')[0];
+}
+
+// The Metiv page tree's tool pages (the chatbot Q&A, users, the edit log).
+function renderTool(kind) {
+  if (kind === 'qa') return PANELS[QA_SCOPE];
+  if (kind === 'users') return <UsersPanel />;
+  return <EditLogPanel />;
 }
 
 // The panel's two main sections - the guide (home) and the editable pages -
@@ -1853,10 +1913,12 @@ export default function Admin({ variant = 'ptsd' }) {
   const showContent = hasAdminAccess();
   const showUsers = hasUserManagementAccess();
   const { changes } = usePendingChanges();
+  const metiv = variant === 'metiv';
+  // The Metiv variant keeps users and the edit log in its page tree.
   const views = [
     { key: 'guide', label: 'מדריך שימוש', icon: Info },
-    ...(showContent ? [{ key: 'content', label: 'עריכת תוכן', icon: Pencil }] : []),
-    ...(showUsers ? [USERS_VIEW, LOG_VIEW] : []),
+    ...(showContent || (metiv && showUsers) ? [{ key: 'content', label: 'עריכת תוכן', icon: Pencil }] : []),
+    ...(showUsers && !metiv ? [USERS_VIEW, LOG_VIEW] : []),
   ];
   const [view, setView] = useState('guide');
   const [activeTab, setActiveTab] = useState(CONTENT_TABS[0].key);
@@ -1870,7 +1932,7 @@ export default function Admin({ variant = 'ptsd' }) {
   }
 
   return (
-    <div className={`${variant === 'metiv' ? 'max-w-6xl' : 'max-w-5xl'} mx-auto px-4 sm:px-6 py-8 pb-28`}>
+    <div className={`${metiv ? 'max-w-7xl' : 'max-w-5xl'} mx-auto px-4 sm:px-6 py-8 pb-28`}>
       <nav aria-label="אזורי ממשק הניהול" className="flex flex-wrap gap-2 mb-8 border-b border-border pb-4">
         {views.map(v => {
           const Icon = v.icon;
@@ -1894,14 +1956,21 @@ export default function Admin({ variant = 'ptsd' }) {
 
       {view === 'guide' && <AdminGuide canEdit={showContent} onStart={() => setView('content')} />}
 
-      {view === 'content' && showContent && variant === 'metiv' && (
+      {view === 'content' && metiv && (showContent || showUsers) && (
         <AdminLangProvider lang={lang}>
           <LanguageTabs lang={lang} onChange={setLang} />
-          <MetivContentView ptsdTabs={CONTENT_TABS} renderPtsd={key => PANELS[key]} ptsdPending={pendingByTab} />
+          <MetivContentView
+            ptsdTabs={CONTENT_TABS}
+            renderPtsd={key => PANELS[key]}
+            renderTool={renderTool}
+            ptsdSearch={ptsdSearchEntries}
+            showContent={showContent}
+            showUsers={showUsers}
+          />
         </AdminLangProvider>
       )}
 
-      {view === 'content' && showContent && variant !== 'metiv' && (
+      {view === 'content' && showContent && !metiv && (
         <AdminLangProvider lang={lang}>
           <LanguageTabs lang={lang} onChange={setLang} />
           <h2 className="text-xs font-semibold text-muted-foreground mb-2">עמודי האתר הניתנים לעריכה</h2>
