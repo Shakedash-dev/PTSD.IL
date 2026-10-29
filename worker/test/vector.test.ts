@@ -67,3 +67,13 @@ describe("vector", () => {
     expect(deleteByIds).toHaveBeenCalledWith(expected);
   });
 });
+
+describe("deleteIds batching", () => {
+  it("never sends more than 100 ids per deleteByIds call (Vectorize limit)", async () => {
+    const { deleteIds } = await import("../src/lib/vector");
+    const calls: number[] = [];
+    const index = { deleteByIds: async (ids: string[]) => { if (ids.length > 100) throw new Error("40007"); calls.push(ids.length); } } as any;
+    await deleteIds(index, Array.from({ length: 250 }, (_, i) => `id-${i}`));
+    expect(calls).toEqual([100, 100, 50]);
+  });
+});
