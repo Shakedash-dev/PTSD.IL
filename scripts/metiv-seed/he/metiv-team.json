@@ -13,7 +13,9 @@
         "name": "ד\"ר דני ברום",
         "role": "מייסד ומנכ\"ל מטיב",
         "group": "הנהלה",
-        "bio": "ד\"ר דני ברום הוא מומחה בתחום הטראומה והחוסן. כמייסד מטיב, הביא את מומחיותו בטראומה לתחומי החינוך, הבריאות, בריאות הנפש והקהילה. לימד בבית הספר לעבודה סוציאלית באוניברסיטה העברית, הקים את הקואליציה הישראלית לטראומה וכיהן בה כיו\"ר, ושימש כמנהל המחקר של AMCHA המספקת תמיכה פסיכו-סוציאלית לדור ראשון ושני לניצולי שואה. בעולם, מקיים הדרכות וייעוץ בטראומה וחוסן לאנשי מקצוע ונותני שירותים בעקבות פיגועי טרור ואסונות, כולל ניו יורק לאחר 9/11, האיטי, טורקיה, ניו אורלינס ומקסיקו. היה שותף ל-50 מאמרים שפורסמו בכתבי עת מקצועיים ולכתיבת שבעה ספרים בתחום הטראומה."
+        "bio": "ד\"ר דני ברום הוא מומחה בתחום הטראומה והחוסן. כמייסד מטיב, הביא את מומחיותו בטראומה לתחומי החינוך, הבריאות, בריאות הנפש והקהילה. לימד בבית הספר לעבודה סוציאלית באוניברסיטה העברית, הקים את הקואליציה הישראלית לטראומה וכיהן בה כיו\"ר, ושימש כמנהל המחקר של AMCHA המספקת תמיכה פסיכו-סוציאלית לדור ראשון ושני לניצולי שואה. בעולם, מקיים הדרכות וייעוץ בטראומה וחוסן לאנשי מקצוע ונותני שירותים בעקבות פיגועי טרור ואסונות, כולל ניו יורק לאחר 9/11, האיטי, טורקיה, ניו אורלינס ומקסיקו. היה שותף ל-50 מאמרים שפורסמו בכתבי עת מקצועיים ולכתיבת שבעה ספרים בתחום הטראומה.",
+        "releaseJourneyTeam": false,
+        "releaseJourneyResearcher": false
       }
     },
     {
@@ -26,7 +28,9 @@
         "name": "עידית דיקשטיין",
         "role": "סמנכ\"לית מטיב ומטפלת במרפאת הילדים",
         "group": "הנהלה",
-        "bio": "פוטותרפיסטית, בוגרת תכנית CBT של המרכז לפסיכוטראומה. בעלת תואר ראשון בצילום והכשרה בפוטו-תרפיה."
+        "bio": "פוטותרפיסטית, בוגרת תכנית CBT של המרכז לפסיכוטראומה. בעלת תואר ראשון בצילום והכשרה בפוטו-תרפיה.",
+        "releaseJourneyTeam": false,
+        "releaseJourneyResearcher": false
       }
     },
     {
@@ -39,7 +43,9 @@
         "name": "חיים לנדאו",
         "role": "אחראי פיתוח ושיתופי פעולה",
         "group": "הנהלה",
-        "email": "Chaim@metiv.org"
+        "email": "Chaim@metiv.org",
+        "releaseJourneyTeam": false,
+        "releaseJourneyResearcher": false
       }
     },
     {
@@ -51,7 +57,9 @@
         "_col": "metiv-team",
         "name": "קרן אללוף",
         "role": "כספים",
-        "group": "הנהלה"
+        "group": "הנהלה",
+        "releaseJourneyTeam": false,
+        "releaseJourneyResearcher": false
       }
     },
     {
@@ -64,7 +72,9 @@
         "name": "יונית אפרתי",
         "role": "מנהלת קידום מדיניות ופיתוח שירותים בקהילה",
         "group": "הנהלה",
-        "email": "yonit@metiv.org"
+        "email": "yonit@metiv.org",
+        "releaseJourneyTeam": false,
+        "releaseJourneyResearcher": false
       }
     },
     {
@@ -76,7 +86,9 @@
         "_col": "metiv-team",
         "name": "אריאל בן אהרון",
         "role": "מנהל מרפאת מבוגרים",
-        "group": "מרפאות"
+        "group": "מרפאות",
+        "releaseJourneyTeam": false,
+        "releaseJourneyResearcher": false
       }
     },
     {
@@ -90,7 +102,9 @@
         "role": "מנהלת מרפאת הילדים (מטיב ילדים)",
         "group": "מרפאות",
         "bio": "פסיכולוגית חינוכית מומחית. שותפה בפיתוח תכנית פנד\"ה - פה נלמד דרכי התמודדות, תכנית קבוצתית לפיתוח ויסות רגשי לילדים. עוסקת בטיפול בילדים, מתבגרים והורים, הכשרת מטפלים וצוותים חינוכיים והעברת הרצאות וסדנאות. השכלתה כוללת תואר שני בפסיכולוגיה חינוכית וקלינית של הילד, קורס דו-שנתי לטיפול קוגניטיבי התנהגותי בטראומה וטיפול SE.",
-        "email": "sarit@metiv.org"
+        "email": "sarit@metiv.org",
+        "releaseJourneyTeam": false,
+        "releaseJourneyResearcher": false
       }
     },
     {
@@ -102,7 +116,9 @@
         "_col": "metiv-team",
         "name": "יואל ורדי",
         "role": "מדריך בכיר",
-        "group": "מרפאות"
+        "group": "מרפאות",
+        "releaseJourneyTeam": false,
+        "releaseJourneyResearcher": false
       }
     },
     {
@@ -114,7 +130,9 @@
         "_col": "metiv-team",
         "name": "שלומית חווה",
         "role": "מטפלת במרפאת המבוגרים",
-        "group": "מרפאות"
+        "group": "מרפאות",
+        "releaseJourneyTeam": false,
+        "releaseJourneyResearcher": false
       }
     },
     {
@@ -128,7 +146,9 @@
         "role": "רכזת תכניות לגיל הרך, מטיב ילדים",
         "group": "מרפאות",
         "bio": "פסיכולוגית שיקומית מתמחה. שותפה בשלבי הפיתוח וההוצאה לפועל של מגוון פרויקטים במרפאת הילדים.",
-        "email": "eliya@metiv.org"
+        "email": "eliya@metiv.org",
+        "releaseJourneyTeam": false,
+        "releaseJourneyResearcher": false
       }
     },
     {
@@ -142,7 +162,9 @@
         "role": "רכז תכניות לגיל יסודי ולמשפחות, מטפל במרפאת ילדים",
         "group": "מרפאות",
         "bio": "מתמחה בפסיכולוגיה חינוכית. מרכז את תכנית פנד\"ה ועוסק בטיפול בילדים, מתבגרים והורים, הרצאות וסדנאות.",
-        "email": "yaakov@metiv.org"
+        "email": "yaakov@metiv.org",
+        "releaseJourneyTeam": false,
+        "releaseJourneyResearcher": false
       }
     },
     {
@@ -155,7 +177,9 @@
         "name": "אפרת הרצוג",
         "role": "רכזת תכנית נמ\"ל במטיב ילדים",
         "group": "מרפאות",
-        "email": "efrath@metiv.org"
+        "email": "efrath@metiv.org",
+        "releaseJourneyTeam": false,
+        "releaseJourneyResearcher": false
       }
     },
     {
@@ -168,7 +192,9 @@
         "name": "ד\"ר אנה הרווד גרוס",
         "role": "מנהלת תחום מחקר (בדף הבית: חוקרת בכירה)",
         "group": "מחקר",
-        "email": "anna@metiv.org"
+        "email": "anna@metiv.org",
+        "releaseJourneyTeam": false,
+        "releaseJourneyResearcher": false
       }
     },
     {
@@ -181,7 +207,9 @@
         "name": "שיר אליאס",
         "role": "מנהלת מחלקת מחקר",
         "group": "מחקר",
-        "email": "shir@metiv.org"
+        "email": "shir@metiv.org",
+        "releaseJourneyTeam": false,
+        "releaseJourneyResearcher": false
       }
     },
     {
@@ -193,7 +221,9 @@
         "_col": "metiv-team",
         "name": "ד\"ר אנה פורטוגלוב",
         "role": "אחראית מחקר מרפאות",
-        "group": "מחקר"
+        "group": "מחקר",
+        "releaseJourneyTeam": false,
+        "releaseJourneyResearcher": false
       }
     },
     {
@@ -206,7 +236,9 @@
         "name": "דליה עמית זיוון",
         "role": "מנהלת קלינית של מחקר MDMA/SEA-IT ומטפלת במרפאת המבוגרים",
         "group": "מחקר",
-        "bio": "עובדת סוציאלית קלינית בעלת תואר שני עם התמחות בטיפול בטראומה, ומומחית מטעם איט\"ה כמטפלת ומדריכה מוסמכת ב-CBT. מטפלת בשיטות הגל השלישי, ביניהן ACT ו-DBT, והוכשרה ב-EMDR וב-SE. עובדת במטיב מאז 2017 בטיפול פרטני במרפאת המבוגרים, ומאז 2023 מנחה קבוצות לעיבוד חוויות לחימה בתוכנית \"מסע שחרור\"."
+        "bio": "עובדת סוציאלית קלינית בעלת תואר שני עם התמחות בטיפול בטראומה, ומומחית מטעם איט\"ה כמטפלת ומדריכה מוסמכת ב-CBT. מטפלת בשיטות הגל השלישי, ביניהן ACT ו-DBT, והוכשרה ב-EMDR וב-SE. עובדת במטיב מאז 2017 בטיפול פרטני במרפאת המבוגרים, ומאז 2023 מנחה קבוצות לעיבוד חוויות לחימה בתוכנית \"מסע שחרור\".",
+        "releaseJourneyTeam": false,
+        "releaseJourneyResearcher": true
       }
     },
     {
@@ -219,7 +251,9 @@
         "name": "נדב שטרן",
         "role": "חוקר תוכנית \"מסע שחרור\"",
         "group": "מחקר",
-        "bio": "פסיכולוג בהתמחות קלינית. מטפל במרפאה לבריאות הנפש \"ברזיל\" של שירותי בריאות כללית ובקליניקה פרטית. במטיב חוקר את תוכנית \"מסע שחרור\" ושותף למחקרים נוספים בתחום החיילים."
+        "bio": "פסיכולוג בהתמחות קלינית. מטפל במרפאה לבריאות הנפש \"ברזיל\" של שירותי בריאות כללית ובקליניקה פרטית. במטיב חוקר את תוכנית \"מסע שחרור\" ושותף למחקרים נוספים בתחום החיילים.",
+        "releaseJourneyTeam": false,
+        "releaseJourneyResearcher": true
       }
     },
     {
@@ -232,7 +266,9 @@
         "name": "מיכל זמורה",
         "role": "מנהלת תחום הכשרות",
         "group": "הכשרות",
-        "email": "michal@metiv.org"
+        "email": "michal@metiv.org",
+        "releaseJourneyTeam": false,
+        "releaseJourneyResearcher": false
       }
     },
     {
@@ -245,7 +281,9 @@
         "name": "גפנית אגסי",
         "role": "מנהלת יחידת ההכשרות",
         "group": "הכשרות",
-        "email": "gafnit@metiv.org"
+        "email": "gafnit@metiv.org",
+        "releaseJourneyTeam": false,
+        "releaseJourneyResearcher": false
       }
     },
     {
@@ -258,7 +296,9 @@
         "name": "גיל שמש",
         "role": "פסיכולוג ומרצה בכיר ביחידת הקורסים וההכשרות",
         "group": "הכשרות",
-        "email": "gil@metiv.org"
+        "email": "gil@metiv.org",
+        "releaseJourneyTeam": false,
+        "releaseJourneyResearcher": false
       }
     },
     {
@@ -270,7 +310,9 @@
         "_col": "metiv-team",
         "name": "רחלי ברוקס",
         "role": "מנהלת מסע שחרור",
-        "group": "מסע שחרור"
+        "group": "מסע שחרור",
+        "releaseJourneyTeam": true,
+        "releaseJourneyResearcher": false
       }
     },
     {
@@ -282,7 +324,9 @@
         "_col": "metiv-team",
         "name": "איה רוט",
         "role": "מטפלת, מנהלת קלינית של טיפולי מסע שחרור",
-        "group": "מסע שחרור"
+        "group": "מסע שחרור",
+        "releaseJourneyTeam": true,
+        "releaseJourneyResearcher": false
       }
     },
     {
@@ -294,7 +338,9 @@
         "_col": "metiv-team",
         "name": "רות חבשוש",
         "role": "מנהלת אופרציה",
-        "group": "מסע שחרור"
+        "group": "מסע שחרור",
+        "releaseJourneyTeam": true,
+        "releaseJourneyResearcher": false
       }
     },
     {
@@ -306,7 +352,9 @@
         "_col": "metiv-team",
         "name": "יהודה לפיאן",
         "role": "מנהל קשרי חוץ",
-        "group": "מסע שחרור"
+        "group": "מסע שחרור",
+        "releaseJourneyTeam": true,
+        "releaseJourneyResearcher": false
       }
     },
     {
@@ -318,7 +366,9 @@
         "_col": "metiv-team",
         "name": "הלל מאירסון",
         "role": "רכז מעני המשך",
-        "group": "מסע שחרור"
+        "group": "מסע שחרור",
+        "releaseJourneyTeam": true,
+        "releaseJourneyResearcher": false
       }
     },
     {
@@ -330,7 +380,9 @@
         "_col": "metiv-team",
         "name": "יעל רוזנפלד כהן",
         "role": "רכזת קהילות חו\"ל",
-        "group": "מסע שחרור"
+        "group": "מסע שחרור",
+        "releaseJourneyTeam": true,
+        "releaseJourneyResearcher": false
       }
     },
     {
@@ -342,7 +394,9 @@
         "_col": "metiv-team",
         "name": "יאיר ברין",
         "role": "רכז פניות ותפעול קליני",
-        "group": "מסע שחרור"
+        "group": "מסע שחרור",
+        "releaseJourneyTeam": true,
+        "releaseJourneyResearcher": false
       }
     },
     {
@@ -354,7 +408,9 @@
         "_col": "metiv-team",
         "name": "שלי ארליך",
         "role": "רכזת קבוצות",
-        "group": "מסע שחרור"
+        "group": "מסע שחרור",
+        "releaseJourneyTeam": true,
+        "releaseJourneyResearcher": false
       }
     },
     {
@@ -366,7 +422,9 @@
         "_col": "metiv-team",
         "name": "שמחה אדרי",
         "role": "רכזת קבוצות",
-        "group": "מסע שחרור"
+        "group": "מסע שחרור",
+        "releaseJourneyTeam": true,
+        "releaseJourneyResearcher": false
       }
     }
   ]

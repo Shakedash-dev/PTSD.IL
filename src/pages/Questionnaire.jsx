@@ -116,7 +116,7 @@ export default function Questionnaire() {
         <div className="max-w-3xl mx-auto px-4 sm:px-6 pb-16">
           <div className="rounded-super p-8 text-center bg-card border border-warning/30">
             <AlertCircle className="w-8 h-8 mx-auto mb-3 text-warning" />
-            <p className="text-muted-foreground">{t(lang, 'error_loading') || 'שגיאה בטעינת השאלון. נסו לרענן.'}</p>
+            <p className="text-muted-foreground">{t(lang, 'error_loading')}</p>
           </div>
         </div>
       ) : result === null ? (
@@ -230,6 +230,7 @@ export default function Questionnaire() {
 // sections by order. Any questions beyond the overlay's summed counts render
 // flat below the last section (defensive - never drop a question).
 function HebrewSectioned({ questions, answers, onAnswer }) {
+  const { lang } = useLang();
   let idx = 0;
   const blocks = HE_SECTIONS.sections.map((section, sIdx) => {
     const slice = questions.slice(idx, idx + section.count);
@@ -252,7 +253,7 @@ function HebrewSectioned({ questions, answers, onAnswer }) {
   const leftover = questions.slice(idx);
   return (
     <div>
-      <p className="text-center text-muted-foreground italic mb-10 text-sm">{HE_SECTIONS.intro}</p>
+      <p className="text-center text-muted-foreground italic mb-10 text-sm">{t(lang, 'questionnaire_sections_intro')}</p>
       <div className="space-y-10">
         {blocks}
         {leftover.length > 0 && (

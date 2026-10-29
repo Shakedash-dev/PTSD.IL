@@ -18,7 +18,8 @@ import { fieldRules, hasVisible, isDateKey, patternOf } from './metivFieldRules'
 // icons, category keys, provenance and layout headings are not shown at all,
 // and a list or object with nothing visible inside is left out too. Keys
 // starting with `_` are never shown. A field with a fixed set of choices is a
-// select, an ISO date a date picker. Every input carries `data-path` (the
+// select (a list of keys from such a set: checkboxes), an ISO date a date
+// picker. A list item with nothing to show (an internal link) is kept unshown. Every input carries `data-path` (the
 // field's dot path), so a search result can focus it.
 //
 // `structureLocked` (non-Hebrew tabs) hides add/remove/reorder: a translation
@@ -81,6 +82,28 @@ function SelectControl({ id, value, onChange, choices, path }) {
       {!known && <option value={value ?? ''}>{value || 'לא נבחר'}</option>}
       {choices.map(c => <option key={c.value} value={c.value}>{c.label}</option>)}
     </select>
+  );
+}
+
+/** A list of keys picked from a fixed set (e.g. which ages a model is for). Kept in the choices' order. */
+function MultiChoiceControl({ id, value, onChange, choices, path }) {
+  const set = new Set(value);
+  const toggle = v => {
+    const next = new Set(set);
+    if (next.has(v)) next.delete(v); else next.add(v);
+    const known = choices.map(c => c.value).filter(x => next.has(x));
+    onChange([...known, ...value.filter(x => next.has(x) && !known.includes(x))]);
+  };
+  const unknown = value.filter(x => !choices.some(c => c.value === x));
+  return (
+    <div className="flex flex-wrap gap-x-4 gap-y-2" data-path={path}>
+      {[...choices, ...unknown.map(x => ({ value: x, label: String(x) }))].map((c, i) => (
+        <label key={c.value} className="flex items-center gap-1.5 text-sm text-foreground">
+          <input id={`${id}-${i}`} type="checkbox" checked={set.has(c.value)} onChange={() => toggle(c.value)} />
+          {c.label}
+        </label>
+      ))}
+    </div>
   );
 }
 
@@ -159,11 +182,30 @@ function ItemControls({ index, count, onMove, onRemove, ctx }) {
   );
 }
 
+/**
+ * In a non-Hebrew tab (structure locked) only text is translated by hand:
+ * switches, choices, numbers, dates and links come from the Hebrew row (a
+ * Hebrew save copies them to every language), so they show read-only here.
+ */
+function SetInHebrew({ value }) {
+  const shown = Array.isArray(value) ? value.join(', ') : typeof value === 'boolean' ? (value ? 'כן' : 'לא') : String(value ?? '');
+  return (
+    <p className="text-sm text-muted-foreground" dir="ltr">
+      {shown || '-'} <span className="text-xs" dir="rtl">(נקבע בלשונית העברית)</span>
+    </p>
+  );
+}
+
 /** The editor for a value with no label of its own (a list item, a card body). */
 function Value({ k, value, onChange, path, ctx }) {
   const id = `${ctx.idBase}-${path}`;
   const dir = isTechnicalKey(k) ? 'ltr' : ctx.dir;
   if (isRef(value)) return <RefNote value={value} ctx={ctx} />;
+  const listChoices = Array.isArray(value) ? ctx.rules.options(patternOf(path)) : null;
+  if (ctx.structureLocked && (listChoices || typeof value === 'boolean' || typeof value === 'number' || isDateKey(k) || isTechnicalKey(k) || (typeof value === 'string' && ctx.rules.options(patternOf(path))))) {
+    return <SetInHebrew value={value} />;
+  }
+  if (listChoices) return <MultiChoiceControl id={id} value={value} onChange={onChange} choices={listChoices} path={path} />;
   if (Array.isArray(value)) return <ListField k={k} value={value} onChange={onChange} path={path} ctx={ctx} />;
   if (value && typeof value === 'object') return <ObjectFields value={value} onChange={onChange} path={path} ctx={ctx} />;
   if (typeof value === 'number') return <NumberControl id={id} value={value} onChange={onChange} path={path} />;
@@ -182,7 +224,7 @@ function Field({ k, value, onChange, path, ctx }) {
     return (
       <div>
         <label className="flex items-center gap-2 text-sm text-foreground">
-          <input id={id} data-path={path} type="checkbox" checked={value} disabled={ctx.lockedKeys?.includes(k)} onChange={e => onChange(e.target.checked)} />
+          <input id={id} data-path={path} type="checkbox" checked={value} disabled={ctx.structureLocked || ctx.lockedKeys?.includes(k)} onChange={e => onChange(e.target.checked)} />
           {fieldLabel(k, ctx.labels)}
         </label>
         <FieldHelp k={k} value={value} ctx={ctx} />
@@ -213,7 +255,7 @@ function ObjectFields({ value, onChange, path, ctx }) {
   const at = k => (path ? `${path}.${k}` : k);
   const entries = Object.entries(value).filter(([k, v]) => {
     const pattern = patternOf(at(k));
-    return visible(pattern, k) && hasVisible(v, pattern, visible);
+    return visible(pattern, k, v, value) && hasVisible(v, pattern, visible);
   });
   const set = (k, v) => onChange({ ...value, [k]: v });
   return (
@@ -254,44 +296,52 @@ function ItemCard({ index, item, count, k, onChange, onMove, onRemove, path, ctx
 function ListField({ k, value: list, onChange, path, ctx }) {
   const [added, setAdded] = useState(-1);
   const primitive = list.every(x => x === null || typeof x !== 'object');
+  // Items with nothing to edit (an internal link) are kept as they are, unshown.
+  const pattern = `${patternOf(path)}[]`;
+  const shown = list.map((_, i) => i).filter(i => primitive || hasVisible(list[i], pattern, ctx.rules.visible));
   const setAt = (i, v) => onChange(list.map((x, j) => (j === i ? v : x)));
   const remove = i => onChange(list.filter((_, j) => j !== i));
+  // Moves swap with the next shown item, so a hidden one never blocks a move.
   const move = (i, delta) => {
-    const t = i + delta;
-    if (t < 0 || t >= list.length) return;
+    const at = shown.indexOf(i);
+    const t = shown[at + delta];
+    if (t === undefined) return;
     const next = list.slice();
     [next[i], next[t]] = [next[t], next[i]];
     onChange(next);
   };
   const add = () => {
-    const sample = list.find(x => x && typeof x === 'object' && !isRef(x)) ?? list[0];
+    const sample = list.find(x => x && typeof x === 'object' && !isRef(x) && hasVisible(x, pattern, ctx.rules.visible)) ?? list[0];
     setAdded(list.length);
     onChange([...list, list.length ? blankLike(sample) : '']);
   };
+  // ItemControls see positions among the shown items.
+  const moveShown = (pos, delta) => move(shown[pos], delta);
+  const removeShown = pos => remove(shown[pos]);
 
   return (
     <div className="space-y-2">
-      {list.length === 0 && <p className="text-xs text-muted-foreground">(רשימה ריקה)</p>}
+      {shown.length === 0 && <p className="text-xs text-muted-foreground">(רשימה ריקה)</p>}
       {primitive
-        ? list.map((x, i) => (
+        ? shown.map((i, pos) => (
           <div key={i} className="flex items-start gap-1">
-            <span className="text-xs text-muted-foreground pt-2.5 w-5 flex-shrink-0">{i + 1}.</span>
+            <span className="text-xs text-muted-foreground pt-2.5 w-5 flex-shrink-0">{pos + 1}.</span>
             <div className="flex-1 min-w-0">
-              <Value k={k} value={x} onChange={v => setAt(i, v)} path={`${path}.${i}`} ctx={ctx} />
+              <Value k={k} value={list[i]} onChange={v => setAt(i, v)} path={`${path}.${i}`} ctx={ctx} />
             </div>
-            <ItemControls index={i} count={list.length} onMove={move} onRemove={remove} ctx={ctx} />
+            <ItemControls index={pos} count={shown.length} onMove={moveShown} onRemove={removeShown} ctx={ctx} />
           </div>
         ))
-        : list.map((x, i) => (
+        : shown.map((i, pos) => (
           <ItemCard
             key={i}
-            index={i}
-            item={x}
-            count={list.length}
+            index={pos}
+            item={list[i]}
+            count={shown.length}
             k={k}
             onChange={v => setAt(i, v)}
-            onMove={move}
-            onRemove={remove}
+            onMove={moveShown}
+            onRemove={removeShown}
             path={`${path}.${i}`}
             ctx={ctx}
             defaultOpen={i === added}

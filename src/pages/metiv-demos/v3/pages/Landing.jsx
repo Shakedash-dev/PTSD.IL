@@ -4,7 +4,9 @@ import { DemoLink } from '@/pages/metiv-demos/shared/DemoChrome';
 import { ROUTES } from '@/pages/metiv-demos/shared/routes';
 import { FIRST_CIRCLE_ILLUSTRATIONS, TREATMENT_STEP_IMAGES } from '@/lib/images';
 import { cn } from '@/lib/utils';
-import { fmt, useCopy, useMetiv } from '../content/MetivContent';
+import { useLang } from '@/lib/LanguageContext';
+import { t } from '@/lib/i18n';
+import { fmt, isExternalLink, useCopy, useMetiv } from '../content/MetivContent';
 import { V3_ROUTES } from '../meta';
 import { Band, CHIP_LINK, ExternalLink, FOCUS, FWD, NamedIcon, NUDGE, PILL_OUTLINE, PILL_SOLID, SectionHeading, StatusPill, TEXT_LINK } from '../components/kit';
 
@@ -88,7 +90,8 @@ function DoorCard({ door }) {
 
 export default function Landing() {
   const c = useCopy('landing');
-  const { ACTIVE_STUDIES, ARTICLES, DONATE, FACTS, FUNDERS_AND_COLLABORATORS, METIV_SERVICE_CARDS, ORG, PARTNERS, PATIENT_HUB, RESEARCH_INTRO, UPCOMING_EVENTS } = useMetiv();
+  const { lang } = useLang();
+  const { ACTIVE_STUDIES, ARTICLES, DONATE, FACTS, FUNDERS_AND_COLLABORATORS, METIV_SERVICE_CARDS, ORG, PARTNERS, RESEARCH_INTRO, UPCOMING_EVENTS } = useMetiv();
   const DOORS = doorsFrom(c);
   const recruiting = ACTIVE_STUDIES.filter((s) => s.recruiting);
   const article = ARTICLES[0];
@@ -124,11 +127,11 @@ export default function Landing() {
         <div className="grid gap-8 md:grid-cols-[minmax(0,1fr)_auto] md:items-center">
           <div className="max-w-3xl">
             <SectionHeading id="landing-ptsd" eyebrow={c.ptsdEyebrow} title={c.ptsdTitle} className="mb-4" />
-            <p className="text-lg sm:text-xl text-foreground leading-relaxed">{PATIENT_HUB.hero.about}</p>
+            <p className="text-lg sm:text-xl text-foreground leading-relaxed">{t(lang, 'about_ptsd_short')}</p>
           </div>
           <div className="flex flex-wrap gap-3">
-            <DemoLink to={PATIENT_HUB.hero.aboutRoute} className={PILL_SOLID}>
-              {PATIENT_HUB.hero.aboutLinkLabel} <ArrowLeft className={cn('w-4 h-4', FWD)} aria-hidden="true" />
+            <DemoLink to={ROUTES.ptsdInfo} className={PILL_SOLID}>
+              {t(lang, 'read_more')} <ArrowLeft className={cn('w-4 h-4', FWD)} aria-hidden="true" />
             </DemoLink>
             <DemoLink to={ROUTES.questionnaire} className={PILL_OUTLINE}>{c.questionnaire}</DemoLink>
           </div>
@@ -222,7 +225,7 @@ export default function Landing() {
         <SectionHeading id="landing-news" eyebrow={c.newsEyebrow} title={c.newsTitle} />
         <div className="grid gap-4 md:grid-cols-3">
           {UPCOMING_EVENTS.slice(0, 2).map((/** @type {any} */ e) => (
-            <DemoLink key={e.slug} to={e.link && !e.external ? e.link : ROUTES.events} className={cn('group flex flex-col rounded-super bg-card border border-border p-6 shadow-card hover:shadow-card-hover transition-natural', FOCUS)}>
+            <DemoLink key={e.slug} to={e.link && !isExternalLink(e.link) ? e.link : ROUTES.events} className={cn('group flex flex-col rounded-super bg-card border border-border p-6 shadow-card hover:shadow-card-hover transition-natural', FOCUS)}>
               <span className="inline-flex items-center gap-2 text-sm font-semibold text-accent">
                 <CalendarDays className="w-4 h-4" aria-hidden="true" /> {e.date} · {e.type}
               </span>

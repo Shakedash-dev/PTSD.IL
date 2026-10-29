@@ -29,7 +29,10 @@
             "contact": {
               "email": "gil@metiv.org"
             },
-            "sourceUrl": "https://metiv.org/הדרכות/"
+            "sourceUrl": "https://metiv.org/הדרכות/",
+            "kinds": [
+              "individual"
+            ]
           },
           {
             "key": "organizations",
@@ -40,7 +43,10 @@
             "contact": {
               "email": "shimrit@metiv.org"
             },
-            "sourceUrl": "https://metiv.org/הדרכות/"
+            "sourceUrl": "https://metiv.org/הדרכות/",
+            "kinds": [
+              "team"
+            ]
           },
           {
             "key": "supervision-group",
@@ -65,7 +71,10 @@
             "startDate": "14.5.2025",
             "isPast": true,
             "registrationUrl": "https://pay.sumit.co.il/1i0fvg/a99vjw/a99vam/payment/",
-            "sourceUrl": "https://metiv.org/jet-popup/קבוצת-הדרכה/"
+            "sourceUrl": "https://metiv.org/jet-popup/קבוצת-הדרכה/",
+            "kinds": [
+              "group"
+            ]
           },
           {
             "key": "after-roadmap",
@@ -73,7 +82,10 @@
             "format": "Групповая",
             "price": "За дополнительную плату и в зависимости от числа участников",
             "description": "После курса «Дорожная карта» можно присоединиться к супервизионной группе из 5 встреч, где участники приносят случаи из практики для консультации и планирования работы, а также обогащаются, разбирая случаи других.",
-            "sourceUrl": "https://metiv.org/יסודות-הטיפול-בטראומה/"
+            "sourceUrl": "https://metiv.org/יסודות-הטיפול-בטראומה/",
+            "kinds": [
+              "group"
+            ]
           },
           {
             "key": "kids-clinic",
@@ -83,7 +95,11 @@
             "contact": {
               "email": "kids@metiv.org"
             },
-            "sourceUrl": "https://metiv.org/מטיב-ילדים-טראומה/"
+            "sourceUrl": "https://metiv.org/מטיב-ילדים-טראומה/",
+            "kinds": [
+              "individual",
+              "kids"
+            ]
           }
         ],
         "clientList": [

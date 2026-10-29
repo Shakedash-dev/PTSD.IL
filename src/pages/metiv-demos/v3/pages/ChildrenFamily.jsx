@@ -9,15 +9,6 @@ import { Band, ChipQuestion, ContactChips, ExternalLink, FactGrid, FOCUS, FWD, P
 import { courseStatus } from '../lib';
 import { fmt, useCopy, useMetiv } from '../content/MetivContent';
 
-// Which age groups each model serves, for the "which age?" question.
-const MODEL_AGES = {
-  panda: ['school'],
-  'panda-parents': ['parents'],
-  'panda-family': ['early', 'school', 'parents'],
-  'panda-two': ['early', 'parents'],
-  namal: ['early', 'parents'],
-};
-
 export default function ChildrenFamily() {
   const { CHILDREN_FAMILY_INTRO, coursesByCategory } = useMetiv();
   const c = useCopy('childrenFamily');
@@ -30,7 +21,8 @@ export default function ChildrenFamily() {
   const [age, setAge] = useState('all');
   const intro = CHILDREN_FAMILY_INTRO;
   const trainings = coursesByCategory('children-family');
-  const models = intro.models.filter((/** @type {any} */ m) => age === 'all' || (MODEL_AGES[/** @type {keyof typeof MODEL_AGES} */ (m.key)] || []).includes(age));
+  // Each model lists the age groups it serves (`ageGroups`), for the "which age?" question.
+  const models = intro.models.filter((/** @type {any} */ m) => age === 'all' || (m.ageGroups || []).includes(age));
 
   return (
     <div className="bg-background">

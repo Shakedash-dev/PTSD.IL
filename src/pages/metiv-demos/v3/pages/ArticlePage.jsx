@@ -8,6 +8,10 @@ import PageHeaderV3 from '../components/PageHeaderV3';
 import { Band, EmptyState, ExternalLink, FWD, PILL_OUTLINE, PILL_SOLID, StatusPill, TEXT_LINK } from '../components/kit';
 import { fmt, useCopy, useMetiv } from '../content/MetivContent';
 
+// The eyebrow label of each article genre (`genre` on the article).
+/** @type {Record<string, string>} */
+const GENRE_COPY = { opinion: 'eyebrow' };
+
 export default function ArticlePage() {
   const { getArticle } = useMetiv();
   const c = useCopy('articlePage');
@@ -29,7 +33,7 @@ export default function ArticlePage() {
     <div className="bg-background">
       <PageHeaderV3
         tone="muted"
-        eyebrow={c.eyebrow}
+        eyebrow={c[GENRE_COPY[article.genre ?? 'opinion'] ?? '']}
         title={article.title}
         subtitle={article.excerpt}
         meta={

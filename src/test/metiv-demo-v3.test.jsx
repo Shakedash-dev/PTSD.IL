@@ -7,7 +7,11 @@ import { ChatProvider } from '@/lib/ChatContext';
 import { ValidationProvider } from '@/contexts/ValidationContext';
 import { UserTypeProvider } from '@/contexts/UserTypeContext';
 import Site from '@/pages/metiv-demos/v3/Site';
-import { metivQueryOptions } from '@/pages/metiv-demos/v3/content/MetivContent';
+import { isExternalLink, metivQueryOptions, withIsoDates } from '@/pages/metiv-demos/v3/content/MetivContent';
+import { EDITABLE_I18N } from '@/lib/editableI18nKeys';
+import copySupervision from '../../scripts/metiv-seed/copy/supervision.json';
+import copyOrganizations from '../../scripts/metiv-seed/copy/organizations.json';
+import copyChildrenFamily from '../../scripts/metiv-seed/copy/childrenFamily.json';
 import { metivSeedData } from '@/test/fixtures/metivSeed';
 import { t } from '@/lib/i18n';
 
@@ -283,5 +287,150 @@ describe('metiv demo v3 (Guided Journey)', () => {
     fireEvent.click(screen.getAllByRole('button', { name: 'הצג את כל הקורסים' })[0]);
     expect(cards()).toBe(all);
     assertClean(container);
+  });
+});
+
+describe('metiv demo v3: content decided by the data', () => {
+  let fetchSpy;
+  beforeAll(() => {
+    class IO {
+      observe() {}
+      unobserve() {}
+      disconnect() {}
+      takeRecords() { return []; }
+    }
+    vi.stubGlobal('IntersectionObserver', IO);
+    window.scrollTo = vi.fn();
+  });
+  beforeEach(() => {
+    fetchSpy = vi.spyOn(globalThis, 'fetch').mockImplementation(() => new Promise(() => {}));
+  });
+  afterEach(() => {
+    cleanup();
+    fetchSpy.mockRestore();
+  });
+
+  const seed = metivSeedData();
+  /** @param {HTMLElement} container */
+  const h3s = (container) => [...container.querySelectorAll('main h3')].map((h) => h.textContent?.trim());
+
+  it('release-journey study, papers and people come from their flags', () => {
+    expect(seed.RELEASE_JOURNEY_STUDY?.slug).toBe('release-journey-study');
+    expect(seed.RELEASE_JOURNEY_PAPERS).toHaveLength(3);
+    expect(seed.RELEASE_JOURNEY_PAPERS.every((p) => /peace of mind|battlefield to home/i.test(p.title))).toBe(true);
+    expect(seed.RELEASE_JOURNEY_TEAM).toHaveLength(9);
+    expect(seed.RELEASE_JOURNEY_RESEARCHERS).toHaveLength(2);
+    expect(seed.RELEASE_JOURNEY_TEAM.every((m) => !m.releaseJourneyResearcher)).toBe(true);
+  });
+
+  it('ISO dates give the visible date in the page language and the past/upcoming state', () => {
+    const d = {
+      EVENTS: [
+        { dateISO: '1999-03-05', date: 'old text', isPast: false },
+        { dateISO: '2999-12-18', date: 'old text', isPast: true },
+        { date: 'ימי שני', isPast: true },
+      ],
+      ARTICLES: [{ dateISO: '2025-12-18', date: 'x' }],
+      COURSES: [{ startDateISO: '2999-01-09', startDate: 'x', formats: [{ startDateISO: '1999-01-01', startDate: 'x' }], units: [{ dateISO: '2025-02-06', date: 'x' }] }],
+    };
+    const he = withIsoDates(d, 'he');
+    expect(he.EVENTS[0]).toMatchObject({ date: '5 במרץ 1999', isPast: true });
+    expect(he.EVENTS[1]).toMatchObject({ date: '18 בדצמבר 2999', isPast: false });
+    expect(he.EVENTS[2]).toMatchObject({ date: 'ימי שני', isPast: true });
+    expect(he.ARTICLES[0].date).toBe('18 בדצמבר 2025');
+    expect(he.ARTICLES[0].isPast).toBeUndefined();
+    expect(he.COURSES[0]).toMatchObject({ startDate: '9 בינואר 2999', isPast: false });
+    expect(he.COURSES[0].formats[0].isPast).toBe(true);
+    expect(he.COURSES[0].units[0].date).toBe('6 בפברואר 2025');
+    expect(withIsoDates(d, 'en').ARTICLES[0].date).toBe('December 18, 2025');
+    expect(withIsoDates(d, 'ar').ARTICLES[0].date).toMatch(/18/);
+  });
+
+  it('an end date makes a localized range and decides past/upcoming; dateText overrides the text', () => {
+    const d = {
+      EVENTS: [
+        { dateISO: '2023-02-28', endDateISO: '2023-03-01', date: 'x' },
+        { dateISO: '1999-06-28', endDateISO: '2999-07-16', date: 'x', isPast: true },
+        { dateISO: '2025-02-06', endDateISO: '2025-02-13', dateText: '6.2.2025 ו-13.2.2025', date: 'x' },
+        { dateISO: '2025-02-06', dateText: '  ', date: 'x' },
+      ],
+      COURSES: [{ units: [{ dateISO: '2025-02-06', endDateISO: '2025-02-13', dateText: 'שני ימים', date: 'x' }] }],
+    };
+    const he = withIsoDates(d, 'he');
+    expect(he.EVENTS[0].date).toBe('28 פברואר - 1 מרץ 2023');
+    expect(he.EVENTS[0].isPast).toBe(true);
+    expect(he.EVENTS[1].isPast).toBe(false);
+    expect(he.EVENTS[2].date).toBe('6.2.2025 ו-13.2.2025');
+    expect(he.EVENTS[3].date).toBe('6 בפברואר 2025');
+    expect(he.COURSES[0].units[0].date).toBe('שני ימים');
+    const en = withIsoDates(d, 'en');
+    expect(en.EVENTS[0].date).toBe('February 28 - March 1, 2023');
+    for (const lang of ['he', 'ar', 'en', 'ru', 'fr']) expect(withIsoDates(d, lang).EVENTS[0].date).not.toMatch(/[\u2013\u2014]/);
+  });
+
+  it('events with several dates show the same information as before', () => {
+    const events = Object.fromEntries(seed.EVENTS.map((e) => [e.slug, e]));
+    expect(events['summer-course-2026'].date).toBe('28.6-9.7.2026, הכשרה קלינית 12-16.7.2026');
+    expect(events['summer-course-2026'].isPast).toBe(true);
+    expect(events['kaleidoscope-dissociation'].date).toBe('6.2.2025 ו-13.2.2025');
+    expect(events['kids-trauma-basics-2024-09'].date).toBe('11, 12, 15 בספטמבר 2024');
+    expect(events['trauma-informed-care-conference-2023'].date).toBe('28 פברואר - 1 מרץ 2023');
+    const unit = seed.COURSES.find((c) => c.slug === 'kaleidoscope').units[0];
+    expect(unit.date).toBe('6.2.2025 ו-13.2.2025');
+    const { container } = renderAt(ROUTES.events);
+    expect(container.textContent).toContain('28.6-9.7.2026, הכשרה קלינית 12-16.7.2026');
+    expect(container.textContent).toContain('28 פברואר - 1 מרץ 2023');
+  });
+
+  it('an event link is external exactly when it is an absolute http(s) URL', () => {
+    expect(isExternalLink('https://metiv.org/x')).toBe(true);
+    expect(isExternalLink('http://metiv.org')).toBe(true);
+    expect(isExternalLink('/therapist/courses/roadmap')).toBe(false);
+    expect(isExternalLink(undefined)).toBe(false);
+  });
+
+  it('supervision kinds, organisation needs and model ages filter by the item fields', () => {
+    const sup = renderAt(ROUTES.supervision);
+    fireEvent.click(screen.getByRole('button', { name: copySupervision.kindKids }));
+    const kidsTitles = seed.SUPERVISION.options.filter((o) => o.kinds.includes('kids')).map((o) => o.title);
+    expect(kidsTitles.length).toBeGreaterThan(0);
+    for (const o of seed.SUPERVISION.options) expect(h3s(sup.container).includes(o.title), o.key).toBe(kidsTitles.includes(o.title));
+    sup.unmount();
+
+    const org = renderAt(ROUTES.organizations);
+    fireEvent.click(screen.getByRole('button', { name: copyOrganizations.needWorkshop }));
+    for (const p of seed.ORGANIZATION_PROGRAMS) expect(h3s(org.container).includes(p.title), p.slug).toBe(p.needs.includes('workshop'));
+    org.unmount();
+
+    const kids = renderAt(ROUTES.childrenFamily);
+    fireEvent.click(screen.getByRole('button', { name: copyChildrenFamily.ageEarly }));
+    for (const m of seed.CHILDREN_FAMILY_INTRO.models) expect(h3s(kids.container).includes(m.title), m.key).toBe(m.ageGroups.includes('early'));
+    kids.unmount();
+  });
+
+  it('a therapist-hub goal lists the courses that name it, in course order', () => {
+    const { container } = renderAt('/therapist?need=team');
+    const expected = seed.COURSES.filter((c) => c.therapistNeeds.includes('team'));
+    expect(expected.map((c) => c.slug)).toEqual(['org-therapist-training', 'trauma-informed-org-day']);
+    const text = container.querySelector('main')?.textContent || '';
+    for (const c of expected) expect(text).toContain(c.title);
+  });
+
+  it('shared texts come from i18n: the landing PTSD paragraph and the footer disclaimer', () => {
+    const { container } = renderAt('/');
+    const text = container.textContent || '';
+    expect(text).toContain(t('he', 'about_ptsd_short'));
+    expect(text).toContain(t('he', 'footer_disclaimer'));
+    expect(seed.PATIENT_HUB.hero).toBeUndefined();
+    expect(seed.PATIENT_HUB.disclaimer).toBeUndefined();
+  });
+
+  it('every editable i18n key exists in all five languages, on a known admin page', () => {
+    for (const [page, keys] of Object.entries(EDITABLE_I18N)) {
+      expect(keys.length, page).toBeGreaterThan(0);
+      for (const key of keys) for (const lang of ['he', 'ar', 'en', 'ru', 'fr']) expect(t(lang, key), `${page}: ${lang}.${key}`).not.toBe(key);
+    }
+    for (const key of ['error_loading', 'questionnaire_sections_intro']) for (const lang of ['he', 'ar', 'en', 'ru', 'fr']) expect(t(lang, key)).not.toBe(key);
+    expect(t('he', 'chatbot_description')).toContain('תשובות');
   });
 });

@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useMemo, useRef, useState } from 'react';
-import { Check, ChevronDown, ChevronLeft, ChevronUp, ExternalLink, Menu, Pencil, Search, Trash2, X } from 'lucide-react';
+import { Check, ChevronDown, ChevronLeft, ChevronUp, ExternalLink, Menu, Pencil, RotateCcw, Search, Trash2, X } from 'lucide-react';
 import { useSearchParams } from 'react-router-dom';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
@@ -11,11 +11,14 @@ import { AdminFocusProvider, revealElement, useAdminFocus } from '@/components/a
 import { TRANSLATION_BADGES, usePendingChanges } from '@/components/admin/PendingChanges';
 import { stageSiblingDeletes, useStageTranslations } from '@/components/admin/translationStaging';
 import { blankLike, contentDiff, fieldLabel, isRef, isTechnicalKey, itemSummary } from '@/components/admin/contentFields';
-import { fieldRules, hasVisible, patternOf } from '@/components/admin/metivFieldRules';
+import { fieldRules, hasVisible, isNavLink, patternOf } from '@/components/admin/metivFieldRules';
 import { COPY_CONTENT_KEYS, copyContentKeys } from '@/components/admin/copyContentKeys';
 import { buildSiteTree, findPage, flattenPages } from '@/components/admin/metivSiteMap';
+import { siteCopyLabel } from '@/components/admin/siteCopyLabels';
 import { groupByPage, plainText, searchEntries } from '@/components/admin/adminSearch';
-import { TARGET_LANGS, humanStamp } from '@/api/adminTranslate';
+import { LANG_BY_ID, TARGET_LANGS, humanStamp } from '@/api/adminTranslate';
+import { createSiteCopyRow, loadSiteCopyRows, removeSiteCopyRow, siteCopyRow, updateSiteCopyRow } from '@/api/adminSiteCopy';
+import { translations } from '@/lib/i18n';
 import { loadChatbotQa, qaTitle } from '@/api/chatbotQaAdminSource';
 import {
   createMetivRow, loadMetiv, metivTitle, newItemKey, removeMetivRow, resolveRef, setMetivSortOrder, updateMetivRow,
@@ -34,8 +37,10 @@ import { BASE_PATH } from '@/base-path';
 // (?page=...), so refresh and back keep the place.
 //
 // Only content is editable, never format: page copy shows its content keys
-// only (copyContentKeys.js), and collection items hide ids, routes, icons and
-// layout headings (metivFieldRules.js).
+// only (copyContentKeys.js), collection items hide ids, routes, icons and
+// layout headings (metivFieldRules.js), and the i18n texts shared with PTSD-IL
+// are the ones in src/lib/editableI18nKeys.js, edited as site-copy override
+// rows (SiteCopySection below).
 //
 // Every edit is staged like every other panel: "אישור" stages, the save-all
 // dialog writes. A Hebrew change stages its AI translations
@@ -66,6 +71,29 @@ export function MetivStoreProvider({ children }) {
   return <MetivStoreContext.Provider value={state}>{children}</MetivStoreContext.Provider>;
 }
 
+const SiteCopyStoreContext = createContext(/** @type {null | { store: import('@/api/adminSiteCopy').SiteCopyStore|null, loading: boolean, error: string }} */ (null));
+
+// The site-copy override rows, loaded once and again after each save-all batch.
+function SiteCopyStoreProvider({ children }) {
+  const { version } = usePendingChanges();
+  const [state, setState] = useState({ store: null, loading: true, error: '' });
+  useEffect(() => {
+    let cancelled = false;
+    setState(s => ({ ...s, loading: true }));
+    loadSiteCopyRows()
+      .then(store => { if (!cancelled) setState({ store, loading: false, error: '' }); })
+      .catch(err => { if (!cancelled) setState({ store: null, loading: false, error: err?.message || 'שגיאה בטעינת הטקסטים' }); });
+    return () => { cancelled = true; };
+  }, [version]);
+  return <SiteCopyStoreContext.Provider value={state}>{children}</SiteCopyStoreContext.Provider>;
+}
+
+function useSiteCopyStore() {
+  const ctx = useContext(SiteCopyStoreContext);
+  if (!ctx) throw new Error('useSiteCopyStore must be used inside <SiteCopyStoreProvider>');
+  return ctx;
+}
+
 function useMetivStore() {
   const ctx = useContext(MetivStoreContext);
   if (!ctx) throw new Error('useMetivStore must be used inside <MetivStoreProvider>');
@@ -83,7 +111,7 @@ function siblingIn(store, row, lang) {
   return store.rows.find(r => r.groupId === row.groupId && r.langId === lang) ?? null;
 }
 
-/** The Hebrew data by collection key - list contents, singleton content, string items - for select choices. */
+/** The Hebrew data by collection key - list contents, singleton content, string items - and the page copy (COPY), for select choices. */
 function heCollections(store) {
   /** @type {Record<string, any>} */
   const out = {};
@@ -93,6 +121,8 @@ function heCollections(store) {
     else if (col.kind === 'strings') out[col.key] = rows[0]?.content?.items ?? [];
     else out[col.key] = rows[0]?.content ?? {};
   }
+  // The page copy by namespace, for choices labelled with a page's chip texts.
+  out.COPY = Object.fromEntries(heRowsOf(store, COPY_SLUG).map(r => [r.key, r.content]));
   return out;
 }
 
@@ -111,7 +141,7 @@ const withoutMeta = content => Object.fromEntries(Object.entries(content || {}).
 
 /**
  * What a section edits, resolved against the registry.
- * @typedef {{ id: string, kind: string, label: string, slug: string, collection?: string, scope: string, sectionName: string, titleField?: string, idField?: string, copyKey?: string, fields?: string[], itemKey?: string }} SectionMeta
+ * @typedef {{ id: string, kind: string, label: string, slug: string, collection?: string, scope: string, sectionName: string, titleField?: string, idField?: string, copyKey?: string, fields?: string[], itemKey?: string, keys?: string[] }} SectionMeta
  */
 
 /** @param {any} section @param {import('./metivSiteMap').PageNode} page @param {Record<string, string>} ptsdLabels @returns {SectionMeta} */
@@ -132,6 +162,10 @@ function sectionMeta(section, page, ptsdLabels) {
       id: section.id, kind: section.kind === 'item' ? 'item' : col.kind, label, slug: col.slug, collection: col.key, scope,
       sectionName: `${where} / ${label}`, titleField: col.titleField, idField: col.idField, fields: section.fields, itemKey: section.itemKey,
     };
+  }
+  if (section.kind === 'i18n') {
+    const label = section.label || 'טקסטים בעמוד (משותפים עם PTSD-IL)';
+    return { id: section.id, kind: 'i18n', label, slug: '', scope: 'sitecopy', sectionName: `${where} / ${label}`, keys: section.keys ?? [] };
   }
   const label = section.label || ptsdLabels[section.panel] || '';
   return { id: section.id, kind: section.kind, label, slug: '', scope: section.panel || section.kind, sectionName: `${where} / ${label}` };
@@ -533,6 +567,222 @@ function SingleSection({ meta, store }) {
   );
 }
 
+// ─── Site copy (i18n texts shared with PTSD-IL) ──────────────────────────────
+
+/** The text the site ships for a key in a language (src/lib/i18n.js), or ''. */
+function shippedText(key, lang) {
+  const v = /** @type {any} */ (translations)[lang]?.[key];
+  return typeof v === 'string' ? v : '';
+}
+
+/**
+ * What a key shows in a language, the way t() resolves it: the language's
+ * override, its shipped text, then the Hebrew override and shipped text.
+ * @param {import('@/api/adminSiteCopy').SiteCopyStore} store @param {string} key @param {string} lang
+ */
+function siteCopyText(store, key, lang) {
+  const own = siteCopyRow(store, key, lang)?.text || shippedText(key, lang);
+  if (own || lang === 'he') return own;
+  return siteCopyRow(store, key, 'he')?.text || shippedText(key, 'he');
+}
+
+/** Change keys: the Hebrew edit (and the revert of every language), a hand edit in another language. */
+export const siteCopyKey = (/** @type {string} */ key, /** @type {string} */ lang = 'he') => (lang === 'he' ? `sitecopy:${key}` : `sitecopy:${key}:${lang}`);
+const siteCopyScope = (/** @type {string} */ key) => `sitecopy:${key}`;
+
+/** Staging for the site-copy texts of one section. */
+function useSiteCopyStaging(meta, store) {
+  const { changes, stage, discard } = usePendingChanges();
+  const stageTranslations = useStageTranslations();
+  const section = meta.sectionName;
+  const rowOf = (key, lang) => siteCopyRow(store, key, lang);
+  // The key's rows share one groupId: the Hebrew row's, else any language's.
+  const groupOf = key => rowOf(key, 'he')?.groupId ?? store.rows.find(r => r.key === key)?.groupId;
+
+  /** A Hebrew edit: the Hebrew row, and the AI translation of the four others. */
+  function stageHe(key, text) {
+    const heKey = siteCopyKey(key);
+    const row = rowOf(key, 'he');
+    const before = siteCopyText(store, key, 'he');
+    const title = siteCopyLabel(key).label;
+    if (text === before) { discard(heKey); return; }
+    const groupRef = { groupId: groupOf(key) };
+    const content = { ...(row?.content ?? {}), text };
+    discard(heKey);
+    stage({
+      key: heKey, scope: siteCopyScope(key), section, action: row ? 'update' : 'create', ...(row ? { itemId: row.id } : {}),
+      title, draft: { text }, diff: [{ label: 'נוסח', before, after: text }],
+      run: () => (row
+        ? updateSiteCopyRow(row, content)
+        : createSiteCopyRow(store, { key, lang: 'he', content, groupId: groupRef.groupId, onSaved: saved => { groupRef.groupId = groupRef.groupId ?? saved?.groupId; } })),
+    });
+    // A language with no override row yet translates from its shipped text.
+    const siblings = Object.fromEntries(TARGET_LANGS.map(l => {
+      const r = rowOf(key, l);
+      if (r) return [l, { id: r.id, title: key, content: r.content }];
+      const shipped = shippedText(key, l);
+      return [l, shipped ? { id: '', title: key, content: { text: shipped } } : null];
+    }));
+    stageTranslations({
+      heKey, scope: siteCopyScope(key), section, title,
+      context: `${title}${siteCopyLabel(key).where ? ` (${siteCopyLabel(key).where})` : ''}`,
+      handEdited: lang => changes.some(c => c.key === siteCopyKey(key, lang)),
+      prepare: async () => ({
+        oldContent: { text: before },
+        newContent: { text },
+        siblings,
+        write: (lang, built) => {
+          const r = rowOf(key, lang);
+          return r ? updateSiteCopyRow(r, built.content) : createSiteCopyRow(store, { key, lang, content: built.content, groupId: groupRef.groupId });
+        },
+      }),
+    });
+  }
+
+  /** A hand edit in another language: that row only, stamped as edited by hand. */
+  function stageHuman(key, lang, text) {
+    const ck = siteCopyKey(key, lang);
+    const row = rowOf(key, lang);
+    const before = siteCopyText(store, key, lang);
+    if (text === before) { discard(ck); return; }
+    const content = { ...(row?.content ?? {}), text, _tr: humanStamp() };
+    stage({
+      key: ck, scope: siteCopyScope(key), section, lang, action: row ? 'update' : 'create', ...(row ? { itemId: row.id } : {}),
+      title: `${siteCopyLabel(key).label} (${LANG_BY_ID[lang].label})`, draft: { text }, diff: [{ label: 'נוסח', before, after: text }],
+      run: () => (row ? updateSiteCopyRow(row, content) : createSiteCopyRow(store, { key, lang, content, groupId: groupOf(key) })),
+    });
+  }
+
+  /** Back to the shipped text: deletes the override rows (every language from the Hebrew tab). */
+  function stageRevert(key, lang) {
+    const title = siteCopyLabel(key).label;
+    const original = shippedText(key, lang) || shippedText(key, 'he');
+    if (lang !== 'he') {
+      const row = rowOf(key, lang);
+      if (!row) return;
+      stage({
+        key: siteCopyKey(key, lang), scope: siteCopyScope(key), section, lang, action: 'delete', itemId: row.id,
+        title: `${title} (${LANG_BY_ID[lang].label}): חזרה לנוסח המקורי`, diff: [{ label: 'נוסח', before: row.text, after: original }],
+        run: () => removeSiteCopyRow(row.id),
+      });
+      return;
+    }
+    const heKey = siteCopyKey(key);
+    const row = rowOf(key, 'he');
+    discard(heKey);
+    for (const l of TARGET_LANGS) discard(siteCopyKey(key, l));
+    stage({
+      key: heKey, scope: siteCopyScope(key), section, action: 'delete', ...(row ? { itemId: row.id } : {}),
+      title: `${title}: חזרה לנוסח המקורי בכל השפות`,
+      diff: row ? [{ label: 'נוסח', before: row.text, after: original }] : [],
+      run: async () => (row ? removeSiteCopyRow(row.id) : null),
+    });
+    stageSiblingDeletes(stage, {
+      heKey, scope: siteCopyScope(key), section, title: `${title}: חזרה לנוסח המקורי`,
+      siblings: Object.fromEntries(TARGET_LANGS.map(l => { const r = rowOf(key, l); return [l, r && { id: r.id, title: key, content: r.content }]; })),
+      remove: removeSiteCopyRow,
+    });
+  }
+
+  return { changes, discard, stageHe, stageHuman, stageRevert };
+}
+
+/** One editable i18n text: its name, where it shows, its text in the tab's language. */
+function SiteCopyCard({ k, store, s, lang, open }) {
+  const hebrew = lang.id === 'he';
+  const { label, where } = siteCopyLabel(k);
+  const ck = siteCopyKey(k, lang.id);
+  const p = s.changes.find(c => c.key === ck);
+  const row = siteCopyRow(store, k, lang.id);
+  const overridden = hebrew ? store.rows.some(r => r.key === k) : Boolean(row);
+  const reverting = p?.action === 'delete';
+  const current = siteCopyText(store, k, lang.id);
+  const shown = reverting ? (shippedText(k, lang.id) || shippedText(k, 'he')) : p?.draft?.text ?? current;
+  const [editing, setEditing] = useState(open);
+  const [draft, setDraft] = useState(shown);
+  const box = useRef(/** @type {HTMLDivElement|null} */ (null));
+  const id = `sitecopy-${k}-${lang.id}`;
+  // A first override row is a create, but to the editor it is an edit of the text.
+  const badge = p && STATUS_BADGES[p.action === 'delete' ? 'delete' : 'update'];
+  const translating = !hebrew && s.changes.some(c => c.linkedTo === siteCopyKey(k) && c.lang === lang.id);
+  useEffect(() => { if (open) revealElement(box.current); }, [open]);
+
+  function confirm() {
+    const text = draft.trim();
+    if (!text) { toast.error('הטקסט ריק. כדי לחזור לנוסח המקורי יש ללחוץ על "חזרה לנוסח המקורי".'); return; }
+    if (hebrew) s.stageHe(k, text); else s.stageHuman(k, lang.id, text);
+    setEditing(false);
+  }
+
+  return (
+    <div ref={box} className={`relative p-4 rounded-xl border bg-background ${badge ? 'border-warning/60' : editing ? 'border-primary/40' : 'border-border'}`}>
+      <div className="flex items-center gap-2 flex-wrap pe-20">
+        <label htmlFor={id} className="font-medium text-foreground">{label}</label>
+        {badge
+          ? <Badge color={badge.color}>{reverting ? 'יחזור לנוסח המקורי בשמירה' : badge.label}</Badge>
+          : <Badge color={overridden ? 'bg-info/10 text-info' : 'bg-muted text-muted-foreground'}>{overridden ? 'נוסח שנערך' : 'הנוסח המקורי של האתר'}</Badge>}
+        {hebrew && p && !reverting && <TranslationSummary heKey={ck} />}
+        {translating && <Badge color={TRANSLATION_BADGES.pending.color}>תרגום מהעברית ממתין לשמירה</Badge>}
+        {p && <DiscardButton onClick={() => s.discard(ck)} />}
+      </div>
+      {where && <p className="text-xs text-muted-foreground mt-1">{where}</p>}
+      {editing ? (
+        <div className="space-y-2 mt-2">
+          <textarea
+            id={id}
+            dir={lang.dir}
+            rows={3}
+            value={draft}
+            onChange={e => setDraft(e.target.value)}
+            className="w-full px-3 py-2 rounded-lg border border-border bg-background text-sm text-foreground leading-relaxed resize-y"
+          />
+          <EditorButtons onConfirm={confirm} onCancel={() => { setDraft(shown); setEditing(false); }} />
+        </div>
+      ) : (
+        <p id={id} className={`text-sm text-muted-foreground mt-2 whitespace-pre-line ${reverting ? 'opacity-70' : ''}`} dir={lang.dir}>{shown}</p>
+      )}
+      {!editing && (
+        <div className="absolute top-3 end-3 flex gap-1">
+          <IconBtn icon={Pencil} title="עריכה" onClick={() => { setDraft(shown); setEditing(true); }} />
+          {overridden && !reverting && (
+            <IconBtn icon={RotateCcw} title={hebrew ? 'חזרה לנוסח המקורי (בכל השפות)' : 'חזרה לנוסח המקורי'} onClick={() => s.stageRevert(k, lang.id)} />
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+/** A page's i18n texts. They are shared with PTSD-IL: one row per text per language. */
+function SiteCopySection({ meta }) {
+  const lang = useAdminLang();
+  const focus = useAdminFocus();
+  const { store, loading, error } = useSiteCopyStore();
+  const s = useSiteCopyStaging(meta, store || { categoryId: null, rows: [] });
+  if (loading && !store) return <LoadingRow />;
+  if (!store) return <p className="text-sm text-destructive py-6 text-center">{error || 'שגיאה בטעינת הטקסטים'}</p>;
+  return (
+    <div className="space-y-3">
+      <p className="text-xs text-muted-foreground leading-relaxed">
+        הטקסטים האלה משותפים לאתר PTSD-IL: שינוי כאן משנה אותם גם שם. עריכה בעברית מתורגמת לשאר השפות.
+      </p>
+      {meta.keys.map(k => {
+        const open = focus?.sectionId === meta.id && focus.path === k;
+        return (
+          <SiteCopyCard
+            key={`${k}:${lang.id}:${open ? focus.nonce : ''}`}
+            k={k}
+            store={store}
+            s={s}
+            lang={lang}
+            open={open}
+          />
+        );
+      })}
+    </div>
+  );
+}
+
 function MetivSectionBody({ meta }) {
   const { store, loading, error } = useMetivStore();
   if (loading && !store) return <LoadingRow />;
@@ -560,6 +810,10 @@ function sectionPending(section, meta, changes, store) {
     return own.filter(c => c.scope === meta.scope && ids.has(c.itemId)).length;
   }
   if (section.kind === 'collection' || section.kind === 'copy') return own.filter(c => c.scope === meta.scope).length;
+  if (section.kind === 'i18n') {
+    const scopes = new Set((section.keys ?? []).map(siteCopyScope));
+    return own.filter(c => scopes.has(c.scope)).length;
+  }
   return 0;
 }
 
@@ -605,6 +859,7 @@ function SectionCard({ section, page }) {
       {section.kind === 'ptsd' && renderPtsd(section.panel)}
       {(section.kind === 'qa' || section.kind === 'users' || section.kind === 'log') && renderTool(section.kind)}
       {(section.kind === 'collection' || section.kind === 'item' || section.kind === 'copy') && <MetivSectionBody meta={meta} />}
+      {section.kind === 'i18n' && <SiteCopySection meta={meta} />}
     </section>
   );
 }
@@ -613,7 +868,7 @@ function SectionCard({ section, page }) {
 function PageView({ page, trail }) {
   const { goTo } = useContext(PageContext);
   const focus = useAdminFocus();
-  const sections = page.sections.filter(s => s.kind !== 'copy' || copyContentKeys(s.ns).length > 0);
+  const sections = page.sections;
   const editable = sections.filter(s => s.kind !== 'link');
 
   useEffect(() => {
@@ -758,11 +1013,11 @@ function visibleLeaves(value, rules) {
   const walk = (v, path, key) => {
     if (typeof v === 'string') { if (v.trim()) out.push({ path, key, text: v }); return; }
     if (Array.isArray(v)) { v.forEach((x, i) => walk(x, path ? `${path}.${i}` : String(i), key)); return; }
-    if (v && typeof v === 'object' && !isRef(v)) {
+    if (v && typeof v === 'object' && !isRef(v) && !isNavLink(v)) {
       for (const [k, x] of Object.entries(v)) {
         const p = path ? `${path}.${k}` : k;
         const pattern = patternOf(p);
-        if (rules.visible(pattern, k) && hasVisible(x, pattern, rules.visible)) walk(x, p, k);
+        if (rules.visible(pattern, k, x, v) && hasVisible(x, pattern, rules.visible)) walk(x, p, k);
       }
     }
   };
@@ -770,16 +1025,27 @@ function visibleLeaves(value, rules) {
   return out;
 }
 
-/** Search entries for the Metiv rows of every page, in one language. */
-function metivEntries(pages, store, lang, ptsdLabels) {
+/** Search entries for the Metiv rows and the site-copy texts of every page, in one language. */
+function metivEntries(pages, store, siteCopy, lang, ptsdLabels) {
   /** @type {import('./adminSearch').SearchEntry[]} */
   const out = [];
-  if (!store) return out;
-  const he = heCollections(store);
+  const he = store ? heCollections(store) : {};
   for (const page of pages) {
     if (page.aliasOf) continue;
     for (const section of page.sections) {
-      if (section.kind !== 'collection' && section.kind !== 'copy') continue;
+      if (section.kind === 'i18n') {
+        if (!siteCopy) continue;
+        const meta = sectionMeta(section, page, ptsdLabels);
+        for (const k of section.keys ?? []) {
+          const { label, where } = siteCopyLabel(k);
+          out.push({
+            pageId: page.id, sectionId: section.id, sectionLabel: meta.label, title: label,
+            text: [siteCopyText(siteCopy, k, lang), where].filter(Boolean).join(' · '), focus: { sectionId: section.id, path: k },
+          });
+        }
+        continue;
+      }
+      if (!store || (section.kind !== 'collection' && section.kind !== 'copy')) continue;
       const meta = sectionMeta(section, page, ptsdLabels);
       const base = { pageId: page.id, sectionId: section.id, sectionLabel: meta.label };
       if (meta.kind === 'copy') {
@@ -867,13 +1133,16 @@ function SearchResults({ query, groups, pagesById, onOpen, onClear, loadingMore 
 export function MetivContentView(props) {
   return (
     <MetivStoreProvider>
-      <MetivView {...props} />
+      <SiteCopyStoreProvider>
+        <MetivView {...props} />
+      </SiteCopyStoreProvider>
     </MetivStoreProvider>
   );
 }
 
 function MetivView({ ptsdTabs, renderPtsd, renderTool, ptsdSearch, showContent, showUsers }) {
   const { store } = useMetivStore();
+  const { store: siteCopy } = useSiteCopyStore();
   const { changes, version } = usePendingChanges();
   const lang = useAdminLang();
   const [params, setParams] = useSearchParams();
@@ -965,7 +1234,7 @@ function MetivView({ ptsdTabs, renderPtsd, renderTool, ptsdSearch, showContent, 
     return () => { cancelled = true; };
   }, [searching, lang.id, extra, pages, ptsdSearch, ptsdLabels, showContent]);
 
-  const metiv = useMemo(() => (searching && showContent ? metivEntries(pages, store, lang.id, ptsdLabels) : []), [searching, showContent, pages, store, lang.id, ptsdLabels]);
+  const metiv = useMemo(() => (searching && showContent ? metivEntries(pages, store, siteCopy, lang.id, ptsdLabels) : []), [searching, showContent, pages, store, siteCopy, lang.id, ptsdLabels]);
   const groups = useMemo(() => {
     if (!searching) return [];
     const hits = searchEntries([...metiv, ...(extra[lang.id] ?? [])], query);

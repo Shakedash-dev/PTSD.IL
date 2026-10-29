@@ -51,7 +51,10 @@
           "role": "Directrice de la promotion des politiques et du développement des services communautaires",
           "email": "yonit@metiv.org"
         },
-        "sourceUrl": "https://metiv.org/מרחב-מטיב/"
+        "sourceUrl": "https://metiv.org/מרחב-מטיב/",
+        "needs": [
+          "informed"
+        ]
       }
     },
     {
@@ -86,7 +89,10 @@
           "name": "Yonit Efrati",
           "email": "yonit@metiv.org"
         },
-        "sourceUrl": "https://metiv.org/בניית-ארגון-מותאם-טראומה/"
+        "sourceUrl": "https://metiv.org/בניית-ארגון-מותאם-טראומה/",
+        "needs": [
+          "informed"
+        ]
       }
     },
     {
@@ -163,7 +169,10 @@
         "contact": {
           "email": "shir@metiv.org"
         },
-        "sourceUrl": "https://metiv.org/סדנאות-והכשרות-בהתאמה-אישית/"
+        "sourceUrl": "https://metiv.org/סדנאות-והכשרות-בהתאמה-אישית/",
+        "needs": [
+          "workshop"
+        ]
       }
     },
     {
@@ -198,7 +207,10 @@
         "contact": {
           "email": "shir@metiv.org"
         },
-        "sourceUrl": "https://metiv.org/הכשרות-לארגונים/"
+        "sourceUrl": "https://metiv.org/הכשרות-לארגונים/",
+        "needs": [
+          "clinical"
+        ]
       }
     }
   ]

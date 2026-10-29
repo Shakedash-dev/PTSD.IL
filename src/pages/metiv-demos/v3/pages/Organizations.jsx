@@ -9,20 +9,21 @@ import PageHeaderV3 from '../components/PageHeaderV3';
 import { Band, ChipQuestion, ContactChips, ExternalLink, FWD, PILL_OUTLINE, QuoteCard, SectionHeading, StatusPill } from '../components/kit';
 import { fmt, useCopy, useMetiv } from '../content/MetivContent';
 
-const NEED_SLUGS = [
-  { key: 'informed', copy: 'needInformed', slugs: ['metiv-space', 'trauma-informed-org'] },
-  { key: 'workshop', copy: 'needWorkshop', slugs: ['custom-workshops'] },
-  { key: 'clinical', copy: 'needClinical', slugs: ['org-trainings'] },
+// The need chips. Each programme lists the needs it answers (`needs`).
+const NEED_KEYS = [
+  { key: 'informed', copy: 'needInformed' },
+  { key: 'workshop', copy: 'needWorkshop' },
+  { key: 'clinical', copy: 'needClinical' },
 ];
 
 export default function Organizations() {
   // No choice shows every programme; choosing the same answer again clears it.
   const { ORGANIZATION_PROGRAMS, getCourse } = useMetiv();
   const c = useCopy('organizations');
-  const NEEDS = NEED_SLUGS.map((n) => ({ key: n.key, label: c[n.copy], slugs: n.slugs }));
+  const NEEDS = NEED_KEYS.map((n) => ({ key: n.key, label: c[n.copy] }));
   const [need, setNeed] = useState('');
   const chosen = NEEDS.find((n) => n.key === need);
-  const programs = chosen ? ORGANIZATION_PROGRAMS.filter((/** @type {any} */ p) => chosen.slugs.includes(p.slug)) : ORGANIZATION_PROGRAMS;
+  const programs = chosen ? ORGANIZATION_PROGRAMS.filter((/** @type {any} */ p) => (p.needs || []).includes(chosen.key)) : ORGANIZATION_PROGRAMS;
   const clients = [...new Set(ORGANIZATION_PROGRAMS.flatMap((/** @type {any} */ p) => p.clientList))];
 
   return (

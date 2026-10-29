@@ -7,7 +7,7 @@ import ChatbotFAB from '@/components/ChatbotFAB';
 import { DemoLink } from '@/pages/metiv-demos/shared/DemoChrome';
 import { ROUTES } from '@/pages/metiv-demos/shared/routes';
 import { useLang } from '@/lib/LanguageContext';
-import { getDir } from '@/lib/i18n';
+import { getDir, t } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
 import { fmt, useCopy, useMetiv } from '../content/MetivContent';
 import { resolveRoute, routeLabel, ALL_ROUTES, V3_ROUTES } from '../meta';
@@ -338,7 +338,8 @@ function AreaNav({ area }) {
  */
 export function Footer() {
   const c = useCopy('chrome');
-  const { ORG, PATIENT_HUB, ROUTE_META } = useMetiv();
+  const { ORG, ROUTE_META } = useMetiv();
+  const { lang } = useLang();
   const { eran: ERAN, eranWa: ERAN_WA } = useCrisisLines();
   return (
     <footer className="bg-muted text-foreground border-t border-border">
@@ -358,7 +359,7 @@ export function Footer() {
                 <li key={k}><DemoLink to={ROUTES[k]} className={cn('text-foreground hover:text-accent underline-offset-4 hover:underline rounded-sm', FOCUS)}>{ROUTE_META?.[k]?.label}</DemoLink></li>
               ))}
             </ul>
-            <p className="text-xs text-muted-foreground">{fmt(c.footerDisclaimer, { disclaimer: PATIENT_HUB?.disclaimer ?? '' })}</p>
+            <p className="text-xs text-muted-foreground">{fmt(c.footerDisclaimer, { disclaimer: t(lang, 'footer_disclaimer') })}</p>
           </div>
           <div className="rounded-super bg-card border border-border p-5 self-start md:w-72">
             <p className="font-heading font-semibold">{c.eranCardTitle}</p>

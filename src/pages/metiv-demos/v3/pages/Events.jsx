@@ -5,7 +5,7 @@ import { DemoLink } from '@/pages/metiv-demos/shared/DemoChrome';
 import { cn } from '@/lib/utils';
 import PageHeaderV3 from '../components/PageHeaderV3';
 import { Band, ChipQuestion, EmptyState, ExternalLink, FWD, PILL_OUTLINE, SectionHeading, StatusPill, TEXT_LINK } from '../components/kit';
-import { fmt, useCopy, useMetiv } from '../content/MetivContent';
+import { fmt, isExternalLink, useCopy, useMetiv } from '../content/MetivContent';
 
 /** @typedef {import('@/pages/metiv-demos/shared/therapist/articles.js').MetivEvent} MetivEvent */
 
@@ -41,7 +41,7 @@ function EventCard({ event }) {
         )}
         {event.link && (
           <div className="mt-3">
-            {event.external ? (
+            {isExternalLink(event.link) ? (
               <ExternalLink href={event.link} className={TEXT_LINK}>{c.detailsOnMetiv}</ExternalLink>
             ) : (
               <DemoLink to={event.link} className={cn('inline-flex items-center gap-1', TEXT_LINK)}>{c.details} <ArrowLeft className={cn('w-4 h-4', FWD)} aria-hidden="true" /></DemoLink>

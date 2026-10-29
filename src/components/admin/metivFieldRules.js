@@ -10,13 +10,24 @@
 //
 // Paths are patterns: keys joined by ".", "[]" after a key for "any item of
 // this list" - "contacts[].kind", "syllabus[].items[]".
+//
+// Three rules also look at the value:
+//   - an object with a `to` (an internal route, e.g. a department's "קורסים
+//     והכשרות" link) is navigation: its caption and target are both fixed;
+//   - a date with an ISO twin (`date` next to `dateISO`, `startDate` next to
+//     `startDateISO`) is derived by the site from the ISO date, and so is
+//     `isPast` in that object: only the ISO date is edited (a date picker).
+//     Items without an ISO date keep their free-text date and manual isPast;
+//   - per collection, `hideIf` hides a field by its value (an event link that
+//     is an internal route).
 
 /** Keys hidden wherever they appear (collection items, not page copy). */
 export const HIDDEN_KEYS = new Set([
   'id', 'slug', 'key', 'anchor', 'icon', 'kind', 'route', 'to', 'area', 'parent',
   'category', 'topic', 'image',
   'courseSlug', 'relatedCourseSlug', 'relatedSlugs', 'trainingSlug',
-  'placeholder', 'isPlaceholder', 'sourceUrl', 'source', 'relatedSourceUrls',
+  'sourceUrl', 'source', 'relatedSourceUrls',
+  // Derived by the site from the link (absolute http(s) = external).
   'external', 'aboutRoute',
   // Button and link captions, and the small label above a heading: format.
   'ctaLabel', 'linkLabel', 'aboutLinkLabel', 'eyebrow',
@@ -48,22 +59,53 @@ const PAPER_TYPE = [
  * @typedef {Choice[] | ((he: Record<string, any>) => Choice[])} ChoiceSource
  */
 
-/** @type {Record<string, { hide?: string[], options?: Record<string, ChoiceSource> }>} */
+/**
+ * Choices whose labels are the page's own chip labels (page copy), so the
+ * editor picks with the words the visitor sees. `he.COPY` is the Hebrew page
+ * copy by namespace.
+ * @param {string} ns @param {[string, string][]} pairs  [stored key, copy key]
+ * @returns {ChoiceSource}
+ */
+const fromCopy = (ns, pairs) => he => pairs.map(([value, key]) => ({ value, label: String(he.COPY?.[ns]?.[key] ?? value) }));
+
+const isRoute = v => typeof v === 'string' && v.startsWith('/');
+
+/** @type {Record<string, { hide?: string[], options?: Record<string, ChoiceSource>, hideIf?: Record<string, (value: any) => boolean> }>} */
 export const COLLECTION_RULES = {
-  ORG: { hide: ['headline', 'tagline', 'shortName'] },
+  // The slogan (headline) and tagline are content; the short name is the brand.
+  ORG: { hide: ['shortName'] },
   ABOUT: { hide: ['title'] },
   DONATE: { hide: ['title', 'ways[].cta'] },
   LEGAL: { hide: ['accessibility.title', 'privacy.title'] },
-  PATIENT_HUB: { hide: ['hero.brand', 'hero.headline', 'hero.subtitle', 'crisisLines[].label'] },
+  // Crisis lines (ERAN 1201, MDA 101...) are fixed national numbers: not edited.
+  PATIENT_HUB: { hide: ['hero.brand', 'hero.headline', 'hero.subtitle', 'crisisLines'] },
   CONSULTATION: { hide: ['title'] },
   VIDEO_LECTURES: { hide: ['title'] },
   TREATMENT_WHERE_BLOCK: { hide: ['title'] },
   RELEASE_JOURNEY: { hide: ['title', 'social[].label'] },
+  // The chip label repeats the title.
+  JOURNEY_MODELS: { hide: ['label'] },
+  // An internal route ("/therapist/courses/...") is navigation; an external
+  // URL is content.
+  EVENTS: { hideIf: { link: isRoute } },
   THERAPIST_HUB: { hide: ['title', 'sections[].title', 'cta.label'] },
-  SUPERVISION: { hide: ['title'] },
-  CHILDREN_FAMILY_INTRO: { hide: ['title'] },
   RESEARCH_INTRO: { hide: ['title', 'journalClub.title'] },
   BOOKS: { hide: ['language', 'audience'] },
+  // Which chips of a page's question an item answers: a pick from the chips.
+  CHILDREN_FAMILY_INTRO: {
+    hide: ['title'],
+    options: { 'models[].ageGroups': fromCopy('childrenFamily', [['early', 'ageEarly'], ['school', 'ageSchool'], ['parents', 'ageParents']]) },
+  },
+  SUPERVISION: {
+    hide: ['title'],
+    options: { 'options[].kinds': fromCopy('supervision', [['individual', 'kindIndividual'], ['group', 'kindGroup'], ['team', 'kindTeam'], ['kids', 'kindKids']]) },
+  },
+  ORGANIZATION_PROGRAMS: {
+    options: { needs: fromCopy('organizations', [['informed', 'needInformed'], ['workshop', 'needWorkshop'], ['clinical', 'needClinical']]) },
+  },
+  ARTICLES: {
+    options: { genre: fromCopy('articlePage', [['opinion', 'eyebrow']]) },
+  },
   PAPERS: {
     hide: ['language'],
     options: {
@@ -78,6 +120,7 @@ export const COLLECTION_RULES = {
       'registration.status': REGISTRATION_STATUS,
       'formats[].registration.status': REGISTRATION_STATUS,
       'units[].status': UNIT_STATUS,
+      therapistNeeds: fromCopy('therapistHub', [['supervision', 'needSupervision'], ['team', 'needTeam'], ['kids', 'needKids']]),
     },
   },
   TEAM: {
@@ -107,6 +150,24 @@ export function isDateKey(key) {
 }
 
 /**
+ * Is a field shown? `value` is the field's value and `parent` the object that
+ * holds it, for the value rules above; both optional.
+ * @typedef {(pattern: string, key: string, value?: any, parent?: any) => boolean} Visible
+ */
+
+/** Keys of `parent` the site derives from an ISO date next to them. */
+function derivedFromIso(key, parent) {
+  if (!parent || typeof parent !== 'object' || Array.isArray(parent)) return false;
+  if (`${key}ISO` in parent) return true;
+  return key === 'isPast' && Object.keys(parent).some(isDateKey);
+}
+
+/** An internal link ({ label, to }): navigation, not content. */
+export function isNavLink(value) {
+  return Boolean(value) && typeof value === 'object' && !Array.isArray(value) && typeof value.to === 'string';
+}
+
+/**
  * The editor rules for one section.
  * @param {{ collection?: string, fields?: string[], copyKeys?: string[], he?: Record<string, any>, translation?: boolean }} opts
  *   collection  the registry key (absent for page copy)
@@ -114,7 +175,7 @@ export function isDateKey(key) {
  *   copyKeys    page copy: only these keys are shown
  *   he          the Hebrew data by collection key, for select choices
  *   translation a non-Hebrew tab: choices are set in Hebrew for every language
- * @returns {{ visible: (pattern: string, key: string) => boolean, options: (pattern: string) => Choice[]|null }}
+ * @returns {{ visible: Visible, options: (pattern: string) => Choice[]|null }}
  */
 export function fieldRules({ collection, fields, copyKeys, he = {}, translation = false }) {
   if (copyKeys) {
@@ -127,10 +188,14 @@ export function fieldRules({ collection, fields, copyKeys, he = {}, translation 
     if (!src) return null;
     return typeof src === 'function' ? src(he) : src;
   };
-  const visible = (/** @type {string} */ pattern, /** @type {string} */ key) => {
+  /** @type {Visible} */
+  const visible = (pattern, key, value, parent) => {
     if (key.startsWith('_') || key === '$ref') return false;
     if (rules.options?.[pattern]) return !translation;
     if (HIDDEN_KEYS.has(key)) return false;
+    if (isNavLink(value)) return false;
+    if (derivedFromIso(key, parent)) return false;
+    if (value !== undefined && rules.hideIf?.[pattern]?.(value)) return false;
     if (rules.hide?.some(h => within(pattern, h))) return false;
     if (fields && !fields.some(f => within(pattern, f) || within(f, pattern))) return false;
     return true;
@@ -140,8 +205,9 @@ export function fieldRules({ collection, fields, copyKeys, he = {}, translation 
 
 /**
  * Does a value have anything an editor would see under these rules? A list or
- * object whose every field is hidden is hidden itself.
- * @param {any} value @param {string} pattern @param {(pattern: string, key: string) => boolean} visible
+ * object whose every field is hidden is hidden itself, and so is an internal
+ * link.
+ * @param {any} value @param {string} pattern @param {Visible} visible
  */
 export function hasVisible(value, pattern, visible) {
   if (Array.isArray(value)) {
@@ -150,9 +216,10 @@ export function hasVisible(value, pattern, visible) {
   }
   if (value && typeof value === 'object') {
     if ('$ref' in value) return true;
+    if (isNavLink(value)) return false;
     return Object.entries(value).some(([k, v]) => {
       const p = pattern ? `${pattern}.${k}` : k;
-      return visible(p, k) && hasVisible(v, p, visible);
+      return visible(p, k, v, value) && hasVisible(v, p, visible);
     });
   }
   return true;

@@ -25,7 +25,8 @@
         "type": "article",
         "topic": "terror-war",
         "featured": true,
-        "sourceUrl": "https://metiv.org/en/current-research/"
+        "sourceUrl": "https://metiv.org/en/current-research/",
+        "releaseJourney": false
       }
     },
     {
@@ -49,7 +50,8 @@
         "type": "article",
         "topic": "treatment",
         "featured": true,
-        "sourceUrl": "https://metiv.org/מאמרים-ונתונים/"
+        "sourceUrl": "https://metiv.org/מאמרים-ונתונים/",
+        "releaseJourney": false
       }
     },
     {
@@ -72,7 +74,8 @@
         "type": "article",
         "topic": "veterans",
         "featured": true,
-        "sourceUrl": "https://metiv.org/מאמרים-ונתונים/"
+        "sourceUrl": "https://metiv.org/מאמרים-ונתונים/",
+        "releaseJourney": false
       }
     },
     {
@@ -98,7 +101,8 @@
         "type": "article",
         "topic": "veterans",
         "featured": true,
-        "sourceUrl": "https://metiv.org/מאמרים-ונתונים/"
+        "sourceUrl": "https://metiv.org/מאמרים-ונתונים/",
+        "releaseJourney": false
       }
     },
     {
@@ -119,7 +123,8 @@
         "type": "article",
         "topic": "veterans",
         "featured": true,
-        "sourceUrl": "https://metiv.org/מאמרים-ונתונים/"
+        "sourceUrl": "https://metiv.org/מאמרים-ונתונים/",
+        "releaseJourney": false
       }
     },
     {
@@ -140,7 +145,8 @@
         "type": "article",
         "topic": "veterans",
         "featured": true,
-        "sourceUrl": "https://metiv.org/מאמרים-ונתונים/"
+        "sourceUrl": "https://metiv.org/מאמרים-ונתונים/",
+        "releaseJourney": false
       }
     },
     {
@@ -163,7 +169,8 @@
         "type": "article",
         "topic": "policy",
         "featured": true,
-        "sourceUrl": "https://metiv.org/מאמרים-ונתונים/"
+        "sourceUrl": "https://metiv.org/מאמרים-ונתונים/",
+        "releaseJourney": false
       }
     },
     {
@@ -187,7 +194,8 @@
         "type": "article",
         "topic": "veterans",
         "featured": true,
-        "sourceUrl": "https://metiv.org/מאמרים-ונתונים/"
+        "sourceUrl": "https://metiv.org/מאמרים-ונתונים/",
+        "releaseJourney": true
       }
     },
     {
@@ -210,7 +218,8 @@
         "type": "article",
         "topic": "veterans",
         "featured": true,
-        "sourceUrl": "https://metiv.org/מאמרים-ונתונים/"
+        "sourceUrl": "https://metiv.org/מאמרים-ונתונים/",
+        "releaseJourney": true
       }
     },
     {
@@ -236,7 +245,8 @@
         "language": "he",
         "type": "article",
         "topic": "children-family",
-        "sourceUrl": "https://metiv.org/מחקרי-עבר-ופרסומים/"
+        "sourceUrl": "https://metiv.org/מחקרי-עבר-ופרסומים/",
+        "releaseJourney": false
       }
     },
     {
@@ -261,7 +271,8 @@
         "details": "in press",
         "type": "article",
         "topic": "growth",
-        "sourceUrl": "https://metiv.org/מחקרי-עבר-ופרסומים/"
+        "sourceUrl": "https://metiv.org/מחקרי-עבר-ופרסומים/",
+        "releaseJourney": false
       }
     },
     {
@@ -286,7 +297,8 @@
         "doi": "10.1177/1534735415607318",
         "type": "article",
         "topic": "growth",
-        "sourceUrl": "https://metiv.org/מחקרי-עבר-ופרסומים/"
+        "sourceUrl": "https://metiv.org/מחקרי-עבר-ופרסומים/",
+        "releaseJourney": false
       }
     },
     {
@@ -311,7 +323,8 @@
         "doi": "10.1002/jts.22014",
         "type": "article",
         "topic": "growth",
-        "sourceUrl": "https://metiv.org/מחקרי-עבר-ופרסומים/"
+        "sourceUrl": "https://metiv.org/מחקרי-עבר-ופרסומים/",
+        "releaseJourney": false
       }
     },
     {
@@ -338,7 +351,8 @@
         "doi": "10.1002/imhj.21515",
         "type": "article",
         "topic": "children-family",
-        "sourceUrl": "https://metiv.org/מחקרי-עבר-ופרסומים/"
+        "sourceUrl": "https://metiv.org/מחקרי-עבר-ופרסומים/",
+        "releaseJourney": false
       }
     },
     {
@@ -362,7 +376,8 @@
         "doi": "10.1007/s10566-014-9276-8",
         "type": "article",
         "topic": "children-family",
-        "sourceUrl": "https://metiv.org/מחקרי-עבר-ופרסומים/"
+        "sourceUrl": "https://metiv.org/מחקרי-עבר-ופרסומים/",
+        "releaseJourney": false
       }
     },
     {
@@ -383,7 +398,8 @@
         "doi": "10.1007/s10615-013-0471-0",
         "type": "article",
         "topic": "children-family",
-        "sourceUrl": "https://metiv.org/מחקרי-עבר-ופרסומים/"
+        "sourceUrl": "https://metiv.org/מחקרי-עבר-ופרסומים/",
+        "releaseJourney": false
       }
     },
     {
@@ -405,7 +421,8 @@
         "doi": "10.1007/s10615-013-0439-0",
         "type": "article",
         "topic": "children-family",
-        "sourceUrl": "https://metiv.org/מחקרי-עבר-ופרסומים/"
+        "sourceUrl": "https://metiv.org/מחקרי-עבר-ופרסומים/",
+        "releaseJourney": false
       }
     },
     {
@@ -428,7 +445,8 @@
         "doi": "10.1007/s10566-013-9241-y",
         "type": "article",
         "topic": "adolescents",
-        "sourceUrl": "https://metiv.org/מחקרי-עבר-ופרסומים/"
+        "sourceUrl": "https://metiv.org/מחקרי-עבר-ופרסומים/",
+        "releaseJourney": false
       }
     },
     {
@@ -453,7 +471,8 @@
         "doi": "10.1037/a0032488",
         "type": "article",
         "topic": "terror-war",
-        "sourceUrl": "https://metiv.org/מחקרי-עבר-ופרסומים/"
+        "sourceUrl": "https://metiv.org/מחקרי-עבר-ופרסומים/",
+        "releaseJourney": false
       }
     },
     {
@@ -477,7 +496,8 @@
         "details": "22(6), 644-659",
         "type": "article",
         "topic": "veterans",
-        "sourceUrl": "https://metiv.org/מחקרי-עבר-ופרסומים/"
+        "sourceUrl": "https://metiv.org/מחקרי-עבר-ופרסומים/",
+        "releaseJourney": true
       }
     },
     {
@@ -509,7 +529,8 @@
         "details": "80-90",
         "type": "article",
         "topic": "children-family",
-        "sourceUrl": "https://metiv.org/מחקרי-עבר-ופרסומים/"
+        "sourceUrl": "https://metiv.org/מחקרי-עבר-ופרסומים/",
+        "releaseJourney": false
       }
     },
     {
@@ -534,7 +555,8 @@
         "year": 2013,
         "type": "article",
         "topic": "schools-resilience",
-        "sourceUrl": "https://metiv.org/מחקרי-עבר-ופרסומים/"
+        "sourceUrl": "https://metiv.org/מחקרי-עבר-ופרסומים/",
+        "releaseJourney": false
       }
     },
     {
@@ -558,7 +580,8 @@
         "details": "5(4), 303-314",
         "type": "article",
         "topic": "children-family",
-        "sourceUrl": "https://metiv.org/מחקרי-עבר-ופרסומים/"
+        "sourceUrl": "https://metiv.org/מחקרי-עבר-ופרסומים/",
+        "releaseJourney": false
       }
     },
     {
@@ -582,7 +605,8 @@
         "details": "75, 1321-1328",
         "type": "article",
         "topic": "adolescents",
-        "sourceUrl": "https://metiv.org/מחקרי-עבר-ופרסומים/"
+        "sourceUrl": "https://metiv.org/מחקרי-עבר-ופרסומים/",
+        "releaseJourney": false
       }
     },
     {
@@ -611,7 +635,8 @@
         "language": "he",
         "type": "article",
         "topic": "children-family",
-        "sourceUrl": "https://metiv.org/מחקרי-עבר-ופרסומים/"
+        "sourceUrl": "https://metiv.org/מחקרי-עבר-ופרסומים/",
+        "releaseJourney": false
       }
     },
     {
@@ -634,7 +659,8 @@
         "details": "51, 208-214",
         "type": "article",
         "topic": "growth",
-        "sourceUrl": "https://metiv.org/מחקרי-עבר-ופרסומים/"
+        "sourceUrl": "https://metiv.org/מחקרי-עבר-ופרסומים/",
+        "releaseJourney": false
       }
     },
     {
@@ -658,7 +684,8 @@
         "details": "29(1), 16-22",
         "type": "article",
         "topic": "other",
-        "sourceUrl": "https://metiv.org/מחקרי-עבר-ופרסומים/"
+        "sourceUrl": "https://metiv.org/מחקרי-עבר-ופרסומים/",
+        "releaseJourney": false
       }
     },
     {
@@ -685,7 +712,8 @@
         "details": "24(6), 756-759",
         "type": "article",
         "topic": "adolescents",
-        "sourceUrl": "https://metiv.org/מחקרי-עבר-ופרסומים/"
+        "sourceUrl": "https://metiv.org/מחקרי-עבר-ופרסומים/",
+        "releaseJourney": false
       }
     },
     {
@@ -706,7 +734,8 @@
         "details": "8(4), 81-83",
         "type": "article",
         "topic": "children-family",
-        "sourceUrl": "https://metiv.org/מחקרי-עבר-ופרסומים/"
+        "sourceUrl": "https://metiv.org/מחקרי-עבר-ופרסומים/",
+        "releaseJourney": false
       }
     },
     {
@@ -732,7 +761,8 @@
         "details": "23(3), 599-605",
         "type": "article",
         "topic": "terror-war",
-        "sourceUrl": "https://metiv.org/מחקרי-עבר-ופרסומים/"
+        "sourceUrl": "https://metiv.org/מחקרי-עבר-ופרסומים/",
+        "releaseJourney": false
       }
     },
     {
@@ -753,7 +783,8 @@
         "details": "3(2), 117-129",
         "type": "article",
         "topic": "other",
-        "sourceUrl": "https://metiv.org/מחקרי-עבר-ופרסומים/"
+        "sourceUrl": "https://metiv.org/מחקרי-עבר-ופרסומים/",
+        "releaseJourney": false
       }
     },
     {
@@ -777,7 +808,8 @@
         "details": "23(5), 657-660",
         "type": "article",
         "topic": "adolescents",
-        "sourceUrl": "https://metiv.org/מחקרי-עבר-ופרסומים/"
+        "sourceUrl": "https://metiv.org/מחקרי-עבר-ופרסומים/",
+        "releaseJourney": false
       }
     },
     {
@@ -798,7 +830,8 @@
         "details": "3(2), 95-108",
         "type": "article",
         "topic": "adolescents",
-        "sourceUrl": "https://metiv.org/מחקרי-עבר-ופרסומים/"
+        "sourceUrl": "https://metiv.org/מחקרי-עבר-ופרסומים/",
+        "releaseJourney": false
       }
     },
     {
@@ -819,7 +852,8 @@
         "language": "he",
         "type": "article",
         "topic": "children-family",
-        "sourceUrl": "https://metiv.org/מחקרי-עבר-ופרסומים/"
+        "sourceUrl": "https://metiv.org/מחקרי-עבר-ופרסומים/",
+        "releaseJourney": false
       }
     },
     {
@@ -847,7 +881,8 @@
         "details": "58(4), 688-708",
         "type": "article",
         "topic": "adolescents",
-        "sourceUrl": "https://metiv.org/מחקרי-עבר-ופרסומים/"
+        "sourceUrl": "https://metiv.org/מחקרי-עבר-ופרסומים/",
+        "releaseJourney": false
       }
     },
     {
@@ -869,7 +904,8 @@
         "details": "2(1)",
         "type": "article",
         "topic": "schools-resilience",
-        "sourceUrl": "https://metiv.org/מחקרי-עבר-ופרסומים/"
+        "sourceUrl": "https://metiv.org/מחקרי-עבר-ופרסומים/",
+        "releaseJourney": false
       }
     },
     {
@@ -890,7 +926,8 @@
         "details": "1:1, 81-88",
         "type": "article",
         "topic": "schools-resilience",
-        "sourceUrl": "https://metiv.org/מחקרי-עבר-ופרסומים/"
+        "sourceUrl": "https://metiv.org/מחקרי-עבר-ופרסומים/",
+        "releaseJourney": false
       }
     },
     {
@@ -911,7 +948,8 @@
         "details": "20(4), 541-551",
         "type": "article",
         "topic": "schools-resilience",
-        "sourceUrl": "https://metiv.org/מחקרי-עבר-ופרסומים/"
+        "sourceUrl": "https://metiv.org/מחקרי-עבר-ופרסומים/",
+        "releaseJourney": false
       }
     },
     {
@@ -931,7 +969,8 @@
         "details": "37, 9-33",
         "type": "article",
         "topic": "schools-resilience",
-        "sourceUrl": "https://metiv.org/מחקרי-עבר-ופרסומים/"
+        "sourceUrl": "https://metiv.org/מחקרי-עבר-ופרסומים/",
+        "releaseJourney": false
       }
     },
     {
@@ -951,7 +990,8 @@
         "details": "56(3), 379-385",
         "type": "article",
         "topic": "growth",
-        "sourceUrl": "https://metiv.org/מחקרי-עבר-ופרסומים/"
+        "sourceUrl": "https://metiv.org/מחקרי-עבר-ופרסומים/",
+        "releaseJourney": false
       }
     },
     {
@@ -975,7 +1015,8 @@
         "details": "77(1), 76-85",
         "type": "article",
         "topic": "adolescents",
-        "sourceUrl": "https://metiv.org/מחקרי-עבר-ופרסומים/"
+        "sourceUrl": "https://metiv.org/מחקרי-עבר-ופרסומים/",
+        "releaseJourney": false
       }
     },
     {
@@ -999,7 +1040,8 @@
         "details": "164(1), 66-72",
         "type": "article",
         "topic": "adolescents",
-        "sourceUrl": "https://metiv.org/מחקרי-עבר-ופרסומים/"
+        "sourceUrl": "https://metiv.org/מחקרי-עבר-ופרסומים/",
+        "releaseJourney": false
       }
     },
     {
@@ -1024,7 +1066,8 @@
         "details": "1094, 363-368",
         "type": "article",
         "topic": "children-family",
-        "sourceUrl": "https://metiv.org/מחקרי-עבר-ופרסומים/"
+        "sourceUrl": "https://metiv.org/מחקרי-עבר-ופרסומים/",
+        "releaseJourney": false
       }
     },
     {
@@ -1045,7 +1088,8 @@
         "details": "39(2), 199-205",
         "type": "article",
         "topic": "adolescents",
-        "sourceUrl": "https://metiv.org/מחקרי-עבר-ופרסומים/"
+        "sourceUrl": "https://metiv.org/מחקרי-עבר-ופרסומים/",
+        "releaseJourney": false
       }
     },
     {
@@ -1064,7 +1108,8 @@
         "details": "9 (No. 3/4). Co-published as a chapter in: The Trauma of Terrorism: Sharing Knowledge and Shared Care, An International Handbook (Haworth Press, 2005), pp. 335-347",
         "type": "article",
         "topic": "adolescents",
-        "sourceUrl": "https://metiv.org/מחקרי-עבר-ופרסומים/"
+        "sourceUrl": "https://metiv.org/מחקרי-עבר-ופרסומים/",
+        "releaseJourney": false
       }
     },
     {
@@ -1083,7 +1128,8 @@
         "details": "28, 79-85",
         "type": "article",
         "topic": "terror-war",
-        "sourceUrl": "https://metiv.org/מחקרי-עבר-ופרסומים/"
+        "sourceUrl": "https://metiv.org/מחקרי-עבר-ופרסומים/",
+        "releaseJourney": false
       }
     },
     {
@@ -1102,7 +1148,8 @@
         "details": "July, 14-17",
         "type": "article",
         "topic": "children-family",
-        "sourceUrl": "https://metiv.org/מחקרי-עבר-ופרסומים/"
+        "sourceUrl": "https://metiv.org/מחקרי-עבר-ופרסומים/",
+        "releaseJourney": false
       }
     },
     {
@@ -1124,7 +1171,8 @@
         "details": "listed as in press, expected in 2013",
         "type": "chapter",
         "topic": "children-family",
-        "sourceUrl": "https://metiv.org/מחקרי-עבר-ופרסומים/"
+        "sourceUrl": "https://metiv.org/מחקרי-עבר-ופרסומים/",
+        "releaseJourney": false
       }
     },
     {
@@ -1145,7 +1193,8 @@
         "details": "listed as in press, expected in 2013",
         "type": "chapter",
         "topic": "children-family",
-        "sourceUrl": "https://metiv.org/מחקרי-עבר-ופרסומים/"
+        "sourceUrl": "https://metiv.org/מחקרי-עבר-ופרסומים/",
+        "releaseJourney": false
       }
     },
     {
@@ -1165,7 +1214,8 @@
         "details": "listed as in press",
         "type": "chapter",
         "topic": "schools-resilience",
-        "sourceUrl": "https://metiv.org/מחקרי-עבר-ופרסומים/"
+        "sourceUrl": "https://metiv.org/מחקרי-עבר-ופרסומים/",
+        "releaseJourney": false
       }
     },
     {
@@ -1185,7 +1235,8 @@
         "details": "pp. 737-752",
         "type": "chapter",
         "topic": "treatment",
-        "sourceUrl": "https://metiv.org/מחקרי-עבר-ופרסומים/"
+        "sourceUrl": "https://metiv.org/מחקרי-עבר-ופרסומים/",
+        "releaseJourney": false
       }
     },
     {
@@ -1209,7 +1260,8 @@
         "year": 2012,
         "type": "chapter",
         "topic": "schools-resilience",
-        "sourceUrl": "https://metiv.org/מחקרי-עבר-ופרסומים/"
+        "sourceUrl": "https://metiv.org/מחקרי-עבר-ופרסומים/",
+        "releaseJourney": false
       }
     },
     {
@@ -1231,7 +1283,8 @@
         "details": "pp. 42-50",
         "type": "chapter",
         "topic": "adolescents",
-        "sourceUrl": "https://metiv.org/מחקרי-עבר-ופרסומים/"
+        "sourceUrl": "https://metiv.org/מחקרי-עבר-ופרסומים/",
+        "releaseJourney": false
       }
     },
     {
@@ -1254,7 +1307,8 @@
         "year": 2011,
         "type": "chapter",
         "topic": "schools-resilience",
-        "sourceUrl": "https://metiv.org/מחקרי-עבר-ופרסומים/"
+        "sourceUrl": "https://metiv.org/מחקרי-עבר-ופרסומים/",
+        "releaseJourney": false
       }
     },
     {
@@ -1276,7 +1330,8 @@
         "details": "pp. 51-71",
         "type": "chapter",
         "topic": "children-family",
-        "sourceUrl": "https://metiv.org/מחקרי-עבר-ופרסומים/"
+        "sourceUrl": "https://metiv.org/מחקרי-עבר-ופרסומים/",
+        "releaseJourney": false
       }
     },
     {
@@ -1297,7 +1352,8 @@
         "details": "pp. 269-276",
         "type": "chapter",
         "topic": "children-family",
-        "sourceUrl": "https://metiv.org/מחקרי-עבר-ופרסומים/"
+        "sourceUrl": "https://metiv.org/מחקרי-עבר-ופרסומים/",
+        "releaseJourney": false
       }
     },
     {
@@ -1316,7 +1372,8 @@
         "details": "pp. 112-119",
         "type": "chapter",
         "topic": "children-family",
-        "sourceUrl": "https://metiv.org/מחקרי-עבר-ופרסומים/"
+        "sourceUrl": "https://metiv.org/מחקרי-עבר-ופרסומים/",
+        "releaseJourney": false
       }
     },
     {
@@ -1334,7 +1391,8 @@
         "year": 2006,
         "type": "chapter",
         "topic": "terror-war",
-        "sourceUrl": "https://metiv.org/מחקרי-עבר-ופרסומים/"
+        "sourceUrl": "https://metiv.org/מחקרי-עבר-ופרסומים/",
+        "releaseJourney": false
       }
     },
     {
@@ -1360,7 +1418,8 @@
         "language": "he",
         "type": "chapter",
         "topic": "treatment",
-        "sourceUrl": "https://metiv.org/מחקרי-עבר-ופרסומים/"
+        "sourceUrl": "https://metiv.org/מחקרי-עבר-ופרסומים/",
+        "releaseJourney": false
       }
     },
     {
@@ -1381,7 +1440,8 @@
         "language": "he",
         "type": "chapter",
         "topic": "adolescents",
-        "sourceUrl": "https://metiv.org/מחקרי-עבר-ופרסומים/"
+        "sourceUrl": "https://metiv.org/מחקרי-עבר-ופרסומים/",
+        "releaseJourney": false
       }
     },
     {
@@ -1400,7 +1460,8 @@
         "language": "he",
         "type": "chapter",
         "topic": "schools-resilience",
-        "sourceUrl": "https://metiv.org/מחקרי-עבר-ופרסומים/"
+        "sourceUrl": "https://metiv.org/מחקרי-עבר-ופרסומים/",
+        "releaseJourney": false
       }
     },
     {
@@ -1418,7 +1479,8 @@
         "year": 2004,
         "type": "chapter",
         "topic": "schools-resilience",
-        "sourceUrl": "https://metiv.org/מחקרי-עבר-ופרסומים/"
+        "sourceUrl": "https://metiv.org/מחקרי-עבר-ופרסומים/",
+        "releaseJourney": false
       }
     }
   ]

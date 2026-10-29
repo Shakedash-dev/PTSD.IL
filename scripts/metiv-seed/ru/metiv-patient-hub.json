@@ -10,43 +10,6 @@
       "content": {
         "_key": "PATIENT_HUB",
         "_col": "metiv-patient-hub",
-        "hero": {
-          "brand": "Метив - Израильский центр психотравмы",
-          "eyebrow": "ПТСР",
-          "headline": "Вы не одни",
-          "subtitle": "Информация, инструменты и поддержка - всё в одном месте, понятным языком.",
-          "ctaLabel": "Что привело вас сюда?",
-          "image": "/images/set1/home_hero.webp",
-          "about": "Посттравматическое стрессовое расстройство (ПТСР) - это психическая реакция на травмирующее событие, которое мозг и тело продолжают перерабатывать ещё долго после того, как опасность миновала.",
-          "aboutLinkLabel": "Подробнее",
-          "aboutRoute": "/patient/ptsd-info"
-        },
-        "paths": [
-          {
-            "key": "firstCircle",
-            "route": "/patient/first-circle",
-            "title": "Я живу с ПТСР",
-            "subtitle": "Всё, что нужно, чтобы понять своё состояние, начать терапию и узнать свои права - в вашем темпе, не теряя себя.",
-            "image": "/images/illustrations/ptsd_sufferer.webp",
-            "ctaLabel": "Продолжить"
-          },
-          {
-            "key": "secondCircle",
-            "route": "/patient/second-circle",
-            "title": "Мой близкий живёт с ПТСР",
-            "subtitle": "Для партнёра, родителя, друга человека, который живёт с ПТСР: как поддержать, понять и не забывать о себе на этом пути.",
-            "image": "/images/illustrations/supporter.webp",
-            "ctaLabel": "Продолжить"
-          },
-          {
-            "key": "questionnaire",
-            "route": "/patient/questionnaire",
-            "title": "Я сомневаюсь",
-            "subtitle": "Короткий анонимный опросник (около 3 минут), который поможет понять, стоит ли дополнительно проверить ваши симптомы.",
-            "image": "/images/illustrations/wondering.webp",
-            "ctaLabel": "Продолжить"
-          }
-        ],
         "quickLinks": [
           {
             "key": "ptsdInfo",
@@ -245,8 +208,7 @@
             "icon": "HandHeart",
             "route": "/patient/where-to-get-help#free-treatments"
           }
-        ],
-        "disclaimer": "Сайт не предоставляет медицинских консультаций. В экстренной ситуации обратитесь к врачу или позвоните в ЭРАН: 1201"
+        ]
       }
     }
   ]

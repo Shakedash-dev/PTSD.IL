@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { createContext, useContext, useState, useEffect, useRef } from 'react';
 import { Users, UserCog, FileText, BookOpen, HelpCircle, Wrench, Heart, Baby, Shield, ClipboardList, MessageCircle, Pencil, Trash2, Plus, Check, X, ChevronUp, ChevronDown, Info, History } from 'lucide-react';
 import { toast } from 'sonner';
 import RichTextEditor from '@/components/RichTextEditor';
@@ -155,9 +155,10 @@ function displayName(user) {
 
 // The editable site pages, in the order the panel shows them, then the
 // chatbot's curated Q&A (`shared`: the chatbot serves both sites, so the Metiv
-// variant lists it under a heading of its own). Site copy (page headings) and
-// the legal documents are deliberately NOT here: they are not editable from
-// /admin. The public site still honours any override row stored before that
+// variant lists it under a heading of its own). Site copy and the legal
+// documents are deliberately NOT here: /admin does not edit them. The Metiv
+// admin edits the content i18n texts as site-copy override rows on its own
+// pages (MetivAdmin.jsx); the public site honours any override row
 // (src/api/source.js fetchSiteCopy/fetchLegalDoc).
 const CONTENT_TABS = [
   { key: 'ptsd_faqs',     label: 'שאלות PTSD',        icon: HelpCircle },
@@ -175,6 +176,14 @@ const CONTENT_TABS = [
 // masteradmin-only sections (hasUserManagementAccess()).
 const USERS_VIEW = { key: 'users', label: 'ניהול משתמשים', icon: UserCog };
 const LOG_VIEW = { key: 'log', label: 'יומן עריכות', icon: History };
+
+// Which admin the panels render in. The Metiv admin shows content only (owner
+// rule, 2026-10-29): it hides the PTSD-IL panels' format and technical fields -
+// the treatment step number, the children resources' button caption, the
+// questionnaire's name (its page h1), slug, order, active flag, scores and
+// cutoff - and the questionnaire's structure (adding or removing
+// questionnaires, questions and answers). /admin keeps them all.
+const AdminVariantContext = createContext(/** @type {'ptsd'|'metiv'} */ ('ptsd'));
 
 function LinksField({ value, onChange }) {
   const links = value || [];
@@ -325,6 +334,73 @@ function MethodsField({ value, onChange }) {
   );
 }
 
+// Repeatable app editor for a self-help tool ("אפליקציות מומלצות"): each app
+// has a name, a description and its App Store / Google Play links, rendered as
+// a card on the self-help page. Stored in the tool row's content as `apps`.
+function AppsField({ value, onChange }) {
+  const apps = value || [];
+  const update = (i, key, val) => onChange(apps.map((a, idx) => (idx === i ? { ...a, [key]: val } : a)));
+  const remove = i => onChange(apps.filter((_, idx) => idx !== i));
+  const add = () => onChange([...apps, { title: '', description: '', ios_url: '', android_url: '' }]);
+  function move(i, delta) {
+    const target = i + delta;
+    if (target < 0 || target >= apps.length) return;
+    const next = apps.slice();
+    [next[i], next[target]] = [next[target], next[i]];
+    onChange(next);
+  }
+  const input = 'w-full px-2 py-1.5 rounded-lg border border-border bg-background text-sm';
+  return (
+    <div className="space-y-3">
+      {apps.map((a, i) => (
+        <div key={i} className="p-3 rounded-lg border border-border bg-muted/30 space-y-2">
+          <div className="flex gap-2 items-center">
+            <input
+              value={a.title || ''}
+              onChange={e => update(i, 'title', e.target.value)}
+              placeholder="שם האפליקציה"
+              aria-label={`שם האפליקציה ${i + 1}`}
+              className={`flex-1 ${input} font-medium`}
+            />
+            <Button type="button" variant="quiet" size="none" onClick={() => move(i, -1)} disabled={i === 0} title="הזזה למעלה" className="disabled:opacity-30">
+              <ChevronUp className="w-3.5 h-3.5" />
+            </Button>
+            <Button type="button" variant="quiet" size="none" onClick={() => move(i, 1)} disabled={i === apps.length - 1} title="הזזה למטה" className="disabled:opacity-30">
+              <ChevronDown className="w-3.5 h-3.5" />
+            </Button>
+            <Button type="button" variant="quiet" size="none" onClick={() => remove(i)} title="הסרת אפליקציה" className="hover:text-destructive">
+              <X className="w-3.5 h-3.5" />
+            </Button>
+          </div>
+          <div>
+            <label className="text-xs font-semibold text-muted-foreground block mb-1" htmlFor={`app-${i}-description`}>תיאור</label>
+            <textarea
+              id={`app-${i}-description`}
+              value={a.description || ''}
+              onChange={e => update(i, 'description', e.target.value)}
+              rows={2}
+              className={`${input} leading-relaxed`}
+            />
+          </div>
+          <div className="grid gap-2 sm:grid-cols-2">
+            <div>
+              <label className="text-xs font-semibold text-muted-foreground block mb-1" htmlFor={`app-${i}-ios`}>קישור ל-App Store</label>
+              <input id={`app-${i}-ios`} dir="ltr" value={a.ios_url || ''} onChange={e => update(i, 'ios_url', e.target.value)} className={input} />
+            </div>
+            <div>
+              <label className="text-xs font-semibold text-muted-foreground block mb-1" htmlFor={`app-${i}-android`}>קישור ל-Google Play</label>
+              <input id={`app-${i}-android`} dir="ltr" value={a.android_url || ''} onChange={e => update(i, 'android_url', e.target.value)} className={input} />
+            </div>
+          </div>
+        </div>
+      ))}
+      <Button type="button" variant="link" size="none" onClick={add} className="text-xs gap-1">
+        <Plus className="w-3 h-3" /> הוספת אפליקציה
+      </Button>
+    </div>
+  );
+}
+
 function FieldInput({ field, value, onChange }) {
   switch (field.type) {
     case 'select':
@@ -396,6 +472,8 @@ function FieldInput({ field, value, onChange }) {
       return <SectionsField value={value} onChange={onChange} />;
     case 'methods':
       return <MethodsField value={value} onChange={onChange} />;
+    case 'apps':
+      return <AppsField value={value} onChange={onChange} />;
     default:
       return (
         <input
@@ -747,6 +825,7 @@ function SelfHelpPanel() {
     { key: 'category', label: 'קטגוריה', type: 'select', options: toOptions(SELF_HELP_CATEGORY_LABELS) },
     { key: 'title_he', label: 'כותרת', type: 'text' },
     { key: 'content_he', label: 'תוכן', type: 'richtext' },
+    { key: 'apps', label: 'אפליקציות (כרטיסים עם קישורים לחנויות)', type: 'apps' },
   ];
 
   function renderView(tool) {
@@ -756,6 +835,9 @@ function SelfHelpPanel() {
         <div>
           <p className="font-medium text-foreground">{tool.title_he}</p>
           <div className="text-sm text-muted-foreground mt-1 line-clamp-2" dangerouslySetInnerHTML={{ __html: tool.content_he }} />
+          {tool.apps?.length > 0 && (
+            <p className="text-xs text-muted-foreground mt-2">{tool.apps.length} אפליקציות: {tool.apps.map(a => a.title).join(' · ')}</p>
+          )}
         </div>
       </div>
     );
@@ -773,7 +855,7 @@ function SelfHelpPanel() {
           fields={fields}
           renderView={renderView}
           describe={t => t.title_he}
-          blank={{ category: 'sleep', title_he: '', content_he: '' }}
+          blank={{ category: 'sleep', title_he: '', content_he: '', apps: [] }}
           save={(draft, x) => saveSelfHelp(draft, { lang, ...x })}
           build={draft => buildSelfHelp(draft, { lang })}
           remove={removeSelfHelp}
@@ -786,10 +868,13 @@ function SelfHelpPanel() {
 
 function TreatmentPanel() {
   const { id: lang } = useAdminLang();
+  const metiv = useContext(AdminVariantContext) === 'metiv';
   const [steps, loading] = useAdminData(() => loadTreatment({ lang }), [lang], 'שגיאה בטעינת שלבי הטיפול', []);
 
   const fields = [
-    { key: 'step_number', label: 'מספר שלב', type: 'number' },
+    // The step number is the order on the page ("שלב 2 / 5"): format, not
+    // content, in the Metiv admin. A new step still gets the next number.
+    ...(metiv ? [] : [{ key: 'step_number', label: 'מספר שלב', type: 'number' }]),
     { key: 'title_he', label: 'כותרת', type: 'text' },
     { key: 'description_he', label: 'תיאור', type: 'textarea' },
     { key: 'how_to_start_he', label: 'איך מתחילים', type: 'richtext' },
@@ -1093,6 +1178,7 @@ function SecondCirclePanel() {
 const GUIDELINES_FIELDS = [{ key: 'guidelines', label: 'הנחיות', type: 'richtext' }];
 
 function ChildrenPanel() {
+  const metiv = useContext(AdminVariantContext) === 'metiv';
   const { changes, stage, discard } = usePendingChanges();
   const { id: lang } = useAdminLang();
   const { translate } = useArticleTranslations();
@@ -1129,7 +1215,8 @@ function ChildrenPanel() {
     { key: 'title_he', label: 'כותרת', type: 'text' },
     { key: 'description_he', label: 'תיאור', type: 'textarea' },
     { key: 'content_he', label: 'תוכן מורחב (אופציונלי)', type: 'richtext' },
-    { key: 'cta_label', label: 'טקסט כפתור פעולה (אופציונלי, למשל "לרכישת הספר")', type: 'text' },
+    // A button caption is format in the Metiv admin; the link is content.
+    ...(metiv ? [] : [{ key: 'cta_label', label: 'טקסט כפתור פעולה (אופציונלי, למשל "לרכישת הספר")', type: 'text' }]),
     { key: 'cta_url', label: 'קישור כפתור הפעולה', type: 'text' },
   ];
 
@@ -1482,6 +1569,7 @@ function flatQuestion(q) {
 }
 
 function QuestionnairePanel() {
+  const metiv = useContext(AdminVariantContext) === 'metiv';
   const { changes, stage, discard, newKey } = usePendingChanges();
   const [creating, setCreating] = useState(false);
   const { id: lang } = useAdminLang();
@@ -1507,7 +1595,9 @@ function QuestionnairePanel() {
     <div>
       <Section title="שאלונים" count={items.length} />
       <p className="text-xs text-muted-foreground mb-4">
-        השאלון אינו מתורגם אוטומטית: כל שפה נערכת בלשונית שלה, ושינוי בעברית לא משנה את השפות האחרות. totalQuestions מנוהל בשרת ומתעדכן אוטומטית עם הוספת/מחיקת שאלות.
+        {metiv
+          ? 'השאלון אינו מתורגם אוטומטית: כל שפה נערכת בלשונית שלה, ושינוי בעברית לא משנה את השפות האחרות. אפשר לערוך את התיאור, את נוסח השאלות ואת נוסח התשובות; הניקוד, הסף, הסדר ומבנה השאלון קבועים.'
+          : 'השאלון אינו מתורגם אוטומטית: כל שפה נערכת בלשונית שלה, ושינוי בעברית לא משנה את השפות האחרות. totalQuestions מנוהל בשרת ומתעדכן אוטומטית עם הוספת/מחיקת שאלות.'}
       </p>
 
       <div className="space-y-3 mt-3">
@@ -1525,7 +1615,7 @@ function QuestionnairePanel() {
                 if (!diff.length) { discard(key); return; }
                 stage({ key, scope, section: QUESTIONNAIRE_SECTION, action: 'update', itemId: q.id, title: draft.name || q.name, draft, diff, run: () => updateQuestionnaire(q.id, draft) });
               }}
-              onDelete={() => stage({
+              onDelete={metiv ? undefined : () => stage({
                 key: `${scope}:${q.id}`, scope, section: QUESTIONNAIRE_SECTION, action: 'delete', itemId: q.id,
                 title: `${q.name} (כולל כל השאלות שלו)`, diff: [], run: () => removeQuestionnaire(q.id),
               })}
@@ -1552,9 +1642,11 @@ function QuestionnairePanel() {
         )}
       </div>
 
-      <div className="mt-3">
-        <AddNewButton label="הוספת שאלון חדש" onClick={() => setCreating(true)} />
-      </div>
+      {!metiv && (
+        <div className="mt-3">
+          <AddNewButton label="הוספת שאלון חדש" onClick={() => setCreating(true)} />
+        </div>
+      )}
     </div>
   );
 }
@@ -1569,6 +1661,7 @@ function QuestionnairePanel() {
  * @param {() => void} [props.onDiscard]
  */
 function QuestionnaireRow({ q, status, onStage, onDelete, onDiscard }) {
+  const metiv = useContext(AdminVariantContext) === 'metiv';
   const [editing, setEditing] = useState(false);
   const [expanded, setExpanded] = useState(false);
   const badge = status && STATUS_BADGES[status];
@@ -1588,9 +1681,13 @@ function QuestionnaireRow({ q, status, onStage, onDelete, onDiscard }) {
               {badge && <div className="mb-2"><Badge color={badge.color}>{badge.label}</Badge></div>}
               <div className={status === 'delete' ? 'opacity-50 line-through' : ''}>
                 <p className="font-semibold text-foreground">{q.name}</p>
-                <p className="text-xs text-muted-foreground mt-1">
-                  slug: {q.slug} · שאלות: {q.totalQuestions ?? 0} · max: {q.maxScore} · סף: {q.cutoffScore ?? '-'} · {q.isActive ? 'פעיל' : 'לא פעיל'}
-                </p>
+                {metiv ? (
+                  <p className="text-sm text-muted-foreground mt-1 line-clamp-2">{q.description}</p>
+                ) : (
+                  <p className="text-xs text-muted-foreground mt-1">
+                    slug: {q.slug} · שאלות: {q.totalQuestions ?? 0} · max: {q.maxScore} · סף: {q.cutoffScore ?? '-'} · {q.isActive ? 'פעיל' : 'לא פעיל'}
+                  </p>
+                )}
               </div>
             </div>
             <div className="flex gap-2 flex-shrink-0 items-center">
@@ -1625,6 +1722,7 @@ function QuestionnaireRow({ q, status, onStage, onDelete, onDiscard }) {
 
 // Metadata form for create/edit.
 function QuestionnaireMetaForm({ initial, onSave, onCancel }) {
+  const metiv = useContext(AdminVariantContext) === 'metiv';
   const [draft, setDraft] = useState({
     langId: initial.langId ?? 'he', // the language tab's; not editable here
     slug: initial.slug ?? '',
@@ -1640,38 +1738,44 @@ function QuestionnaireMetaForm({ initial, onSave, onCancel }) {
 
   return (
     <div className="space-y-3">
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-        <div>
-          <label className="text-xs font-semibold text-muted-foreground block mb-1">slug</label>
-          <input className={inputCls} value={draft.slug} onChange={e => set('slug', e.target.value)} />
+      {!metiv && (
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+          <div>
+            <label className="text-xs font-semibold text-muted-foreground block mb-1">slug</label>
+            <input className={inputCls} value={draft.slug} onChange={e => set('slug', e.target.value)} />
+          </div>
+          <div>
+            <label className="text-xs font-semibold text-muted-foreground block mb-1">ציון מקסימלי</label>
+            <input type="number" className={inputCls} value={draft.maxScore} onChange={e => set('maxScore', e.target.value)} />
+          </div>
+          <div>
+            <label className="text-xs font-semibold text-muted-foreground block mb-1">סף קליני</label>
+            <input type="number" className={inputCls} value={draft.cutoffScore} onChange={e => set('cutoffScore', e.target.value)} />
+          </div>
         </div>
+      )}
+      {!metiv && (
         <div>
-          <label className="text-xs font-semibold text-muted-foreground block mb-1">ציון מקסימלי</label>
-          <input type="number" className={inputCls} value={draft.maxScore} onChange={e => set('maxScore', e.target.value)} />
+          <label className="text-xs font-semibold text-muted-foreground block mb-1">שם</label>
+          <input className={inputCls} value={draft.name} onChange={e => set('name', e.target.value)} />
         </div>
-        <div>
-          <label className="text-xs font-semibold text-muted-foreground block mb-1">סף קליני</label>
-          <input type="number" className={inputCls} value={draft.cutoffScore} onChange={e => set('cutoffScore', e.target.value)} />
-        </div>
-      </div>
-      <div>
-        <label className="text-xs font-semibold text-muted-foreground block mb-1">שם</label>
-        <input className={inputCls} value={draft.name} onChange={e => set('name', e.target.value)} />
-      </div>
+      )}
       <div>
         <label className="text-xs font-semibold text-muted-foreground block mb-1">תיאור</label>
         <textarea className={inputCls} rows={2} value={draft.description ?? ''} onChange={e => set('description', e.target.value)} />
       </div>
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 items-end">
-        <div>
-          <label className="text-xs font-semibold text-muted-foreground block mb-1">סדר תצוגה</label>
-          <input type="number" className={inputCls} value={draft.sortOrder} onChange={e => set('sortOrder', e.target.value)} />
+      {!metiv && (
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 items-end">
+          <div>
+            <label className="text-xs font-semibold text-muted-foreground block mb-1">סדר תצוגה</label>
+            <input type="number" className={inputCls} value={draft.sortOrder} onChange={e => set('sortOrder', e.target.value)} />
+          </div>
+          <label className="flex items-center gap-2 text-sm">
+            <input type="checkbox" checked={!!draft.isActive} onChange={e => set('isActive', e.target.checked)} />
+            פעיל
+          </label>
         </div>
-        <label className="flex items-center gap-2 text-sm">
-          <input type="checkbox" checked={!!draft.isActive} onChange={e => set('isActive', e.target.checked)} />
-          פעיל
-        </label>
-      </div>
+      )}
       <div className="flex gap-2 items-center flex-wrap">
         <Button variant="solid" size="none" onClick={() => onSave(draft)} className="px-4 py-2 rounded-lg text-sm gap-1"><Check className="w-4 h-4" /> אישור</Button>
         <Button variant="outline-subtle" size="none" onClick={onCancel} className="px-4 py-2 rounded-lg text-sm gap-1"><X className="w-4 h-4" /> ביטול</Button>
@@ -1684,6 +1788,7 @@ function QuestionnaireMetaForm({ initial, onSave, onCancel }) {
 // Questions editor: lazy-loads the questionnaire detail, lists questions with
 // inline option editing, add/delete - all staged.
 function QuestionsEditor({ questionnaireId, questionnaireName }) {
+  const metiv = useContext(AdminVariantContext) === 'metiv';
   const { changes, stage, discard, newKey } = usePendingChanges();
   const [detail, loading] = useAdminData(
     () => loadQuestionnaireDetail(questionnaireId), [questionnaireId], 'שגיאה בטעינת השאלות', null
@@ -1722,7 +1827,7 @@ function QuestionsEditor({ questionnaireId, questionnaireName }) {
               if (!diff.length) { discard(key); return; }
               stage({ key, scope, section, action: 'update', itemId: qn.id, title: draft.text || qn.text, draft, diff, run: () => updateQuestion(questionnaireId, qn.id, draft) });
             }}
-            onDelete={() => stage({ key, scope, section, action: 'delete', itemId: qn.id, title: qn.text, diff: [], run: () => removeQuestion(questionnaireId, qn.id) })}
+            onDelete={metiv ? undefined : () => stage({ key, scope, section, action: 'delete', itemId: qn.id, title: qn.text, diff: [], run: () => removeQuestion(questionnaireId, qn.id) })}
           />
         );
       })}
@@ -1746,7 +1851,7 @@ function QuestionsEditor({ questionnaireId, questionnaireName }) {
           onSave={draft => { stageCreate(newKey(scope), draft); setAddingNew(false); }}
           onCancel={() => setAddingNew(false)}
         />
-      ) : (
+      ) : !metiv && (
         <AddNewButton label="הוספת שאלה" onClick={() => setAddingNew(true)} />
       )}
     </div>
@@ -1766,6 +1871,8 @@ function QuestionsEditor({ questionnaireId, questionnaireName }) {
  * @param {boolean} [props.startInEdit]
  */
 function QuestionRow({ index, question, onSave, onDelete, onCancel, onDiscard, status, startInEdit = false }) {
+  // The Metiv admin edits the wording only: scores, order and the set of answers are the PCL-5 protocol.
+  const metiv = useContext(AdminVariantContext) === 'metiv';
   const [editing, setEditing] = useState(startInEdit);
   const seed = q => (q.options ?? []).map(o => ({ answer: o.answer ?? '', score: o.score ?? 0, order: o.order ?? 0 }));
   const [text, setText] = useState(question.text ?? '');
@@ -1792,7 +1899,7 @@ function QuestionRow({ index, question, onSave, onDelete, onCancel, onDiscard, s
           {badge && <div className="mb-1"><Badge color={badge.color}>{badge.label}</Badge></div>}
           <div className={status === 'delete' ? 'opacity-50 line-through' : ''}>
             <p className="text-sm text-foreground"><span className="text-muted-foreground/60">{index + 1}. </span>{question.text}</p>
-            <p className="text-xs text-muted-foreground mt-1">{(question.options ?? []).map(o => `${o.answer}=${o.score}`).join(' · ')}</p>
+            <p className="text-xs text-muted-foreground mt-1">{(question.options ?? []).map(o => (metiv ? o.answer : `${o.answer}=${o.score}`)).join(' · ')}</p>
           </div>
         </div>
         <div className="flex gap-2 flex-shrink-0 items-center">
@@ -1811,19 +1918,25 @@ function QuestionRow({ index, question, onSave, onDelete, onCancel, onDiscard, s
   return (
     <div className="p-3 rounded-lg border border-primary/30 bg-background space-y-2">
       <div className="flex gap-2">
-        <input className={`${inputCls} w-16`} type="number" value={sortOrder} onChange={e => setSortOrder(e.target.value)} title="sortOrder" />
-        <input className={`${inputCls} flex-1`} value={text} onChange={e => setText(e.target.value)} placeholder="טקסט השאלה" />
+        {!metiv && <input className={`${inputCls} w-16`} type="number" value={sortOrder} onChange={e => setSortOrder(e.target.value)} title="sortOrder" />}
+        <input className={`${inputCls} flex-1`} value={text} onChange={e => setText(e.target.value)} placeholder="טקסט השאלה" aria-label="טקסט השאלה" />
       </div>
       <div className="space-y-1">
         {options.map((o, i) => (
           <div key={i} className="flex gap-2 items-center">
-            <input className={`${inputCls} flex-1`} value={o.answer} onChange={e => setOpt(i, 'answer', e.target.value)} placeholder="תשובה" />
-            <input className={`${inputCls} w-16`} type="number" value={o.score} onChange={e => setOpt(i, 'score', e.target.value)} title="score" />
-            <input className={`${inputCls} w-16`} type="number" value={o.order} onChange={e => setOpt(i, 'order', e.target.value)} title="order" />
-            <Button variant="outline-subtle" size="none" onClick={() => setOptions(os => os.filter((_, j) => j !== i))} className="p-1.5 rounded-lg text-destructive"><X className="w-3 h-3" /></Button>
+            <input className={`${inputCls} flex-1`} value={o.answer} onChange={e => setOpt(i, 'answer', e.target.value)} placeholder="תשובה" aria-label={`תשובה ${i + 1}`} />
+            {!metiv && (
+              <>
+                <input className={`${inputCls} w-16`} type="number" value={o.score} onChange={e => setOpt(i, 'score', e.target.value)} title="score" />
+                <input className={`${inputCls} w-16`} type="number" value={o.order} onChange={e => setOpt(i, 'order', e.target.value)} title="order" />
+                <Button variant="outline-subtle" size="none" onClick={() => setOptions(os => os.filter((_, j) => j !== i))} className="p-1.5 rounded-lg text-destructive"><X className="w-3 h-3" /></Button>
+              </>
+            )}
           </div>
         ))}
-        <Button variant="link" size="none" onClick={() => setOptions(os => [...os, { answer: '', score: os.length, order: os.length }])} className="text-xs gap-1 mt-1"><Plus className="w-3 h-3" /> הוספת תשובה</Button>
+        {!metiv && (
+          <Button variant="link" size="none" onClick={() => setOptions(os => [...os, { answer: '', score: os.length, order: os.length }])} className="text-xs gap-1 mt-1"><Plus className="w-3 h-3" /> הוספת תשובה</Button>
+        )}
       </div>
       <div className="flex gap-2">
         <Button variant="solid" size="none" onClick={() => { onSave({ text, sortOrder, options }); if (!startInEdit) setEditing(false); }} className="px-3 py-1.5 rounded-lg text-sm gap-1"><Check className="w-4 h-4" /> אישור</Button>
@@ -1872,7 +1985,7 @@ async function ptsdSearchEntries(lang) {
   ]);
   return [
     ...faqs.map(f => entry('ptsd_faqs', f, f.q, f.a)),
-    ...tools.map(t => entry('self_help', t, t.title_he, t.content_he)),
+    ...tools.map(t => entry('self_help', t, t.title_he, join(t.content_he, (t.apps || []).map(x => [x.title, x.description])))),
     ...steps.map(st => entry('treatment', st, st.title_he, join(st.description_he, st.how_to_start_he, (st.methods || []).map(m => [m.title_he, m.description_he])))),
     ...communities.map(c => entry('communities', c, c.name, join(c.organization, c.description_he, c.location))),
     ...sources.map(src => entry('sources', src, src.title, join(src.authors, src.description_he))),
@@ -1932,83 +2045,85 @@ export default function Admin({ variant = 'ptsd' }) {
   }
 
   return (
-    <div className={`${metiv ? 'max-w-7xl' : 'max-w-5xl'} mx-auto px-4 sm:px-6 py-8 pb-28`}>
-      <nav aria-label="אזורי ממשק הניהול" className="flex flex-wrap gap-2 mb-8 border-b border-border pb-4">
-        {views.map(v => {
-          const Icon = v.icon;
-          return (
-            <ChoiceChip
-              key={v.key}
-              variant="plain"
-              selected={view === v.key}
-              onClick={() => setView(v.key)}
-              className="gap-2 px-4 py-2 rounded-super-sm text-sm"
-            >
-              <Icon className="w-4 h-4" />
-              {v.label}
-              {v.key === 'content' && changes.length > 0 && (
-                <Badge color="bg-warning/20 text-foreground">{changes.length}</Badge>
-              )}
-            </ChoiceChip>
-          );
-        })}
-      </nav>
+    <AdminVariantContext.Provider value={variant}>
+      <div className={`${metiv ? 'max-w-7xl' : 'max-w-5xl'} mx-auto px-4 sm:px-6 py-8 pb-28`}>
+        <nav aria-label="אזורי ממשק הניהול" className="flex flex-wrap gap-2 mb-8 border-b border-border pb-4">
+          {views.map(v => {
+            const Icon = v.icon;
+            return (
+              <ChoiceChip
+                key={v.key}
+                variant="plain"
+                selected={view === v.key}
+                onClick={() => setView(v.key)}
+                className="gap-2 px-4 py-2 rounded-super-sm text-sm"
+              >
+                <Icon className="w-4 h-4" />
+                {v.label}
+                {v.key === 'content' && changes.length > 0 && (
+                  <Badge color="bg-warning/20 text-foreground">{changes.length}</Badge>
+                )}
+              </ChoiceChip>
+            );
+          })}
+        </nav>
 
-      {view === 'guide' && <AdminGuide canEdit={showContent} onStart={() => setView('content')} />}
+        {view === 'guide' && <AdminGuide canEdit={showContent} onStart={() => setView('content')} />}
 
-      {view === 'content' && metiv && (showContent || showUsers) && (
-        <AdminLangProvider lang={lang}>
-          <LanguageTabs lang={lang} onChange={setLang} />
-          <MetivContentView
-            ptsdTabs={CONTENT_TABS}
-            renderPtsd={key => PANELS[key]}
-            renderTool={renderTool}
-            ptsdSearch={ptsdSearchEntries}
-            showContent={showContent}
-            showUsers={showUsers}
-          />
-        </AdminLangProvider>
-      )}
+        {view === 'content' && metiv && (showContent || showUsers) && (
+          <AdminLangProvider lang={lang}>
+            <LanguageTabs lang={lang} onChange={setLang} />
+            <MetivContentView
+              ptsdTabs={CONTENT_TABS}
+              renderPtsd={key => PANELS[key]}
+              renderTool={renderTool}
+              ptsdSearch={ptsdSearchEntries}
+              showContent={showContent}
+              showUsers={showUsers}
+            />
+          </AdminLangProvider>
+        )}
 
-      {view === 'content' && showContent && !metiv && (
-        <AdminLangProvider lang={lang}>
-          <LanguageTabs lang={lang} onChange={setLang} />
-          <h2 className="text-xs font-semibold text-muted-foreground mb-2">עמודי האתר הניתנים לעריכה</h2>
-          <div className="flex flex-wrap gap-2 mb-6">
-            {CONTENT_TABS.map(tab => {
-              const Icon = tab.icon;
-              return (
-                <ChoiceChip
-                  key={tab.key}
-                  variant="plain"
-                  selected={activeTab === tab.key}
-                  onClick={() => setActiveTab(tab.key)}
-                  className="gap-2 px-4 py-2 rounded-super-sm text-sm"
-                >
-                  <Icon className="w-4 h-4" />
-                  {tab.label}
-                  {pendingByTab[tab.key] > 0 && (
-                    <Badge color="bg-warning/20 text-foreground">{pendingByTab[tab.key]}</Badge>
-                  )}
-                </ChoiceChip>
-              );
-            })}
-          </div>
-          <div className="bg-card rounded-super border border-border p-6 shadow-card">
-            {PANELS[activeTab]}
-          </div>
-        </AdminLangProvider>
-      )}
+        {view === 'content' && showContent && !metiv && (
+          <AdminLangProvider lang={lang}>
+            <LanguageTabs lang={lang} onChange={setLang} />
+            <h2 className="text-xs font-semibold text-muted-foreground mb-2">עמודי האתר הניתנים לעריכה</h2>
+            <div className="flex flex-wrap gap-2 mb-6">
+              {CONTENT_TABS.map(tab => {
+                const Icon = tab.icon;
+                return (
+                  <ChoiceChip
+                    key={tab.key}
+                    variant="plain"
+                    selected={activeTab === tab.key}
+                    onClick={() => setActiveTab(tab.key)}
+                    className="gap-2 px-4 py-2 rounded-super-sm text-sm"
+                  >
+                    <Icon className="w-4 h-4" />
+                    {tab.label}
+                    {pendingByTab[tab.key] > 0 && (
+                      <Badge color="bg-warning/20 text-foreground">{pendingByTab[tab.key]}</Badge>
+                    )}
+                  </ChoiceChip>
+                );
+              })}
+            </div>
+            <div className="bg-card rounded-super border border-border p-6 shadow-card">
+              {PANELS[activeTab]}
+            </div>
+          </AdminLangProvider>
+        )}
 
-      {view === 'users' && showUsers && (
-        <div className="bg-card rounded-super border border-border p-6 shadow-card"><UsersPanel /></div>
-      )}
+        {view === 'users' && showUsers && (
+          <div className="bg-card rounded-super border border-border p-6 shadow-card"><UsersPanel /></div>
+        )}
 
-      {view === 'log' && showUsers && (
-        <div className="bg-card rounded-super border border-border p-6 shadow-card"><EditLogPanel /></div>
-      )}
+        {view === 'log' && showUsers && (
+          <div className="bg-card rounded-super border border-border p-6 shadow-card"><EditLogPanel /></div>
+        )}
 
-      <SaveAllBar />
-    </div>
+        <SaveAllBar />
+      </div>
+    </AdminVariantContext.Provider>
   );
 }

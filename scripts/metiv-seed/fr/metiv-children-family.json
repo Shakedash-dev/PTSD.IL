@@ -33,7 +33,10 @@
             "developedBy": "Pr Ruth Pat-Horenczyk et Sarit Schramm-Yavin, au sein de Metiv",
             "description": "Un programme de groupe pour renforcer la régulation émotionnelle et développer des façons de faire face chez les enfants. Le programme se concentre sur l'acquisition d'outils pour faire face à toute une gamme d'états émotionnels, ainsi que sur la prévention des difficultés de régulation émotionnelle ou de l'aggravation de difficultés existantes. Il associe des techniques de pleine conscience (mindfulness) et des techniques cognitivo-comportementales, en mettant l'accent sur le jeu et le plaisir. Le programme a été mis en œuvre dans des cadres tels que des internats, des familles d'accueil, des clubs thérapeutiques et des écoles dans tout le pays, ainsi qu'à Singapour, en Italie et aux États-Unis, et il a été traduit en arabe.",
             "trainingSlug": "panda-training",
-            "sourceUrl": "https://metiv.org/תכנית-פנדה-לילדים/"
+            "sourceUrl": "https://metiv.org/תכנית-פנדה-לילדים/",
+            "ageGroups": [
+              "school"
+            ]
           },
           {
             "key": "panda-parents",
@@ -44,7 +47,10 @@
             "developedBy": "Sarit Schramm-Yavin et Tzipora Hayat",
             "description": "Des groupes pour les parents qui souhaitent développer une conscience d'eux-mêmes et de leur parentalité, et acquérir des outils de régulation émotionnelle et comportementale avec d'autres parents. Le programme s'appuie sur l'approche dialectique et comportementale (DBT) et intègre des exercices du programme PANDA pour enfants. Des groupes spécifiques sont parfois ouverts, par exemple pour les parents d'enfants ayant vécu les événements de la guerre « Épées de fer ».",
             "trainingSlug": "panda-parents-training",
-            "sourceUrl": "https://metiv.org/מטיב-ילדים-טראומה/"
+            "sourceUrl": "https://metiv.org/מטיב-ילדים-טראומה/",
+            "ageGroups": [
+              "parents"
+            ]
           },
           {
             "key": "panda-family",
@@ -53,7 +59,12 @@
             "structure": "En général, 6 séances familiales et 6 séances de guidance parentale (à domicile ou chez Metiv)",
             "developedBy": "Metiv Enfants",
             "description": "Des activités familiales pour développer les façons de faire face et les capacités de régulation, notamment pour les réservistes et leurs familles.",
-            "sourceUrl": "https://metiv.org/טיפולים-ללא-עלות-דרך-מטיב/"
+            "sourceUrl": "https://metiv.org/טיפולים-ללא-עלות-דרך-מטיב/",
+            "ageGroups": [
+              "early",
+              "school",
+              "parents"
+            ]
           },
           {
             "key": "panda-two",
@@ -70,7 +81,11 @@
               "Exprimer et refléter les émotions"
             ],
             "trainingSlug": "panda-two-training",
-            "sourceUrl": "https://metiv.org/הכשרה-למטפלים-פנדה-בשניים/"
+            "sourceUrl": "https://metiv.org/הכשרה-למטפלים-פנדה-בשניים/",
+            "ageGroups": [
+              "early",
+              "parents"
+            ]
           },
           {
             "key": "namal",
@@ -89,7 +104,11 @@
               "Jouer à l'ombre du traumatisme (jeu post-traumatique)"
             ],
             "trainingSlug": "namal-training",
-            "sourceUrl": "https://metiv.org/תוכנית-נמל/"
+            "sourceUrl": "https://metiv.org/תוכנית-נמל/",
+            "ageGroups": [
+              "early",
+              "parents"
+            ]
           }
         ],
         "contact": {

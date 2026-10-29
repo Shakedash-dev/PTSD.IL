@@ -1,15 +1,17 @@
 // Which page-copy keys (scripts/metiv-seed/copy/<namespace>.json) the Metiv
 // admin lets an editor change, with the Hebrew name the editor sees.
 //
-// Rule: a key is CONTENT - editable - when it is running text that informs the
-// visitor (an intro, an explanation, a card description, a note, a disclaimer,
-// a help line), typically a full sentence. Everything else is UI and stays as
-// shipped: page and section headings, titles and subtitles, eyebrows, nav and
-// breadcrumb labels, button, link and CTA labels, field labels (fieldCost,
-// fieldLocation...), badges and status labels, aria/alt/sr-only text,
-// placeholders, empty and error states, count and format templates
-// ("{count} ..."), sentence fragments around a link, and crisis-line labels
-// (sanctuaryCrisisLine, eranCall...). When in doubt it is UI.
+// Rule (owner, 2026-10-29): only the content itself is editable - the
+// information the site presents: an intro, a description, a note, a
+// disclaimer, the descriptive sentence under a page's h1 (its subtitle) and a
+// sentence that states facts about Metiv. Everything else is UI and stays as
+// shipped: page h1s and section headings, eyebrows, nav and breadcrumb labels,
+// button, link and CTA labels and the captions of link cards, field labels,
+// badges and status labels, aria/alt/sr-only text, placeholders, empty and
+// error states, count and format templates ("{count} ..."), sentence
+// fragments around a link, crisis-line labels (sanctuaryCrisisLine,
+// eranCall...), and texts that explain how the page works ("אפשר לסנן לפי
+// סוג", "בוחרים גיל, והמודלים נשארים"). When in doubt it is UI.
 //
 // A namespace that is not listed has no editable key. src/test/admin-metiv-
 // sitemap.test.js checks every key here exists in the seed copy files.
@@ -17,36 +19,34 @@
 /** @type {Record<string, Record<string, string>>} */
 export const COPY_CONTENT_KEYS = {
   about: {
-    short1: 'תיבת "בקצרה": שורה 1',
-    short2: 'תיבת "בקצרה": שורה 2',
     moreAboutHistory: 'תיאור הכרטיס "הסיפור של מטיב"',
     moreAboutTeam: 'תיאור הכרטיס "הצוות"',
     moreAboutPartners: 'תיאור הכרטיס "השותפים שלנו"',
     moreAboutCollaborations: 'תיאור הכרטיס "שיתופי פעולה"',
   },
   aboutCollaborations: {
+    subtitle: 'המשפט שמתחת לכותרת העמוד',
     orgsIntro: 'פתיחה: ארגונים שקיבלו הכשרה',
     contactText: 'טקסט "רוצים לעבוד יחד?"',
   },
+  aboutHistory: {
+    subtitle: 'המשפט שמתחת לכותרת העמוד',
+  },
   aboutPartners: {
-    short1: 'תיבת "בקצרה": שורה 1',
-    short2: 'תיבת "בקצרה": שורה 2',
+    subtitle: 'המשפט שמתחת לכותרת העמוד',
     joinText: 'טקסט "רוצים לתמוך?"',
   },
   accessibility: {
-    short1: 'תיבת "בקצרה": שורה 1',
-    short2: 'תיבת "בקצרה": שורה 2',
+    short2: 'תיבת "בקצרה": למי פונים כשמשהו לא עובד',
   },
   articles: {
+    subtitle: 'המשפט שמתחת לכותרת העמוד',
     moreSoon: 'הערה: מאמרים נוספים יתווספו',
   },
-  chrome: {
-    helpNowIntro: 'חלון "עזרה עכשיו": פתיחה',
-  },
   childrenFamily: {
+    subtitle: 'המשפט שמתחת לכותרת העמוד',
     shortTrainings: 'תיבת "בקצרה": הכשרות',
     shortInterest: 'תיבת "בקצרה": רישום התעניינות',
-    modelsIntro: 'פתיחה למודלים',
   },
   contact: {
     topicAdultsText: 'נושא "טיפול למבוגרים": תיאור',
@@ -61,9 +61,7 @@ export const COPY_CONTENT_KEYS = {
     registerClosedText: 'מחזור שהסתיים: הסבר',
   },
   courses: {
-    shortQuestions: 'תיבת "בקצרה": השאלות',
-    shortAll: 'תיבת "בקצרה": כל הקורסים',
-    finderIntro: 'פתיחה לשאלון הקורסים',
+    subtitle: 'המשפט שמתחת לכותרת העמוד',
     pastIntro: 'פתיחה: קורסים שהתקיימו',
     moreSupervisionText: 'כרטיס "הדרכה": תיאור',
     moreKidsText: 'כרטיס "ילדים ומשפחה": תיאור',
@@ -71,22 +69,20 @@ export const COPY_CONTENT_KEYS = {
   },
   donate: {
     short1: 'תיבת "בקצרה": שורה 1',
-    placeholderNote: 'הערה על טקסט זמני',
   },
   events: {
-    shortFilter: 'תיבת "בקצרה": סינון',
-    shortCourseLink: 'תיבת "בקצרה": קישור לקורס',
+    subtitle: 'המשפט שמתחת לכותרת העמוד',
   },
   landing: {
     intro: 'פתיחה בראש העמוד',
     patientText: 'כרטיס אזור המטופלים: תיאור',
     therapistText: 'כרטיס אזור אנשי המקצוע: תיאור',
     servicesIntro: 'פתיחה לשירותים הטיפוליים',
-    moreServicesText: 'כרטיס "מסגרות נוספות": תיאור',
   },
   organizations: {
+    subtitle: 'המשפט שמתחת לכותרת העמוד',
+    shortPrograms: 'תיבת "בקצרה": התוכניות',
     shortTailored: 'תיבת "בקצרה": התאמה לארגון',
-    shortContact: 'תיבת "בקצרה": איש קשר',
     clientsIntro: 'פתיחה: ארגונים שעבדו עם מטיב',
   },
   patientChildren: {
@@ -96,12 +92,13 @@ export const COPY_CONTENT_KEYS = {
     veteransIntro: 'פתיחה: חיילים משוחררים ומילואימניקים',
   },
   patientFreeTreatment: {
+    subtitle: 'המשפט שמתחת לכותרת העמוד',
     researchNote: 'הערה על השתתפות במחקר',
   },
   patientReleaseJourney: {
+    subtitle: 'המשפט שמתחת לכותרת העמוד',
     forWhom: 'למי מיועד',
     where: 'איפה',
-    modelsIntro: 'פתיחה למסלולים',
     moreIntro: 'פתיחה: מענים נוספים',
     moreVeteransDescription: 'כרטיס "קבוצות למילואימניקים": תיאור',
     moreFreeDescription: 'כרטיס "טיפולים ללא עלות": תיאור',
@@ -116,31 +113,29 @@ export const COPY_CONTENT_KEYS = {
     booksIntro: 'פתיחה: ספרים של אנשי מטיב',
   },
   patientWhereToGetHelp: {
+    subtitle: 'המשפט שמתחת לכותרת העמוד',
     disclaimer: 'הסתייגות על הפרטים',
   },
   publications: {
-    shortFilter: 'תיבת "בקצרה": סינון',
+    subtitle: 'המשפט שמתחת לכותרת העמוד',
   },
   releaseJourneyPro: {
+    subtitle: 'המשפט שמתחת לכותרת העמוד (לאנשי מקצוע)',
     shortStructure: 'תיבת "בקצרה": מבנה התוכנית',
-    shortWho: 'תיבת "בקצרה": מי פיתח',
-    shortTeam: 'תיבת "בקצרה": הצוות',
     modelsIntro: 'פתיחה למודלים',
+    mod: 'שם השותף בכרטיס השותפות',
     contactText: 'למי פונים: הסבר',
   },
   research: {
-    shortCards: 'תיבת "בקצרה": הכרטיסים',
     studiesIntro: 'פתיחה למחקרים הפעילים',
     collabText: 'שיתופי פעולה מחקריים: הסבר',
   },
   supervision: {
-    shortCompare: 'תיבת "בקצרה": טבלת ההשוואה',
-    shortContact: 'תיבת "בקצרה": פנייה',
-    optionsIntro: 'פתיחה לאפשרויות',
+    subtitle: 'המשפט שמתחת לכותרת העמוד',
+    shortOptions: 'תיבת "בקצרה": האפשרויות',
     notSureText: 'טקסט "לא בטוח/ה מה מתאים?"',
   },
   therapistHub: {
-    questionIntro: 'פתיחה לשאלה "במה נוכל לעזור?"',
     referWhereText: 'כרטיס "איפה מקבלים טיפול": תיאור',
     referFreeText: 'כרטיס "טיפולים ללא עלות": תיאור',
     referResearchText: 'כרטיס "מחקרים שמגייסים": תיאור',

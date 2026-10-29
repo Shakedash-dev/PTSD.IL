@@ -13,7 +13,9 @@
         "name": "Dr. Danny Brom",
         "role": "Founder and CEO of Metiv",
         "group": "Management",
-        "bio": "Dr. Danny Brom is an expert in trauma and resilience. As the founder of Metiv, he brought his trauma expertise to the fields of education, health, mental health and community. He taught at the Hebrew University's School of Social Work, founded the Israel Trauma Coalition and served as its chair, and was research director of AMCHA, which provides psychosocial support to Holocaust survivors and the second generation. Internationally, he provides training and consultation on trauma and resilience to professionals and service providers following terror attacks and disasters, including in New York after 9/11, Haiti, Turkey, New Orleans and Mexico. He has co-authored 50 papers published in professional journals and has co-written seven books on trauma."
+        "bio": "Dr. Danny Brom is an expert in trauma and resilience. As the founder of Metiv, he brought his trauma expertise to the fields of education, health, mental health and community. He taught at the Hebrew University's School of Social Work, founded the Israel Trauma Coalition and served as its chair, and was research director of AMCHA, which provides psychosocial support to Holocaust survivors and the second generation. Internationally, he provides training and consultation on trauma and resilience to professionals and service providers following terror attacks and disasters, including in New York after 9/11, Haiti, Turkey, New Orleans and Mexico. He has co-authored 50 papers published in professional journals and has co-written seven books on trauma.",
+        "releaseJourneyTeam": false,
+        "releaseJourneyResearcher": false
       }
     },
     {
@@ -26,7 +28,9 @@
         "name": "Idit Dickstein",
         "role": "Deputy CEO of Metiv and therapist at the Children's Clinic",
         "group": "Management",
-        "bio": "Phototherapist and graduate of the Psychotrauma Center's CBT program. She holds a bachelor's degree in photography and has trained in phototherapy."
+        "bio": "Phototherapist and graduate of the Psychotrauma Center's CBT program. She holds a bachelor's degree in photography and has trained in phototherapy.",
+        "releaseJourneyTeam": false,
+        "releaseJourneyResearcher": false
       }
     },
     {
@@ -39,7 +43,9 @@
         "name": "Haim Landau",
         "role": "Head of Development and Partnerships",
         "group": "Management",
-        "email": "Chaim@metiv.org"
+        "email": "Chaim@metiv.org",
+        "releaseJourneyTeam": false,
+        "releaseJourneyResearcher": false
       }
     },
     {
@@ -51,7 +57,9 @@
         "_col": "metiv-team",
         "name": "Keren Alaluf",
         "role": "Finance",
-        "group": "Management"
+        "group": "Management",
+        "releaseJourneyTeam": false,
+        "releaseJourneyResearcher": false
       }
     },
     {
@@ -64,7 +72,9 @@
         "name": "Yonit Efrati",
         "role": "Head of Policy Advancement and Community Service Development",
         "group": "Management",
-        "email": "yonit@metiv.org"
+        "email": "yonit@metiv.org",
+        "releaseJourneyTeam": false,
+        "releaseJourneyResearcher": false
       }
     },
     {
@@ -76,7 +86,9 @@
         "_col": "metiv-team",
         "name": "Ariel Ben Aharon",
         "role": "Director of the Adult Clinic",
-        "group": "Clinics"
+        "group": "Clinics",
+        "releaseJourneyTeam": false,
+        "releaseJourneyResearcher": false
       }
     },
     {
@@ -90,7 +102,9 @@
         "role": "Director of the Children's Clinic (Metiv Children)",
         "group": "Clinics",
         "bio": "Expert educational psychologist. Co-developer of PANDA - \"Here We Learn Ways of Coping\", a group program for developing emotion regulation in children. She treats children, adolescents and parents, trains therapists and educational teams, and gives lectures and workshops. Her education includes a master's degree in educational and clinical child psychology, the two-year course in cognitive behavioral therapy for trauma, and SE therapy.",
-        "email": "sarit@metiv.org"
+        "email": "sarit@metiv.org",
+        "releaseJourneyTeam": false,
+        "releaseJourneyResearcher": false
       }
     },
     {
@@ -102,7 +116,9 @@
         "_col": "metiv-team",
         "name": "Yoel Wardi",
         "role": "Senior Supervisor",
-        "group": "Clinics"
+        "group": "Clinics",
+        "releaseJourneyTeam": false,
+        "releaseJourneyResearcher": false
       }
     },
     {
@@ -114,7 +130,9 @@
         "_col": "metiv-team",
         "name": "Shlomit Hava",
         "role": "Therapist at the Adult Clinic",
-        "group": "Clinics"
+        "group": "Clinics",
+        "releaseJourneyTeam": false,
+        "releaseJourneyResearcher": false
       }
     },
     {
@@ -128,7 +146,9 @@
         "role": "Early Childhood Programs Coordinator, Metiv Children",
         "group": "Clinics",
         "bio": "Rehabilitation psychology intern. She takes part in the development and implementation stages of a range of projects at the Children's Clinic.",
-        "email": "eliya@metiv.org"
+        "email": "eliya@metiv.org",
+        "releaseJourneyTeam": false,
+        "releaseJourneyResearcher": false
       }
     },
     {
@@ -142,7 +162,9 @@
         "role": "Elementary School and Family Programs Coordinator, therapist at the Children's Clinic",
         "group": "Clinics",
         "bio": "Educational psychology intern. He coordinates the PANDA program and treats children, adolescents and parents, and gives lectures and workshops.",
-        "email": "yaakov@metiv.org"
+        "email": "yaakov@metiv.org",
+        "releaseJourneyTeam": false,
+        "releaseJourneyResearcher": false
       }
     },
     {
@@ -155,7 +177,9 @@
         "name": "Efrat Herzog",
         "role": "NAMAL Program Coordinator at Metiv Children",
         "group": "Clinics",
-        "email": "efrath@metiv.org"
+        "email": "efrath@metiv.org",
+        "releaseJourneyTeam": false,
+        "releaseJourneyResearcher": false
       }
     },
     {
@@ -168,7 +192,9 @@
         "name": "Dr. Anna Harwood-Gross",
         "role": "Head of Research (on the home page: Senior Researcher)",
         "group": "Research",
-        "email": "anna@metiv.org"
+        "email": "anna@metiv.org",
+        "releaseJourneyTeam": false,
+        "releaseJourneyResearcher": false
       }
     },
     {
@@ -181,7 +207,9 @@
         "name": "Shir Elias",
         "role": "Head of the Research Department",
         "group": "Research",
-        "email": "shir@metiv.org"
+        "email": "shir@metiv.org",
+        "releaseJourneyTeam": false,
+        "releaseJourneyResearcher": false
       }
     },
     {
@@ -193,7 +221,9 @@
         "_col": "metiv-team",
         "name": "Dr. Anna Portugalov",
         "role": "Clinics Study Lead",
-        "group": "Research"
+        "group": "Research",
+        "releaseJourneyTeam": false,
+        "releaseJourneyResearcher": false
       }
     },
     {
@@ -206,7 +236,9 @@
         "name": "Dalia Amit Zivan",
         "role": "Clinical Director of the MDMA/SEA-IT study and therapist at the Adult Clinic",
         "group": "Research",
-        "bio": "Clinical social worker with a master's degree specializing in trauma therapy, and an ITA-certified expert CBT therapist and supervisor. She works with third-wave methods, including ACT and DBT, and has trained in EMDR and SE. She has worked at Metiv since 2017 providing individual therapy at the Adult Clinic, and since 2023 has facilitated groups for processing combat experiences in the \"Peace of Mind\" program."
+        "bio": "Clinical social worker with a master's degree specializing in trauma therapy, and an ITA-certified expert CBT therapist and supervisor. She works with third-wave methods, including ACT and DBT, and has trained in EMDR and SE. She has worked at Metiv since 2017 providing individual therapy at the Adult Clinic, and since 2023 has facilitated groups for processing combat experiences in the \"Peace of Mind\" program.",
+        "releaseJourneyTeam": false,
+        "releaseJourneyResearcher": true
       }
     },
     {
@@ -219,7 +251,9 @@
         "name": "Nadav Stern",
         "role": "Researcher, \"Peace of Mind\" program",
         "group": "Research",
-        "bio": "Clinical psychology intern. He works as a therapist at the \"Brazil\" mental health clinic of Clalit Health Services and in private practice. At Metiv, he researches the \"Peace of Mind\" program and takes part in other studies involving soldiers."
+        "bio": "Clinical psychology intern. He works as a therapist at the \"Brazil\" mental health clinic of Clalit Health Services and in private practice. At Metiv, he researches the \"Peace of Mind\" program and takes part in other studies involving soldiers.",
+        "releaseJourneyTeam": false,
+        "releaseJourneyResearcher": true
       }
     },
     {
@@ -232,7 +266,9 @@
         "name": "Michal Zmora",
         "role": "Head of Training",
         "group": "Training",
-        "email": "michal@metiv.org"
+        "email": "michal@metiv.org",
+        "releaseJourneyTeam": false,
+        "releaseJourneyResearcher": false
       }
     },
     {
@@ -245,7 +281,9 @@
         "name": "Gafnit Agassi",
         "role": "Head of the Training Unit",
         "group": "Training",
-        "email": "gafnit@metiv.org"
+        "email": "gafnit@metiv.org",
+        "releaseJourneyTeam": false,
+        "releaseJourneyResearcher": false
       }
     },
     {
@@ -258,7 +296,9 @@
         "name": "Gil Shemesh",
         "role": "Psychologist and senior lecturer in the courses and training unit",
         "group": "Training",
-        "email": "gil@metiv.org"
+        "email": "gil@metiv.org",
+        "releaseJourneyTeam": false,
+        "releaseJourneyResearcher": false
       }
     },
     {
@@ -270,7 +310,9 @@
         "_col": "metiv-team",
         "name": "Racheli Brooks",
         "role": "Director of Peace of Mind",
-        "group": "Peace of Mind"
+        "group": "Peace of Mind",
+        "releaseJourneyTeam": true,
+        "releaseJourneyResearcher": false
       }
     },
     {
@@ -282,7 +324,9 @@
         "_col": "metiv-team",
         "name": "Aya Roth",
         "role": "Therapist, Clinical Director of Peace of Mind treatments",
-        "group": "Peace of Mind"
+        "group": "Peace of Mind",
+        "releaseJourneyTeam": true,
+        "releaseJourneyResearcher": false
       }
     },
     {
@@ -294,7 +338,9 @@
         "_col": "metiv-team",
         "name": "Ruth Habshush",
         "role": "Operations Manager",
-        "group": "Peace of Mind"
+        "group": "Peace of Mind",
+        "releaseJourneyTeam": true,
+        "releaseJourneyResearcher": false
       }
     },
     {
@@ -306,7 +352,9 @@
         "_col": "metiv-team",
         "name": "Yehuda Lapian",
         "role": "External Relations Manager",
-        "group": "Peace of Mind"
+        "group": "Peace of Mind",
+        "releaseJourneyTeam": true,
+        "releaseJourneyResearcher": false
       }
     },
     {
@@ -318,7 +366,9 @@
         "_col": "metiv-team",
         "name": "Hillel Meirson",
         "role": "Follow-up Services Coordinator",
-        "group": "Peace of Mind"
+        "group": "Peace of Mind",
+        "releaseJourneyTeam": true,
+        "releaseJourneyResearcher": false
       }
     },
     {
@@ -330,7 +380,9 @@
         "_col": "metiv-team",
         "name": "Yael Rosenfeld Cohen",
         "role": "Communities Abroad Coordinator",
-        "group": "Peace of Mind"
+        "group": "Peace of Mind",
+        "releaseJourneyTeam": true,
+        "releaseJourneyResearcher": false
       }
     },
     {
@@ -342,7 +394,9 @@
         "_col": "metiv-team",
         "name": "Yair Brin",
         "role": "Inquiries and Clinical Operations Coordinator",
-        "group": "Peace of Mind"
+        "group": "Peace of Mind",
+        "releaseJourneyTeam": true,
+        "releaseJourneyResearcher": false
       }
     },
     {
@@ -354,7 +408,9 @@
         "_col": "metiv-team",
         "name": "Shelly Ehrlich",
         "role": "Groups Coordinator",
-        "group": "Peace of Mind"
+        "group": "Peace of Mind",
+        "releaseJourneyTeam": true,
+        "releaseJourneyResearcher": false
       }
     },
     {
@@ -366,7 +422,9 @@
         "_col": "metiv-team",
         "name": "Simcha Edri",
         "role": "Groups Coordinator",
-        "group": "Peace of Mind"
+        "group": "Peace of Mind",
+        "releaseJourneyTeam": true,
+        "releaseJourneyResearcher": false
       }
     }
   ]

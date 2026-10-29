@@ -136,7 +136,8 @@
           "email": "gafnit@metiv.org"
         },
         "sourceUrl": "https://metiv.org/קורס-cbt-לטראומה/",
-        "isPast": false
+        "isPast": false,
+        "therapistNeeds": []
       }
     },
     {
@@ -335,7 +336,10 @@
           "https://metiv.org/קורס-מפת-הדרכים-zoom/",
           "https://metiv.org/jet-popup/מפת-הדרכים-יוני/"
         ],
-        "isPast": false
+        "isPast": false,
+        "therapistNeeds": [
+          "supervision"
+        ]
       }
     },
     {
@@ -404,7 +408,8 @@
         "relatedSourceUrls": [
           "https://metiv.org/מידע-כללי-טראומה/"
         ],
-        "isPast": true
+        "isPast": true,
+        "therapistNeeds": []
       }
     },
     {
@@ -471,6 +476,8 @@
             "tagline": "\"Where am I?\"",
             "date": "February 6 and February 13, 2025",
             "dateISO": "2025-02-06",
+            "endDateISO": "2025-02-13",
+            "dateText": "February 6 and February 13, 2025",
             "hours": "14:00-17:00",
             "format": "Zoom",
             "lecturers": [
@@ -663,7 +670,8 @@
         "relatedSourceUrls": [
           "https://metiv.org/תכנית-שנתית/"
         ],
-        "isPast": true
+        "isPast": true,
+        "therapistNeeds": []
       }
     },
     {
@@ -718,7 +726,8 @@
           "roadmap"
         ],
         "sourceUrl": "https://metiv.org/תרגול-מיומנויות/",
-        "isPast": true
+        "isPast": true,
+        "therapistNeeds": []
       }
     },
     {
@@ -777,7 +786,8 @@
         "relatedSourceUrls": [
           "https://metiv.org/מידע-כללי-טראומה/"
         ],
-        "isPast": true
+        "isPast": true,
+        "therapistNeeds": []
       }
     },
     {
@@ -897,7 +907,8 @@
         "relatedSourceUrls": [
           "https://metiv.org/en/international-summer-course/"
         ],
-        "isPast": true
+        "isPast": true,
+        "therapistNeeds": []
       }
     },
     {
@@ -1007,7 +1018,10 @@
         "relatedSourceUrls": [
           "https://metiv.org/news/מחזור-חדש-לקורס-יסודות-הטיפול-בטראומה/"
         ],
-        "isPast": true
+        "isPast": true,
+        "therapistNeeds": [
+          "kids"
+        ]
       }
     },
     {
@@ -1084,7 +1098,8 @@
           "panda-arts-training"
         ],
         "sourceUrl": "https://metiv.org/הכשרה-למטפלים-פנדה-יסודי/",
-        "isPast": true
+        "isPast": true,
+        "therapistNeeds": []
       }
     },
     {
@@ -1136,7 +1151,8 @@
           "panda-two-training"
         ],
         "sourceUrl": "https://metiv.org/הכשרה-למטפלים-פנדה-הורים/",
-        "isPast": false
+        "isPast": false,
+        "therapistNeeds": []
       }
     },
     {
@@ -1200,7 +1216,8 @@
           "panda-training"
         ],
         "sourceUrl": "https://metiv.org/הכשרה-למטפלים-פנדה-בשניים/",
-        "isPast": false
+        "isPast": false,
+        "therapistNeeds": []
       }
     },
     {
@@ -1237,7 +1254,8 @@
           "panda-training"
         ],
         "sourceUrl": "https://metiv.org/הכשרת-פנדה-ייעודית-למטפלים-באמנויות-כ/",
-        "isPast": false
+        "isPast": false,
+        "therapistNeeds": []
       }
     },
     {
@@ -1275,7 +1293,8 @@
         "relatedSourceUrls": [
           "https://metiv.org/תוכנית-נמל/"
         ],
-        "isPast": false
+        "isPast": false,
+        "therapistNeeds": []
       }
     },
     {
@@ -1320,7 +1339,10 @@
           "roadmap"
         ],
         "sourceUrl": "https://metiv.org/הכשרות-לארגונים/",
-        "isPast": false
+        "isPast": false,
+        "therapistNeeds": [
+          "team"
+        ]
       }
     },
     {
@@ -1385,7 +1407,10 @@
           "email": "yonit@metiv.org"
         },
         "sourceUrl": "https://metiv.org/בניית-ארגון-מותאם-טראומה/",
-        "isPast": true
+        "isPast": true,
+        "therapistNeeds": [
+          "team"
+        ]
       }
     }
   ]

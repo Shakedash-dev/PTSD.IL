@@ -17,7 +17,8 @@
         "population": "Демобилизованные военнослужащие, участвующие в программах Peace of Mind",
         "status": "Активно",
         "recruiting": false,
-        "sourceUrl": "https://metiv.org/מחקרים-פעילים-טראומה/"
+        "sourceUrl": "https://metiv.org/מחקרים-פעילים-טראומה/",
+        "releaseJourney": true
       }
     },
     {
@@ -63,7 +64,8 @@
           "email": "moriya@metiv.org",
           "whatsapp": "026264889"
         },
-        "sourceUrl": "https://metiv.org/sea-it-mdma/"
+        "sourceUrl": "https://metiv.org/sea-it-mdma/",
+        "releaseJourney": false
       }
     },
     {
@@ -84,7 +86,8 @@
           "name": "Д-р Анна Португалов",
           "role": "Ответственная за исследование в клиниках"
         },
-        "sourceUrl": "https://metiv.org/מחקרים-פעילים-טראומה/"
+        "sourceUrl": "https://metiv.org/מחקרים-פעילים-טראומה/",
+        "releaseJourney": false
       }
     },
     {
@@ -105,7 +108,8 @@
           "email": "shir@metiv.org",
           "whatsapp": "02-5952240"
         },
-        "sourceUrl": "https://metiv.org/מחקרים-פעילים-טראומה/"
+        "sourceUrl": "https://metiv.org/מחקרים-פעילים-טראומה/",
+        "releaseJourney": false
       }
     },
     {
@@ -126,7 +130,8 @@
           "email": "shir@metiv.org",
           "whatsapp": "02-5952240"
         },
-        "sourceUrl": "https://metiv.org/מחקרים-פעילים-טראומה/"
+        "sourceUrl": "https://metiv.org/מחקרים-פעילים-טראומה/",
+        "releaseJourney": false
       }
     },
     {
@@ -143,7 +148,8 @@
         "population": "Дети и семьи",
         "status": "Активно",
         "recruiting": false,
-        "sourceUrl": "https://metiv.org/מחקרים-פעילים-טראומה/"
+        "sourceUrl": "https://metiv.org/מחקרים-פעילים-טראומה/",
+        "releaseJourney": false
       }
     },
     {
@@ -160,7 +166,8 @@
         "population": "Люди с ПТСР",
         "status": "Активно",
         "recruiting": false,
-        "sourceUrl": "https://metiv.org/מחקרים-פעילים-טראומה/"
+        "sourceUrl": "https://metiv.org/מחקרים-פעילים-טראומה/",
+        "releaseJourney": false
       }
     }
   ]

@@ -33,7 +33,10 @@
             "developedBy": "Prof. Ruth Pat-Horenczyk and Sarit Schramm-Yavin, at Metiv",
             "description": "A group program for strengthening emotion regulation and developing coping skills in children. The program focuses on acquiring tools for coping with a range of emotional states, and on preventing difficulties in emotion regulation or the worsening of existing difficulties. It combines mindfulness techniques and cognitive-behavioral techniques, with an emphasis on playfulness and enjoyment. The program has been implemented in settings such as residential facilities, foster families, therapeutic after-school centers and schools across Israel, as well as in Singapore, Italy and the US, and has been translated into Arabic.",
             "trainingSlug": "panda-training",
-            "sourceUrl": "https://metiv.org/תכנית-פנדה-לילדים/"
+            "sourceUrl": "https://metiv.org/תכנית-פנדה-לילדים/",
+            "ageGroups": [
+              "school"
+            ]
           },
           {
             "key": "panda-parents",
@@ -44,7 +47,10 @@
             "developedBy": "Sarit Schramm-Yavin and Tzipora Hayat",
             "description": "Groups for parents who want to develop awareness of themselves and their parenting, and to acquire tools for emotional and behavioral regulation together with other parents. The program is based on the dialectical behavior therapy (DBT) approach and includes exercises from the PANDA for Children program. Dedicated groups are opened from time to time, for example for parents of children who went through the events of the Iron Swords war.",
             "trainingSlug": "panda-parents-training",
-            "sourceUrl": "https://metiv.org/מטיב-ילדים-טראומה/"
+            "sourceUrl": "https://metiv.org/מטיב-ילדים-טראומה/",
+            "ageGroups": [
+              "parents"
+            ]
           },
           {
             "key": "panda-family",
@@ -53,7 +59,12 @@
             "structure": "Usually 6 family sessions and 6 parent guidance sessions (at home or at Metiv)",
             "developedBy": "Metiv Children",
             "description": "Family activities for developing coping skills and regulation abilities, including for reservists and their families.",
-            "sourceUrl": "https://metiv.org/טיפולים-ללא-עלות-דרך-מטיב/"
+            "sourceUrl": "https://metiv.org/טיפולים-ללא-עלות-דרך-מטיב/",
+            "ageGroups": [
+              "early",
+              "school",
+              "parents"
+            ]
           },
           {
             "key": "panda-two",
@@ -70,7 +81,11 @@
               "Expressing and reflecting emotions"
             ],
             "trainingSlug": "panda-two-training",
-            "sourceUrl": "https://metiv.org/הכשרה-למטפלים-פנדה-בשניים/"
+            "sourceUrl": "https://metiv.org/הכשרה-למטפלים-פנדה-בשניים/",
+            "ageGroups": [
+              "early",
+              "parents"
+            ]
           },
           {
             "key": "namal",
@@ -89,7 +104,11 @@
               "Play in the shadow of trauma (post-traumatic play)"
             ],
             "trainingSlug": "namal-training",
-            "sourceUrl": "https://metiv.org/תוכנית-נמל/"
+            "sourceUrl": "https://metiv.org/תוכנית-נמל/",
+            "ageGroups": [
+              "early",
+              "parents"
+            ]
           }
         ],
         "contact": {

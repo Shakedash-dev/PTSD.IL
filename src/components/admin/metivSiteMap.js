@@ -8,6 +8,10 @@
 //   item        one item of a list (a course page, an article page)
 //   copy        the editable (content) keys of a page-copy namespace
 //               (copyContentKeys.js)
+//   i18n        the editable i18n texts of this page (src/lib/editableI18nKeys.js),
+//               edited as site-copy override rows shared with PTSD-IL. Filled
+//               in by buildSiteTree from EDITABLE_I18N[page id]: where the spec
+//               places `{ kind: 'i18n' }`, else first on the page
 //   ptsd        one of the PTSD-IL panels (src/pages/Admin.jsx)
 //   link        data shown here but edited on its main page: a pointer, not a
 //               second editor
@@ -24,15 +28,24 @@
 // Not in the tree at all: pure navigation and taxonomy - NAV, PATIENT_NAV,
 // ROUTE_META, NEXT_STEPS (menu entries, page names, "next step" links),
 // COURSE_CATEGORIES, PAPER_TOPICS, TEAM_GROUPS (filter labels; their values are
-// offered as choices where an item picks one).
+// offered as choices where an item picks one) - and what is fixed or not shown:
+// CONTACTS and PATIENT_HUB (crisis-line numbers, the consultation link and
+// chatbot-only material), SHORT_VERSIONS (no page renders it).
+//
+// Pages with nothing editable (the calming exercises, a page whose texts are
+// all headings and buttons) are left out of the tree by buildSiteTree; their
+// child pages move up to their place, so the tree still follows the site.
 
 import { ROUTES } from '@/pages/metiv-demos/shared/routes';
 import { V3_ROUTES } from '@/pages/metiv-demos/v3/meta';
+import { EDITABLE_I18N } from '@/lib/editableI18nKeys';
+import { copyContentKeys } from './copyContentKeys';
 
 /**
  * @typedef {{ kind: 'collection', key: string, fields?: string[], label?: string }
  *   | { kind: 'item', key: string, itemKey: string, label?: string }
  *   | { kind: 'copy', ns: string, label?: string }
+ *   | { kind: 'i18n', keys?: string[], label?: string }
  *   | { kind: 'ptsd', panel: string, label?: string }
  *   | { kind: 'link', to: string, label: string, key?: string, ns?: string, panel?: string }
  *   | { kind: 'qa' | 'users' | 'log', label?: string }} SectionSpec
@@ -41,12 +54,13 @@ import { V3_ROUTES } from '@/pages/metiv-demos/v3/meta';
  * @typedef {{ id: string, label: string, pages: PageSpec[] }} AreaSpec
  */
 
-/** Collections that are navigation or taxonomy only: never edited here. */
-export const NOT_EDITED = ['NAV', 'PATIENT_NAV', 'ROUTE_META', 'NEXT_STEPS', 'COURSE_CATEGORIES', 'PAPER_TOPICS', 'TEAM_GROUPS'];
+/** Collections never edited here: navigation, taxonomy, fixed crisis lines, unrendered data. */
+export const NOT_EDITED = [
+  'NAV', 'PATIENT_NAV', 'ROUTE_META', 'NEXT_STEPS', 'COURSE_CATEGORIES', 'PAPER_TOPICS', 'TEAM_GROUPS',
+  'CONTACTS', 'PATIENT_HUB', 'SHORT_VERSIONS',
+];
 
-const NO_CONTENT = 'בעמוד הזה אין תוכן לעריכה: הכותרות, הכפתורים והניווט שלו קבועים.';
-
-const ORG_ABOUT = ['intro', 'vision'];
+const ORG_ABOUT = ['headline', 'tagline', 'intro', 'vision'];
 const ORG_CONTACT = ['name', 'legalName', 'legalEntity', 'address', 'mail', 'phones', 'emails', 'social', 'donateUrl', 'trainingsFormUrl', 'adultsClinicFormUrl', 'kidsClinicFormUrl'];
 const ABOUT_HISTORY = ['history', 'timeline', 'activitiesIntro', 'activities', 'communities', 'partnersAbroad'];
 const RESEARCH_MAIN = ['paragraphs', 'focus', 'role', 'principles', 'pastResearchAreas', 'collaborationContact', 'journalClub'];
@@ -61,7 +75,7 @@ export const SITE_MAP = [
         id: 'home', label: 'דף הבית', route: ROUTES.home,
         sections: [
           { kind: 'copy', ns: 'landing' },
-          { kind: 'collection', key: 'PATIENT_HUB', fields: ['hero.about'], label: 'מה זה פוסט-טראומה (פסקה)' },
+          { kind: 'i18n', label: 'מה זה פוסט-טראומה (משותף עם אזור המטופלים)' },
           { kind: 'link', key: 'METIV_SERVICES', to: 'whereToGetHelp', label: 'השירותים הטיפוליים של מטיב' },
           { kind: 'collection', key: 'ORG', fields: ORG_ABOUT, label: 'מי אנחנו' },
           { kind: 'collection', key: 'FACTS' },
@@ -102,11 +116,10 @@ export const SITE_MAP = [
         sections: [{ kind: 'collection', key: 'LEGAL_DOCS', fields: ['terms'], label: 'תנאי השימוש' }],
       },
       {
-        id: 'siteFrame', label: 'בכל העמודים: עזרה עכשיו, קווי חירום ותחתית',
+        id: 'siteFrame', label: 'בכל העמודים: תחתית העמוד',
         sections: [
           { kind: 'copy', ns: 'chrome', label: 'חלון "עזרה עכשיו"' },
-          { kind: 'collection', key: 'PATIENT_HUB', fields: ['crisisLines', 'disclaimer'], label: 'קווי חירום בכותרת והסתייגות בתחתית' },
-          { kind: 'collection', key: 'CONTACTS', fields: ['ERAN_PHONE', 'ERAN_WHATSAPP'], label: 'ער"ן בעמודי האזור למטופלים' },
+          { kind: 'i18n', label: 'הסתייגות בתחתית' },
           { kind: 'link', key: 'ORG', to: 'contact', label: 'פרטי הקשר בתחתית' },
         ],
       },
@@ -116,9 +129,9 @@ export const SITE_MAP = [
     id: 'patient',
     label: 'אזור המטופלים והמשפחות',
     pages: [
-      { id: 'patient', label: 'למטופלים ולמשפחות', route: ROUTES.patient, note: NO_CONTENT },
+      { id: 'patient', label: 'למטופלים ולמשפחות', route: ROUTES.patient },
       {
-        id: 'firstCircle', label: 'מי שחווה אירוע קשה', route: ROUTES.firstCircle, note: NO_CONTENT,
+        id: 'firstCircle', label: 'מי שחווה אירוע קשה', route: ROUTES.firstCircle,
         children: [
           { id: 'ptsdInfo', label: 'מה זה פוסט-טראומה', route: ROUTES.ptsdInfo, sections: [{ kind: 'ptsd', panel: 'ptsd_faqs' }] },
           {
@@ -147,7 +160,7 @@ export const SITE_MAP = [
         ],
       },
       {
-        id: 'secondCircle', label: 'קרובים ובני משפחה', route: ROUTES.secondCircle, note: NO_CONTENT,
+        id: 'secondCircle', label: 'קרובים ובני משפחה', route: ROUTES.secondCircle,
         children: [
           {
             id: 'secondCircleTools', label: 'כלים לבני משפחה', route: ROUTES.secondCircleTools,
@@ -159,8 +172,8 @@ export const SITE_MAP = [
         id: 'questionnaire', label: 'שאלון אנונימי', route: ROUTES.questionnaire,
         sections: [
           { kind: 'ptsd', panel: 'questionnaire' },
+          { kind: 'i18n', label: 'הנחיה, פתיחה והסברי התוצאה' },
           { kind: 'link', key: 'CONSULTATION', to: 'whereToGetHelp', label: 'לא בטוחים אם לפנות?' },
-          { kind: 'link', key: 'CONTACTS', to: 'siteFrame', label: 'ער"ן' },
         ],
       },
       {
@@ -182,32 +195,29 @@ export const SITE_MAP = [
         id: 'whereToGetHelp', label: 'איפה מקבלים טיפול', route: ROUTES.whereToGetHelp,
         sections: [
           { kind: 'copy', ns: 'patientWhereToGetHelp' },
-          { kind: 'collection', key: 'SHORT_VERSIONS', fields: ['whereToGetHelp'], label: 'תיבת "בקצרה"' },
           { kind: 'collection', key: 'PUBLIC_OPTIONS', label: 'המערכת הציבורית' },
           { kind: 'collection', key: 'NONPROFIT_OPTIONS', label: 'עמותות וקווי סיוע' },
           { kind: 'collection', key: 'METIV_SERVICES', label: 'מרפאות ותוכניות של מטיב' },
           { kind: 'collection', key: 'CONSULTATION', label: 'לא בטוחים אם לפנות?' },
-          { kind: 'link', key: 'CONTACTS', to: 'siteFrame', label: 'ער"ן' },
         ],
       },
       {
         id: 'freeTreatment', label: 'טיפולים ללא עלות ומחקרים', route: ROUTES.freeTreatment,
         sections: [
           { kind: 'copy', ns: 'patientFreeTreatment' },
-          { kind: 'collection', key: 'SHORT_VERSIONS', fields: ['freeTreatment'], label: 'תיבת "בקצרה"' },
           { kind: 'collection', key: 'FREE_TREATMENTS' },
           { kind: 'collection', key: 'RESEARCH_STUDIES' },
           { kind: 'link', key: 'RESERVIST_FAMILY_PROGRAMS', to: 'secondCircleTools', label: 'קבוצות למילואימניקים ולבני משפחותיהם' },
           { kind: 'link', key: 'CONSULTATION', to: 'whereToGetHelp', label: 'לא בטוחים אם לפנות?' },
-          { kind: 'link', key: 'CONTACTS', to: 'siteFrame', label: 'ער"ן' },
         ],
       },
       {
-        id: 'calming', label: 'תרגילי הרגעה', route: ROUTES.calming, note: NO_CONTENT,
+        // The exercises are locked (owner, 2026-10-29): left out of the tree.
+        id: 'calming', label: 'תרגילי הרגעה', route: ROUTES.calming,
         children: [
-          { id: 'calmingBreathing', label: 'נשימה', route: ROUTES.calmingBreathing, note: NO_CONTENT },
-          { id: 'calmingGrounding', label: 'קרקוע', route: ROUTES.calmingGrounding, note: NO_CONTENT },
-          { id: 'calmingMuscle', label: 'הרפיית שרירים', route: ROUTES.calmingMuscle, note: NO_CONTENT },
+          { id: 'calmingBreathing', label: 'נשימה', route: ROUTES.calmingBreathing },
+          { id: 'calmingGrounding', label: 'קרקוע', route: ROUTES.calmingGrounding },
+          { id: 'calmingMuscle', label: 'הרפיית שרירים', route: ROUTES.calmingMuscle },
         ],
       },
       {
@@ -245,6 +255,7 @@ export const SITE_MAP = [
           {
             id: 'aboutHistory', label: 'הסיפור של מטיב', route: V3_ROUTES.aboutHistory,
             sections: [
+              { kind: 'copy', ns: 'aboutHistory' },
               { kind: 'collection', key: 'ORG', fields: ['mission'], label: 'המטרה שלנו' },
               { kind: 'collection', key: 'ABOUT', fields: ABOUT_HISTORY, label: 'ההיסטוריה ותחומי הפעילות' },
               { kind: 'link', key: 'FACTS', to: 'home', label: 'מטיב במספרים' },
@@ -352,18 +363,42 @@ export const SITE_MAP = [
  * @typedef {{ id: string, label: string, pages: PageNode[] }} AreaNode
  */
 
+/** The sections of a spec page as shown: copy only with editable keys, the i18n texts filled in. @param {PageSpec} p @param {Record<string, string[]>} i18n */
+function specSections(p, i18n) {
+  const keys = i18n[p.id] ?? [];
+  /** @type {SectionSpec[]} */
+  let out = (p.sections ?? []).filter(s => s.kind !== 'copy' || copyContentKeys(s.ns).length > 0);
+  const at = out.findIndex(s => s.kind === 'i18n');
+  if (keys.length) {
+    const i18n = /** @type {SectionSpec} */ ({ ...(at >= 0 ? out[at] : {}), kind: 'i18n', keys });
+    out = at >= 0 ? out.map((s, i) => (i === at ? i18n : s)) : [i18n, ...out];
+  } else if (at >= 0) {
+    out = out.filter(s => s.kind !== 'i18n');
+  }
+  return out;
+}
+
+/** Does a page have anything to edit (not only pointers to other pages)? */
+const editable = (/** @type {{ sections: SectionSpec[] }} */ p) => p.sections.some(s => s.kind !== 'link');
+
 /**
  * The tree with ids on every section and the dynamic children (one page per
- * course, per article) built from the loaded Hebrew rows.
+ * course, per article) built from the loaded Hebrew rows. A page with nothing
+ * to edit is left out and its children take its place; a pointer to a page
+ * that is left out is dropped.
  * @param {Record<string, { key: string, title: string }[]>} [items]  per collection key, the Hebrew items in order
+ * @param {{ map?: AreaSpec[], i18n?: Record<string, string[]> }} [spec]  the tree and the i18n keys (tests pass their own)
  * @returns {AreaNode[]}
  */
-export function buildSiteTree(items = {}) {
-  /** @param {PageSpec} p @param {AreaSpec} area @param {string} [parentId] @returns {PageNode} */
+export function buildSiteTree(items = {}, { map = SITE_MAP, i18n = EDITABLE_I18N } = {}) {
+  /** @param {PageSpec} p @param {AreaSpec} area @param {string} [parentId] @returns {PageNode[]} */
   const node = (p, area, parentId) => {
-    const own = (p.children ?? []).map(c => node(c, area, p.id));
+    const sections = specSections(p, i18n);
+    const keep = p.aliasOf || p.masterOnly || editable({ sections });
+    const childParent = keep ? p.id : parentId;
+    const own = (p.children ?? []).flatMap(c => node(c, area, childParent));
     const dyn = p.dynamic
-      ? (items[p.dynamic.from] ?? []).map(it => node({
+      ? (items[p.dynamic.from] ?? []).flatMap(it => node({
         id: `${p.dynamic.prefix}:${it.key}`,
         label: it.title,
         route: p.dynamic.route.replace(':slug', it.key),
@@ -371,24 +406,35 @@ export function buildSiteTree(items = {}) {
           { kind: 'item', key: p.dynamic.from, itemKey: it.key, label: it.title },
           ...(p.dynamic.from === 'COURSES' ? [/** @type {SectionSpec} */ ({ kind: 'link', ns: 'courseDetail', to: 'courses', label: 'טקסטים שמשותפים לכל עמודי הקורסים' })] : []),
         ],
-      }, area, p.id))
+      }, area, childParent))
       : [];
-    return {
+    if (!keep) return [...own, ...dyn];
+    return [{
       id: p.id,
       label: p.label,
       route: p.route,
       area: area.id,
       areaLabel: area.label,
-      sections: (p.sections ?? []).map((s, i) => ({ ...s, id: `${p.id}/${i}` })),
+      sections: sections.map((s, i) => ({ ...s, id: `${p.id}/${i}` })),
       children: [...own, ...dyn],
       aliasOf: p.aliasOf,
       alsoIn: p.alsoIn,
       note: p.note,
       masterOnly: p.masterOnly,
       parentId,
-    };
+    }];
   };
-  return SITE_MAP.map(area => ({ id: area.id, label: area.label, pages: area.pages.map(p => node(p, area)) }));
+  const tree = map.map(area => ({ id: area.id, label: area.label, pages: area.pages.flatMap(p => node(p, area)) }));
+  // Pointers to a page that is not in the tree go too.
+  const ids = new Set(flattenPages(tree).map(p => p.id));
+  const prune = (/** @type {PageNode[]} */ pages) => {
+    for (const p of pages) {
+      p.sections = p.sections.filter(s => s.kind !== 'link' || ids.has(s.to));
+      prune(p.children);
+    }
+  };
+  for (const a of tree) prune(a.pages);
+  return tree;
 }
 
 /** Every page of the tree, depth first, in tree order. @param {AreaNode[]} tree */

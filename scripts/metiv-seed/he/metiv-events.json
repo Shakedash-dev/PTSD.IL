@@ -19,7 +19,6 @@
         "location": "מרכז מטיב, גבעת שאול, ירושלים",
         "price": "10,350 ש\"ח לשנה",
         "link": "/therapist/courses/cbt-trauma",
-        "external": false,
         "courseSlug": "cbt-trauma",
         "isPast": false,
         "sourceUrl": "https://metiv.org/קורס-cbt-לטראומה/"
@@ -41,7 +40,6 @@
         "location": "מרכז מטיב, המרכז הרפואי הרצוג, ירושלים",
         "price": "1,700 ₪",
         "link": "/therapist/courses/roadmap",
-        "external": false,
         "courseSlug": "roadmap",
         "isPast": false,
         "sourceUrl": "https://metiv.org/יסודות-הטיפול-בטראומה/"
@@ -58,11 +56,12 @@
         "title": "קורס קיץ בינלאומי: Trauma & Resilience",
         "date": "28.6-9.7.2026, הכשרה קלינית 12-16.7.2026",
         "dateISO": "2026-06-28",
+        "endDateISO": "2026-07-16",
+        "dateText": "28.6-9.7.2026, הכשרה קלינית 12-16.7.2026",
         "type": "מחזור קורס",
         "summary": "קורס באנגלית בשיתוף האוניברסיטה העברית, עם שבוע שלישי אופציונלי של הכשרה קלינית.",
         "location": "בית הספר הבינלאומי ע\"ש רוטברג, הר הצופים",
         "link": "/therapist/courses/summer-course",
-        "external": false,
         "courseSlug": "summer-course",
         "isPast": true,
         "sourceUrl": "https://metiv.org/en/international-summer-course/"
@@ -84,7 +83,6 @@
         "location": "מרכז מטיב, המרכז הרפואי הרצוג, ירושלים",
         "price": "500 ₪",
         "link": "/therapist/courses/skills-day",
-        "external": false,
         "courseSlug": "skills-day",
         "isPast": true,
         "sourceUrl": "https://metiv.org/תרגול-מיומנויות/"
@@ -106,7 +104,6 @@
         "location": "מרכז מטיב, המרכז הרפואי הרצוג, ירושלים",
         "price": "2,500 ₪",
         "link": "/therapist/courses/complex-trauma",
-        "external": false,
         "courseSlug": "complex-trauma",
         "isPast": true,
         "sourceUrl": "https://metiv.org/טראומה-מורכבת-קורס/"
@@ -128,7 +125,6 @@
         "location": "Zoom",
         "price": "1,700 ₪",
         "link": "/therapist/courses/roadmap",
-        "external": false,
         "courseSlug": "roadmap",
         "isPast": true,
         "sourceUrl": "https://metiv.org/קורס-מפת-הדרכים-zoom/"
@@ -150,7 +146,6 @@
         "location": "אליעזר קפלן 8, חברת fiverr",
         "price": "300 ₪",
         "link": "/therapist/courses/trauma-informed-org-day",
-        "external": false,
         "courseSlug": "trauma-informed-org-day",
         "isPast": true,
         "sourceUrl": "https://metiv.org/בניית-ארגון-מותאם-טראומה/"
@@ -170,7 +165,6 @@
         "type": "סדנה",
         "summary": "יחידת לימוד בהנחיית ד\"ר מיכל שמחון, 9:00-16:00.",
         "link": "/therapist/courses/kaleidoscope",
-        "external": false,
         "courseSlug": "kaleidoscope",
         "isPast": true,
         "sourceUrl": "https://metiv.org/jet-popup/קליידוסקופ-טיפול-בפגיעות-מיניות-2/"
@@ -190,7 +184,6 @@
         "type": "סדנה",
         "summary": "יחידת לימוד על טיפול ביולדות ועבודה עם חוויות לידה, 16:00-21:00, במרכז מטיב.",
         "link": "/therapist/courses/kaleidoscope",
-        "external": false,
         "courseSlug": "kaleidoscope",
         "isPast": true,
         "sourceUrl": "https://metiv.org/jet-popup/קליידוסקופ-לידות-בידיים-מלאות/"
@@ -210,7 +203,6 @@
         "type": "סדנה",
         "summary": "יחידת לימוד בהנחיית מיכל זמורה, 17:00-21:00, במטיב.",
         "link": "/therapist/courses/kaleidoscope",
-        "external": false,
         "courseSlug": "kaleidoscope",
         "isPast": true,
         "sourceUrl": "https://metiv.org/jet-popup/קליידוסקופ-טיפול-בפגיעות-מיניות/"
@@ -232,7 +224,6 @@
         "location": "מטיב - המרכז לפסיכוטראומה, ירושלים",
         "price": "1,500 ש\"ח",
         "link": "/therapist/courses/roadmap",
-        "external": false,
         "courseSlug": "roadmap",
         "isPast": true,
         "sourceUrl": "https://metiv.org/jet-popup/מפת-הדרכים-יוני/"
@@ -252,7 +243,6 @@
         "type": "סדנה",
         "summary": "סדנה חווייתית בהנחיית יואל ורדי ומיכל זמורה, 15:00-19:00, במרכז מטיב.",
         "link": "/therapist/courses/kaleidoscope",
-        "external": false,
         "courseSlug": "kaleidoscope",
         "isPast": true,
         "sourceUrl": "https://metiv.org/jet-popup/קליידוסקופ-לא-על-הדיבור-לבדו/"
@@ -273,7 +263,6 @@
         "summary": "שישה מפגשים שבועיים בזום, בימי רביעי בשעה 14:00, לקבוצה של כ-5 מטפלים.",
         "price": "כ-1,200 ש\"ח",
         "link": "/therapist/supervision",
-        "external": false,
         "isPast": true,
         "sourceUrl": "https://metiv.org/jet-popup/קבוצת-הדרכה/"
       }
@@ -292,7 +281,6 @@
         "type": "סדנה",
         "summary": "יחידת לימוד בהנחיית דליה זיוון, 9:00-16:00, במרכז מטיב.",
         "link": "/therapist/courses/kaleidoscope",
-        "external": false,
         "courseSlug": "kaleidoscope",
         "isPast": true,
         "sourceUrl": "https://metiv.org/jet-popup/קליידוסקופ-act-לטיפול-בטראומה/"
@@ -312,7 +300,6 @@
         "type": "סדנה",
         "summary": "יחידת לימוד בהנחיית תמרה וינר, 15:00-20:00, במטיב.",
         "link": "/therapist/courses/kaleidoscope",
-        "external": false,
         "courseSlug": "kaleidoscope",
         "isPast": true,
         "sourceUrl": "https://metiv.org/jet-popup/קליידוסקופ-סדנה-באומנות/"
@@ -332,7 +319,6 @@
         "type": "סדנה",
         "summary": "יחידת לימוד בזום בהנחיית נילי לביא, 10:00-16:00.",
         "link": "/therapist/courses/kaleidoscope",
-        "external": false,
         "courseSlug": "kaleidoscope",
         "isPast": true,
         "sourceUrl": "https://metiv.org/jet-popup/קליידוסקופ-אבל/"
@@ -349,10 +335,11 @@
         "title": "קליידוסקופ: דיסוציאציה וטראומה",
         "date": "6.2.2025 ו-13.2.2025",
         "dateISO": "2025-02-06",
+        "endDateISO": "2025-02-13",
+        "dateText": "6.2.2025 ו-13.2.2025",
         "type": "סדנה",
         "summary": "שני מפגשים בזום עם דני ברום, 14:00-17:00.",
         "link": "/therapist/courses/kaleidoscope",
-        "external": false,
         "courseSlug": "kaleidoscope",
         "isPast": true,
         "sourceUrl": "https://metiv.org/jet-popup/קליידוסקופ-דיסוציאציה-וטראומה/"
@@ -374,7 +361,6 @@
         "location": "Zoom",
         "price": "2,000 ש\"ח",
         "link": "/therapist/courses/panda-training",
-        "external": false,
         "courseSlug": "panda-training",
         "isPast": true,
         "sourceUrl": "https://metiv.org/הכשרה-למטפלים-פנדה-יסודי/"
@@ -398,7 +384,6 @@
         "location": "בית הארחה בית וגן, רחוב הפסגה 8, ירושלים",
         "price": "ללא עלות, בהרשמה מראש",
         "link": "https://metiv.org/הרשמה-לכנס-שנה-של-התמודדות-מטיב-המרכז-ה/",
-        "external": true,
         "isPast": true,
         "sourceUrl": "https://metiv.org/news/כנס-למטפלים-לרגל-שנה-למלחמה/"
       }
@@ -414,13 +399,14 @@
         "title": "מחזור חדש לקורס \"יסודות הטיפול בטראומה בילדים\"",
         "date": "11, 12, 15 בספטמבר 2024",
         "dateISO": "2024-09-11",
+        "endDateISO": "2024-09-15",
+        "dateText": "11, 12, 15 בספטמבר 2024",
         "publishedDate": "21.8.2024",
         "type": "מחזור קורס",
         "summary": "קורס מרוכז לאנשי טיפול עם תואר מוכר וניסיון בעבודה עם ילדים, בהנחיית שרית שרם יבין.",
         "body": "**למי הקורס מיועד?** אנשי טיפול עם תואר מוכר וניסיון בעבודה עם ילדים. לא נדרש ניסיון בעבודה עם טראומה.\n\n**מתי?** 11, 12, 15 לספטמבר, בין 9:00-15:00.\n\n**איפה?** משרדי מטיב, בניין המרפאות, מרכז רפואי הרצוג, ירושלים.\n\n**לפרטים נוספים והרשמה:** סתיו - 0547466538 או במייל stav@metiv.org",
         "location": "משרדי מטיב, בניין המרפאות, מרכז רפואי הרצוג, ירושלים",
         "link": "/therapist/courses/kids-trauma-basics",
-        "external": false,
         "courseSlug": "kids-trauma-basics",
         "isPast": true,
         "sourceUrl": "https://metiv.org/news/מחזור-חדש-לקורס-יסודות-הטיפול-בטראומה/"
@@ -437,13 +423,13 @@
         "title": "A Roadmap for Trauma-Informed Care - כנס משולב למחקר ופסיכותרפיה",
         "date": "28.2-1.3.2023",
         "dateISO": "2023-02-28",
+        "endDateISO": "2023-03-01",
         "publishedDate": "20.1.2023",
         "type": "כנס",
         "summary": "כנס של יומיים לחוקרים ומטפלים על מחקר וטיפול בטראומה בהקשר של החברה הישראלית.",
         "body": "הכנס התקיים ב-28.2-1.3.23, בין השעות 09:00-17:00, בבית החולים הרצוג בירושלים.\n\nביום הראשון: הרצאות TED על מחקר טראומה עדכני בישראל, מושבים מקבילים בנושאים שונים (רפואה, חברה, דת ורוחניות) בהקשר של טראומה, ופאנל של חוקרים בכירים. ביום השני: הרצאות, סדנאות קליניות בטיפול בטראומה וקולות מתוך עדויות של מטופלים.",
         "location": "בית החולים הרצוג, ירושלים",
         "link": "https://metiv.org/en/news/a-roadmap-for-trauma-informed-care/",
-        "external": true,
         "isPast": true,
         "sourceUrl": "https://metiv.org/en/news/a-roadmap-for-trauma-informed-care/"
       }
@@ -463,7 +449,6 @@
         "summary": "מטיב פתחה מסגרת טיפול ללא עלות לחיילים משוחררים עם PTSD כחלק מפרויקט מחקר קליני.",
         "body": "חיילים משוחררים המתמודדים עם טראומה מהשירות הצבאי יכולים לפנות לבירור התאמה לטיפול פסיכולוגי ללא עלות, כחלק מפרויקט מחקר. לפי העמוד באנגלית, המרפאה פועלת במסגרת מחקר קליני בחוויה הסומטית (Somatic Experiencing).",
         "link": "/patient/free-treatment-and-research",
-        "external": false,
         "isPast": true,
         "sourceUrl": "https://metiv.org/news/טיפול-לחיילים-משוחררים-המתמודדים-עם-פ/"
       }

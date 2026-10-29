@@ -137,23 +137,34 @@ src/lib/auth.js         <- login/logout, JWT in sessionStorage, isAuthenticated/
 
 **Static layer is fully retired.** `src/data/static/*` and `src/data/db.js` have been deleted. The PCL-5 questionnaire, like every other content type, is now served from dedicated API endpoints (`/api/questionnaires`, `/api/admin/questionnaires`) and is fully editable in the admin panel. `src/data/questionnaireSections.js` remains, but it is a presentation-only overlay (Hebrew section grouping for the question list) - not a content source; do NOT add new content data under `src/data/`, new content goes through the API/admin.
 
-### Site copy and legal documents: override rows, not editable from /admin
+### Site copy and legal documents: override rows
 
 Page headings, subtitles, intros, questionnaire result text, the footer and the
 SEO descriptions ship in `src/lib/i18n.js`; `/privacy-policy` and
 `/terms-of-use` ship their Markdown in `PrivacyPolicy.jsx` / `TermsOfUse.jsx`.
-/admin used to edit both through override rows and **no longer does** - there
-was no reason to let editors change them. The public read side is kept, so any
-row stored earlier still applies:
+The PTSD-IL `/admin` does not edit either. The Metiv admin
+(`/metiv-site-demo-v3/admin`) edits the i18n texts listed in
+`src/lib/editableI18nKeys.js` (content only: intros, page subtitles,
+questionnaire result texts; never h1s, labels, crisis lines or the calming
+exercises), on the admin page each key belongs to, through the same override
+rows - so an edit there changes the live PTSD-IL site too:
 
-- Site copy: `type: 'article'`, category `site-copy`, `title` = the i18n key,
-  `content` = `{ text }`, per language. `fetchSiteCopy()` reads them;
-  `LanguageProvider` installs them via `setCopyOverrides()`; `t()` resolves
+- Site copy: `type: 'article'`, category `site-copy` (created on the first
+  save), `title` = the i18n key, `content` = `{ text }` (+ `_tr`), one row per
+  language, the rows of a key linked by groupId. Read/write layer:
+  `src/api/adminSiteCopy.js` (no chatbot reindex). A Hebrew edit stages the AI
+  translation of the four others (a language without a row translates over
+  its shipped text); another language is edited by hand. "חזרה לנוסח המקורי"
+  stages deleting the rows (every language from the Hebrew tab). Hebrew names
+  per key: `src/components/admin/siteCopyLabels.js`.
+  `fetchSiteCopy()` reads them; `LanguageProvider` installs them via
+  `setCopyOverrides()`; `t()` resolves
   *lang override -> lang default -> Hebrew override -> Hebrew default -> key*.
   `src/lib/seo.js` sees shipped defaults only.
 - Legal: category `legal`, `title` = the slug, content `{ body, updated }`, raw
-  Markdown. `LegalPage` renders the shipped text unless a row exists.
-- To revert either, DELETE the row (`/api/admin/articles/:id`).
+  Markdown. `LegalPage` renders the shipped text unless a row exists. Not
+  editable from either admin.
+- To revert either by hand, DELETE the row (`/api/admin/articles/:id`).
 
 ## Auth & DB access
 

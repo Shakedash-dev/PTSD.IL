@@ -10,6 +10,7 @@ import { liveGet } from '@/api/adminLiveRead';
 import { loadPtsdFaq, loadRightsFaq } from '@/api/adminSource';
 import { loadMetiv } from '@/api/metivAdminSource';
 import { loadChatbotQa } from '@/api/chatbotQaAdminSource';
+import { loadSiteCopyRows } from '@/api/adminSiteCopy';
 import { buildSiteTree, flattenPages } from '@/components/admin/metivSiteMap';
 import { copyContentKeys } from '@/components/admin/copyContentKeys';
 import { COLLECTION_BY_KEY, COPY_SLUG } from '@/pages/metiv-demos/v3/content/registry';
@@ -50,6 +51,12 @@ describe.skipIf(!live)('metiv admin on the live data (read-only)', () => {
     expect(qa.rows.filter(r => r.langId === 'he').length).toBeGreaterThan(20);
     const list = await liveGet('/admin/questionnaires');
     expect(list.some(q => q.langId === 'he')).toBe(true);
+  }, 60000);
+
+  it('reads the site-copy override rows through the public endpoint (none is fine)', async () => {
+    const siteCopy = await loadSiteCopyRows();
+    expect(Array.isArray(siteCopy.rows)).toBe(true);
+    for (const r of siteCopy.rows) expect(typeof r.key).toBe('string');
   }, 60000);
 
   it('every site-map page resolves each of its sections to live rows', () => {
@@ -119,11 +126,11 @@ describe.skipIf(!live)('metiv admin on the live data (read-only)', () => {
     // The where-to-get-help page: its sections, in site order, with live data.
     fireEvent.click(within(nav).getByRole('button', { name: 'איפה מקבלים טיפול' }));
     const regions = await screen.findAllByRole('region');
-    expect(regions.map(r => r.getAttribute('aria-label')).slice(0, 6)).toEqual([
-      'טקסטים בעמוד', 'תיבת "בקצרה"', 'המערכת הציבורית', 'עמותות וקווי סיוע', 'מרפאות ותוכניות של מטיב', 'לא בטוחים אם לפנות?',
+    expect(regions.map(r => r.getAttribute('aria-label')).slice(0, 5)).toEqual([
+      'טקסטים בעמוד', 'המערכת הציבורית', 'עמותות וקווי סיוע', 'מרפאות ותוכניות של מטיב', 'לא בטוחים אם לפנות?',
     ]);
     const services = store.rows.filter(r => r.col === 'metiv-services' && r.langId === 'he').length;
-    expect(within(regions[4]).getByText(`${services} פריטים`)).toBeInTheDocument();
+    expect(within(regions[3]).getByText(`${services} פריטים`)).toBeInTheDocument();
     // The PTSD FAQ page shows all 12 live questions.
     fireEvent.click(within(nav).getByRole('button', { name: 'מה זה פוסט-טראומה' }));
     expect(await screen.findByText('12 פריטים', {}, { timeout: 30000 })).toBeInTheDocument();

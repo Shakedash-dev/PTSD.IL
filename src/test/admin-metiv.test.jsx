@@ -4,6 +4,7 @@ import coursesSeed from '../../scripts/metiv-seed/he/metiv-courses.json';
 import orgSeed from '../../scripts/metiv-seed/he/metiv-org.json';
 import { applyLeaves, extractLeaves } from '@/lib/translatable';
 import { COLLECTIONS } from '@/pages/metiv-demos/v3/content/registry';
+import { translations } from '@/lib/i18n';
 import { renderAdmin } from './renderAdmin';
 
 // /metiv-site-demo-v3/admin against an in-memory API (with the live API's
@@ -41,6 +42,20 @@ const PARENT = { id: 'cat-metiv', slug: 'metiv', parentId: null };
 const child = slug => ({ id: `cat-${slug}`, slug, parentId: PARENT.id });
 const CHILDREN = COLLECTIONS.map(c => child(c.slug));
 const PTSD_INFO = { id: 'cat-ptsd-info', slug: 'ptsd-info', parentId: null };
+const SELF_HELP = { id: 'cat-self-help', slug: 'self-help', parentId: null };
+const SLEEP = { id: 'cat-sleep', slug: 'sleep', parentId: SELF_HELP.id };
+const SITE_COPY = { id: 'cat-site-copy', slug: 'site-copy', parentId: null };
+const APPS = [
+  { title: 'Calm', description: 'מדיטציה מודרכת ושינה.', ios_url: 'https://apps.apple.com/calm', android_url: 'https://play.google.com/calm' },
+  { title: 'Headspace', description: 'מדיטציה בתשלום.', ios_url: 'https://apps.apple.com/headspace', android_url: 'https://play.google.com/headspace' },
+];
+
+function siteCopyRow(id, groupId, langId, key, text, extra = {}) {
+  return {
+    id, groupId, langId, type: 'article', title: key, sortOrder: 0, isPublished: true,
+    content: JSON.stringify({ text, ...extra }), categories: [SITE_COPY], audiences: [], ageGroups: [],
+  };
+}
 
 const COURSE_1 = coursesSeed.rows[0].content; // cbt-trauma
 const COURSE_2 = coursesSeed.rows[1].content; // roadmap
@@ -64,9 +79,11 @@ let writes;
 let translateCalls;
 let translateImpl;
 let created;
+let siteCopyCategory;
 
 function resetDb() {
   created = 0;
+  siteCopyCategory = false;
   writes = [];
   translateCalls = [];
   translateImpl = body => ({
@@ -86,6 +103,7 @@ function resetDb() {
     metivRow('org', 'g-org', 'he', 'metiv-org', 0, orgSeed.rows[0].content),
     { id: 'a1', groupId: 'g-a1', langId: 'he', type: 'faq', title: 'מהי הפרעת דחק?', sortOrder: 1, content: JSON.stringify({ answer: 'תשובה בעברית.' }), categories: [PTSD_INFO], audiences: [], ageGroups: [] },
     { id: 'a1-en', groupId: 'g-a1', langId: 'en', type: 'faq', title: 'What is PTSD?', sortOrder: 1, content: JSON.stringify({ answer: 'An English answer.', _tr: { by: 'claude' } }), categories: [PTSD_INFO], audiences: [], ageGroups: [] },
+    { id: 't1', groupId: 'g-t1', langId: 'he', type: 'tool', title: 'אפליקציות מומלצות', sortOrder: 1, content: JSON.stringify({ body: 'אפליקציות שיכולות לעזור.', apps: APPS }), categories: [SELF_HELP, SLEEP], audiences: [], ageGroups: [] },
   ];
 }
 
@@ -95,9 +113,12 @@ h.api = async (method, path, body) => {
   if (method === 'GET') {
     if (base === '/categories') {
       if (q.get('parentId') === PARENT.id) return CHILDREN;
-      return [{ ...PARENT, children: CHILDREN }, { ...PTSD_INFO, children: [] }];
+      return [
+        { ...PARENT, children: CHILDREN }, { ...PTSD_INFO, children: [] }, { ...SELF_HELP, children: [SLEEP] },
+        ...(siteCopyCategory ? [{ ...SITE_COPY, children: [] }] : []),
+      ];
     }
-    if (base === '/audiences' || base === '/age-groups') return [];
+    if (base === '/audiences' || base === '/age-groups' || base === '/admin/questionnaires') return [];
     if (base === '/admin/articles') {
       const categoryId = q.get('categoryId');
       return db
@@ -126,15 +147,18 @@ const translateFor = target => translateCalls.find(c => c.target === target);
 
 /** Opens a page of the tree: expands every collapsed area and parent, then picks the page. */
 async function openPage(label) {
-  fireEvent.click(screen.getByRole('button', { name: 'עריכת תוכן' }));
+  // The tree entry's name, with or without its count of staged changes.
+  const named = (/** @type {string} */ name) => name === label || name.replace(/\d+$/, '') === label;
+  const content = screen.queryByRole('button', { name: /^עריכת תוכן/ });
+  if (content && content.getAttribute('aria-pressed') !== 'true') fireEvent.click(content);
   const nav = await screen.findByRole('navigation', { name: 'עמודי האתר' });
   await waitFor(() => {
     for (let collapsed = within(nav).queryAllByRole('button', { expanded: false }); collapsed.length; collapsed = within(nav).queryAllByRole('button', { expanded: false })) {
       for (const b of collapsed) fireEvent.click(b);
     }
-    expect(within(nav).getAllByRole('button', { name: label }).length).toBeGreaterThan(0);
+    expect(within(nav).getAllByRole('button').filter(b => named(b.textContent)).length).toBeGreaterThan(0);
   });
-  fireEvent.click(within(nav).getAllByRole('button', { name: label }).find(b => b.hasAttribute('aria-pressed')));
+  fireEvent.click(within(nav).getAllByRole('button').filter(b => named(b.textContent)).find(b => b.hasAttribute('aria-pressed')));
   return nav;
 }
 
@@ -200,7 +224,7 @@ describe('metiv admin', () => {
     expect([...at].sort((a, b) => a - b)).toEqual(at);
     expect(await screen.findByRole('heading', { level: 2, name: 'איפה מקבלים טיפול' })).toBeInTheDocument();
     const sections = screen.getAllByRole('region').map(r => r.getAttribute('aria-label'));
-    expect(sections).toEqual(['טקסטים בעמוד', 'תיבת "בקצרה"', 'המערכת הציבורית', 'עמותות וקווי סיוע', 'מרפאות ותוכניות של מטיב', 'לא בטוחים אם לפנות?']);
+    expect(sections).toEqual(['טקסטים בעמוד', 'המערכת הציבורית', 'עמותות וקווי סיוע', 'מרפאות ותוכניות של מטיב', 'לא בטוחים אם לפנות?']);
     expect(within(nav).getByRole('button', { name: 'איפה מקבלים טיפול' })).toHaveAttribute('aria-current', 'page');
     // A shared item points to its main page instead of a second editor.
     fireEvent.click(within(nav).getByRole('button', { name: 'זכויות' }));
@@ -465,5 +489,121 @@ describe('metiv admin', () => {
     const ar = ws.find(w => w.method === 'POST' && w.body.langId === 'ar');
     expect(ar.body).toMatchObject({ groupId: 'g-a1', type: 'faq', title: '[ar] מהי הפרעת דחק פוסט-טראומטית?' });
     expect(JSON.parse(ar.body.content).answer).toBe('[ar] תשובה בעברית.');
+  });
+  // ─── Site copy: the i18n texts shared with PTSD-IL ───────────────────────
+
+  /** The card of an editable i18n text, by its Hebrew name, on the open page. */
+  async function textCard(label) {
+    const name = await screen.findByText(label, { selector: 'label' }, { timeout: 4000 });
+    return name.closest('.relative');
+  }
+
+  it('an i18n text shows the shipped wording; a Hebrew edit creates the category, the Hebrew row, then its translations linked by groupId', async () => {
+    renderAdmin({ variant: 'metiv' });
+    await openPage('עזרה עצמית');
+    const box = await textCard('המשפט שמתחת לכותרת העמוד');
+    expect(within(box).getByText(translations.he.self_help_intro)).toBeInTheDocument();
+    expect(within(box).getByText('הנוסח המקורי של האתר')).toBeInTheDocument();
+    // Nothing is overridden yet: nothing to revert.
+    expect(within(box).queryByTitle(/חזרה לנוסח המקורי/)).toBeNull();
+    fireEvent.click(within(box).getByTitle('עריכה'));
+    fireEvent.change(within(box).getByRole('textbox'), { target: { value: 'אפשר להתחיל להרגיש טוב יותר כבר היום.' } });
+    fireEvent.click(within(box).getByRole('button', { name: 'אישור' }));
+
+    await waitFor(() => expect(translateCalls).toHaveLength(4));
+    for (const target of ['ar', 'en', 'ru', 'fr']) expect(translateFor(target).items).toEqual({ text: 'אפשר להתחיל להרגיש טוב יותר כבר היום.' });
+    const review = await openReview();
+    // A language with no override row translates over its shipped text.
+    expect(within(review.dialog).getByText(translations.en.self_help_intro)).toBeInTheDocument();
+    await confirmSave(review);
+
+    const ws = articleWrites();
+    expect(writes.find(w => w.path === '/admin/categories').body).toMatchObject({ slug: 'site-copy' });
+    const posts = ws.filter(w => w.method === 'POST');
+    expect(posts.map(w => w.body.langId)).toEqual(['he', 'ar', 'en', 'ru', 'fr']);
+    expect(posts[0].body).toMatchObject({ type: 'article', title: 'self_help_intro', categoryIds: ['cat-site-copy'], isPublished: true });
+    expect(posts[0].body.groupId).toBeUndefined();
+    expect(JSON.parse(posts[0].body.content)).toEqual({ text: 'אפשר להתחיל להרגיש טוב יותר כבר היום.' });
+    for (const w of posts.slice(1)) {
+      expect(w.body).toMatchObject({ title: 'self_help_intro', groupId: 'grp-new-1', categoryIds: ['cat-site-copy'] });
+      const c = JSON.parse(w.body.content);
+      expect(c.text).toBe(`[${w.body.langId}] אפשר להתחיל להרגיש טוב יותר כבר היום.`);
+      expect(c._tr.by).toBe('ai');
+    }
+  });
+
+  it('an i18n text on two pages is one row: staged on one page, it shows staged on the other', async () => {
+    renderAdmin({ variant: 'metiv' });
+    await openPage('דף הבית');
+    const box = await textCard('מה זה פוסט-טראומה (פסקה קצרה)');
+    fireEvent.click(within(box).getByTitle('עריכה'));
+    fireEvent.change(within(box).getByRole('textbox'), { target: { value: 'פסקה חדשה.' } });
+    fireEvent.click(within(box).getByRole('button', { name: 'אישור' }));
+    await openPage('למטופלים ולמשפחות');
+    const other = await textCard('מה זה פוסט-טראומה (פסקה קצרה)');
+    expect(within(other).getByText('פסקה חדשה.')).toBeInTheDocument();
+    expect(within(other).getByText('נערך · ממתין לשמירה')).toBeInTheDocument();
+  });
+
+  it('an edited i18n text: a hand edit in another language writes that row only; "back to the original" deletes the override rows', async () => {
+    siteCopyCategory = true;
+    db.push(
+      siteCopyRow('sc-he', 'g-sc', 'he', 'self_help_intro', 'נוסח שנערך בעברית.'),
+      siteCopyRow('sc-en', 'g-sc', 'en', 'self_help_intro', 'An edited English text.', { _tr: { by: 'ai' } }),
+    );
+    renderAdmin({ variant: 'metiv' });
+    fireEvent.click(screen.getByRole('button', { name: 'עריכת תוכן' }));
+    fireEvent.click(within(screen.getByRole('group', { name: 'שפת העריכה' })).getByRole('button', { name: 'צרפתית' }));
+    await openPage('עזרה עצמית');
+    // French has no row: it shows its shipped text, and a hand edit creates its row in the key's group.
+    let box = await textCard('המשפט שמתחת לכותרת העמוד');
+    expect(within(box).getByText(translations.fr.self_help_intro)).toBeInTheDocument();
+    fireEvent.click(within(box).getByTitle('עריכה'));
+    fireEvent.change(within(box).getByRole('textbox'), { target: { value: 'Un texte écrit à la main.' } });
+    fireEvent.click(within(box).getByRole('button', { name: 'אישור' }));
+    await confirmSave(await openReview());
+    expect(translateCalls).toHaveLength(0);
+    let ws = articleWrites();
+    expect(ws).toHaveLength(1);
+    expect(ws[0].method).toBe('POST');
+    expect(ws[0].body).toMatchObject({ langId: 'fr', title: 'self_help_intro', groupId: 'g-sc', categoryIds: ['cat-site-copy'] });
+    const fr = JSON.parse(ws[0].body.content);
+    expect(fr.text).toBe('Un texte écrit à la main.');
+    expect(fr._tr.by).toBe('human');
+
+    // Hebrew: the edited wording, and the revert of every language.
+    writes.length = 0;
+    fireEvent.click(within(screen.getByRole('group', { name: 'שפת העריכה' })).getByRole('button', { name: 'עברית' }));
+    box = await textCard('המשפט שמתחת לכותרת העמוד');
+    expect(within(box).getByText('נוסח שנערך בעברית.')).toBeInTheDocument();
+    expect(within(box).getByText('נוסח שנערך')).toBeInTheDocument();
+    fireEvent.click(within(box).getByTitle('חזרה לנוסח המקורי (בכל השפות)'));
+    expect(await within(box).findByText('יחזור לנוסח המקורי בשמירה')).toBeInTheDocument();
+    expect(within(box).getByText(translations.he.self_help_intro)).toBeInTheDocument();
+    await confirmSave(await openReview());
+    ws = articleWrites();
+    expect(ws.map(w => `${w.method} ${w.path}`).sort()).toEqual(['DELETE /admin/articles/sc-en', 'DELETE /admin/articles/sc-he']);
+  });
+
+  it('the self-help apps are edited in the tool: change, add, reorder, saved in the row and translated', async () => {
+    renderAdmin({ variant: 'metiv' });
+    await openPage('עזרה עצמית');
+    const tool = (await screen.findByText('אפליקציות מומלצות', {}, { timeout: 4000 })).closest('.group');
+    expect(within(tool).getByText('2 אפליקציות: Calm · Headspace')).toBeInTheDocument();
+    fireEvent.click(within(tool).getByTitle('עריכה'));
+    fireEvent.change(screen.getByDisplayValue('מדיטציה מודרכת ושינה.'), { target: { value: 'מדיטציה מודרכת, שינה ונשימה.' } });
+    fireEvent.click(screen.getAllByTitle('הזזה למטה').find(b => b.closest('.space-y-3') && !b.disabled));
+    fireEvent.click(screen.getByRole('button', { name: /הוספת אפליקציה/ }));
+    fireEvent.change(screen.getByLabelText('שם האפליקציה 3'), { target: { value: 'Wysa' } });
+    fireEvent.change(document.getElementById('app-2-ios'), { target: { value: 'https://apps.apple.com/wysa' } });
+    fireEvent.click(screen.getByRole('button', { name: 'אישור' }));
+    await waitFor(() => expect(translateCalls.length).toBe(4));
+    expect(Object.values(translateFor('en').items)).toContain('מדיטציה מודרכת, שינה ונשימה.');
+    await confirmSave(await openReview());
+    const he = articleWrites().find(w => w.path === '/admin/articles/t1');
+    const apps = JSON.parse(he.body.content).apps;
+    expect(apps.map(a => a.title)).toEqual(['Headspace', 'Calm', 'Wysa']);
+    expect(apps[1]).toMatchObject({ description: 'מדיטציה מודרכת, שינה ונשימה.', ios_url: 'https://apps.apple.com/calm' });
+    expect(apps[2]).toMatchObject({ ios_url: 'https://apps.apple.com/wysa', android_url: '' });
   });
 });

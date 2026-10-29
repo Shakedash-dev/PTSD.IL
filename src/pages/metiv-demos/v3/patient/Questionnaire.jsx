@@ -243,6 +243,7 @@ export default function Questionnaire() {
 // sections by order. Any questions beyond the overlay's summed counts render
 // flat below the last section (defensive - never drop a question).
 function HebrewSectioned({ questions, answers, onAnswer }) {
+  const { lang } = useLang();
   let idx = 0;
   const blocks = HE_SECTIONS.sections.map((section, sIdx) => {
     const slice = questions.slice(idx, idx + section.count);
@@ -265,7 +266,7 @@ function HebrewSectioned({ questions, answers, onAnswer }) {
   const leftover = questions.slice(idx);
   return (
     <div>
-      <p className="text-center text-muted-foreground italic mb-10 text-sm">{HE_SECTIONS.intro}</p>
+      <p className="text-center text-muted-foreground italic mb-10 text-sm">{t(lang, 'questionnaire_sections_intro')}</p>
       <div className="space-y-10">
         {blocks}
         {leftover.length > 0 && (

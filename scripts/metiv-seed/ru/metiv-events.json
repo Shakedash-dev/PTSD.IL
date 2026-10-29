@@ -19,7 +19,6 @@
         "location": "Центр Метив, Гиват-Шауль, Иерусалим",
         "price": "10 350 ₪ в год",
         "link": "/therapist/courses/cbt-trauma",
-        "external": false,
         "courseSlug": "cbt-trauma",
         "isPast": false,
         "sourceUrl": "https://metiv.org/קורס-cbt-לטראומה/"
@@ -41,7 +40,6 @@
         "location": "Центр Метив, Медицинский центр Герцог, Иерусалим",
         "price": "1,700 ₪",
         "link": "/therapist/courses/roadmap",
-        "external": false,
         "courseSlug": "roadmap",
         "isPast": false,
         "sourceUrl": "https://metiv.org/יסודות-הטיפול-בטראומה/"
@@ -58,11 +56,12 @@
         "title": "Международный летний курс: Trauma & Resilience",
         "date": "28.6-9.7.2026, клиническая подготовка 12-16.7.2026",
         "dateISO": "2026-06-28",
+        "endDateISO": "2026-07-16",
+        "dateText": "28.6-9.7.2026, клиническая подготовка 12-16.7.2026",
         "type": "Поток курса",
         "summary": "Курс на английском языке совместно с Еврейским университетом, с дополнительной третьей неделей клинической подготовки по желанию.",
         "location": "Международная школа имени Ротберга, Хар-ха-Цофим",
         "link": "/therapist/courses/summer-course",
-        "external": false,
         "courseSlug": "summer-course",
         "isPast": true,
         "sourceUrl": "https://metiv.org/en/international-summer-course/"
@@ -84,7 +83,6 @@
         "location": "Центр Метив, Медицинский центр Герцог, Иерусалим",
         "price": "500 ₪",
         "link": "/therapist/courses/skills-day",
-        "external": false,
         "courseSlug": "skills-day",
         "isPast": true,
         "sourceUrl": "https://metiv.org/תרגול-מיומנויות/"
@@ -106,7 +104,6 @@
         "location": "Центр Метив, Медицинский центр Герцог, Иерусалим",
         "price": "2,500 ₪",
         "link": "/therapist/courses/complex-trauma",
-        "external": false,
         "courseSlug": "complex-trauma",
         "isPast": true,
         "sourceUrl": "https://metiv.org/טראומה-מורכבת-קורס/"
@@ -128,7 +125,6 @@
         "location": "Zoom",
         "price": "1,700 ₪",
         "link": "/therapist/courses/roadmap",
-        "external": false,
         "courseSlug": "roadmap",
         "isPast": true,
         "sourceUrl": "https://metiv.org/קורס-מפת-הדרכים-zoom/"
@@ -150,7 +146,6 @@
         "location": "Улица Элиэзер Каплан, 8, компания fiverr",
         "price": "300 ₪",
         "link": "/therapist/courses/trauma-informed-org-day",
-        "external": false,
         "courseSlug": "trauma-informed-org-day",
         "isPast": true,
         "sourceUrl": "https://metiv.org/בניית-ארגון-מותאם-טראומה/"
@@ -170,7 +165,6 @@
         "type": "Семинар",
         "summary": "Учебный модуль под руководством д-ра Михаль Симхон, 9:00-16:00.",
         "link": "/therapist/courses/kaleidoscope",
-        "external": false,
         "courseSlug": "kaleidoscope",
         "isPast": true,
         "sourceUrl": "https://metiv.org/jet-popup/קליידוסקופ-טיפול-בפגיעות-מיניות-2/"
@@ -190,7 +184,6 @@
         "type": "Семинар",
         "summary": "Учебный модуль о терапии рожениц и работе с опытом родов, 16:00-21:00, в центре Метив.",
         "link": "/therapist/courses/kaleidoscope",
-        "external": false,
         "courseSlug": "kaleidoscope",
         "isPast": true,
         "sourceUrl": "https://metiv.org/jet-popup/קליידוסקופ-לידות-בידיים-מלאות/"
@@ -210,7 +203,6 @@
         "type": "Семинар",
         "summary": "Учебный модуль под руководством Михаль Зморы, 17:00-21:00, в Метиве.",
         "link": "/therapist/courses/kaleidoscope",
-        "external": false,
         "courseSlug": "kaleidoscope",
         "isPast": true,
         "sourceUrl": "https://metiv.org/jet-popup/קליידוסקופ-טיפול-בפגיעות-מיניות/"
@@ -232,7 +224,6 @@
         "location": "Метив - Центр психотравмы, Иерусалим",
         "price": "1500 ₪",
         "link": "/therapist/courses/roadmap",
-        "external": false,
         "courseSlug": "roadmap",
         "isPast": true,
         "sourceUrl": "https://metiv.org/jet-popup/מפת-הדרכים-יוני/"
@@ -252,7 +243,6 @@
         "type": "Семинар",
         "summary": "Практический семинар под руководством Йоэля Варди и Михаль Зморы, 15:00-19:00, в центре Метив.",
         "link": "/therapist/courses/kaleidoscope",
-        "external": false,
         "courseSlug": "kaleidoscope",
         "isPast": true,
         "sourceUrl": "https://metiv.org/jet-popup/קליידוסקופ-לא-על-הדיבור-לבדו/"
@@ -273,7 +263,6 @@
         "summary": "Шесть еженедельных встреч в Zoom по средам в 14:00, для группы примерно из 5 психотерапевтов.",
         "price": "Около 1200 ₪",
         "link": "/therapist/supervision",
-        "external": false,
         "isPast": true,
         "sourceUrl": "https://metiv.org/jet-popup/קבוצת-הדרכה/"
       }
@@ -292,7 +281,6 @@
         "type": "Семинар",
         "summary": "Учебный модуль под руководством Далии Зиван, 9:00-16:00, в центре Метив.",
         "link": "/therapist/courses/kaleidoscope",
-        "external": false,
         "courseSlug": "kaleidoscope",
         "isPast": true,
         "sourceUrl": "https://metiv.org/jet-popup/קליידוסקופ-act-לטיפול-בטראומה/"
@@ -312,7 +300,6 @@
         "type": "Семинар",
         "summary": "Учебный модуль под руководством Тамары Винер, 15:00-20:00, в Метиве.",
         "link": "/therapist/courses/kaleidoscope",
-        "external": false,
         "courseSlug": "kaleidoscope",
         "isPast": true,
         "sourceUrl": "https://metiv.org/jet-popup/קליידוסקופ-סדנה-באומנות/"
@@ -332,7 +319,6 @@
         "type": "Семинар",
         "summary": "Учебный модуль в Zoom под руководством Нили Лави, 10:00-16:00.",
         "link": "/therapist/courses/kaleidoscope",
-        "external": false,
         "courseSlug": "kaleidoscope",
         "isPast": true,
         "sourceUrl": "https://metiv.org/jet-popup/קליידוסקופ-אבל/"
@@ -349,10 +335,11 @@
         "title": "Калейдоскоп: диссоциация и травма",
         "date": "6.2.2025 и 13.2.2025",
         "dateISO": "2025-02-06",
+        "endDateISO": "2025-02-13",
+        "dateText": "6.2.2025 и 13.2.2025",
         "type": "Семинар",
         "summary": "Две встречи в Zoom с Дани Бромом, 14:00-17:00.",
         "link": "/therapist/courses/kaleidoscope",
-        "external": false,
         "courseSlug": "kaleidoscope",
         "isPast": true,
         "sourceUrl": "https://metiv.org/jet-popup/קליידוסקופ-דיסוציאציה-וטראומה/"
@@ -374,7 +361,6 @@
         "location": "Zoom",
         "price": "2000 ₪",
         "link": "/therapist/courses/panda-training",
-        "external": false,
         "courseSlug": "panda-training",
         "isPast": true,
         "sourceUrl": "https://metiv.org/הכשרה-למטפלים-פנדה-יסודי/"
@@ -398,7 +384,6 @@
         "location": "Гостевой дом «Бейт ва-Ган», улица ха-Псага, 8, Иерусалим",
         "price": "Бесплатно, по предварительной записи",
         "link": "https://metiv.org/הרשמה-לכנס-שנה-של-התמודדות-מטיב-המרכז-ה/",
-        "external": true,
         "isPast": true,
         "sourceUrl": "https://metiv.org/news/כנס-למטפלים-לרגל-שנה-למלחמה/"
       }
@@ -414,13 +399,14 @@
         "title": "Новый поток курса «Основы терапии травмы у детей»",
         "date": "11, 12, 15 сентября 2024",
         "dateISO": "2024-09-11",
+        "endDateISO": "2024-09-15",
+        "dateText": "11, 12, 15 сентября 2024",
         "publishedDate": "21.8.2024",
         "type": "Поток курса",
         "summary": "Интенсивный курс для специалистов помогающих профессий с признанным дипломом и опытом работы с детьми; ведёт Сарит Шрам-Явин.",
         "body": "**Для кого предназначен курс?** Для специалистов помогающих профессий с признанным дипломом и опытом работы с детьми. Опыт работы с травмой не требуется.\n\n**Когда?** 11, 12, 15 сентября, с 9:00 до 15:00.\n\n**Где?** Офис Метива, здание поликлиник, Медицинский центр Герцог, Иерусалим.\n\n**Подробности и запись:** Став - 0547466538 или по электронной почте stav@metiv.org",
         "location": "Офис Метива, здание поликлиник, Медицинский центр Герцог, Иерусалим",
         "link": "/therapist/courses/kids-trauma-basics",
-        "external": false,
         "courseSlug": "kids-trauma-basics",
         "isPast": true,
         "sourceUrl": "https://metiv.org/news/מחזור-חדש-לקורס-יסודות-הטיפול-בטראומה/"
@@ -437,13 +423,13 @@
         "title": "A Roadmap for Trauma-Informed Care - совместная конференция по исследованиям и психотерапии",
         "date": "28.2-1.3.2023",
         "dateISO": "2023-02-28",
+        "endDateISO": "2023-03-01",
         "publishedDate": "20.1.2023",
         "type": "Конференция",
         "summary": "Двухдневная конференция для исследователей и психотерапевтов об исследованиях и терапии травмы в контексте израильского общества.",
         "body": "Конференция прошла 28.2-1.3.23, с 09:00 до 17:00, в больнице Герцог в Иерусалиме.\n\nВ первый день: лекции в формате TED о современных исследованиях травмы в Израиле, параллельные секции по разным темам (медицина, общество, религия и духовность) в контексте травмы и дискуссия ведущих исследователей. Во второй день: лекции, клинические семинары по терапии травмы и голоса из свидетельств клиентов.",
         "location": "Больница Герцог, Иерусалим",
         "link": "https://metiv.org/en/news/a-roadmap-for-trauma-informed-care/",
-        "external": true,
         "isPast": true,
         "sourceUrl": "https://metiv.org/en/news/a-roadmap-for-trauma-informed-care/"
       }
@@ -463,7 +449,6 @@
         "summary": "Метив открыл программу бесплатной терапии для демобилизованных военнослужащих с ПТСР в рамках клинического исследовательского проекта.",
         "body": "Демобилизованные военнослужащие, которые справляются с травмой, полученной во время военной службы, могут обратиться, чтобы узнать, подходят ли они для бесплатной психологической терапии в рамках исследовательского проекта. Согласно странице на английском языке, клиника работает в рамках клинического исследования соматического переживания (Somatic Experiencing).",
         "link": "/patient/free-treatment-and-research",
-        "external": false,
         "isPast": true,
         "sourceUrl": "https://metiv.org/news/טיפול-לחיילים-משוחררים-המתמודדים-עם-פ/"
       }

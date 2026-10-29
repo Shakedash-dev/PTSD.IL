@@ -10,43 +10,6 @@
       "content": {
         "_key": "PATIENT_HUB",
         "_col": "metiv-patient-hub",
-        "hero": {
-          "brand": "Metiv - Centre israélien de psychotraumatologie",
-          "eyebrow": "Stress post-traumatique",
-          "headline": "Vous n'êtes pas seuls",
-          "subtitle": "Informations, outils et soutien, réunis en un seul endroit, dans un langage clair.",
-          "ctaLabel": "Qu'est-ce qui vous amène ici ?",
-          "image": "/images/set1/home_hero.webp",
-          "about": "Le trouble de stress post-traumatique (TSPT) est une réaction psychologique à un événement traumatique, que le cerveau et le corps continuent de traiter longtemps après que le danger est passé.",
-          "aboutLinkLabel": "En savoir plus",
-          "aboutRoute": "/patient/ptsd-info"
-        },
-        "paths": [
-          {
-            "key": "firstCircle",
-            "route": "/patient/first-circle",
-            "title": "Vous vivez avec un TSPT",
-            "subtitle": "Tout ce qu'il faut pour comprendre la situation, commencer un traitement et connaître vos droits, à votre rythme, sans vous perdre.",
-            "image": "/images/illustrations/ptsd_sufferer.webp",
-            "ctaLabel": "Continuer"
-          },
-          {
-            "key": "secondCircle",
-            "route": "/patient/second-circle",
-            "title": "Vous êtes proche d'une personne concernée",
-            "subtitle": "Pour le conjoint, le parent ou l'ami d'une personne concernée : comment la soutenir, la comprendre, et prendre aussi soin de vous en chemin.",
-            "image": "/images/illustrations/supporter.webp",
-            "ctaLabel": "Continuer"
-          },
-          {
-            "key": "questionnaire",
-            "route": "/patient/questionnaire",
-            "title": "Je ne sais pas trop",
-            "subtitle": "Un court questionnaire anonyme (environ 3 minutes) pour vous aider à savoir si vos symptômes justifient un examen plus approfondi.",
-            "image": "/images/illustrations/wondering.webp",
-            "ctaLabel": "Continuer"
-          }
-        ],
         "quickLinks": [
           {
             "key": "ptsdInfo",
@@ -245,8 +208,7 @@
             "icon": "HandHeart",
             "route": "/patient/where-to-get-help#free-treatments"
           }
-        ],
-        "disclaimer": "Ce site ne fournit pas d'avis médical. En cas d'urgence, consultez un médecin ou appelez ERAN : 1201"
+        ]
       }
     }
   ]

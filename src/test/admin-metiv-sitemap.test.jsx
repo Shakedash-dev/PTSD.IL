@@ -8,9 +8,13 @@ import navSeed from '../../scripts/metiv-seed/he/metiv-nav.json';
 import patientNavSeed from '../../scripts/metiv-seed/he/metiv-patient-nav.json';
 import coursesSeed from '../../scripts/metiv-seed/he/metiv-courses.json';
 import landingCopy from '../../scripts/metiv-seed/copy/landing.json';
+import supervisionCopy from '../../scripts/metiv-seed/copy/supervision.json';
+import eventsSeed from '../../scripts/metiv-seed/he/metiv-events.json';
 import { COPY_CONTENT_KEYS, copyContentKeys } from '@/components/admin/copyContentKeys';
 import { NOT_EDITED, SITE_MAP, buildSiteTree, flattenPages } from '@/components/admin/metivSiteMap';
-import { fieldRules } from '@/components/admin/metivFieldRules';
+import { fieldRules, hasVisible } from '@/components/admin/metivFieldRules';
+import { SITE_COPY_LABELS } from '@/components/admin/siteCopyLabels';
+import { EDITABLE_I18N, EDITABLE_I18N_KEYS } from '@/lib/editableI18nKeys';
 import { normalize, searchEntries } from '@/components/admin/adminSearch';
 import { liveGet, publicPathFor } from '@/api/adminLiveRead';
 import { adminApi, ReadOnlyPreviewError } from '@/api/adminClient';
@@ -44,9 +48,21 @@ describe('page copy: content keys only', () => {
     const ui = [
       ['landing', 'titleName'], ['landing', 'ptsdTitle'], ['landing', 'serviceCta'], ['patientKit', 'fieldCost'],
       ['patientKit', 'fieldLocation'], ['patientLayout', 'sanctuaryCrisisLine'], ['chrome', 'eranCall'], ['courses', 'title'],
-      ['courses', 'shortCount'], ['contact', 'subtitle'],
+      ['courses', 'shortCount'], ['contact', 'subtitle'], ['research', 'subtitle'],
+      // Texts that explain how the page works, and link captions.
+      ['chrome', 'helpNowIntro'], ['courses', 'finderIntro'], ['courses', 'shortQuestions'], ['childrenFamily', 'modelsIntro'],
+      ['supervision', 'optionsIntro'], ['events', 'shortFilter'], ['publications', 'shortFilter'], ['research', 'shortCards'],
+      ['therapistHub', 'questionIntro'], ['about', 'short1'], ['aboutPartners', 'short2'], ['landing', 'moreServicesText'],
+      ['patientReleaseJourney', 'modelsIntro'], ['donate', 'placeholderNote'],
     ];
     for (const [ns, k] of ui) expect(copyContentKeys(ns), `${ns}.${k}`).not.toContain(k);
+    // Page subtitles (the sentence under the h1) and facts about Metiv are content.
+    const content = [
+      ['courses', 'subtitle'], ['events', 'subtitle'], ['aboutHistory', 'subtitle'], ['releaseJourneyPro', 'subtitle'],
+      ['releaseJourneyPro', 'mod'], ['supervision', 'shortOptions'], ['organizations', 'shortPrograms'],
+      ['patientWhereToGetHelp', 'subtitle'], ['patientFreeTreatment', 'subtitle'], ['patientReleaseJourney', 'subtitle'],
+    ];
+    for (const [ns, k] of content) expect(copyContentKeys(ns), `${ns}.${k}`).toContain(k);
     const rules = fieldRules({ copyKeys: copyContentKeys('landing') });
     expect(rules.visible('intro', 'intro')).toBe(true);
     expect(rules.visible('titleName', 'titleName')).toBe(false);
@@ -62,11 +78,15 @@ describe('page copy: content keys only', () => {
   });
 });
 
+// Pages with nothing to edit: the calming exercises are locked.
+const HIDDEN = ['calming', 'calmingBreathing', 'calmingGrounding', 'calmingMuscle'];
+
 describe('page tree: mirrors the site', () => {
-  it('has a page for every route, with the route and the page name of ROUTE_META', () => {
+  it('has a page for every route with something to edit, with the route and the page name of ROUTE_META', () => {
     for (const [key, route] of Object.entries(ALL_ROUTES)) {
       if (key === 'course' || key === 'article') continue;
       const page = pages.find(p => p.id === key);
+      if (HIDDEN.includes(key)) { expect(page, key).toBeUndefined(); continue; }
       expect(page, key).toBeTruthy();
       expect(page.route).toBe(route);
       expect(page.label).toBe(ROUTE_META[key].label);
@@ -76,9 +96,43 @@ describe('page tree: mirrors the site', () => {
   it('orders the patient area like its menu, with מסע שחרור above "איפה מקבלים טיפול"', () => {
     const menu = patientNavSeed.rows.map(r => r.content.key).flatMap(k => (k === 'whereToGetHelp' ? ['releaseJourney', k] : [k]));
     expect(area('patient').pages.map(p => p.id)).toEqual(menu);
+    const tree = buildSiteTree().find(a => a.id === 'patient');
+    expect(tree.pages.map(p => p.id)).toEqual(menu.filter(k => !HIDDEN.includes(k)));
     const firstCircle = patientNavSeed.rows.find(r => r.content.key === 'firstCircle').content.children.map(c => c.key);
     expect(byId.firstCircle.children.map(c => c.id)).toEqual(firstCircle);
-    expect(byId.calming.children.map(c => c.id)).toEqual(['calmingBreathing', 'calmingGrounding', 'calmingMuscle']);
+  });
+
+  it('leaves out pages with nothing to edit, and moves their children up in their place', () => {
+    for (const id of HIDDEN) expect(pages.some(p => p.id === id), id).toBe(false);
+    for (const p of real) expect(p.sections.some(s => s.kind !== 'link') || p.masterOnly, p.id).toBeTruthy();
+    // A parent with nothing of its own: its children take its place, in order.
+    const map = [{
+      id: 'a', label: 'A', pages: [
+        { id: 'first', label: '1', sections: [{ kind: 'qa' }] },
+        { id: 'empty', label: 'E', sections: [{ kind: 'link', to: 'first', label: 'x' }], children: [{ id: 'c1', label: 'C1', sections: [{ kind: 'i18n' }] }, { id: 'c2', label: 'C2', sections: [{ kind: 'qa' }] }] },
+        { id: 'last', label: 'L', sections: [{ kind: 'link', to: 'empty', label: 'y' }, { kind: 'qa' }] },
+      ],
+    }];
+    const t = buildSiteTree({}, { map, i18n: { c1: ['k'] } });
+    expect(t[0].pages.map(p => p.id)).toEqual(['first', 'c1', 'c2', 'last']);
+    expect(t[0].pages[1].parentId).toBeUndefined();
+    expect(t[0].pages[1].sections).toMatchObject([{ kind: 'i18n', keys: ['k'] }]);
+    // A pointer to a page that is left out is dropped.
+    expect(t[0].pages[3].sections.map(s => s.kind)).toEqual(['qa']);
+    // Without its i18n keys the child has nothing either, and goes too.
+    expect(flattenPages(buildSiteTree({}, { map, i18n: {} })).map(p => p.id)).toEqual(['first', 'c2', 'last']);
+  });
+
+  it('shows the editable i18n texts on their pages, each with a Hebrew name', () => {
+    for (const [pageId, keys] of Object.entries(EDITABLE_I18N)) {
+      const page = byId[pageId];
+      expect(page, pageId).toBeTruthy();
+      expect(page.sections.find(s => s.kind === 'i18n')?.keys, pageId).toEqual(keys);
+    }
+    for (const k of EDITABLE_I18N_KEYS) expect(SITE_COPY_LABELS[k]?.label, k).toBeTruthy();
+    // One text on two pages is one row: the same key on both.
+    expect(byId.home.sections.find(s => s.kind === 'i18n').keys).toContain('about_ptsd_short');
+    expect(byId.patient.sections.find(s => s.kind === 'i18n').keys).toContain('about_ptsd_short');
   });
 
   it('orders the professional area like its tabs: "על מטיב" after the home, מסע שחרור last', () => {
@@ -166,10 +220,59 @@ describe('collection fields: content, not format', () => {
     const r = fieldRules({ collection: 'ORG', fields: ['intro', 'vision'] });
     expect(r.visible('intro', 'intro')).toBe(true);
     expect(r.visible('phones', 'phones')).toBe(false);
-    const hub = fieldRules({ collection: 'PATIENT_HUB', fields: ['hero.about'] });
-    expect(hub.visible('hero', 'hero')).toBe(true);
-    expect(hub.visible('hero.about', 'about')).toBe(true);
-    expect(hub.visible('hero.headline', 'headline')).toBe(false);
+    const legal = fieldRules({ collection: 'LEGAL', fields: ['accessibility'] });
+    expect(legal.visible('accessibility', 'accessibility')).toBe(true);
+    expect(legal.visible('accessibility.sections[].body', 'body')).toBe(true);
+    expect(legal.visible('privacy', 'privacy')).toBe(false);
+  });
+
+  it('the slogan is content; crisis lines, an internal link and a duplicate chip label are not', () => {
+    const org = fieldRules({ collection: 'ORG' });
+    expect(org.visible('headline', 'headline')).toBe(true);
+    expect(org.visible('tagline', 'tagline')).toBe(true);
+    expect(org.visible('shortName', 'shortName')).toBe(false);
+    expect(fieldRules({ collection: 'PATIENT_HUB' }).visible('crisisLines', 'crisisLines')).toBe(false);
+    expect(fieldRules({ collection: 'JOURNEY_MODELS' }).visible('label', 'label')).toBe(false);
+    // An event link to a page of the site is navigation; an external one is content.
+    const ev = fieldRules({ collection: 'EVENTS' });
+    expect(ev.visible('link', 'link', '/therapist/courses/cbt-trauma')).toBe(false);
+    expect(ev.visible('link', 'link', 'https://example.org/x')).toBe(true);
+    // A { label, to } link (a department's link to a page of the site) is not shown at all.
+    const dep = fieldRules({ collection: 'DEPARTMENT_GROUPS' });
+    expect(hasVisible({ label: 'קורסים והכשרות', to: '/therapist/courses' }, 'departments[].links[]', dep.visible)).toBe(false);
+    expect(hasVisible({ label: 'טופס פנייה', href: 'https://example.org' }, 'departments[].links[]', dep.visible)).toBe(true);
+    // The placeholder flags are switches the editor can clear.
+    expect(fieldRules({ collection: 'DONATE' }).visible('isPlaceholder', 'isPlaceholder')).toBe(true);
+    expect(fieldRules({ collection: 'PARTNER_GROUPS' }).visible('partners[].placeholder', 'placeholder')).toBe(true);
+  });
+
+  it('an item with an ISO date edits only the ISO date: no display text, no past flag', () => {
+    const ev = fieldRules({ collection: 'EVENTS' });
+    const event = { date: '3 במרץ', dateISO: '2027-03-03', isPast: false, title: 'x' };
+    expect(ev.visible('dateISO', 'dateISO', event.dateISO, event)).toBe(true);
+    expect(ev.visible('date', 'date', event.date, event)).toBe(false);
+    expect(ev.visible('isPast', 'isPast', false, event)).toBe(false);
+    // Without an ISO date the free-text date and the manual flag stay.
+    const c = fieldRules({ collection: 'COURSES' });
+    const course = { startDate: 'בפנייה', isPast: true };
+    expect(c.visible('startDate', 'startDate', course.startDate, course)).toBe(true);
+    expect(c.visible('isPast', 'isPast', true, course)).toBe(true);
+    const run = { startDate: '1.3.2027', startDateISO: '2027-03-01', isPast: false };
+    expect(c.visible('formats[].startDate', 'startDate', run.startDate, run)).toBe(false);
+    expect(c.visible('formats[].isPast', 'isPast', false, run)).toBe(false);
+  });
+
+  it('the new data fields are picks from the page\'s own chips, labelled in Hebrew', () => {
+    const he = { COPY: { childrenFamily: { ageEarly: 'גיל הרך', ageSchool: 'גיל בית ספר', ageParents: 'עבודה עם הורים' }, supervision: { kindIndividual: 'אחד על אחד' } } };
+    expect(fieldRules({ collection: 'CHILDREN_FAMILY_INTRO', he }).options('models[].ageGroups')).toEqual([
+      { value: 'early', label: 'גיל הרך' }, { value: 'school', label: 'גיל בית ספר' }, { value: 'parents', label: 'עבודה עם הורים' },
+    ]);
+    expect(fieldRules({ collection: 'SUPERVISION', he }).options('options[].kinds')[0]).toEqual({ value: 'individual', label: 'אחד על אחד' });
+    expect(fieldRules({ collection: 'ORGANIZATION_PROGRAMS' }).options('needs').map(c => c.value)).toEqual(['informed', 'workshop', 'clinical']);
+    expect(fieldRules({ collection: 'COURSES' }).options('therapistNeeds').map(c => c.value)).toEqual(['supervision', 'team', 'kids']);
+    expect(fieldRules({ collection: 'ARTICLES' }).options('genre').map(c => c.value)).toEqual(['opinion']);
+    for (const col of ['PAPERS', 'ACTIVE_STUDIES']) expect(fieldRules({ collection: col }).visible('releaseJourney', 'releaseJourney')).toBe(true);
+    expect(fieldRules({ collection: 'TEAM' }).visible('releaseJourneyTeam', 'releaseJourneyTeam')).toBe(true);
   });
 });
 
@@ -221,6 +324,79 @@ describe('metiv admin: content-only editors, search and the merged page (preview
     // Content that looks technical stays: the registration link, the ISO date as a date picker.
     expect(within(editor).getByDisplayValue(course.registration.url)).toBeInTheDocument();
     expect(within(editor).getByDisplayValue(course.startDateISO)).toHaveAttribute('type', 'date');
+  });
+
+  /** Opens a page of the tree by its label: every area and parent expanded first. */
+  async function openPage(nav, label) {
+    await waitFor(() => {
+      for (const b of within(nav).queryAllByRole('button', { expanded: false })) fireEvent.click(b);
+      expect(within(nav).getAllByRole('button').some(b => b.textContent === label)).toBe(true);
+    });
+    fireEvent.click(within(nav).getAllByRole('button').find(b => b.textContent === label && b.hasAttribute('aria-pressed')));
+    return screen.findByRole('heading', { level: 2, name: label });
+  }
+
+  it('a page subtitle is editable; a text that explains how the page works is not', async () => {
+    const nav = await openTree();
+    await openPage(nav, 'הדרכה');
+    expect(await screen.findByDisplayValue(supervisionCopy.subtitle, {}, { timeout: 4000 })).toBeInTheDocument();
+    expect(screen.getByLabelText('המשפט שמתחת לכותרת העמוד')).toBeInTheDocument();
+    expect(screen.queryByDisplayValue(supervisionCopy.optionsIntro)).toBeNull();
+    expect(screen.queryByDisplayValue(supervisionCopy.shortCompare)).toBeNull();
+  });
+
+  it('crisis-line numbers are not in the admin', async () => {
+    const nav = await openTree();
+    await openPage(nav, 'בכל העמודים: תחתית העמוד');
+    await screen.findByText('הסתייגות רפואית בתחתית', {}, { timeout: 4000 });
+    expect(screen.queryByDisplayValue(/1201/)).toBeNull();
+    expect(screen.queryByText(/ער"ן בעמודי האזור למטופלים/)).toBeNull();
+    for (const label of ['למטופלים ולמשפחות', 'שאלון אנונימי', 'איפה מקבלים טיפול']) {
+      await openPage(nav, label);
+      expect(screen.queryByRole('button', { name: /עריכה בעמוד בכל העמודים/ })).toBeNull();
+    }
+    expect(within(nav).queryByRole('button', { name: 'תרגילי הרגעה' })).toBeNull();
+  });
+
+  it('an event with an ISO date edits only that date: no date text, no past flag', async () => {
+    const nav = await openTree();
+    await openPage(nav, 'אירועים ועדכונים');
+    const ev = eventsSeed.rows[0].content;
+    const title = await screen.findByText(ev.title, { selector: 'section p' }, { timeout: 4000 });
+    fireEvent.click(within(title.closest('.relative')).getByTitle('עריכה'));
+    const editor = screen.getByDisplayValue(ev.title).closest('section');
+    expect(within(editor).getByDisplayValue(ev.dateISO)).toHaveAttribute('type', 'date');
+    expect(within(editor).queryByDisplayValue(ev.date)).toBeNull();
+    expect(within(editor).queryByLabelText('אירוע שעבר')).toBeNull();
+  });
+
+  it('the PTSD-IL panels show content only: no step number, no questionnaire name, slug, scores or structure', async () => {
+    const nav = await openTree();
+    await openPage(nav, 'המסע הטיפולי');
+    const step = (await screen.findByText('שלב 1 - זיהוי', {}, { timeout: 4000 })).closest('.group');
+    fireEvent.click(within(step).getByTitle('עריכה'));
+    expect(screen.queryByText('מספר שלב')).toBeNull();
+    expect(screen.getByText('כותרת')).toBeInTheDocument();
+
+    await openPage(nav, 'שאלון אנונימי');
+    const q = await screen.findByText('PCL-5 (תצוגה מקדימה)', {}, { timeout: 4000 });
+    expect(screen.queryByText(/slug:/)).toBeNull();
+    expect(screen.queryByRole('button', { name: /הוספת שאלון חדש/ })).toBeNull();
+    const row = q.closest('.rounded-xl');
+    expect(within(row).queryByTitle('מחיקה')).toBeNull();
+    fireEvent.click(within(row).getByTitle('עריכה'));
+    expect(within(row).getByText('תיאור')).toBeInTheDocument();
+    for (const label of ['slug', 'שם', 'ציון מקסימלי', 'סף קליני', 'סדר תצוגה', 'פעיל']) expect(within(row).queryByText(label), label).toBeNull();
+    fireEvent.click(within(row).getByRole('button', { name: /ביטול/ }));
+    fireEvent.click(within(row).getByRole('button', { name: /שאלות/ }));
+    const question = (await within(row).findByText('זיכרונות חוזרים ומטרידים של האירוע')).closest('.rounded-lg');
+    expect(within(question).getByText('כלל לא · מעט · במידה בינונית · הרבה')).toBeInTheDocument();
+    expect(within(row).queryByRole('button', { name: /הוספת שאלה/ })).toBeNull();
+    fireEvent.click(within(question).getByTitle('עריכה'));
+    expect(within(row).getByLabelText('תשובה 1')).toHaveValue('כלל לא');
+    expect(within(row).queryByTitle('score')).toBeNull();
+    expect(within(row).queryByTitle('order')).toBeNull();
+    expect(within(row).queryByRole('button', { name: /הוספת תשובה/ })).toBeNull();
   });
 
   it('opens מסע שחרור from either area as one page with both pages\' texts', async () => {

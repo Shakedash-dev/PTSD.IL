@@ -10,43 +10,6 @@
       "content": {
         "_key": "PATIENT_HUB",
         "_col": "metiv-patient-hub",
-        "hero": {
-          "brand": "Metiv - The Israel Psychotrauma Center",
-          "eyebrow": "Post-traumatic stress",
-          "headline": "You are not alone",
-          "subtitle": "Information, tools and support - all in one place, in clear language.",
-          "ctaLabel": "What brought you here?",
-          "image": "/images/set1/home_hero.webp",
-          "about": "Post-traumatic stress disorder (PTSD) is a psychological response to a traumatic event that the brain and body keep processing long after the danger has passed.",
-          "aboutLinkLabel": "Read more",
-          "aboutRoute": "/patient/ptsd-info"
-        },
-        "paths": [
-          {
-            "key": "firstCircle",
-            "route": "/patient/first-circle",
-            "title": "Living with post-traumatic stress",
-            "subtitle": "Everything you need to understand what's happening, start treatment and know your rights - at your own pace, without losing yourself.",
-            "image": "/images/illustrations/ptsd_sufferer.webp",
-            "ctaLabel": "Continue"
-          },
-          {
-            "key": "secondCircle",
-            "route": "/patient/second-circle",
-            "title": "Close to someone who is struggling",
-            "subtitle": "For a partner, parent or friend of someone who is struggling - how to support, understand, and take care of yourself along the way.",
-            "image": "/images/illustrations/supporter.webp",
-            "ctaLabel": "Continue"
-          },
-          {
-            "key": "questionnaire",
-            "route": "/patient/questionnaire",
-            "title": "I'm not sure",
-            "subtitle": "A short anonymous questionnaire (about 3 minutes) to help you understand whether your symptoms call for further evaluation.",
-            "image": "/images/illustrations/wondering.webp",
-            "ctaLabel": "Continue"
-          }
-        ],
         "quickLinks": [
           {
             "key": "ptsdInfo",
@@ -245,8 +208,7 @@
             "icon": "HandHeart",
             "route": "/patient/where-to-get-help#free-treatments"
           }
-        ],
-        "disclaimer": "This website does not provide medical advice. In an emergency, see a doctor or call ERAN - Emotional First Aid at 1201"
+        ]
       }
     }
   ]

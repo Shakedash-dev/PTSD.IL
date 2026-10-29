@@ -9,7 +9,17 @@ import { cn } from '@/lib/utils';
 import PageHeaderV3 from '../components/PageHeaderV3';
 import { Band, ChipQuestion, ExternalLink, FOCUS, FWD, JourneySteps, LinkCard, NUDGE, PILL_OUTLINE, PILL_SOLID, SectionHeading, StatusPill, TEXT_LINK } from '../components/kit';
 import { courseStatus } from '../lib';
-import { fmt, useCopy, useMetiv } from '../content/MetivContent';
+import { fmt, isExternalLink, useCopy, useMetiv } from '../content/MetivContent';
+
+/**
+ * Day and month for the date badge: from the ISO date, else from a "d.m.yyyy" text.
+ * @param {{ startDateISO?: string, startDate?: string }} course
+ */
+function shortDate(course) {
+  const iso = /^(\d{4})-(\d{2})-(\d{2})$/.exec(course.startDateISO || '');
+  if (iso) return `${Number(iso[3])}.${Number(iso[2])}`;
+  return (course.startDate || '').split('.').slice(0, 2).join('.');
+}
 
 /**
  * The goal chips and the route each one suggests.
@@ -21,16 +31,16 @@ function buildNeeds(data, c) {
   const section = Object.fromEntries(data.THERAPIST_HUB.sections.map((/** @type {any} */ s) => [s.key, s]));
   /** @param {string} key */
   const sectionStep = (key) => ({ title: section[key].title, text: section[key].description, to: section[key].route, cta: c.toPage });
-  /** @param {string} slug */
-  const courseStep = (slug) => {
-    const course = data.getCourse(slug);
-    return { title: course?.title || slug, text: course?.summary, to: `${ROUTES.courses}/${slug}`, cta: c.toCourse };
-  };
+  // Courses recommended for a goal: those listing it in `therapistNeeds`, in course order.
+  /** @param {string} need */
+  const courseSteps = (need) => data.COURSES
+    .filter((/** @type {any} */ course) => (course.therapistNeeds || []).includes(need))
+    .map((/** @type {any} */ course) => ({ title: course.title, text: course.summary, to: `${ROUTES.courses}/${course.slug}`, cta: c.toCourse }));
   return [
     { key: 'learn', label: c.needLearn, steps: [sectionStep('courses'), sectionStep('events'), sectionStep('articles')] },
-    { key: 'supervision', label: c.needSupervision, steps: [sectionStep('supervision'), courseStep('roadmap')] },
-    { key: 'team', label: c.needTeam, steps: [sectionStep('organizations'), courseStep('org-therapist-training'), courseStep('trauma-informed-org-day')] },
-    { key: 'kids', label: c.needKids, steps: [sectionStep('childrenFamily'), courseStep('kids-trauma-basics')] },
+    { key: 'supervision', label: c.needSupervision, steps: [sectionStep('supervision'), ...courseSteps('supervision')] },
+    { key: 'team', label: c.needTeam, steps: [sectionStep('organizations'), ...courseSteps('team')] },
+    { key: 'kids', label: c.needKids, steps: [sectionStep('childrenFamily'), ...courseSteps('kids')] },
     { key: 'research', label: c.needResearch, steps: [sectionStep('research'), sectionStep('publications'), sectionStep('articles')] },
     {
       key: 'refer',
@@ -105,7 +115,7 @@ export default function TherapistHub() {
                       <DemoLink to={`${ROUTES.courses}/${x.slug}`} className={cn('group flex items-start gap-4 rounded-super-sm bg-background border border-border p-4 hover:border-primary/60 transition-natural', FOCUS)}>
                         <span className="w-14 flex-shrink-0 rounded-2xl bg-primary/10 text-accent text-center py-2 font-heading font-semibold leading-tight">
                           <CalendarDays className="w-5 h-5 mx-auto mb-0.5" aria-hidden="true" />
-                          <span className="text-xs" dir="ltr">{(x.startDate || '').split('.').slice(0, 2).join('.')}</span>
+                          <span className="text-xs" dir="ltr">{shortDate(x)}</span>
                         </span>
                         <span className="flex-1 min-w-0">
                           <span className="flex flex-wrap items-center gap-2">
@@ -145,7 +155,7 @@ export default function TherapistHub() {
                 <p className="text-sm font-semibold text-accent flex items-center gap-2"><CalendarDays className="w-4 h-4" aria-hidden="true" /> {e.date} · {e.type}</p>
                 <p className="mt-2 font-heading font-semibold text-xl text-foreground">{e.title}</p>
                 <p className="mt-1 text-muted-foreground leading-relaxed">{e.summary}</p>
-                {e.link && !e.external && (
+                {e.link && !isExternalLink(e.link) && (
                   <DemoLink to={e.link} className={cn('mt-3 inline-flex items-center gap-1', TEXT_LINK)}>{c.details} <ArrowLeft className={cn('w-4 h-4', FWD)} aria-hidden="true" /></DemoLink>
                 )}
               </li>

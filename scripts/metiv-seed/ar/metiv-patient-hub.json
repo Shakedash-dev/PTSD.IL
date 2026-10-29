@@ -10,43 +10,6 @@
       "content": {
         "_key": "PATIENT_HUB",
         "_col": "metiv-patient-hub",
-        "hero": {
-          "brand": "ميتيف - المركز الإسرائيلي للصدمات النفسية",
-          "eyebrow": "اضطراب ما بعد الصدمة",
-          "headline": "لست وحدك",
-          "subtitle": "معلومات وأدوات ودعم - كل شيء في مكان واحد، بلغة واضحة.",
-          "ctaLabel": "ما الذي أتى بك إلى هنا؟",
-          "image": "/images/set1/home_hero.webp",
-          "about": "اضطراب ما بعد الصدمة (PTSD) هو استجابة نفسية لحدث صادم يواصل الدماغ والجسد معالجته وقتًا طويلًا بعد زوال الخطر.",
-          "aboutLinkLabel": "اقرأ المزيد",
-          "aboutRoute": "/patient/ptsd-info"
-        },
-        "paths": [
-          {
-            "key": "firstCircle",
-            "route": "/patient/first-circle",
-            "title": "أعاني من اضطراب ما بعد الصدمة",
-            "subtitle": "كل ما تحتاجه لفهم حالتك، والبدء بالعلاج، ومعرفة حقوقك - بالإيقاع الذي يناسبك، دون أن تفقد نفسك.",
-            "image": "/images/illustrations/ptsd_sufferer.webp",
-            "ctaLabel": "متابعة"
-          },
-          {
-            "key": "secondCircle",
-            "route": "/patient/second-circle",
-            "title": "مقرّب من شخص يعاني",
-            "subtitle": "لشريك الحياة أو الوالد أو الصديق لمن يعاني - كيف تدعم وتفهم، وتحافظ على نفسك أيضًا على طول الطريق.",
-            "image": "/images/illustrations/supporter.webp",
-            "ctaLabel": "متابعة"
-          },
-          {
-            "key": "questionnaire",
-            "route": "/patient/questionnaire",
-            "title": "لست متأكدًا",
-            "subtitle": "استبيان قصير مجهول الهوية (نحو 3 دقائق) يساعدك على فهم ما إذا كانت أعراضك تستدعي فحصًا إضافيًا.",
-            "image": "/images/illustrations/wondering.webp",
-            "ctaLabel": "متابعة"
-          }
-        ],
         "quickLinks": [
           {
             "key": "ptsdInfo",
@@ -245,8 +208,7 @@
             "icon": "HandHeart",
             "route": "/patient/where-to-get-help#free-treatments"
           }
-        ],
-        "disclaimer": "لا يقدّم الموقع استشارة طبية. في حالة الطوارئ توجّه إلى الطبيب أو اتصل بعيران: 1201"
+        ]
       }
     }
   ]

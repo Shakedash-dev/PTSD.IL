@@ -5,15 +5,6 @@ import PageHeaderV3 from '../components/PageHeaderV3';
 import { Band, ChipQuestion, ContactChips, EmptyState, ExternalLink, FactGrid, PILL_SOLID, SectionHeading, StatusPill, TEXT_LINK } from '../components/kit';
 import { fmt, useCopy, useMetiv } from '../content/MetivContent';
 
-// Group the five options for the "which kind?" question.
-const KIND = {
-  individual: ['individual'],
-  organizations: ['team'],
-  'supervision-group': ['group'],
-  'after-roadmap': ['group'],
-  'kids-clinic': ['individual', 'kids'],
-};
-
 export default function Supervision() {
   const { SUPERVISION } = useMetiv();
   const c = useCopy('supervision');
@@ -25,7 +16,8 @@ export default function Supervision() {
     { key: 'kids', label: c.kindKids },
   ];
   const [kind, setKind] = useState('all');
-  const options = SUPERVISION.options.filter((/** @type {any} */ o) => kind === 'all' || (KIND[/** @type {keyof typeof KIND} */ (o.key)] || []).includes(kind));
+  // Each option lists its kinds (`kinds`), for the "which kind?" question.
+  const options = SUPERVISION.options.filter((/** @type {any} */ o) => kind === 'all' || (o.kinds || []).includes(kind));
 
   return (
     <div className="bg-background">

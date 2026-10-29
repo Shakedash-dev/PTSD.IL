@@ -61,9 +61,10 @@ function parse(row) {
  * Exported for tests and for the admin preview.
  * @param {ApiRow[]} heRows
  * @param {ApiRow[]} [langRows]
+ * @param {string} [lang] the page language (visible dates are written in it)
  * @returns {MetivData}
  */
-export function buildMetivData(heRows, langRows = []) {
+export function buildMetivData(heRows, langRows = [], lang = langRows[0]?.langId ?? 'he') {
   /** @type {Map<string, ApiRow>} */
   const localByGroup = new Map();
   for (const r of langRows) if (r.groupId) localByGroup.set(r.groupId, r);
@@ -113,7 +114,7 @@ export function buildMetivData(heRows, langRows = []) {
 
   resolveRefs(data);
   resolveRefs(heData);
-  const out = withDerived(stripPrivate(data), stripPrivate(heData));
+  const out = withDerived(withIsoDates(stripPrivate(data), lang), stripPrivate(heData));
   out.copy = copy;
   return out;
 }
@@ -176,22 +177,83 @@ function stripPrivate(v) {
   return v;
 }
 
+const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
+
+/** Today as YYYY-MM-DD in local time. */
+function isoToday() {
+  const now = new Date();
+  return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+}
+
 /**
- * The derived values the static modules exported. Selections that test Hebrew
- * text (team group, role) run on the Hebrew data and map back by `_key`, so they
- * keep working in every language.
+ * Items with an ISO date get their visible date and past/upcoming state from
+ * it: `date`/`startDate` become the ISO date written in the page language (a
+ * range when the item has a later `endDateISO`), and `isPast` is "ended before
+ * today" (the end date when there is one). A non-empty `dateText` (dates that
+ * are not one day or one range, e.g. "6.2 and 13.2.2025") is shown as is.
+ * Items without an ISO date keep their free text and flag.
+ * @param {MetivData} d @param {string} lang
+ * @returns {MetivData}
+ */
+export function withIsoDates(d, lang) {
+  const today = isoToday();
+  const options = /** @type {const} */ ({ day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
+  /** @type {Intl.DateTimeFormat} */
+  let format;
+  try {
+    format = new Intl.DateTimeFormat(`${lang}-u-nu-latn`, options);
+  } catch {
+    format = new Intl.DateTimeFormat('he', options);
+  }
+  /** @param {string} iso */
+  const day = (iso) => new Date(`${iso}T00:00:00Z`);
+  /** @param {string} from @param {string} [to] */
+  const show = (from, to) => {
+    if (!to) return format.format(day(from));
+    const text = typeof format.formatRange === 'function'
+      ? format.formatRange(day(from), day(to))
+      : `${format.format(day(from))} - ${format.format(day(to))}`;
+    // Ranges come with an en dash; the site writes a plain hyphen.
+    return text.replace(/\s*[\u2013\u2014]\s*/g, (m) => (m.trim() === m ? '-' : ' - '));
+  };
+  /** @param {any} item @param {string} isoKey @param {string} textKey @param {boolean} past */
+  const dated = (item, isoKey, textKey, past) => {
+    const iso = item?.[isoKey];
+    if (typeof iso !== 'string' || !ISO_DATE.test(iso)) return item;
+    const end = typeof item.endDateISO === 'string' && ISO_DATE.test(item.endDateISO) && item.endDateISO > iso ? item.endDateISO : undefined;
+    const custom = typeof item.dateText === 'string' && item.dateText.trim() ? item.dateText.trim() : '';
+    const out = { ...item, [textKey]: custom || show(iso, end) };
+    if (past) out.isPast = (end || iso) < today;
+    return out;
+  };
+  return {
+    ...d,
+    EVENTS: (d.EVENTS ?? []).map((/** @type {any} */ e) => dated(e, 'dateISO', 'date', true)),
+    ARTICLES: (d.ARTICLES ?? []).map((/** @type {any} */ a) => dated(a, 'dateISO', 'date', false)),
+    COURSES: (d.COURSES ?? []).map((/** @type {any} */ course) => {
+      const c = dated(course, 'startDateISO', 'startDate', true);
+      return {
+        ...c,
+        ...(Array.isArray(c.formats) ? { formats: c.formats.map((/** @type {any} */ f) => dated(f, 'startDateISO', 'startDate', true)) } : {}),
+        ...(Array.isArray(c.units) ? { units: c.units.map((/** @type {any} */ u) => dated(u, 'dateISO', 'date', false)) } : {}),
+      };
+    }),
+  };
+}
+
+/** A link that leaves the site (absolute http/https). @param {string} [link] */
+export function isExternalLink(link) {
+  return typeof link === 'string' && /^https?:\/\//i.test(link);
+}
+
+/**
+ * The derived values the static modules exported. Selections read flags on the
+ * items (`releaseJourney`, `releaseJourneyTeam`, ...), which are the same in
+ * every language.
  * @param {MetivData} d @param {MetivData} he
  * @returns {MetivData}
  */
 function withDerived(d, he) {
-  /** @param {string} key @param {(item: any) => boolean} pick */
-  const selectByHebrew = (key, pick) => {
-    const keys = new Set((he[key] ?? []).filter(pick).map((/** @type {any} */ x) => x._key));
-    return (d[key] ?? []).filter((/** @type {any} */ x) => keys.has(x._key));
-  };
-  const RJ = 'מסע שחרור';
-  const RELEASE_JOURNEY_TEAM = selectByHebrew('TEAM', (t) => t.group === RJ);
-  const RELEASE_JOURNEY_RESEARCHERS = selectByHebrew('TEAM', (t) => t.group !== RJ && new RegExp(RJ).test(`${t.role} ${t.bio || ''}`));
   const COURSES = d.COURSES ?? [];
   const ARTICLES = d.ARTICLES ?? [];
   const EVENTS = d.EVENTS ?? [];
@@ -205,10 +267,10 @@ function withDerived(d, he) {
     getArticle: (/** @type {string} */ slug) => ARTICLES.find((/** @type {any} */ a) => a.slug === slug) || null,
     UPCOMING_EVENTS: EVENTS.filter((/** @type {any} */ e) => !e.isPast),
     PAST_EVENTS: EVENTS.filter((/** @type {any} */ e) => e.isPast),
-    RELEASE_JOURNEY_TEAM,
-    RELEASE_JOURNEY_RESEARCHERS,
-    RELEASE_JOURNEY_STUDY: (d.ACTIVE_STUDIES ?? []).find((/** @type {any} */ s) => s.slug === 'release-journey-study'),
-    RELEASE_JOURNEY_PAPERS: (d.PAPERS ?? []).filter((/** @type {any} */ p) => /peace of mind|battlefield to home/i.test(p.title)),
+    RELEASE_JOURNEY_TEAM: (d.TEAM ?? []).filter((/** @type {any} */ t) => t.releaseJourneyTeam === true),
+    RELEASE_JOURNEY_RESEARCHERS: (d.TEAM ?? []).filter((/** @type {any} */ t) => t.releaseJourneyResearcher === true),
+    RELEASE_JOURNEY_STUDY: (d.ACTIVE_STUDIES ?? []).find((/** @type {any} */ s) => s.releaseJourney === true),
+    RELEASE_JOURNEY_PAPERS: (d.PAPERS ?? []).filter((/** @type {any} */ p) => p.releaseJourney === true),
     // The landing page's service cards (the old shared/therapist METIV_SERVICES shape).
     METIV_SERVICE_CARDS: services.map((/** @type {any} */ s) => ({
       slug: s.id,
@@ -247,7 +309,7 @@ export function metivQueryOptions(lang) {
     queryKey: ['metiv-content', lang],
     queryFn: async () => {
       const [heRows, langRows] = await Promise.all([fetchRows('he'), lang === 'he' ? Promise.resolve([]) : fetchRows(lang)]);
-      return buildMetivData(heRows, langRows);
+      return buildMetivData(heRows, langRows, lang);
     },
     staleTime: 5 * 60 * 1000,
   };

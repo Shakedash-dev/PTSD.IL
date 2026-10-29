@@ -13,7 +13,9 @@
         "name": "د. داني بروم",
         "role": "مؤسّس ميتيف ومديره العام",
         "group": "الإدارة",
-        "bio": "د. داني بروم خبير في مجال الصدمة والمناعة النفسية. بصفته مؤسّس ميتيف، نقل خبرته في الصدمة إلى مجالات التربية والصحة والصحة النفسية والمجتمع. درّس في مدرسة العمل الاجتماعي في الجامعة العبرية، وأسّس الائتلاف الإسرائيلي للصدمات النفسية وترأّسه، وشغل منصب مدير الأبحاث في AMCHA التي تقدّم دعمًا نفسيًا اجتماعيًا للجيل الأول والثاني من الناجين من المحرقة. وعلى الصعيد الدولي يقدّم الإشراف المهني والاستشارة في الصدمة والمناعة النفسية للمهنيين ومقدّمي الخدمات في أعقاب العمليات الإرهابية والكوارث، بما في ذلك نيويورك بعد 9/11، وهايتي، وتركيا، ونيو أورلينز، والمكسيك. شارك في 50 مقالًا نُشرت في مجلات مهنية وفي تأليف سبعة كتب في مجال الصدمة."
+        "bio": "د. داني بروم خبير في مجال الصدمة والمناعة النفسية. بصفته مؤسّس ميتيف، نقل خبرته في الصدمة إلى مجالات التربية والصحة والصحة النفسية والمجتمع. درّس في مدرسة العمل الاجتماعي في الجامعة العبرية، وأسّس الائتلاف الإسرائيلي للصدمات النفسية وترأّسه، وشغل منصب مدير الأبحاث في AMCHA التي تقدّم دعمًا نفسيًا اجتماعيًا للجيل الأول والثاني من الناجين من المحرقة. وعلى الصعيد الدولي يقدّم الإشراف المهني والاستشارة في الصدمة والمناعة النفسية للمهنيين ومقدّمي الخدمات في أعقاب العمليات الإرهابية والكوارث، بما في ذلك نيويورك بعد 9/11، وهايتي، وتركيا، ونيو أورلينز، والمكسيك. شارك في 50 مقالًا نُشرت في مجلات مهنية وفي تأليف سبعة كتب في مجال الصدمة.",
+        "releaseJourneyTeam": false,
+        "releaseJourneyResearcher": false
       }
     },
     {
@@ -26,7 +28,9 @@
         "name": "عيديت ديكشتاين",
         "role": "نائبة المدير العام لميتيف ومعالجة في عيادة الأطفال",
         "group": "الإدارة",
-        "bio": "معالجة بالتصوير الفوتوغرافي، خرّيجة برنامج CBT في مركز الصدمات النفسية. حاصلة على بكالوريوس في التصوير وتأهيل في العلاج بالتصوير."
+        "bio": "معالجة بالتصوير الفوتوغرافي، خرّيجة برنامج CBT في مركز الصدمات النفسية. حاصلة على بكالوريوس في التصوير وتأهيل في العلاج بالتصوير.",
+        "releaseJourneyTeam": false,
+        "releaseJourneyResearcher": false
       }
     },
     {
@@ -39,7 +43,9 @@
         "name": "حاييم لانداو",
         "role": "مسؤول التطوير والشراكات",
         "group": "الإدارة",
-        "email": "Chaim@metiv.org"
+        "email": "Chaim@metiv.org",
+        "releaseJourneyTeam": false,
+        "releaseJourneyResearcher": false
       }
     },
     {
@@ -51,7 +57,9 @@
         "_col": "metiv-team",
         "name": "كيرن ألوف",
         "role": "المالية",
-        "group": "الإدارة"
+        "group": "الإدارة",
+        "releaseJourneyTeam": false,
+        "releaseJourneyResearcher": false
       }
     },
     {
@@ -64,7 +72,9 @@
         "name": "يونيت إفراتي",
         "role": "مديرة تعزيز السياسات وتطوير الخدمات المجتمعية",
         "group": "الإدارة",
-        "email": "yonit@metiv.org"
+        "email": "yonit@metiv.org",
+        "releaseJourneyTeam": false,
+        "releaseJourneyResearcher": false
       }
     },
     {
@@ -76,7 +86,9 @@
         "_col": "metiv-team",
         "name": "أرئيل بن أهارون",
         "role": "مدير عيادة البالغين",
-        "group": "العيادات"
+        "group": "العيادات",
+        "releaseJourneyTeam": false,
+        "releaseJourneyResearcher": false
       }
     },
     {
@@ -90,7 +102,9 @@
         "role": "مديرة عيادة الأطفال (ميتيف للأطفال)",
         "group": "العيادات",
         "bio": "أخصائية نفسية تربوية خبيرة. شريكة في تطوير برنامج باندا - هنا نتعلّم طرق التأقلم، وهو برنامج جماعي لتطوير تنظيم المشاعر لدى الأطفال. تعمل في علاج الأطفال والمراهقين والأهل، وتأهيل المعالجين والطواقم التربوية، وتقديم المحاضرات والورشات. يشمل تحصيلها العلمي ماجستير في علم النفس التربوي والسريري للطفل، ودورة لمدة سنتين في العلاج المعرفي السلوكي للصدمة، والعلاج بـSE.",
-        "email": "sarit@metiv.org"
+        "email": "sarit@metiv.org",
+        "releaseJourneyTeam": false,
+        "releaseJourneyResearcher": false
       }
     },
     {
@@ -102,7 +116,9 @@
         "_col": "metiv-team",
         "name": "يوئيل وردي",
         "role": "مشرف مهني كبير",
-        "group": "العيادات"
+        "group": "العيادات",
+        "releaseJourneyTeam": false,
+        "releaseJourneyResearcher": false
       }
     },
     {
@@ -114,7 +130,9 @@
         "_col": "metiv-team",
         "name": "شلوميت حافا",
         "role": "معالجة في عيادة البالغين",
-        "group": "العيادات"
+        "group": "العيادات",
+        "releaseJourneyTeam": false,
+        "releaseJourneyResearcher": false
       }
     },
     {
@@ -128,7 +146,9 @@
         "role": "منسّقة برامج الطفولة المبكرة، ميتيف للأطفال",
         "group": "العيادات",
         "bio": "أخصائية نفسية تأهيلية في مرحلة التخصّص. شريكة في مراحل تطوير وتنفيذ مجموعة متنوعة من المشاريع في عيادة الأطفال.",
-        "email": "eliya@metiv.org"
+        "email": "eliya@metiv.org",
+        "releaseJourneyTeam": false,
+        "releaseJourneyResearcher": false
       }
     },
     {
@@ -142,7 +162,9 @@
         "role": "منسّق برامج المرحلة الابتدائية والعائلات، معالج في عيادة الأطفال",
         "group": "العيادات",
         "bio": "في مرحلة التخصّص في علم النفس التربوي. ينسّق برنامج باندا ويعمل في علاج الأطفال والمراهقين والأهل، وفي المحاضرات والورشات.",
-        "email": "yaakov@metiv.org"
+        "email": "yaakov@metiv.org",
+        "releaseJourneyTeam": false,
+        "releaseJourneyResearcher": false
       }
     },
     {
@@ -155,7 +177,9 @@
         "name": "إفرات هرتسوغ",
         "role": "منسّقة برنامج نامال في ميتيف للأطفال",
         "group": "العيادات",
-        "email": "efrath@metiv.org"
+        "email": "efrath@metiv.org",
+        "releaseJourneyTeam": false,
+        "releaseJourneyResearcher": false
       }
     },
     {
@@ -168,7 +192,9 @@
         "name": "د. آنا هارفود غروس",
         "role": "مديرة مجال الأبحاث (في الصفحة الرئيسية: باحثة كبيرة)",
         "group": "البحث",
-        "email": "anna@metiv.org"
+        "email": "anna@metiv.org",
+        "releaseJourneyTeam": false,
+        "releaseJourneyResearcher": false
       }
     },
     {
@@ -181,7 +207,9 @@
         "name": "شير إلياس",
         "role": "مديرة قسم الأبحاث",
         "group": "البحث",
-        "email": "shir@metiv.org"
+        "email": "shir@metiv.org",
+        "releaseJourneyTeam": false,
+        "releaseJourneyResearcher": false
       }
     },
     {
@@ -193,7 +221,9 @@
         "_col": "metiv-team",
         "name": "د. آنا بورتوغلوف",
         "role": "مسؤولة بحث العيادات",
-        "group": "البحث"
+        "group": "البحث",
+        "releaseJourneyTeam": false,
+        "releaseJourneyResearcher": false
       }
     },
     {
@@ -206,7 +236,9 @@
         "name": "داليا عميت زيفان",
         "role": "مديرة سريرية لبحث MDMA/SEA-IT ومعالجة في عيادة البالغين",
         "group": "البحث",
-        "bio": "عاملة اجتماعية سريرية حاصلة على ماجستير مع تخصّص في علاج الصدمة، وخبيرة معتمدة من إيتا كمعالجة ومشرفة مهنية مؤهّلة في CBT. تعالج بأساليب الموجة الثالثة، ومنها ACT وDBT، وتأهّلت في EMDR وSE. تعمل في ميتيف منذ 2017 في العلاج الفردي في عيادة البالغين، ومنذ 2023 تُيسّر مجموعات لمعالجة تجارب القتال في برنامج \"Peace of Mind (راحة البال)\"."
+        "bio": "عاملة اجتماعية سريرية حاصلة على ماجستير مع تخصّص في علاج الصدمة، وخبيرة معتمدة من إيتا كمعالجة ومشرفة مهنية مؤهّلة في CBT. تعالج بأساليب الموجة الثالثة، ومنها ACT وDBT، وتأهّلت في EMDR وSE. تعمل في ميتيف منذ 2017 في العلاج الفردي في عيادة البالغين، ومنذ 2023 تُيسّر مجموعات لمعالجة تجارب القتال في برنامج \"Peace of Mind (راحة البال)\".",
+        "releaseJourneyTeam": false,
+        "releaseJourneyResearcher": true
       }
     },
     {
@@ -219,7 +251,9 @@
         "name": "ناداف شتيرن",
         "role": "باحث في برنامج \"Peace of Mind (راحة البال)\"",
         "group": "البحث",
-        "bio": "أخصائي نفسي في مرحلة التخصّص السريري. يعالج في عيادة الصحة النفسية \"برازيل\" التابعة لخدمات كلاليت الصحية وفي عيادة خاصة. في ميتيف يبحث في برنامج \"Peace of Mind (راحة البال)\" ويشارك في أبحاث أخرى في مجال الجنود."
+        "bio": "أخصائي نفسي في مرحلة التخصّص السريري. يعالج في عيادة الصحة النفسية \"برازيل\" التابعة لخدمات كلاليت الصحية وفي عيادة خاصة. في ميتيف يبحث في برنامج \"Peace of Mind (راحة البال)\" ويشارك في أبحاث أخرى في مجال الجنود.",
+        "releaseJourneyTeam": false,
+        "releaseJourneyResearcher": true
       }
     },
     {
@@ -232,7 +266,9 @@
         "name": "ميخال زمورا",
         "role": "مديرة مجال التأهيلات",
         "group": "التأهيلات",
-        "email": "michal@metiv.org"
+        "email": "michal@metiv.org",
+        "releaseJourneyTeam": false,
+        "releaseJourneyResearcher": false
       }
     },
     {
@@ -245,7 +281,9 @@
         "name": "غفنيت أغاسي",
         "role": "مديرة وحدة التأهيلات",
         "group": "التأهيلات",
-        "email": "gafnit@metiv.org"
+        "email": "gafnit@metiv.org",
+        "releaseJourneyTeam": false,
+        "releaseJourneyResearcher": false
       }
     },
     {
@@ -258,7 +296,9 @@
         "name": "غيل شيمش",
         "role": "أخصائي نفسي ومحاضر كبير في وحدة الدورات والتأهيلات",
         "group": "التأهيلات",
-        "email": "gil@metiv.org"
+        "email": "gil@metiv.org",
+        "releaseJourneyTeam": false,
+        "releaseJourneyResearcher": false
       }
     },
     {
@@ -270,7 +310,9 @@
         "_col": "metiv-team",
         "name": "راحيلي بروكس",
         "role": "مديرة Peace of Mind (راحة البال)",
-        "group": "Peace of Mind (راحة البال)"
+        "group": "Peace of Mind (راحة البال)",
+        "releaseJourneyTeam": true,
+        "releaseJourneyResearcher": false
       }
     },
     {
@@ -282,7 +324,9 @@
         "_col": "metiv-team",
         "name": "آيا روت",
         "role": "معالجة، مديرة سريرية لعلاجات Peace of Mind (راحة البال)",
-        "group": "Peace of Mind (راحة البال)"
+        "group": "Peace of Mind (راحة البال)",
+        "releaseJourneyTeam": true,
+        "releaseJourneyResearcher": false
       }
     },
     {
@@ -294,7 +338,9 @@
         "_col": "metiv-team",
         "name": "روت حبشوش",
         "role": "مديرة العمليات",
-        "group": "Peace of Mind (راحة البال)"
+        "group": "Peace of Mind (راحة البال)",
+        "releaseJourneyTeam": true,
+        "releaseJourneyResearcher": false
       }
     },
     {
@@ -306,7 +352,9 @@
         "_col": "metiv-team",
         "name": "يهودا لابيان",
         "role": "مدير العلاقات الخارجية",
-        "group": "Peace of Mind (راحة البال)"
+        "group": "Peace of Mind (راحة البال)",
+        "releaseJourneyTeam": true,
+        "releaseJourneyResearcher": false
       }
     },
     {
@@ -318,7 +366,9 @@
         "_col": "metiv-team",
         "name": "هيليل مايرسون",
         "role": "منسّق خدمات المتابعة",
-        "group": "Peace of Mind (راحة البال)"
+        "group": "Peace of Mind (راحة البال)",
+        "releaseJourneyTeam": true,
+        "releaseJourneyResearcher": false
       }
     },
     {
@@ -330,7 +380,9 @@
         "_col": "metiv-team",
         "name": "ياعيل روزنفيلد كوهين",
         "role": "منسّقة الجاليات في الخارج",
-        "group": "Peace of Mind (راحة البال)"
+        "group": "Peace of Mind (راحة البال)",
+        "releaseJourneyTeam": true,
+        "releaseJourneyResearcher": false
       }
     },
     {
@@ -342,7 +394,9 @@
         "_col": "metiv-team",
         "name": "يائير برين",
         "role": "منسّق التوجّهات والتشغيل السريري",
-        "group": "Peace of Mind (راحة البال)"
+        "group": "Peace of Mind (راحة البال)",
+        "releaseJourneyTeam": true,
+        "releaseJourneyResearcher": false
       }
     },
     {
@@ -354,7 +408,9 @@
         "_col": "metiv-team",
         "name": "شيلي إرليخ",
         "role": "منسّقة المجموعات",
-        "group": "Peace of Mind (راحة البال)"
+        "group": "Peace of Mind (راحة البال)",
+        "releaseJourneyTeam": true,
+        "releaseJourneyResearcher": false
       }
     },
     {
@@ -366,7 +422,9 @@
         "_col": "metiv-team",
         "name": "سمحا إدري",
         "role": "منسّقة المجموعات",
-        "group": "Peace of Mind (راحة البال)"
+        "group": "Peace of Mind (راحة البال)",
+        "releaseJourneyTeam": true,
+        "releaseJourneyResearcher": false
       }
     }
   ]

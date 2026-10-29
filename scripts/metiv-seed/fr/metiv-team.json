@@ -13,7 +13,9 @@
         "name": "Dr Danny Brom",
         "role": "Fondateur et directeur général de Metiv",
         "group": "Direction",
-        "bio": "Le Dr Danny Brom est un expert du traumatisme et de la résilience. En tant que fondateur de Metiv, il a apporté son expertise du traumatisme aux domaines de l'éducation, de la santé, de la santé mentale et de la communauté. Il a enseigné à l'École de travail social de l'Université hébraïque, a fondé la Coalition israélienne pour le traumatisme et l'a présidée, et a été directeur de la recherche d'AMCHA, qui apporte un soutien psychosocial aux survivants de la Shoah et à la deuxième génération. À l'international, il assure des formations et des consultations sur le traumatisme et la résilience pour des professionnels et des prestataires de services à la suite d'attentats et de catastrophes, notamment à New York après le 11 septembre, en Haïti, en Turquie, à La Nouvelle-Orléans et au Mexique. Il a cosigné 50 articles publiés dans des revues professionnelles et participé à la rédaction de sept livres sur le traumatisme."
+        "bio": "Le Dr Danny Brom est un expert du traumatisme et de la résilience. En tant que fondateur de Metiv, il a apporté son expertise du traumatisme aux domaines de l'éducation, de la santé, de la santé mentale et de la communauté. Il a enseigné à l'École de travail social de l'Université hébraïque, a fondé la Coalition israélienne pour le traumatisme et l'a présidée, et a été directeur de la recherche d'AMCHA, qui apporte un soutien psychosocial aux survivants de la Shoah et à la deuxième génération. À l'international, il assure des formations et des consultations sur le traumatisme et la résilience pour des professionnels et des prestataires de services à la suite d'attentats et de catastrophes, notamment à New York après le 11 septembre, en Haïti, en Turquie, à La Nouvelle-Orléans et au Mexique. Il a cosigné 50 articles publiés dans des revues professionnelles et participé à la rédaction de sept livres sur le traumatisme.",
+        "releaseJourneyTeam": false,
+        "releaseJourneyResearcher": false
       }
     },
     {
@@ -26,7 +28,9 @@
         "name": "Idit Dickstein",
         "role": "Directrice générale adjointe de Metiv et thérapeute à la clinique pour enfants",
         "group": "Direction",
-        "bio": "Photothérapeute, diplômée du programme de TCC du Centre de psychotraumatologie. Titulaire d'une licence en photographie et formée à la photothérapie."
+        "bio": "Photothérapeute, diplômée du programme de TCC du Centre de psychotraumatologie. Titulaire d'une licence en photographie et formée à la photothérapie.",
+        "releaseJourneyTeam": false,
+        "releaseJourneyResearcher": false
       }
     },
     {
@@ -39,7 +43,9 @@
         "name": "Haim Landau",
         "role": "Responsable du développement et des partenariats",
         "group": "Direction",
-        "email": "Chaim@metiv.org"
+        "email": "Chaim@metiv.org",
+        "releaseJourneyTeam": false,
+        "releaseJourneyResearcher": false
       }
     },
     {
@@ -51,7 +57,9 @@
         "_col": "metiv-team",
         "name": "Keren Alaluf",
         "role": "Finances",
-        "group": "Direction"
+        "group": "Direction",
+        "releaseJourneyTeam": false,
+        "releaseJourneyResearcher": false
       }
     },
     {
@@ -64,7 +72,9 @@
         "name": "Yonit Efrati",
         "role": "Directrice de la promotion des politiques et du développement des services communautaires",
         "group": "Direction",
-        "email": "yonit@metiv.org"
+        "email": "yonit@metiv.org",
+        "releaseJourneyTeam": false,
+        "releaseJourneyResearcher": false
       }
     },
     {
@@ -76,7 +86,9 @@
         "_col": "metiv-team",
         "name": "Ariel Ben Aharon",
         "role": "Directeur de la clinique pour adultes",
-        "group": "Cliniques"
+        "group": "Cliniques",
+        "releaseJourneyTeam": false,
+        "releaseJourneyResearcher": false
       }
     },
     {
@@ -90,7 +102,9 @@
         "role": "Directrice de la clinique pour enfants (Metiv Enfants)",
         "group": "Cliniques",
         "bio": "Psychologue scolaire spécialisée. Elle a co-développé le programme PANDA (« Ici, nous apprenons des façons de faire face »), un programme de groupe de développement de la régulation émotionnelle chez l'enfant. Elle traite des enfants, des adolescents et des parents, forme des thérapeutes et des équipes éducatives, et donne des conférences et des ateliers. Elle est titulaire d'un master en psychologie scolaire et en psychologie clinique de l'enfant, et a suivi le cursus de deux ans en thérapie cognitivo-comportementale du traumatisme ainsi qu'une formation au SE.",
-        "email": "sarit@metiv.org"
+        "email": "sarit@metiv.org",
+        "releaseJourneyTeam": false,
+        "releaseJourneyResearcher": false
       }
     },
     {
@@ -102,7 +116,9 @@
         "_col": "metiv-team",
         "name": "Yoel Vardi",
         "role": "Superviseur principal",
-        "group": "Cliniques"
+        "group": "Cliniques",
+        "releaseJourneyTeam": false,
+        "releaseJourneyResearcher": false
       }
     },
     {
@@ -114,7 +130,9 @@
         "_col": "metiv-team",
         "name": "Shlomit Hava",
         "role": "Thérapeute à la clinique pour adultes",
-        "group": "Cliniques"
+        "group": "Cliniques",
+        "releaseJourneyTeam": false,
+        "releaseJourneyResearcher": false
       }
     },
     {
@@ -128,7 +146,9 @@
         "role": "Coordinatrice des programmes petite enfance, Metiv Enfants",
         "group": "Cliniques",
         "bio": "Psychologue de réadaptation en cours de spécialisation. Elle participe aux phases de développement et de mise en œuvre de divers projets de la clinique pour enfants.",
-        "email": "eliya@metiv.org"
+        "email": "eliya@metiv.org",
+        "releaseJourneyTeam": false,
+        "releaseJourneyResearcher": false
       }
     },
     {
@@ -142,7 +162,9 @@
         "role": "Coordinateur des programmes pour l'âge primaire et les familles, thérapeute à la clinique pour enfants",
         "group": "Cliniques",
         "bio": "Psychologue scolaire en cours de spécialisation. Il coordonne le programme PANDA et traite des enfants, des adolescents et des parents ; il donne aussi des conférences et des ateliers.",
-        "email": "yaakov@metiv.org"
+        "email": "yaakov@metiv.org",
+        "releaseJourneyTeam": false,
+        "releaseJourneyResearcher": false
       }
     },
     {
@@ -155,7 +177,9 @@
         "name": "Efrat Herzog",
         "role": "Coordinatrice du programme NAMAL chez Metiv Enfants",
         "group": "Cliniques",
-        "email": "efrath@metiv.org"
+        "email": "efrath@metiv.org",
+        "releaseJourneyTeam": false,
+        "releaseJourneyResearcher": false
       }
     },
     {
@@ -168,7 +192,9 @@
         "name": "Dr Anna Harwood-Gross",
         "role": "Directrice de la recherche (sur la page d'accueil : chercheuse principale)",
         "group": "Recherche",
-        "email": "anna@metiv.org"
+        "email": "anna@metiv.org",
+        "releaseJourneyTeam": false,
+        "releaseJourneyResearcher": false
       }
     },
     {
@@ -181,7 +207,9 @@
         "name": "Shir Elias",
         "role": "Directrice du département de recherche",
         "group": "Recherche",
-        "email": "shir@metiv.org"
+        "email": "shir@metiv.org",
+        "releaseJourneyTeam": false,
+        "releaseJourneyResearcher": false
       }
     },
     {
@@ -193,7 +221,9 @@
         "_col": "metiv-team",
         "name": "Dr Anna Portugalov",
         "role": "Responsable de l'étude des cliniques",
-        "group": "Recherche"
+        "group": "Recherche",
+        "releaseJourneyTeam": false,
+        "releaseJourneyResearcher": false
       }
     },
     {
@@ -206,7 +236,9 @@
         "name": "Dalia Amit Zivan",
         "role": "Directrice clinique de l'étude MDMA/SEA-IT et thérapeute à la clinique pour adultes",
         "group": "Recherche",
-        "bio": "Travailleuse sociale clinicienne titulaire d'un master avec une spécialisation en traitement du traumatisme, experte reconnue par l'ITA comme thérapeute et superviseuse certifiée en TCC. Elle pratique les thérapies de la troisième vague, dont l'ACT et la DBT, et est formée à l'EMDR et au SE. Elle travaille chez Metiv depuis 2017 en thérapie individuelle à la clinique pour adultes, et depuis 2023 anime des groupes d'élaboration des expériences de combat dans le programme « Peace of Mind »."
+        "bio": "Travailleuse sociale clinicienne titulaire d'un master avec une spécialisation en traitement du traumatisme, experte reconnue par l'ITA comme thérapeute et superviseuse certifiée en TCC. Elle pratique les thérapies de la troisième vague, dont l'ACT et la DBT, et est formée à l'EMDR et au SE. Elle travaille chez Metiv depuis 2017 en thérapie individuelle à la clinique pour adultes, et depuis 2023 anime des groupes d'élaboration des expériences de combat dans le programme « Peace of Mind ».",
+        "releaseJourneyTeam": false,
+        "releaseJourneyResearcher": true
       }
     },
     {
@@ -219,7 +251,9 @@
         "name": "Nadav Stern",
         "role": "Chercheur du programme « Peace of Mind »",
         "group": "Recherche",
-        "bio": "Psychologue en cours de spécialisation clinique. Il exerce au centre de santé mentale « Brazil » des services de santé Clalit et en cabinet privé. Chez Metiv, il mène les recherches sur le programme « Peace of Mind » et participe à d'autres études auprès des soldats."
+        "bio": "Psychologue en cours de spécialisation clinique. Il exerce au centre de santé mentale « Brazil » des services de santé Clalit et en cabinet privé. Chez Metiv, il mène les recherches sur le programme « Peace of Mind » et participe à d'autres études auprès des soldats.",
+        "releaseJourneyTeam": false,
+        "releaseJourneyResearcher": true
       }
     },
     {
@@ -232,7 +266,9 @@
         "name": "Michal Zmora",
         "role": "Responsable des formations",
         "group": "Formations",
-        "email": "michal@metiv.org"
+        "email": "michal@metiv.org",
+        "releaseJourneyTeam": false,
+        "releaseJourneyResearcher": false
       }
     },
     {
@@ -245,7 +281,9 @@
         "name": "Gafnit Agasi",
         "role": "Directrice de l'unité des formations",
         "group": "Formations",
-        "email": "gafnit@metiv.org"
+        "email": "gafnit@metiv.org",
+        "releaseJourneyTeam": false,
+        "releaseJourneyResearcher": false
       }
     },
     {
@@ -258,7 +296,9 @@
         "name": "Gil Shemesh",
         "role": "Psychologue et chargé de cours principal à l'unité des cours et des formations",
         "group": "Formations",
-        "email": "gil@metiv.org"
+        "email": "gil@metiv.org",
+        "releaseJourneyTeam": false,
+        "releaseJourneyResearcher": false
       }
     },
     {
@@ -270,7 +310,9 @@
         "_col": "metiv-team",
         "name": "Racheli Brooks",
         "role": "Directrice de Peace of Mind",
-        "group": "Peace of Mind"
+        "group": "Peace of Mind",
+        "releaseJourneyTeam": true,
+        "releaseJourneyResearcher": false
       }
     },
     {
@@ -282,7 +324,9 @@
         "_col": "metiv-team",
         "name": "Aya Roth",
         "role": "Thérapeute, directrice clinique des traitements Peace of Mind",
-        "group": "Peace of Mind"
+        "group": "Peace of Mind",
+        "releaseJourneyTeam": true,
+        "releaseJourneyResearcher": false
       }
     },
     {
@@ -294,7 +338,9 @@
         "_col": "metiv-team",
         "name": "Ruth Havshush",
         "role": "Directrice des opérations",
-        "group": "Peace of Mind"
+        "group": "Peace of Mind",
+        "releaseJourneyTeam": true,
+        "releaseJourneyResearcher": false
       }
     },
     {
@@ -306,7 +352,9 @@
         "_col": "metiv-team",
         "name": "Yehuda Lapian",
         "role": "Directeur des relations extérieures",
-        "group": "Peace of Mind"
+        "group": "Peace of Mind",
+        "releaseJourneyTeam": true,
+        "releaseJourneyResearcher": false
       }
     },
     {
@@ -318,7 +366,9 @@
         "_col": "metiv-team",
         "name": "Hillel Meirson",
         "role": "Coordinateur des dispositifs de suivi",
-        "group": "Peace of Mind"
+        "group": "Peace of Mind",
+        "releaseJourneyTeam": true,
+        "releaseJourneyResearcher": false
       }
     },
     {
@@ -330,7 +380,9 @@
         "_col": "metiv-team",
         "name": "Yael Rosenfeld Cohen",
         "role": "Coordinatrice des communautés à l'étranger",
-        "group": "Peace of Mind"
+        "group": "Peace of Mind",
+        "releaseJourneyTeam": true,
+        "releaseJourneyResearcher": false
       }
     },
     {
@@ -342,7 +394,9 @@
         "_col": "metiv-team",
         "name": "Yair Brin",
         "role": "Coordinateur des demandes et des opérations cliniques",
-        "group": "Peace of Mind"
+        "group": "Peace of Mind",
+        "releaseJourneyTeam": true,
+        "releaseJourneyResearcher": false
       }
     },
     {
@@ -354,7 +408,9 @@
         "_col": "metiv-team",
         "name": "Shelly Ehrlich",
         "role": "Coordinatrice des groupes",
-        "group": "Peace of Mind"
+        "group": "Peace of Mind",
+        "releaseJourneyTeam": true,
+        "releaseJourneyResearcher": false
       }
     },
     {
@@ -366,7 +422,9 @@
         "_col": "metiv-team",
         "name": "Simcha Edri",
         "role": "Coordinatrice des groupes",
-        "group": "Peace of Mind"
+        "group": "Peace of Mind",
+        "releaseJourneyTeam": true,
+        "releaseJourneyResearcher": false
       }
     }
   ]

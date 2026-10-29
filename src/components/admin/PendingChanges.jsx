@@ -123,6 +123,10 @@ export function fieldText(field, value) {
       return (value || [])
         .map(m => [m.title_he, m.description_he, htmlText(m.how_to_start_he), linksText(m.links)].filter(Boolean).join('\n'))
         .join('\n\n');
+    case 'apps':
+      return (value || [])
+        .map(a => [a.title, a.description, a.ios_url, a.android_url].filter(Boolean).join('\n'))
+        .join('\n\n');
     case 'checkbox':
       return value ? 'כן' : 'לא';
     default:
@@ -147,6 +151,8 @@ function comparable(field, value) {
       }));
     case 'links':
       return (value || []).map(l => [l.label || '', l.url || '']);
+    case 'apps':
+      return (value || []).map(a => [a.title || '', a.description || '', a.ios_url || '', a.android_url || '']);
     case 'tags':
       return [...(value || [])].sort();
     case 'checkbox':

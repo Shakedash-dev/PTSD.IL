@@ -10,43 +10,6 @@
       "content": {
         "_key": "PATIENT_HUB",
         "_col": "metiv-patient-hub",
-        "hero": {
-          "brand": "מטיב - המרכז הישראלי לטיפול בפסיכוטראומה",
-          "eyebrow": "פוסט-טראומה",
-          "headline": "את/ה לא לבד",
-          "subtitle": "מידע, כלים ותמיכה - הכל במקום אחד, בשפה ברורה.",
-          "ctaLabel": "מה הביא אותך לפה?",
-          "image": "/images/set1/home_hero.webp",
-          "about": "פוסט-טראומה (PTSD) היא תגובה נפשית לאירוע טראומטי שהמוח והגוף ממשיכים לעבד זמן רב אחרי שהסכנה חלפה.",
-          "aboutLinkLabel": "קרא/י עוד",
-          "aboutRoute": "/patient/ptsd-info"
-        },
-        "paths": [
-          {
-            "key": "firstCircle",
-            "route": "/patient/first-circle",
-            "title": "מתמודד/ת עם פוסט טראומה",
-            "subtitle": "כל מה שצריך כדי להבין את המצב, להתחיל בטיפול ולדעת מה הזכויות שלך - בקצב שלך, בלי לאבד את עצמך.",
-            "image": "/images/illustrations/ptsd_sufferer.webp",
-            "ctaLabel": "להמשיך"
-          },
-          {
-            "key": "secondCircle",
-            "route": "/patient/second-circle",
-            "title": "קרוב/ה של מתמודד/ת",
-            "subtitle": "לבן/בת זוג, להורה, לחבר של מי שמתמודד - איך לתמוך, להבין, ולשמור גם על עצמך בדרך.",
-            "image": "/images/illustrations/supporter.webp",
-            "ctaLabel": "להמשיך"
-          },
-          {
-            "key": "questionnaire",
-            "route": "/patient/questionnaire",
-            "title": "אני לא בטוח/ה",
-            "subtitle": "שאלון אנונימי קצר (כ-3 דקות) שיעזור להבין אם התסמינים שלך מצדיקים בדיקה נוספת.",
-            "image": "/images/illustrations/wondering.webp",
-            "ctaLabel": "להמשיך"
-          }
-        ],
         "quickLinks": [
           {
             "key": "ptsdInfo",
@@ -245,8 +208,7 @@
             "icon": "HandHeart",
             "route": "/patient/where-to-get-help#free-treatments"
           }
-        ],
-        "disclaimer": "האתר אינו מספק ייעוץ רפואי. במצב חירום פנה/י לרופא/ה או התקשר/י לערן: 1201"
+        ]
       }
     }
   ]
