@@ -284,14 +284,19 @@ export type PlaybookStore =
   | { kind: "shards"; shards: { lang: string; shard: Shard }[] }
   | { kind: "legacy"; index: QaIndex };
 
-// 1-2 KV gets of ~0.5 MB (cached 60 s in the isolate), started alongside the
-// query embedding. A missing shard means the full reindex has not reached that
-// language: the old index answers, if it is still there.
+// Every language's shard (5 KV gets of ~0.5 MB, cached 60 s in the isolate),
+// started alongside the query embedding. All five are scanned, as the old
+// one-value index was: a question is sometimes closest to another language's
+// paraphrase of the right playbook (live comparison 2026-10-30: scanning only
+// the user's language + Hebrew picked the wrong playbook for one of 31
+// questions). The full scan is ~2,350 int8 vectors, about 3 ms CPU. A missing
+// shard for the user's language or Hebrew means the full reindex has not
+// reached it: the old index answers, if it is still there.
 export async function loadPlaybookStore(env: Env, lang: string): Promise<PlaybookStore | null> {
-  const langs = [...new Set([lang, "he"])];
+  const langs = [...new Set([lang, "he", ...LANGS])];
   const got = await Promise.all(langs.map((l) => readShard(env, l)));
   const shards = langs.map((l, i) => ({ lang: l, shard: got[i] })).filter((s): s is { lang: string; shard: Shard } => !!s.shard);
-  if (shards.length < langs.length) {
+  if (!got[0] || !got[langs.indexOf("he")]) {
     const index = await loadQaIndex(env);
     if (index) return { kind: "legacy", index };
   }

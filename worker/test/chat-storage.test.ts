@@ -181,7 +181,7 @@ describe("/chat cost on the shards", () => {
     return { env, kv };
   }
 
-  it("reads at most 2 shards plus small KV rows, no value over 3 MB, at most 14 subrequests, in the worst case", async () => {
+  it("reads the 5 language shards plus small KV rows, no value over 3 MB, at most 17 subrequests, in the worst case", async () => {
     const count = { n: 0 };
     const reads: { key: string; bytes: number }[] = [];
     const { env, kv } = await bigEnv(count, reads);
@@ -194,21 +194,21 @@ describe("/chat cost on the shards", () => {
     expect(r.qa).toMatchObject({ store: "shards", carried: { groupId: "g-1" }, crisis: { groupId: "g-7" }, guide: { groupId: "g-7" } });
     expect(r.body).toContain("event: sources");
     const shardReads = reads.filter((x) => x.key.includes(":vec:"));
-    expect(shardReads.map((x) => x.key).sort()).toEqual([shardKey(env, "en"), shardKey(env, "he")]);
+    expect(shardReads.map((x) => x.key).sort()).toEqual(["ar", "en", "fr", "he", "ru"].map((l) => shardKey(env, l)).sort());
     expect(Math.max(...reads.map((x) => x.bytes))).toBeLessThan(3 * 1024 * 1024);
     expect(Math.max(...reads.filter((x) => !x.key.includes(":vec:")).map((x) => x.bytes))).toBeLessThan(16 * 1024);
     expect(reads.map((x) => x.key)).not.toContain(QA_INDEX_KEY);
-    expect(subrequests).toBeLessThanOrEqual(14);
+    expect(subrequests).toBeLessThanOrEqual(17);
   });
 
-  it("a plain question: rate limit (2 KV) + embed + 2 shards + content query + its KV rows + guided query + Gemini", async () => {
+  it("a plain question: rate limit (2 KV) + embed + 5 shards + content query + its KV rows + guided query + Gemini", async () => {
     const count = { n: 0 };
     const { env } = await bigEnv(count, []);
     count.n = 0;
     const r = await chat(env, [u("g3 en text 2")]);
     expect(r.qa).toMatchObject({ used: { groupId: "g-3", strength: "strong" } });
-    // 2 rate limit + 1 embed + 2 shards (en, he) + 1 content + 2 KV rows (en, he) + 1 guided + 1 Gemini
-    expect(count.n + r.fetches).toBe(10);
+    // 2 rate limit + 1 embed + 5 shards (every language) + 1 content + 2 KV rows (en, he) + 1 guided + 1 Gemini
+    expect(count.n + r.fetches).toBe(13);
     // The next chat in the same isolate reads no shard (60 s cache).
     count.n = 0;
     const again = await chat(env, [u("g4 en text 1")]);

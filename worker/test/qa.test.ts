@@ -241,19 +241,24 @@ describe("findPlaybooks", () => {
     expect((await find(env, [1, 0, 0], "fr")).m.playbook?.row.rowId).toBe("t-he");
   });
 
-  it("scans only the user's language and Hebrew: a row in a third language is not matched", async () => {
-    const env = await seededEnv(VEC, [row("x-ru", "g-x", "ru", { question: "how do i get treatment", guidance: "ru guidance" })]);
+  it("scans every language: a row that exists only in a third language still matches", async () => {
+    const env = await seededEnv(VEC, [
+      row("x-he", "g-x", "he", { question: "something else entirely", guidance: "he guidance" }),
+      row("x-ru", "g-x", "ru", { question: "how do i get treatment", guidance: "ru guidance" }),
+    ]);
     const get = vi.spyOn(env.RL, "get");
-    expect((await find(env, [1, 0, 0], "fr")).m).toEqual({});
-    expect(get.mock.calls.map((c) => c[0]).sort()).toEqual(["qa:vec:v2:fr", "qa:vec:v2:he"]);
-    expect((await find(env, [1, 0, 0], "ru")).m.playbook?.row.rowId).toBe("x-ru");
+    const f = await find(env, [1, 0, 0], "fr");
+    expect(f.m.best?.groupId).toBe("g-x");
+    expect(f.m.best!.score).toBeGreaterThan(0.99);
+    expect(get.mock.calls.map((c) => c[0]).filter((k) => String(k).startsWith("qa:vec:v2:")).sort())
+      .toEqual(["qa:vec:v2:ar", "qa:vec:v2:en", "qa:vec:v2:fr", "qa:vec:v2:he", "qa:vec:v2:ru"]);
   });
 
-  it("a Hebrew user reads one shard", async () => {
+  it("reads each language's shard once, the user's language first", async () => {
     const env = await seededEnv(VEC, ROWS);
     const get = vi.spyOn(env.RL, "get");
-    await loadPlaybookStore(env, "he");
-    expect(get.mock.calls.map((c) => c[0])).toEqual(["qa:vec:v2:he"]);
+    await loadPlaybookStore(env, "ru");
+    expect(get.mock.calls.map((c) => c[0])).toEqual(["qa:vec:v2:ru", "qa:vec:v2:he", "qa:vec:v2:ar", "qa:vec:v2:en", "qa:vec:v2:fr"]);
   });
 
   it("uses the best of question and paraphrases per group", async () => {
@@ -361,7 +366,9 @@ describe("store selection (transition)", () => {
     const env = await seededEnv(VEC, ROWS);
     env.RL.store.delete(shardKey(env, "en"));
     const store = await loadPlaybookStore(env, "en");
-    expect(store?.kind === "shards" && store.shards.map((s) => s.lang)).toEqual(["he"]);
+    const langs = store?.kind === "shards" ? store.shards.map((s) => s.lang) : [];
+    expect(langs).toContain("he");
+    expect(langs).not.toContain("en");
   });
 
   it("nothing at all: no store", async () => {
