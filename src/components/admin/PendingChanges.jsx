@@ -367,8 +367,45 @@ function TranslationInfo({ change }) {
   );
 }
 
-/** @param {{ change: PendingChange, onDiscard: () => void, disabled: boolean }} props */
-function ChangeItem({ change, onDiscard, disabled }) {
+// An AI translation of a language nobody edited by hand is saved with its
+// Hebrew change but not listed in the review: the editor reviews Hebrew, and a
+// translation only needs eyes when it would replace someone's own wording.
+/** @param {PendingChange} c */
+export const isAutoTranslation = c => !!c.translation && !c.translation.humanEdited;
+
+/** One line under a Hebrew change: which languages it translates to, and any that need attention. */
+function AutoTranslationsLine({ items }) {
+  if (items.length === 0) return null;
+  const name = c => LANG_BY_ID[c.lang]?.label || c.lang;
+  const pending = items.filter(c => c.translation?.state === 'pending');
+  const failed = items.filter(c => c.translation?.state === 'error');
+  const flagged = items.filter(c => c.translation?.state === 'done' && c.translation.status === 'flagged');
+  return (
+    <div className="text-xs text-muted-foreground space-y-1">
+      <p className="flex items-center gap-1">
+        <Languages className="w-3 h-3" aria-hidden="true" />
+        יתורגם אוטומטית ל: {items.map(name).join(', ')}
+        {pending.length > 0 && ' (מתרגם...)'}
+      </p>
+      {flagged.length > 0 && (
+        <p className="text-foreground">כדאי לבדוק אחרי השמירה את התרגום ל{flagged.map(name).join(', ')} - הבודק האוטומטי סימן אותו.</p>
+      )}
+      {failed.map(c => (
+        <p key={c.key} className="flex items-center gap-2 text-destructive">
+          התרגום ל{name(c)} נכשל ולא יישמר.
+          {c.retry && (
+            <Button type="button" variant="quiet" size="none" onClick={c.retry} className="text-xs underline">
+              לנסות שוב
+            </Button>
+          )}
+        </p>
+      ))}
+    </div>
+  );
+}
+
+/** @param {{ change: PendingChange, onDiscard: () => void, disabled: boolean, autoTranslations?: PendingChange[] }} props */
+function ChangeItem({ change, onDiscard, disabled, autoTranslations = [] }) {
   const action = ACTION_LABELS[change.action];
   const t = change.translation;
   const badge = t && (t.state === 'done' ? t.status && TRANSLATION_BADGES[t.status] : TRANSLATION_BADGES[t.state]);
@@ -391,6 +428,7 @@ function ChangeItem({ change, onDiscard, disabled }) {
         </Button>
       </div>
       <TranslationInfo change={change} />
+      <AutoTranslationsLine items={autoTranslations} />
       {change.action === 'delete' ? (
         <p className="text-xs text-destructive">הפריט יימחק מהאתר לצמיתות.</p>
       ) : t && t.state !== 'done' ? null : (
@@ -444,7 +482,13 @@ export function SaveAllBar() {
 
   if (!changes.length && !open) return null;
 
-  const sections = [...new Set(changes.map(c => c.section))];
+  // The review lists the editor's own changes and hand-edited languages; plain
+  // AI translations show as one line under their Hebrew change. One whose
+  // Hebrew change is no longer staged (it saved, the translation failed) is
+  // listed on its own, or its retry would have nowhere to show.
+  const stagedKeys = new Set(changes.map(c => c.key));
+  const visible = changes.filter(c => !isAutoTranslation(c) || !c.linkedTo || !stagedKeys.has(c.linkedTo));
+  const sections = [...new Set(visible.map(c => c.section))];
 
   async function handleSave() {
     setProgress({ done: 0, total: changes.length });
@@ -495,7 +539,7 @@ export function SaveAllBar() {
           <DialogHeader className="text-start sm:text-start ps-8">
             <DialogTitle className="font-heading">סקירת שינויים לפני שמירה</DialogTitle>
             <DialogDescription>
-              {changes.length === 1 ? 'שינוי אחד' : `${changes.length} שינויים`} ב{sections.length === 1 ? sections[0] : `-${sections.length} עמודים`}.
+              {visible.length === 1 ? 'שינוי אחד' : `${visible.length} שינויים`} ב{sections.length === 1 ? sections[0] : `-${sections.length} עמודים`}.
             </DialogDescription>
           </DialogHeader>
 
@@ -512,8 +556,14 @@ export function SaveAllBar() {
               <section key={section}>
                 <h3 className="text-sm font-semibold text-foreground mb-2">{section}</h3>
                 <ul className="space-y-2">
-                  {changes.filter(c => c.section === section).map(c => (
-                    <ChangeItem key={c.key} change={c} disabled={saving} onDiscard={() => discard(c.key)} />
+                  {visible.filter(c => c.section === section).map(c => (
+                    <ChangeItem
+                      key={c.key}
+                      change={c}
+                      disabled={saving}
+                      onDiscard={() => discard(c.key)}
+                      autoTranslations={changes.filter(x => x.linkedTo === c.key && isAutoTranslation(x))}
+                    />
                   ))}
                 </ul>
               </section>

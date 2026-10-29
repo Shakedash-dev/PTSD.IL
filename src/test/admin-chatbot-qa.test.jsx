@@ -213,10 +213,12 @@ describe('chatbot Q&A admin', () => {
     const he = items.find(li => li.textContent.includes('הנחיה חדשה וקצרה') && !li.textContent.includes('['));
     expect(he.textContent).toContain('הנחיות לצ׳אטבוט');
     expect(he.textContent).toContain(Q1.guidance.split('\n')[0]);
-    // Four translations, with this section's label too.
-    expect(within(review.dialog).getAllByText('תרגום תקין')).toHaveLength(4);
-    const ar = items.find(li => li.textContent.includes('[ar] הנחיה חדשה וקצרה'));
-    expect(ar.textContent).toContain('הנחיות לצ׳אטבוט');
+    // The four AI translations are not listed: one line under the Hebrew names them.
+    expect(items).toEqual([he]);
+    expect(within(he).getByText('יתורגם אוטומטית ל: ערבית, אנגלית, רוסית, צרפתית')).toBeInTheDocument();
+    expect(within(review.dialog).getByText(/^שינוי אחד ב/)).toBeInTheDocument();
+    expect(within(review.dialog).queryByText('תרגום תקין')).toBeNull();
+    for (const l of ['ar', 'en', 'ru', 'fr']) expect(within(review.dialog).queryByText(`[${l}] הנחיה חדשה וקצרה`)).toBeNull();
 
     await confirmSave(review);
     const byPath = Object.fromEntries(articleWrites().map(w => [w.path, w]));

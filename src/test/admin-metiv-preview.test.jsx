@@ -14,7 +14,7 @@ describe('metiv admin preview', () => {
   });
   afterEach(() => { errorSpy.mockRestore(); cleanup(); localStorage.clear(); });
 
-  it('opens on the seed and shows fake translations in the review dialog', async () => {
+  it('opens on the seed and summarises the fake translations in the review dialog', async () => {
     const fetchSpy = vi.spyOn(globalThis, 'fetch');
     renderAdmin({ variant: 'metiv' });
     expect(screen.getByText('מטיב')).toBeInTheDocument();
@@ -30,8 +30,15 @@ describe('metiv admin preview', () => {
 
     fireEvent.click(screen.getByRole('button', { name: /סקירה ושמירה/ }));
     const dialog = await screen.findByRole('dialog');
-    expect(await within(dialog).findByText('[en] הכשרת CBT בטראומה', {}, { timeout: 4000 })).toBeInTheDocument();
-    expect(within(dialog).getByText('תרגום דורש בדיקה')).toBeInTheDocument();
+    // The stand-in translates every language (French comes back flagged); the
+    // review names them under the Hebrew change instead of listing them.
+    expect(await within(dialog).findByText('יתורגם אוטומטית ל: ערבית, אנגלית, רוסית, צרפתית', {}, { timeout: 4000 })).toBeInTheDocument();
+    expect(await within(dialog).findByText('כדאי לבדוק אחרי השמירה את התרגום לצרפתית - הבודק האוטומטי סימן אותו.', {}, { timeout: 4000 })).toBeInTheDocument();
+    const items = within(dialog).getAllByRole('listitem');
+    expect(items).toHaveLength(1);
+    expect(within(items[0]).getAllByText('הכשרת CBT בטראומה').length).toBeGreaterThan(0);
+    expect(within(dialog).queryByText('[en] הכשרת CBT בטראומה')).toBeNull();
+    expect(within(dialog).queryByText('תרגום דורש בדיקה')).toBeNull();
     // Nothing went over the network.
     expect(fetchSpy.mock.calls.filter(([url]) => String(url).includes('/translate'))).toEqual([]);
     fetchSpy.mockRestore();

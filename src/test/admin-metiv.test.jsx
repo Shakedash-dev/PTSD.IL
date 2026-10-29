@@ -254,15 +254,25 @@ describe('metiv admin', () => {
     }
 
     const { dialog } = await openReview();
-    const he = within(dialog).getAllByRole('listitem').find(li => li.textContent.includes('סילבוס › #1 › כותרת') && !li.textContent.includes('['));
+    const items = within(dialog).getAllByRole('listitem');
+    const he = items.find(li => li.textContent.includes('סילבוס › #1 › כותרת') && !li.textContent.includes('['));
     expect(he).toBeTruthy();
     expect(within(he).getByText(SYLLABUS_0)).toBeInTheDocument();
     expect(within(he).getByText('שנה א - טראומה פשוטה')).toBeInTheDocument();
-    // Four translations staged with the Hebrew one, each with its status.
-    expect(within(dialog).getAllByText('תרגום תקין')).toHaveLength(3);
-    expect(within(dialog).getByText('תרגום דורש בדיקה')).toBeInTheDocument();
-    expect(within(dialog).getByText('מונח לא עקבי בכותרת')).toBeInTheDocument();
-    expect(within(dialog).getByText('[ar] שנה א - טראומה פשוטה')).toBeInTheDocument();
+    // The AI translations are not listed: one line under the Hebrew change
+    // names them, and the flagged one gets a nudge (not its notes).
+    expect(within(he).getByText('יתורגם אוטומטית ל: ערבית, רוסית, צרפתית')).toBeInTheDocument();
+    expect(within(he).getByText('כדאי לבדוק אחרי השמירה את התרגום לצרפתית - הבודק האוטומטי סימן אותו.')).toBeInTheDocument();
+    // Only English, edited by hand, is listed on its own: Hebrew + English.
+    expect(items).toHaveLength(2);
+    const en = items.find(li => li !== he);
+    expect(en.textContent).toContain('אנגלית נערך ידנית - לתרגם מחדש?');
+    expect(within(en).getByText('[en] שנה א - טראומה פשוטה')).toBeInTheDocument();
+    for (const lang of ['ar', 'ru', 'fr']) expect(within(dialog).queryByText(`[${lang}] שנה א - טראומה פשוטה`)).toBeNull();
+    // The only status badge is the listed English one's.
+    expect(within(dialog).getAllByText('תרגום תקין')).toEqual([within(en).getByText('תרגום תקין')]);
+    expect(within(dialog).queryByText('תרגום דורש בדיקה')).toBeNull();
+    expect(within(dialog).queryByText('מונח לא עקבי בכותרת')).toBeNull();
   });
 
   it('saves the Hebrew row and the translated siblings with the right PATCH bodies', async () => {
@@ -307,6 +317,79 @@ describe('metiv admin', () => {
     expect(paths).toContain('/admin/articles/c1-ar');
     expect(paths).not.toContain('/admin/articles/c1-en');
     await waitFor(() => expect(screen.queryByText(/ממתין לשמירה/)).toBeNull());
+  });
+
+  it('a hand-edited language is listed with its retranslate question; the AI-only ones are just named', async () => {
+    renderAdmin({ variant: 'metiv' });
+    await openPage('קורסים והכשרות');
+    await editSyllabusTitle('שנה א - טראומה פשוטה');
+    await waitFor(() => expect(translateCalls).toHaveLength(4));
+    const review = await openReview();
+    const items = within(review.dialog).getAllByRole('listitem');
+    expect(items).toHaveLength(2);
+    const [he, en] = items;
+    expect(he.textContent).not.toContain('נערך ידנית');
+    expect(within(he).getByText('יתורגם אוטומטית ל: ערבית, רוסית, צרפתית')).toBeInTheDocument();
+    // English (_tr.by 'human') is its own change, with the question ticked by default.
+    expect(within(en).getByText('אנגלית')).toBeInTheDocument();
+    expect(within(en).getByRole('checkbox', { name: /אנגלית נערך ידנית - לתרגם מחדש\?/ })).toBeChecked();
+    expect(within(en).getByText(`[en] ${SYLLABUS_0}`)).toBeInTheDocument();
+    expect(within(en).getByText('[en] שנה א - טראומה פשוטה')).toBeInTheDocument();
+    // The other three are nowhere but in the summary line.
+    for (const name of ['ערבית', 'רוסית', 'צרפתית']) {
+      expect(within(review.dialog).queryByText(name)).toBeNull();
+      expect(within(review.dialog).queryByRole('checkbox', { name: new RegExp(`${name} נערך ידנית`) })).toBeNull();
+    }
+    await confirmSave(review);
+    // Ticked by default: English is retranslated, and the others saved as before.
+    const byPath = Object.fromEntries(articleWrites().map(w => [w.path, w]));
+    expect(Object.keys(byPath).sort()).toEqual(['c1', 'c1-ar', 'c1-en', 'c1-fr', 'c1-ru'].map(id => `/admin/articles/${id}`));
+    const enContent = JSON.parse(byPath['/admin/articles/c1-en'].body.content);
+    expect(enContent.syllabus[0].title).toBe('[en] שנה א - טראומה פשוטה');
+    expect(enContent._tr).toMatchObject({ by: 'ai', status: 'pass' });
+  });
+
+  it('a flagged translation is named for a check after saving, and is still saved', async () => {
+    const ok = translateImpl;
+    translateImpl = body => ({ ...ok(body), ...(['ar', 'ru'].includes(body.target) ? { status: 'flagged', notes: ['הערת בודק'] } : { status: 'pass', notes: [] }) });
+    renderAdmin({ variant: 'metiv' });
+    await openPage('קורסים והכשרות');
+    await editSyllabusTitle('שנה א - טראומה פשוטה');
+    const review = await openReview();
+    expect(within(review.dialog).getByText('כדאי לבדוק אחרי השמירה את התרגום לערבית, רוסית - הבודק האוטומטי סימן אותו.')).toBeInTheDocument();
+    expect(within(review.dialog).queryByText('תרגום דורש בדיקה')).toBeNull();
+    expect(within(review.dialog).queryByText('הערת בודק')).toBeNull();
+    // Flagged does not block the save.
+    expect(within(review.dialog).getByText('יתורגם אוטומטית ל: ערבית, רוסית, צרפתית')).toBeInTheDocument();
+    await confirmSave(review);
+    const byPath = Object.fromEntries(articleWrites().map(w => [w.path, w]));
+    for (const id of ['c1-ar', 'c1-ru']) {
+      const c = JSON.parse(byPath[`/admin/articles/${id}`].body.content);
+      expect(c.syllabus[0].title).toBe(`[${id.slice(3)}] שנה א - טראומה פשוטה`);
+      expect(c._tr).toMatchObject({ by: 'ai', status: 'flagged' });
+    }
+    expect(JSON.parse(byPath['/admin/articles/c1-fr'].body.content)._tr.status).toBe('pass');
+  });
+
+  it('the review counts the listed changes only, not the AI translations riding along', async () => {
+    renderAdmin({ variant: 'metiv' });
+    await openPage('קורסים והכשרות');
+    await editSyllabusTitle('שנה א - טראומה פשוטה');
+    fireEvent.click(within(await card(COURSE_2.title)).getByTitle('עריכה'));
+    fireEvent.change(screen.getByDisplayValue(COURSE_2.title), { target: { value: 'מפת דרכים חדשה' } });
+    fireEvent.click(screen.getByRole('button', { name: 'אישור' }));
+    await waitFor(() => expect(translateCalls).toHaveLength(8));
+    // Staged: 2 Hebrew changes, English (by hand) and 6 AI translations.
+    expect(screen.getByText('2 שינויים ממתינים לשמירה')).toBeInTheDocument();
+    const review = await openReview();
+    expect(within(review.dialog).getAllByRole('listitem')).toHaveLength(3);
+    expect(within(review.dialog).getByText(/^3 שינויים ב/)).toBeInTheDocument();
+    expect(within(review.dialog).getAllByText(/^יתורגם אוטומטית ל: /).map(el => el.textContent)).toEqual([
+      'יתורגם אוטומטית ל: ערבית, רוסית, צרפתית',
+      'יתורגם אוטומטית ל: ערבית, אנגלית, רוסית, צרפתית',
+    ]);
+    await confirmSave(review);
+    expect(articleWrites()).toHaveLength(10);
   });
 
   it('adds a list item with a fresh _key, the next sortOrder and both categories, and creates its translations', async () => {
@@ -420,8 +503,12 @@ describe('metiv admin', () => {
     await openPage('קורסים והכשרות');
     await editSyllabusTitle('שנה א - טראומה פשוטה');
     const review = await openReview();
-    expect(within(review.dialog).getByText(/רוסית: התרגום נכשל/)).toBeInTheDocument();
-    expect(within(review.dialog).getByRole('button', { name: /ניסיון חוזר/ })).toBeInTheDocument();
+    // Under the Hebrew change: the failed language, with a retry; not a change of its own.
+    const he = within(review.dialog).getAllByRole('listitem').find(li => li.textContent.includes('סילבוס › #1 › כותרת') && !li.textContent.includes('['));
+    expect(within(he).getByText('יתורגם אוטומטית ל: ערבית, רוסית, צרפתית')).toBeInTheDocument();
+    const failed = within(he).getByText('התרגום לרוסית נכשל ולא יישמר.');
+    expect(within(failed).getByRole('button', { name: 'לנסות שוב' })).toBeInTheDocument();
+    expect(within(review.dialog).queryByText(/רוסית: התרגום נכשל/)).toBeNull();
     // Not waiting on the failed language: ticking the confirmation is enough.
     fireEvent.click(within(review.dialog).getByRole('checkbox', { name: /עברתי על כל השינויים/ }));
     expect(review.save).toBeEnabled();
@@ -437,11 +524,39 @@ describe('metiv admin', () => {
 
     translateImpl = ok;
     writes.length = 0;
+    // Its Hebrew change is saved, so the failed language is listed on its own.
     const again = await openReview();
+    expect(within(again.dialog).getAllByRole('listitem')).toHaveLength(1);
+    expect(within(again.dialog).getByText(/רוסית: התרגום נכשל/)).toBeInTheDocument();
     fireEvent.click(within(again.dialog).getByRole('button', { name: /ניסיון חוזר/ }));
     expect(await within(again.dialog).findByText('[ru] שנה א - טראומה פשוטה', {}, { timeout: 4000 })).toBeInTheDocument();
     await confirmSave({ dialog: again.dialog, save: await within(again.dialog).findByRole('button', { name: /שמירה סופית/ }) });
     expect(articleWrites().map(w => w.path)).toEqual(['/admin/articles/c1-ru']);
+  });
+
+  it('a failed translation retried from the summary line is saved with the Hebrew', async () => {
+    const ok = translateImpl;
+    translateImpl = body => (body.target === 'ru' ? new Response('boom', { status: 500 }) : ok(body));
+    renderAdmin({ variant: 'metiv' });
+    await openPage('קורסים והכשרות');
+    await editSyllabusTitle('שנה א - טראומה פשוטה');
+    const review = await openReview();
+    const failed = within(review.dialog).getByText('התרגום לרוסית נכשל ולא יישמר.');
+    translateImpl = ok;
+    fireEvent.click(within(failed).getByRole('button', { name: 'לנסות שוב' }));
+    await waitFor(() => expect(within(review.dialog).queryByText('התרגום לרוסית נכשל ולא יישמר.')).toBeNull());
+    expect(translateCalls.filter(c => c.target === 'ru')).toHaveLength(2);
+    expect(translateCalls.at(-1).items).toEqual({ 'syllabus.0.title': 'שנה א - טראומה פשוטה' });
+    expect(within(review.dialog).getByText('יתורגם אוטומטית ל: ערבית, רוסית, צרפתית')).toBeInTheDocument();
+    expect(within(review.dialog).queryByText('[ru] שנה א - טראומה פשוטה')).toBeNull();
+    await confirmSave({ dialog: review.dialog, save: await within(review.dialog).findByRole('button', { name: /שמירה סופית/ }) });
+
+    const byPath = Object.fromEntries(articleWrites().map(w => [w.path, w]));
+    expect(Object.keys(byPath).sort()).toEqual(['c1', 'c1-ar', 'c1-en', 'c1-fr', 'c1-ru'].map(id => `/admin/articles/${id}`));
+    const ru = JSON.parse(byPath['/admin/articles/c1-ru'].body.content);
+    expect(ru.syllabus[0].title).toBe('[ru] שנה א - טראומה פשוטה');
+    expect(ru._tr).toMatchObject({ by: 'ai', status: 'pass' });
+    await waitFor(() => expect(screen.queryByText(/ממתין לשמירה/)).toBeNull());
   });
 
   it('a singleton is one form, labelled in Hebrew, staged and translated like a list item', async () => {
@@ -513,8 +628,15 @@ describe('metiv admin', () => {
     await waitFor(() => expect(translateCalls).toHaveLength(4));
     for (const target of ['ar', 'en', 'ru', 'fr']) expect(translateFor(target).items).toEqual({ text: 'אפשר להתחיל להרגיש טוב יותר כבר היום.' });
     const review = await openReview();
-    // A language with no override row translates over its shipped text.
-    expect(within(review.dialog).getByText(translations.en.self_help_intro)).toBeInTheDocument();
+    // One change listed, the Hebrew one; its 4 translations are one line under it.
+    const items = within(review.dialog).getAllByRole('listitem');
+    expect(items).toHaveLength(1);
+    expect(within(items[0]).getByText('אפשר להתחיל להרגיש טוב יותר כבר היום.')).toBeInTheDocument();
+    expect(within(items[0]).getByText('יתורגם אוטומטית ל: ערבית, אנגלית, רוסית, צרפתית')).toBeInTheDocument();
+    expect(within(review.dialog).getByText(/^שינוי אחד ב/)).toBeInTheDocument();
+    expect(within(review.dialog).queryByText(translations.en.self_help_intro)).toBeNull();
+    expect(within(review.dialog).queryByText(/^\[(ar|en|ru|fr)\] /)).toBeNull();
+    expect(within(review.dialog).queryByText('תרגום תקין')).toBeNull();
     await confirmSave(review);
 
     const ws = articleWrites();
