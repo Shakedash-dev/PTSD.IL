@@ -1,12 +1,13 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { X, Send, ExternalLink } from "lucide-react";
+import { X, Send, ExternalLink, Phone } from "lucide-react";
 import { useLang } from "@/lib/LanguageContext";
 import { t } from "@/lib/i18n";
 import { Button } from "@/components/ui/button";
 import { useChat } from "@/lib/ChatContext";
 import Markdown from "@/components/Markdown";
 import { sourceRoute, sourceTitle, isMetivDemoPath } from "@/lib/citations";
+import { splitForCallButtons, CALL_LABEL_KEY } from "@/lib/emergencyCalls";
 
 // Caps the textarea's growth at roughly 4-5 lines before it starts scrolling.
 // Matches the auto-grow approach used by HeroChatInput.
@@ -100,7 +101,22 @@ export default function ChatPanel() {
           return (
             <div key={i} className={m.role === "user" ? "text-end" : "text-start"}>
               <span className={`inline-block px-3 py-2 rounded-2xl text-sm ${m.role === "user" ? "bg-primary text-primary-foreground" : "bg-muted"}`}>
-                {m.role === "assistant" ? <Markdown className="rich-content text-sm">{cleanText}</Markdown> : m.content}
+                {m.role === "assistant"
+                  ? splitForCallButtons(cleanText).map((seg, j) => (
+                    <React.Fragment key={j}>
+                      {seg.md.trim() && <Markdown className="rich-content text-sm">{seg.md}</Markdown>}
+                      {seg.calls.length > 0 && (
+                        <span className="flex flex-wrap gap-2 my-2">
+                          {seg.calls.map((n) => (
+                            <Button key={n} asChild size="sm" variant="destructive" className="rounded-full gap-1.5">
+                              <a href={`tel:${n}`}><Phone className="w-3.5 h-3.5" aria-hidden="true" />{t(lang, CALL_LABEL_KEY[n])}</a>
+                            </Button>
+                          ))}
+                        </span>
+                      )}
+                    </React.Fragment>
+                  ))
+                  : m.content}
               </span>
               {m.role === "assistant" && (() => {
                 const seen = new Set();

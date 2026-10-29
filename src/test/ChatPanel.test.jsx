@@ -258,3 +258,25 @@ describe("ChatPanel", () => {
     expect(screen.queryByText("chat_thinking")).toBeNull();
   });
 });
+
+describe("ChatPanel call buttons", () => {
+  it("shows a call button on its own line after the line that mentions ERAN / MDA", () => {
+    setChat({
+      messages: [{ role: "assistant", content: "I hear you.\nYou can call ERAN at **1201** now.\nAre you safe?\nIf in danger, call **MDA 101**." }],
+    });
+    render(<MemoryRouter><ChatPanel /></MemoryRouter>);
+    const eran = screen.getByRole("link", { name: /chat_call_1201/ });
+    const mda = screen.getByRole("link", { name: /chat_call_101/ });
+    expect(eran.getAttribute("href")).toBe("tel:1201");
+    expect(mda.getAttribute("href")).toBe("tel:101");
+    // The ERAN button comes before "Are you safe?" (right after its line).
+    const text = document.body.textContent;
+    expect(text.indexOf("chat_call_1201")).toBeLessThan(text.indexOf("Are you safe?"));
+  });
+
+  it("adds no button for plain numbers like course hours", () => {
+    setChat({ messages: [{ role: "assistant", content: "The course has 100 hours and costs 1,100 NIS." }] });
+    render(<MemoryRouter><ChatPanel /></MemoryRouter>);
+    expect(screen.queryByRole("link", { name: /chat_call/ })).toBeNull();
+  });
+});
