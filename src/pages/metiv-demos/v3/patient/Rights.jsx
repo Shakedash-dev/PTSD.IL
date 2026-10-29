@@ -5,6 +5,8 @@ import { useRightsFaqs } from '@/api/hooks';
 import PageHeader from '@/components/patterns/PageHeader';
 import Disclosure from '@/components/patterns/Disclosure';
 import ChoiceChip from '@/components/patterns/ChoiceChip';
+import { Button } from '@/components/ui/button';
+import { useChat } from '@/lib/ChatContext';
 import { Shield, Heart, Users, Car, HelpCircle, ExternalLink, MessageCircle } from 'lucide-react';
 import { IMAGES } from '@/lib/images';
 import ValidatableContent from '@/components/ValidatableContent';
@@ -113,6 +115,7 @@ function MetivEntryAccordion({ entry }) {
 
 export default function Rights() {
   const { lang } = useLang();
+  const { setOpen: setChatOpen } = useChat();
   const [activeCategory, setActiveCategory] = useState('security_forces');
   const { METIV_SERVICES } = useMetiv();
   const withReleaseJourneyPage = useWithReleaseJourneyPage();
@@ -172,13 +175,12 @@ export default function Rights() {
           )}
         </div>
 
-        {/* Chatbot placeholder */}
-        <div className="p-6 rounded-super border border-dashed border-primary/30 bg-primary/3 text-center">
-          <MessageCircle className="w-8 h-8 text-primary mx-auto mb-3" />
-          <p className="font-medium text-muted-foreground">{t(lang, 'chatbot_soon')}</p>
-          <p className="text-sm text-muted-foreground mt-1">
-            {t(lang, 'chatbot_description')}
-          </p>
+        {/* Ask the chatbot */}
+        <div className="p-6 rounded-super border border-primary/20 bg-primary/5 text-center">
+          <MessageCircle className="w-8 h-8 text-primary mx-auto mb-3" aria-hidden="true" />
+          <p className="font-semibold text-foreground">{t(lang, 'rights_chat_title')}</p>
+          <p className="text-sm text-muted-foreground mt-1 mb-4">{t(lang, 'rights_chat_text')}</p>
+          <Button onClick={() => setChatOpen(true)}>{t(lang, 'rights_chat_cta')}</Button>
         </div>
       </div>
     </div>

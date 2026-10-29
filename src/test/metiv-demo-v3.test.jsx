@@ -425,12 +425,18 @@ describe('metiv demo v3: content decided by the data', () => {
     expect(seed.PATIENT_HUB.disclaimer).toBeUndefined();
   });
 
+  it('the rights page offers the chatbot (no "coming soon" placeholder) and the button opens it', () => {
+    const { container } = renderAt('/patient/rights');
+    expect(container.textContent).not.toMatch(/בקרוב/);
+    fireEvent.click(screen.getByRole('button', { name: t('he', 'rights_chat_cta') }));
+    expect(screen.getByRole('dialog')).toBeTruthy();
+  });
+
   it('every editable i18n key exists in all five languages, on a known admin page', () => {
     for (const [page, keys] of Object.entries(EDITABLE_I18N)) {
       expect(keys.length, page).toBeGreaterThan(0);
       for (const key of keys) for (const lang of ['he', 'ar', 'en', 'ru', 'fr']) expect(t(lang, key), `${page}: ${lang}.${key}`).not.toBe(key);
     }
     for (const key of ['error_loading', 'questionnaire_sections_intro']) for (const lang of ['he', 'ar', 'en', 'ru', 'fr']) expect(t(lang, key)).not.toBe(key);
-    expect(t('he', 'chatbot_description')).toContain('תשובות');
   });
 });
