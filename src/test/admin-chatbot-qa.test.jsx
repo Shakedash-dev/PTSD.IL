@@ -29,6 +29,17 @@ vi.mock('@/api/adminClient', () => ({
   UnauthorizedError: class UnauthorizedError extends Error {},
   ReadOnlyPreviewError: class ReadOnlyPreviewError extends Error {},
 }));
+// The shared save-status row (src/api/adminStatus.js) is pinned in
+// admin-background-save.test.jsx; here it would add writes and shift ids.
+vi.mock('@/api/adminStatus', () => ({
+  createSaveStatus: async () => null,
+  patchSaveStatus: async () => {},
+  pruneSaveStatuses: async () => {},
+  loadSaveStatuses: async () => [],
+  isOwnSaveStatus: () => false,
+  isRunningStatus: () => false,
+  finishedAtMs: () => 0,
+}));
 vi.mock('@/api/reindex', () => ({
   reindexItem: vi.fn(async () => {}),
   ChatbotSyncError: class ChatbotSyncError extends Error {},

@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { BASE_PATH } from '@/base-path';
 import { logout } from '@/lib/auth';
 import { usePendingChanges } from '@/components/admin/PendingChanges';
+import { OtherSavesBanner, SaveProgressStrip } from '@/components/admin/SaveStatus';
 
 // The /admin frame. /admin is routed outside the site <Layout>, so none of the
 // public chrome (nav links, language switcher, footer, chatbot) appears here -
@@ -13,8 +14,12 @@ import { usePendingChanges } from '@/components/admin/PendingChanges';
 //
 // The wordmark opens the public site in a new tab rather than navigating away:
 // leaving /admin unmounts it, and staged changes would go with it.
+//
+// The header also carries the save notices (SaveStatus.jsx): this tab's
+// background save, and saves running in other admin sessions. It is sticky, so
+// they stay in view while the editor moves around the panel.
 export default function AdminShell({ children, signedIn = false, banner = null, variant = 'ptsd' }) {
-  const { changes, clear } = usePendingChanges();
+  const { changes, clear, saving } = usePendingChanges();
   const metiv = variant === 'metiv';
 
   useEffect(() => {
@@ -24,7 +29,8 @@ export default function AdminShell({ children, signedIn = false, banner = null, 
   }, [metiv]);
 
   function handleLogout() {
-    if (changes.length && !window.confirm(`יש ${changes.length} שינויים שלא נשמרו. התנתקות תמחק אותם. להתנתק בכל זאת?`)) return;
+    if (saving && !window.confirm('שמירה רצה כרגע ברקע. התנתקות תעצור אותה באמצע. להתנתק בכל זאת?')) return;
+    if (!saving && changes.length && !window.confirm(`יש ${changes.length} שינויים שלא נשמרו. התנתקות תמחק אותם. להתנתק בכל זאת?`)) return;
     clear();
     logout();
   }
@@ -57,6 +63,8 @@ export default function AdminShell({ children, signedIn = false, banner = null, 
             </Button>
           )}
         </div>
+        <SaveProgressStrip />
+        <OtherSavesBanner signedIn={signedIn} />
       </header>
       <main className="flex-1">{children}</main>
     </div>

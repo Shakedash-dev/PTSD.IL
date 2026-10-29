@@ -68,12 +68,21 @@ export function siteCopyRow(store, key, lang) {
 }
 
 /** The category id, creating `site-copy` when the DB has never seen it. @param {SiteCopyStore} store */
+// The batch writes several rows at once, so a missing category is created by
+// one request that every concurrent create waits for.
+const creatingCategory = new WeakMap();
 async function siteCopyCategoryId(store) {
   if (store.categoryId) return store.categoryId;
-  const created = await adminApi('POST', '/admin/categories', { slug: SITE_COPY_SLUG, name: SITE_COPY_CATEGORY_NAME });
-  store.categoryId = created?.id ?? null;
-  if (!store.categoryId) throw new Error('יצירת הקטגוריה site-copy נכשלה');
-  return store.categoryId;
+  if (!creatingCategory.has(store)) {
+    creatingCategory.set(store, adminApi('POST', '/admin/categories', { slug: SITE_COPY_SLUG, name: SITE_COPY_CATEGORY_NAME })
+      .then(created => {
+        store.categoryId = created?.id ?? null;
+        if (!store.categoryId) throw new Error('יצירת הקטגוריה site-copy נכשלה');
+        return store.categoryId;
+      })
+      .finally(() => creatingCategory.delete(store)));
+  }
+  return creatingCategory.get(store);
 }
 
 /**

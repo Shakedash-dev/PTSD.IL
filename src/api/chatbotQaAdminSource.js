@@ -9,15 +9,16 @@
 // plus `_tr` on translations. Rows are written in the shape
 // scripts/metiv-seed/import.mjs --qa writes them.
 //
-// Every content write is followed by reindexItem(id): the worker sees a
-// chatbot-qa row and rebuilds its Q&A index (worker/src/lib/qa.ts).
+// Every content write is followed by a reindex of its id (requestReindex,
+// deferred to the end of a "save all" batch): the worker sees a chatbot-qa row
+// and rebuilds its Q&A index (worker/src/lib/qa.ts).
 //
 // Reads go through the UNFILTERED GET /admin/articles?type=article, like
 // metivAdminSource: a categoryId-filtered list only returns the matched
 // category in each row's `categories`.
 
 import { adminApi } from './adminClient';
-import { reindexItem } from './reindex';
+import { requestReindex } from './reindexQueue';
 import { newItemKey } from './metivAdminSource';
 
 const ARTICLES = '/admin/articles';
@@ -79,17 +80,26 @@ export function newQaKey(question, taken) {
  */
 export async function updateQaRow(row, { title, content }) {
   const saved = await adminApi('PATCH', `${ARTICLES}/${row.id}`, { title, content: JSON.stringify(content) });
-  await reindexItem(row.id);
+  await requestReindex(row.id);
   return saved;
 }
 
 /** The category id, creating `chatbot-qa` when the DB has never seen it. */
+// The batch writes several rows at once, so a missing category is created by
+// one request that every concurrent create waits for.
+const creatingCategory = new WeakMap();
 async function qaCategoryId(store) {
   if (store.categoryId) return store.categoryId;
-  const created = await adminApi('POST', '/admin/categories', { slug: QA_SLUG, name: QA_CATEGORY_NAME });
-  store.categoryId = created?.id ?? null;
-  if (!store.categoryId) throw new Error('יצירת הקטגוריה chatbot-qa נכשלה');
-  return store.categoryId;
+  if (!creatingCategory.has(store)) {
+    creatingCategory.set(store, adminApi('POST', '/admin/categories', { slug: QA_SLUG, name: QA_CATEGORY_NAME })
+      .then(created => {
+        store.categoryId = created?.id ?? null;
+        if (!store.categoryId) throw new Error('יצירת הקטגוריה chatbot-qa נכשלה');
+        return store.categoryId;
+      })
+      .finally(() => creatingCategory.delete(store)));
+  }
+  return creatingCategory.get(store);
 }
 
 /**
@@ -111,7 +121,7 @@ export async function createQaRow(store, { lang, title, content, sortOrder, grou
     categoryIds: [categoryId],
   });
   onSaved?.(saved);
-  await reindexItem(saved?.id);
+  await requestReindex(saved?.id);
   return saved;
 }
 
@@ -126,6 +136,6 @@ export function setQaSortOrder(id, sortOrder) {
 
 export async function removeQaRow(id) {
   const res = await adminApi('DELETE', `${ARTICLES}/${id}`);
-  await reindexItem(id); // the worker rebuilds the Q&A index without it
+  await requestReindex(id); // the worker rebuilds the Q&A index without it
   return res;
 }

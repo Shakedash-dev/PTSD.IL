@@ -113,12 +113,39 @@ src/lib/auth.js         <- login/logout, JWT in sessionStorage, isAuthenticated/
 - The provider sits in `AdminGate`, above the login screen, so a session that
   expires mid-edit keeps its staged changes; a 401 stops the batch and leaves
   the rest staged.
+- **The save runs in the background** (`startSave` in `PendingChanges.jsx`):
+  the dialog closes on confirm and a strip in the sticky header
+  (`SaveStatus.jsx`) shows progress, then what failed with a retry. The editor
+  keeps working; new edits are not part of the running batch and a second save
+  waits for it. Writes run 4 at a time; a change `linkedTo` a Hebrew one waits
+  for it (translations need its groupId) and deletes run after every other
+  write. Lazily created categories are created once however many writes ask.
+  Chatbot reindexes are recorded during the batch (`src/api/reindexQueue.js`)
+  and run after it, deduped, 3 at a time; a failure is a warning with "retry
+  chatbot sync", never a failed save. Closing the tab stops it (`beforeunload`
+  warns).
+- **Refreshes never reset an open editor.** Panels re-read the server after a
+  save (or "רענון התוכן") in place, without a loading state or a remount;
+  editors are keyed by item (and language), never by the save `version`. An
+  open editor keeps its draft, and says "הפריט עודכן בינתיים" when its item
+  changed on the server meanwhile (`ServerChanged.jsx`). A staged create the
+  running save is writing cannot be opened until it lands.
+- **Other sessions see it**: the batch keeps one row in category `admin-status`
+  (`src/api/adminStatus.js`, unpublished, created on first use, excluded from
+  the worker's index): `{ user, startedAt, updatedAt, total, done, failed,
+  sections, finishedAt? }`, PATCHed every 3 writes. Every open admin polls it
+  every 15 s and on focus and shows another session's running batch, and one
+  that just finished with a "refresh" button; a row with no update for 10
+  minutes is stale. Advisory only, not a lock. Not polled in the dev read-only
+  mode (unpublished rows are not readable there).
 - **User management is the exception**: role/account changes write
   immediately and are not logged.
 - **Edit log**: after a batch, one row per batch - `type: 'article'`, category
   `admin-log` (created on first save), `isPublished: false`, skipped by the
-  reindex, content `{ at, user, changes: [{ section, action, title, fields:
-  [{label, before, after}] }] }`. Viewable by masteradmin; reading it needs
+  reindex, content `{ at, user, changes: [{ section, action, title, lang,
+  fields: [{label, before, after}] }] }` (older rows have no `lang`; the panel
+  reads a " (ערבית)" title suffix). The panel shows a batch's Hebrew changes
+  and one button per other language. Viewable by masteradmin; reading it needs
   admin/moderator too (GET /admin/articles). **Not tamper-proof** - any
   admin/moderator token can PATCH/DELETE the rows; a real audit trail needs a
   backend log.

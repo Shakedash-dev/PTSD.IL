@@ -12,7 +12,7 @@
 // collection is read from content._col.
 
 import { adminApi } from './adminClient';
-import { reindexItem } from './reindex';
+import { requestReindex } from './reindexQueue';
 import { COLLECTION_BY_KEY, COLLECTION_BY_SLUG, COPY_SLUG, METIV_PARENT_SLUG } from '@/pages/metiv-demos/v3/content/registry';
 
 const ARTICLES = '/admin/articles';
@@ -117,7 +117,7 @@ export function newItemKey(slug, title, taken) {
  */
 export async function updateMetivRow(row, { title, content }) {
   const saved = await adminApi('PATCH', `${ARTICLES}/${row.id}`, { title, content: JSON.stringify(content) });
-  await reindexItem(row.id);
+  await requestReindex(row.id);
   return saved;
 }
 
@@ -141,7 +141,7 @@ export async function createMetivRow(store, { lang, slug, title, content, sortOr
     categoryIds: [store.parentId, childId],
   });
   onSaved?.(saved);
-  await reindexItem(saved?.id);
+  await requestReindex(saved?.id);
   return saved;
 }
 
@@ -156,6 +156,6 @@ export function setMetivSortOrder(id, sortOrder) {
 
 export async function removeMetivRow(id) {
   const res = await adminApi('DELETE', `${ARTICLES}/${id}`);
-  await reindexItem(id); // the worker drops the vectors of a deleted id
+  await requestReindex(id); // the worker drops the vectors of a deleted id
   return res;
 }

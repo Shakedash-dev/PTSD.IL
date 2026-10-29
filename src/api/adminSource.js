@@ -14,7 +14,7 @@
 // Do NOT edit Admin.jsx from this file's concerns - this is the layer only.
 
 import { adminApi } from './adminClient';
-import { reindexItem } from './reindex';
+import { requestReindex } from './reindexQueue';
 import { mdToHtml, htmlToMd } from '@/lib/markdownHtml';
 
 const ARTICLES = '/admin/articles';
@@ -75,12 +75,20 @@ function requireCategoryId(taxonomy, slug) {
 // would otherwise hit "Unknown category slug". Creating it needs
 // the same admin/moderator role the write itself needs. The taxonomy cache is
 // dropped afterwards so the new id is picked up by later calls.
+// Concurrent callers share one create request per slug.
+const creatingCategory = new Map();
 async function resolveOrCreateCategoryId(taxonomy, slug, name) {
   const existing = taxonomy.categoriesBySlug.get(slug);
   if (existing) return existing;
-  const created = await adminApi('POST', '/admin/categories', { slug, name });
-  taxonomy.categoriesBySlug.set(slug, created.id);
-  return created.id;
+  if (!creatingCategory.has(slug)) {
+    creatingCategory.set(slug, adminApi('POST', '/admin/categories', { slug, name })
+      .then(created => {
+        taxonomy.categoriesBySlug.set(slug, created.id);
+        return created.id;
+      })
+      .finally(() => creatingCategory.delete(slug)));
+  }
+  return creatingCategory.get(slug);
 }
 
 function requireAgeGroupId(taxonomy, slug) {
@@ -163,15 +171,16 @@ async function writeArticle(draft, ctx, payload) {
   // Sync the chatbot's vector DB for this item (create/update). Runs after the
   // content write succeeds; a sync failure surfaces as a ChatbotSyncError the
   // panel treats as a non-fatal warning (the content is already saved).
-  // `ctx.skipReindex` is for rows that are UI chrome rather than answerable
+  // Inside a "save all" batch the request is only recorded and runs after the
+  // batch's writes (src/api/reindexQueue.js). `ctx.skipReindex` is for rows that are UI chrome rather than answerable
   // content - see appendEditLog.
-  if (!ctx.skipReindex) await reindexItem(saved?.id ?? draft.id);
+  if (!ctx.skipReindex) await requestReindex(saved?.id ?? draft.id);
   return saved;
 }
 
 async function removeArticle(id, { skipReindex = false } = {}) {
   const res = await adminApi('DELETE', `${ARTICLES}/${id}`);
-  if (!skipReindex) await reindexItem(id); // worker 404s on the deleted id and drops its vectors
+  if (!skipReindex) await requestReindex(id); // worker 404s on the deleted id and drops its vectors
   return res;
 }
 
@@ -232,8 +241,10 @@ export function writeArticleSibling(hePayload, lang, built, sibling, groupId) {
 // ─── editLog - article, category `admin-log`, unpublished ───────────────────
 // Who saved what from /admin. One row per "save all" batch: `title` is the
 // timestamp, content JSON is `{ at, user, changes }` where every change is
-// `{ section, action, title, fields: [{ label, before, after }] }` with the
-// values already flattened to the plain text the review dialog showed.
+// `{ section, action, title, lang, fields: [{ label, before, after }] }` with the
+// values already flattened to the plain text the review dialog showed. `lang`
+// is the row's language (he/ar/en/ru/fr); rows logged before it existed carry
+// none, and the log panel reads the language off a " (ערבית)" title suffix.
 //
 // Stored as an article because the backend has no audit endpoint, which has
 // two consequences worth knowing:
@@ -258,7 +269,7 @@ function capLogValue(text) {
 }
 
 /**
- * @param {{ user: { id: string|null, email: string|null, name: string|null }, changes: Array<{ section: string, action: string, title: string, fields: Array<{ label: string, before: string, after: string }> }> }} entry
+ * @param {{ user: { id: string|null, email: string|null, name: string|null }, changes: Array<{ section: string, action: string, title: string, lang?: string, fields: Array<{ label: string, before: string, after: string }> }> }} entry
  */
 export async function appendEditLog(entry) {
   const taxonomy = await getTaxonomy();
@@ -270,6 +281,7 @@ export async function appendEditLog(entry) {
     section: c.section,
     action: c.action,
     title: c.title,
+    ...(c.lang ? { lang: c.lang } : {}),
     fields: (c.fields || []).map(f => ({
       label: f.label,
       before: capLogValue(f.before),
@@ -849,13 +861,13 @@ export async function saveCommunity(draft, ctx = {}) {
   } else {
     saved = await adminApi('POST', COMMUNITIES, payload);
   }
-  await reindexItem(saved?.id ?? draft.id);
+  await requestReindex(saved?.id ?? draft.id);
   return saved;
 }
 
 export async function removeCommunity(id) {
   const res = await adminApi('DELETE', `${COMMUNITIES}/${id}`);
-  await reindexItem(id);
+  await requestReindex(id);
   return res;
 }
 

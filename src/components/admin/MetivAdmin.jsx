@@ -9,6 +9,7 @@ import { AddNewButton, Badge, DiscardButton, IconBtn, LoadingRow, STATUS_BADGES 
 import { useAdminLang } from '@/components/admin/AdminLang';
 import { AdminFocusProvider, revealElement, useAdminFocus } from '@/components/admin/AdminFocus';
 import { TRANSLATION_BADGES, usePendingChanges } from '@/components/admin/PendingChanges';
+import { ServerChangedNote, sameJson, useChangedWhileOpen } from '@/components/admin/ServerChanged';
 import { stageSiblingDeletes, useStageTranslations } from '@/components/admin/translationStaging';
 import { blankLike, contentDiff, fieldLabel, isRef, isTechnicalKey, itemSummary } from '@/components/admin/contentFields';
 import { fieldRules, hasVisible, isNavLink, patternOf } from '@/components/admin/metivFieldRules';
@@ -52,7 +53,8 @@ import { BASE_PATH } from '@/base-path';
 const MetivStoreContext = createContext(/** @type {null | { store: import('@/api/metivAdminSource').MetivStore|null, loading: boolean, error: string }} */ (null));
 
 // Loads every Metiv row once, and again after each save-all batch, for all
-// sections to share.
+// sections to share. A reload swaps the store in place, so sections stay
+// mounted and open editors keep their drafts (ServerChanged.jsx).
 export function MetivStoreProvider({ children }) {
   const { version } = usePendingChanges();
   const [state, setState] = useState({ store: null, loading: true, error: '' });
@@ -64,7 +66,8 @@ export function MetivStoreProvider({ children }) {
       .catch(err => {
         if (cancelled) return;
         toast.error(err?.message || 'שגיאה בטעינת תוכן מטיב');
-        setState({ store: null, loading: false, error: err?.message || 'שגיאה בטעינת תוכן מטיב' });
+        // A failed refresh keeps what is on screen (and every open editor).
+        setState(s => ({ store: s.store, loading: false, error: err?.message || 'שגיאה בטעינת תוכן מטיב' }));
       });
     return () => { cancelled = true; };
   }, [version]);
@@ -82,7 +85,7 @@ function SiteCopyStoreProvider({ children }) {
     setState(s => ({ ...s, loading: true }));
     loadSiteCopyRows()
       .then(store => { if (!cancelled) setState({ store, loading: false, error: '' }); })
-      .catch(err => { if (!cancelled) setState({ store: null, loading: false, error: err?.message || 'שגיאה בטעינת הטקסטים' }); });
+      .catch(err => { if (!cancelled) setState(s => ({ store: s.store, loading: false, error: err?.message || 'שגיאה בטעינת הטקסטים' })); });
     return () => { cancelled = true; };
   }, [version]);
   return <SiteCopyStoreContext.Provider value={state}>{children}</SiteCopyStoreContext.Provider>;
@@ -307,10 +310,13 @@ function EditorButtons({ onConfirm, onCancel, cancelLabel = 'ביטול' }) {
  * @param {(ref: string) => { label: string, title: string }} props.resolve
  * @param {React.ReactNode} [props.summary]  replaces the card's text summary
  * @param {{ labels?: Record<string, string>, help?: Record<string, string>, lockedKeys?: string[], rules?: any }} [props.editorProps]
+ * @param {any} [props.server]  the server's copy of the item, to tell when it changes under an open editor
+ * @param {boolean} [props.locked]  a staged create the running save is writing: not editable until it lands
  */
-export function ItemCard({ content, title, status, onConfirm, onCancel, onDelete, onDiscard, onUp, onDown, extra, startInEdit = false, reveal = false, dir, structureLocked, resolve, summary, editorProps }) {
+export function ItemCard({ content, title, status, onConfirm, onCancel, onDelete, onDiscard, onUp, onDown, extra, startInEdit = false, reveal = false, dir, structureLocked, resolve, summary, editorProps, server, locked = false }) {
   const [editing, setEditing] = useState(startInEdit);
   const [draft, setDraft] = useState(content);
+  const changed = useChangedWhileOpen(editing, server, content);
   const box = useRef(/** @type {HTMLDivElement|null} */ (null));
   const badge = status && STATUS_BADGES[status];
   const ref = isRef(content);
@@ -320,6 +326,7 @@ export function ItemCard({ content, title, status, onConfirm, onCancel, onDelete
   if (editing) {
     return (
       <div ref={box} className="p-4 rounded-xl border border-primary/40 bg-background space-y-3">
+        {changed && <ServerChangedNote />}
         <ContentEditor value={draft} onChange={setDraft} dir={dir} structureLocked={structureLocked} resolveRef={resolve} {...editorProps} />
         <EditorButtons
           onConfirm={() => { if (onConfirm(draft) !== false) setEditing(false); }}
@@ -334,9 +341,9 @@ export function ItemCard({ content, title, status, onConfirm, onCancel, onDelete
     <div className={`relative p-4 rounded-xl border bg-background ${badge ? 'border-warning/60' : 'border-border'}`}>
       {(badge || extra) && (
         <div className="flex items-center gap-2 mb-2 flex-wrap pe-28">
-          {badge && <Badge color={badge.color}>{badge.label}</Badge>}
+          {badge && <Badge color={badge.color}>{locked ? 'נשמר כעת...' : badge.label}</Badge>}
           {extra}
-          {onDiscard && <DiscardButton onClick={onDiscard} />}
+          {onDiscard && !locked && <DiscardButton onClick={onDiscard} />}
         </div>
       )}
       <div className={`pe-28 ${status === 'delete' ? 'opacity-50 line-through' : ''}`}>
@@ -345,7 +352,7 @@ export function ItemCard({ content, title, status, onConfirm, onCancel, onDelete
           ? <p className="text-xs text-muted-foreground mt-1">מופיע מתוך: {resolve(content.$ref).label}. נערך במקום המקורי שלו.</p>
           : summary ?? <p className="text-sm text-muted-foreground mt-1 line-clamp-2" dir="auto">{itemSummary(content)}</p>}
       </div>
-      {status !== 'delete' && (
+      {status !== 'delete' && !locked && (
         <div className="absolute top-3 end-3 flex gap-1">
           {onUp && <IconBtn icon={ChevronUp} title="הזזה למעלה" onClick={onUp} />}
           {onDown && <IconBtn icon={ChevronDown} title="הזזה למטה" onClick={onDown} />}
@@ -366,6 +373,7 @@ function ListSection({ meta, store }) {
   const focus = useAdminFocus();
   const s = useMetivStaging(meta, store);
   const { changes, stage, discard, newKey } = s;
+  const { running } = usePendingChanges();
   const [creating, setCreating] = useState(false);
   const resolve = ref => resolveRef(store, ref);
   const he = useMemo(() => heCollections(store), [store]);
@@ -427,6 +435,7 @@ function ListSection({ meta, store }) {
                 status={p?.action}
                 extra={p ? <TranslationSummary heKey={key} /> : null}
                 onDiscard={p ? () => discard(key) : undefined}
+                server={row.content}
                 onConfirm={c => s.stageHeUpdate(row, c)}
                 onDelete={single ? undefined : () => s.stageHeDelete(row)}
                 onUp={!single && i > 0 ? () => move(i, -1) : undefined}
@@ -445,9 +454,13 @@ function ListSection({ meta, store }) {
           const p = changes.find(c => c.key === key);
           const content = p ? p.draft.content : sib?.content ?? row.content;
           const translating = changes.some(c => c.linkedTo === `metiv:${row.id}` && c.lang === lang.id);
+          // Keyed by the item and language, not the sibling's id: a save that
+          // creates the translation must not remount an open editor.
+          const cardKey = `${row.id}:${lang.id}`;
           return (
             <ItemCard
-              key={open ? `${key}:${focus.nonce}` : key}
+              key={open ? `${cardKey}:${focus.nonce}` : cardKey}
+              server={sib?.content}
               content={content}
               title={s.titleOf(content)}
               status={p?.action}
@@ -471,6 +484,7 @@ function ListSection({ meta, store }) {
             content={c.draft.content}
             title={c.title}
             status="create"
+            locked={running.has(c)}
             extra={<TranslationSummary heKey={c.key} />}
             onDiscard={() => discard(c.key)}
             onConfirm={content => s.stageHeCreate(c.key, content, c.draft.sortOrder, takenKeys)}
@@ -503,8 +517,23 @@ function ListSection({ meta, store }) {
   );
 }
 
-function SingleForm({ initial, onConfirm, dir, structureLocked, resolve, rules, labels, focusPath, plainText = false }) {
+// Always open. It follows what it shows (the staged draft, else the server
+// copy) while the editor has not typed anything new, and keeps the draft once
+// they have - a background save or refresh landing never resets typing.
+function SingleForm({ initial, server, onConfirm, dir, structureLocked, resolve, rules, labels, focusPath, plainText = false }) {
   const [draft, setDraft] = useState(initial);
+  const [adopted, setAdopted] = useState(initial);
+  const [rebase, setRebase] = useState(0);
+  const initialJson = JSON.stringify(initial ?? null);
+  useEffect(() => {
+    if (sameJson(initial, adopted)) return;
+    if (sameJson(draft, adopted) || sameJson(draft, initial)) {
+      setDraft(initial);
+      setAdopted(initial);
+      setRebase(r => r + 1);
+    }
+  }, [initialJson]); // eslint-disable-line react-hooks/exhaustive-deps
+  const changed = useChangedWhileOpen(true, server, adopted, { rebase });
   const box = useRef(/** @type {HTMLDivElement|null} */ (null));
   useEffect(() => {
     if (!focusPath || !box.current) return;
@@ -512,6 +541,7 @@ function SingleForm({ initial, onConfirm, dir, structureLocked, resolve, rules, 
   }, [focusPath]);
   return (
     <div ref={box} className="space-y-3">
+      {changed && <ServerChangedNote />}
       <ContentEditor value={draft} onChange={setDraft} dir={dir} structureLocked={structureLocked} resolveRef={resolve} rules={rules} labels={labels} plainText={plainText} />
       <EditorButtons onConfirm={() => onConfirm(draft)} onCancel={() => setDraft(initial)} cancelLabel="איפוס הטופס" />
     </div>
@@ -522,9 +552,10 @@ function SingleForm({ initial, onConfirm, dir, structureLocked, resolve, rules, 
 function SingleSection({ meta, store }) {
   const lang = useAdminLang();
   const hebrew = lang.id === 'he';
-  const { version } = usePendingChanges();
   const focus = useAdminFocus();
   const s = useMetivStaging(meta, store);
+  // Bumped by "discard", which resets the form to what the server holds.
+  const [reset, setReset] = useState(0);
   const he = useMemo(() => heCollections(store), [store]);
   const rules = useMemo(() => (meta.kind === 'copy'
     ? fieldRules({ copyKeys: copyContentKeys(meta.copyKey) })
@@ -548,12 +579,13 @@ function SingleSection({ meta, store }) {
           {badge && <Badge color={badge.color}>{badge.label}</Badge>}
           {hebrew && p && <TranslationSummary heKey={key} />}
           {!hebrew && !sib && !p && <Badge>טרם תורגם - מוצג הנוסח העברי</Badge>}
-          {p && <DiscardButton onClick={() => s.discard(key)} />}
+          {p && <DiscardButton onClick={() => { s.discard(key); setReset(r => r + 1); }} />}
         </div>
       )}
       <SingleForm
-        key={`${key}:${version}:${p ? 'staged' : 'server'}:${focusPath ? focus.nonce : ''}`}
+        key={`${heRow.id}:${lang.id}:${reset}:${focusPath ? focus.nonce : ''}`}
         initial={shown}
+        server={hebrew ? heRow.content : sib?.content}
         onConfirm={c => (hebrew ? s.stageHeUpdate(heRow, c) : s.stageHuman(heRow, sib, lang.id, c))}
         dir={lang.dir}
         structureLocked={!hebrew}
@@ -700,6 +732,7 @@ function SiteCopyCard({ k, store, s, lang, open }) {
   const shown = reverting ? (shippedText(k, lang.id) || shippedText(k, 'he')) : p?.draft?.text ?? current;
   const [editing, setEditing] = useState(open);
   const [draft, setDraft] = useState(shown);
+  const changed = useChangedWhileOpen(editing, current, shown);
   const box = useRef(/** @type {HTMLDivElement|null} */ (null));
   const id = `sitecopy-${k}-${lang.id}`;
   // A first override row is a create, but to the editor it is an edit of the text.
@@ -728,6 +761,7 @@ function SiteCopyCard({ k, store, s, lang, open }) {
       {where && <p className="text-xs text-muted-foreground mt-1">{where}</p>}
       {editing ? (
         <div className="space-y-2 mt-2">
+          {changed && <ServerChangedNote />}
           <textarea
             id={id}
             dir={lang.dir}

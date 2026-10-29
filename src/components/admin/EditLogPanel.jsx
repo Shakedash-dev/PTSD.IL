@@ -1,6 +1,8 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import ChoiceChip from '@/components/patterns/ChoiceChip';
+import { ADMIN_LANGS } from '@/api/adminTranslate';
 import { ForbiddenError } from '@/api/adminClient';
 import { loadEditLog } from '@/api/adminSource';
 import { listUsers } from '@/api/adminUsers';
@@ -38,8 +40,63 @@ function Value({ label, text }) {
   );
 }
 
+// Languages a change can be in, besides Hebrew, in button order.
+const OTHER_LANGS = ['ar', 'en', 'ru', 'fr'];
+const LANG_LABELS = Object.fromEntries(ADMIN_LANGS.map(l => [l.id, l.label]));
+const SUFFIX_LANG = new Map(OTHER_LANGS.map(id => [`(${LANG_LABELS[id]})`, id]));
+
+/**
+ * The language of a logged change: its `lang`, or for rows logged before
+ * changes carried one, the " (ערבית)" suffix translations are titled with.
+ * Anything else is Hebrew.
+ */
+export function changeLang(change) {
+  if (change.lang) return change.lang;
+  const m = String(change.title || '').match(/\([^()]+\)\s*$/);
+  return (m && SUFFIX_LANG.get(m[0].trim())) || 'he';
+}
+
+function ChangeRow({ c }) {
+  const action = ACTION_LABELS[c.action] || { label: c.action, color: 'bg-muted text-muted-foreground' };
+  return (
+    <li className="space-y-2">
+      <div className="flex items-center gap-2 flex-wrap">
+        <span className={`inline-block px-2 py-0.5 rounded-full text-xs font-medium ${action.color}`}>{action.label}</span>
+        <span className="text-xs text-muted-foreground">{c.section}</span>
+        <span className="text-sm font-medium text-foreground">{c.title}</span>
+      </div>
+      {(c.fields || []).map((f, j) => (
+        <div key={j}>
+          <p className="text-xs font-semibold text-muted-foreground mb-1">{f.label}</p>
+          <div className="flex flex-col sm:flex-row gap-2">
+            {c.action !== 'create' && <Value label="לפני" text={f.before} />}
+            <Value label={c.action === 'create' ? 'תוכן' : 'אחרי'} text={f.after} />
+          </div>
+        </div>
+      ))}
+    </li>
+  );
+}
+
+// One batch. Opened, it lists the Hebrew changes; the other languages' changes
+// (mostly AI translations of those) stay behind one button per language.
 function LogEntry({ entry, who }) {
   const [open, setOpen] = useState(false);
+  const [shown, setShown] = useState(() => new Set());
+  const byLang = new Map();
+  for (const c of entry.changes) {
+    const lang = changeLang(c);
+    if (!byLang.has(lang)) byLang.set(lang, []);
+    byLang.get(lang).push(c);
+  }
+  const hebrew = byLang.get('he') || [];
+  const others = OTHER_LANGS.filter(l => byLang.has(l));
+  const otherCount = entry.changes.length - hebrew.length;
+  const toggle = lang => setShown(s => {
+    const next = new Set(s);
+    if (next.has(lang)) next.delete(lang); else next.add(lang);
+    return next;
+  });
   return (
     <li className="rounded-xl border border-border bg-background">
       <Button
@@ -52,40 +109,45 @@ function LogEntry({ entry, who }) {
         <span className="min-w-0">
           <span className="block font-medium text-foreground">{who}</span>
           <span className="block text-xs text-muted-foreground mt-0.5">
-            {formatWhen(entry.at)} · {entry.changes.length === 1 ? 'שינוי אחד' : `${entry.changes.length} שינויים`}
+            {formatWhen(entry.at)} · {hebrew.length === 1 ? 'שינוי אחד' : `${hebrew.length} שינויים`}
+            {otherCount > 0 && ` · ועוד ${otherCount} בשפות אחרות`}
           </span>
         </span>
         {open ? <ChevronUp className="w-4 h-4 flex-shrink-0" /> : <ChevronDown className="w-4 h-4 flex-shrink-0" />}
       </Button>
-      {!open && (
+      {!open && hebrew.length > 0 && (
         <p className="px-4 pb-3 -mt-2 text-xs text-muted-foreground line-clamp-1">
-          {entry.changes.map(c => `${c.section}: ${c.title}`).join(' · ')}
+          {hebrew.map(c => `${c.section}: ${c.title}`).join(' · ')}
         </p>
       )}
       {open && (
-        <ul className="border-t border-border p-4 space-y-3">
-          {entry.changes.map((c, i) => {
-            const action = ACTION_LABELS[c.action] || { label: c.action, color: 'bg-muted text-muted-foreground' };
-            return (
-              <li key={i} className="space-y-2">
-                <div className="flex items-center gap-2 flex-wrap">
-                  <span className={`inline-block px-2 py-0.5 rounded-full text-xs font-medium ${action.color}`}>{action.label}</span>
-                  <span className="text-xs text-muted-foreground">{c.section}</span>
-                  <span className="text-sm font-medium text-foreground">{c.title}</span>
-                </div>
-                {(c.fields || []).map((f, j) => (
-                  <div key={j}>
-                    <p className="text-xs font-semibold text-muted-foreground mb-1">{f.label}</p>
-                    <div className="flex flex-col sm:flex-row gap-2">
-                      {c.action !== 'create' && <Value label="לפני" text={f.before} />}
-                      <Value label={c.action === 'create' ? 'תוכן' : 'אחרי'} text={f.after} />
-                    </div>
-                  </div>
-                ))}
-              </li>
-            );
-          })}
-        </ul>
+        <div className="border-t border-border p-4 space-y-3">
+          {hebrew.length > 0 ? (
+            <ul className="space-y-3">
+              {hebrew.map((c, i) => <ChangeRow key={i} c={c} />)}
+            </ul>
+          ) : (
+            <p className="text-xs text-muted-foreground">אין בשמירה הזו שינויים בעברית.</p>
+          )}
+          {others.length > 0 && (
+            <div className="flex items-center gap-2 flex-wrap pt-1">
+              <span className="text-xs text-muted-foreground">שפות נוספות:</span>
+              {others.map(lang => (
+                <ChoiceChip key={lang} size="sm" selected={shown.has(lang)} onClick={() => toggle(lang)}>
+                  {LANG_LABELS[lang]} ({byLang.get(lang).length})
+                </ChoiceChip>
+              ))}
+            </div>
+          )}
+          {others.filter(l => shown.has(l)).map(lang => (
+            <section key={lang} aria-label={LANG_LABELS[lang]} className="rounded-lg border border-dashed border-border p-3 space-y-3">
+              <h4 className="text-xs font-semibold text-muted-foreground">{LANG_LABELS[lang]}</h4>
+              <ul className="space-y-3">
+                {byLang.get(lang).map((c, i) => <ChangeRow key={i} c={c} />)}
+              </ul>
+            </section>
+          ))}
+        </div>
       )}
     </li>
   );

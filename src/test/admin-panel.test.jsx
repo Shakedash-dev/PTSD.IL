@@ -150,8 +150,14 @@ describe('admin: edits are staged, then saved together', () => {
     const save = await findFinalSave(dialog);
     fireEvent.click(within(dialog).getByRole('checkbox'));
     fireEvent.click(save);
-    // The preview refuses every write.
-    await waitFor(() => expect(within(dialog).getByRole('button', { name: /שמירה סופית/ })).toBeInTheDocument());
+    // The save runs in the background: the dialog closes at once. The preview
+    // refuses every write; the strip says what failed and offers a retry.
+    await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull());
+    const strip = await screen.findByTestId('save-progress');
+    await waitFor(() => expect(within(strip).getByText(/לא נשמרו ונשארו ברשימה/)).toBeInTheDocument());
+    expect(within(strip).getByText(/קריאה בלבד/)).toBeInTheDocument();
+    expect(within(strip).getByText(/כי השינוי בעברית שהם תלויים בו נכשל/)).toBeInTheDocument();
+    expect(within(strip).getByRole('button', { name: /ניסיון חוזר/ })).toBeEnabled();
     expect(screen.getByText('שינוי אחד ממתין לשמירה')).toBeInTheDocument();
   });
 });

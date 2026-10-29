@@ -12,6 +12,7 @@ import { MetivContentView } from '@/components/admin/MetivAdmin';
 import { revealElement, useAdminFocus } from '@/components/admin/AdminFocus';
 import ChatbotQaPanel, { QA_SCOPE, QA_SECTION } from '@/components/admin/ChatbotQaAdmin';
 import { SaveAllBar, fieldsDiff, runWrite, usePendingChanges } from '@/components/admin/PendingChanges';
+import { ServerChangedNote, useChangedWhileOpen } from '@/components/admin/ServerChanged';
 import { stageSiblingDeletes, useStageTranslations } from '@/components/admin/translationStaging';
 import { hasAdminAccess, hasUserManagementAccess, getCurrentUserId } from '@/lib/auth';
 import {
@@ -506,10 +507,13 @@ function FieldInput({ field, value, onChange }) {
  * @param {boolean} [props.startInEdit]
  * @param {boolean} [props.reveal]  scroll the open editor into view
  * @param {string} [props.confirmLabel]
+ * @param {any} [props.server]  the server's copy of the item, to tell when it changes under an open editor
+ * @param {boolean} [props.locked]  a staged create the running save is writing: not editable until it lands
  */
-function EditableCard({ item, fields, onSave, onCancel, onDelete, onDiscard, status, renderView, startInEdit = false, reveal = false, confirmLabel = 'אישור' }) {
+function EditableCard({ item, fields, onSave, onCancel, onDelete, onDiscard, status, renderView, startInEdit = false, reveal = false, confirmLabel = 'אישור', server, locked = false }) {
   const [editing, setEditing] = useState(startInEdit);
   const [draft, setDraft] = useState(item);
+  const changed = useChangedWhileOpen(editing, server, item, { same: (a, b) => fieldsDiff(fields, a, b).length === 0 });
   const [saving, setSaving] = useState(false);
   const box = useRef(null);
   // A search result opened this item (Metiv admin): bring the editor into view.
@@ -522,12 +526,12 @@ function EditableCard({ item, fields, onSave, onCancel, onDelete, onDiscard, sta
       <div className={`relative group p-4 rounded-xl border bg-background ${badge ? 'border-warning/60' : 'border-border'}`}>
         {badge && (
           <div className="flex items-center gap-2 mb-2 flex-wrap pe-16">
-            <Badge color={badge.color}>{badge.label}</Badge>
-            {onDiscard && <DiscardButton onClick={onDiscard} />}
+            <Badge color={badge.color}>{locked ? 'נשמר כעת...' : badge.label}</Badge>
+            {onDiscard && !locked && <DiscardButton onClick={onDiscard} />}
           </div>
         )}
         <div className={status === 'delete' ? 'opacity-50 line-through' : ''}>{renderView(item)}</div>
-        {status !== 'delete' && (
+        {status !== 'delete' && !locked && (
           <div className="absolute top-3 end-3 flex gap-1">
             <IconBtn icon={Pencil} title="עריכה" onClick={() => { setDraft(item); setEditing(true); }} />
             {onDelete && <IconBtn icon={Trash2} title="מחיקה" tone="danger" onClick={onDelete} />}
@@ -546,6 +550,7 @@ function EditableCard({ item, fields, onSave, onCancel, onDelete, onDiscard, sta
 
   return (
     <div ref={box} className="p-4 rounded-xl border border-primary/40 bg-background space-y-3">
+      {changed && <ServerChangedNote />}
       {fields.map(f => (
         <div key={f.key}>
           <label className="text-xs font-semibold text-muted-foreground block mb-1">{f.label}</label>
@@ -585,19 +590,31 @@ function EditableCard({ item, fields, onSave, onCancel, onDelete, onDiscard, sta
 // "save all" batch (the pending-changes `version`), so a panel always shows
 // what the server holds once a save lands. A stale response from a previous
 // `deps` value (e.g. switching category quickly) is dropped.
+//
+// A re-fetch after a save (same `deps`) refreshes in place: no loading state,
+// so the panel stays mounted and an open editor keeps its draft (a background
+// save can finish while the editor is typing). A failed refresh keeps the data
+// on screen. Only new `deps` (another language, category...) show the loader.
 function useAdminData(load, deps, errorMessage, empty) {
   const { version } = usePendingChanges();
   const [data, setData] = useState(empty);
   const [loading, setLoading] = useState(true);
+  const loadedFor = useRef(/** @type {string|null} */ (null));
+  const depsKey = JSON.stringify(deps);
   useEffect(() => {
     let cancelled = false;
-    setLoading(true);
+    const refresh = loadedFor.current === depsKey;
+    if (!refresh) setLoading(true);
     load()
-      .then(d => { if (!cancelled) setData(d); })
+      .then(d => {
+        if (cancelled) return;
+        setData(d);
+        loadedFor.current = depsKey;
+      })
       .catch(err => {
         if (cancelled) return;
         toast.error(err?.message || errorMessage);
-        setData(empty);
+        if (!refresh) setData(empty);
       })
       .finally(() => { if (!cancelled) setLoading(false); });
     return () => { cancelled = true; };
@@ -681,7 +698,7 @@ function useArticleTranslations() {
  * @param {string} props.addLabel
  */
 function StagedList({ scope, section, items, fields, renderView, describe, blank, save, remove, build, perLanguage = false, addLabel }) {
-  const { changes, stage, discard, newKey } = usePendingChanges();
+  const { changes, stage, discard, newKey, running } = usePendingChanges();
   const { id: lang } = useAdminLang();
   const { translate, deleteSiblings } = useArticleTranslations();
   const focus = useAdminFocus();
@@ -736,6 +753,7 @@ function StagedList({ scope, section, items, fields, renderView, describe, blank
               startInEdit={open}
               reveal={open}
               item={p?.action === 'update' ? p.draft : item}
+              server={item}
               fields={fields}
               renderView={renderView}
               status={p?.action}
@@ -752,6 +770,7 @@ function StagedList({ scope, section, items, fields, renderView, describe, blank
             fields={fields}
             renderView={renderView}
             status="create"
+            locked={running.has(c)}
             onDiscard={() => discard(c.key)}
             onSave={draft => stageCreate(c.key, draft)}
           />
@@ -1209,6 +1228,9 @@ function ChildrenPanel() {
   const canEditGuidelines = lang === 'he' || Boolean(guidelinesItem?.id);
   const guidelinesPending = changes.find(c => c.key === guidelinesKey);
   const shownGuidelines = guidelinesPending ? guidelinesPending.draft.guidelines : (guidelinesItem?.guidelines || '');
+  const guidelinesChanged = useChangedWhileOpen(editingGuidelines, guidelinesItem?.guidelines || '', shownGuidelines, {
+    same: (a, b) => fieldsDiff(GUIDELINES_FIELDS, { guidelines: a }, { guidelines: b }).length === 0,
+  });
 
   const fields = [
     { key: 'type', label: 'סוג', type: 'select', options: toOptions(RESOURCE_TYPE_LABELS) },
@@ -1295,6 +1317,7 @@ function ChildrenPanel() {
             </div>
             {editingGuidelines ? (
               <div className="space-y-2">
+                {guidelinesChanged && <ServerChangedNote />}
                 <RichTextEditor value={guidelinesDraft} onChange={setGuidelinesDraft} />
                 <div className="flex gap-2 items-center flex-wrap">
                   <Button
@@ -1570,9 +1593,11 @@ function flatQuestion(q) {
 
 function QuestionnairePanel() {
   const metiv = useContext(AdminVariantContext) === 'metiv';
-  const { changes, stage, discard, newKey } = usePendingChanges();
+  const { changes, stage, discard, newKey, running } = usePendingChanges();
   const [creating, setCreating] = useState(false);
   const { id: lang } = useAdminLang();
+  // The tab's language, so the review and the edit log file it there.
+  const langOf = lang === 'he' ? {} : { lang };
   // Each language's questionnaire is its own row (no groupId), so the panel
   // lists the tab's language and nothing is translated automatically.
   const [items, loading] = useAdminData(
@@ -1586,7 +1611,7 @@ function QuestionnairePanel() {
   const creates = pending.filter(c => c.action === 'create');
 
   function stageCreate(key, draft) {
-    stage({ key, scope, section: QUESTIONNAIRE_SECTION, action: 'create', title: draft.name || 'שאלון חדש', draft, diff: fieldsDiff(QUESTIONNAIRE_FIELDS, {}, draft), run: () => createQuestionnaire(draft) });
+    stage({ key, scope, section: QUESTIONNAIRE_SECTION, ...langOf, action: 'create', title: draft.name || 'שאלון חדש', draft, diff: fieldsDiff(QUESTIONNAIRE_FIELDS, {}, draft), run: () => createQuestionnaire(draft) });
   }
 
   if (loading) return <LoadingRow />;
@@ -1607,16 +1632,17 @@ function QuestionnairePanel() {
             <QuestionnaireRow
               key={q.id}
               q={p?.action === 'update' ? { ...q, ...p.draft } : q}
+              server={q}
               status={p?.action}
               onDiscard={p ? () => discard(p.key) : undefined}
               onStage={draft => {
                 const key = `${scope}:${q.id}`;
                 const diff = fieldsDiff(QUESTIONNAIRE_FIELDS, q, draft);
                 if (!diff.length) { discard(key); return; }
-                stage({ key, scope, section: QUESTIONNAIRE_SECTION, action: 'update', itemId: q.id, title: draft.name || q.name, draft, diff, run: () => updateQuestionnaire(q.id, draft) });
+                stage({ key, scope, section: QUESTIONNAIRE_SECTION, ...langOf, action: 'update', itemId: q.id, title: draft.name || q.name, draft, diff, run: () => updateQuestionnaire(q.id, draft) });
               }}
               onDelete={metiv ? undefined : () => stage({
-                key: `${scope}:${q.id}`, scope, section: QUESTIONNAIRE_SECTION, action: 'delete', itemId: q.id,
+                key: `${scope}:${q.id}`, scope, section: QUESTIONNAIRE_SECTION, ...langOf, action: 'delete', itemId: q.id,
                 title: `${q.name} (כולל כל השאלות שלו)`, diff: [], run: () => removeQuestionnaire(q.id),
               })}
             />
@@ -1627,6 +1653,7 @@ function QuestionnairePanel() {
             key={c.key}
             q={c.draft}
             status="create"
+            locked={running.has(c)}
             onDiscard={() => discard(c.key)}
             onStage={draft => stageCreate(c.key, draft)}
           />
@@ -1659,12 +1686,15 @@ function QuestionnairePanel() {
  * @param {(draft: any) => void} props.onStage
  * @param {() => void} [props.onDelete]
  * @param {() => void} [props.onDiscard]
+ * @param {any} [props.server]  the server's copy, to tell when it changes under the open form
+ * @param {boolean} [props.locked]  a staged create the running save is writing
  */
-function QuestionnaireRow({ q, status, onStage, onDelete, onDiscard }) {
+function QuestionnaireRow({ q, status, onStage, onDelete, onDiscard, server, locked = false }) {
   const metiv = useContext(AdminVariantContext) === 'metiv';
   const [editing, setEditing] = useState(false);
   const [expanded, setExpanded] = useState(false);
   const badge = status && STATUS_BADGES[status];
+  const changed = useChangedWhileOpen(editing, server, q, { same: (a, b) => fieldsDiff(QUESTIONNAIRE_FIELDS, a, b).length === 0 });
 
   return (
     <div className={`rounded-xl border bg-background ${badge ? 'border-warning/60' : 'border-border'}`}>
@@ -1672,13 +1702,14 @@ function QuestionnaireRow({ q, status, onStage, onDelete, onDiscard }) {
         {editing ? (
           <QuestionnaireMetaForm
             initial={q}
+            changed={changed}
             onCancel={() => setEditing(false)}
             onSave={draft => { onStage(draft); setEditing(false); }}
           />
         ) : (
           <div className="flex items-start justify-between gap-3">
             <div>
-              {badge && <div className="mb-2"><Badge color={badge.color}>{badge.label}</Badge></div>}
+              {badge && <div className="mb-2"><Badge color={badge.color}>{locked ? 'נשמר כעת...' : badge.label}</Badge></div>}
               <div className={status === 'delete' ? 'opacity-50 line-through' : ''}>
                 <p className="font-semibold text-foreground">{q.name}</p>
                 {metiv ? (
@@ -1691,8 +1722,8 @@ function QuestionnaireRow({ q, status, onStage, onDelete, onDiscard }) {
               </div>
             </div>
             <div className="flex gap-2 flex-shrink-0 items-center">
-              {onDiscard && <DiscardButton onClick={onDiscard} />}
-              {status !== 'delete' && (
+              {onDiscard && !locked && <DiscardButton onClick={onDiscard} />}
+              {status !== 'delete' && !locked && (
                 <Button variant="outline-subtle" size="none" onClick={() => setEditing(true)} className="p-2 rounded-lg" title="עריכה"><Pencil className="w-4 h-4" /></Button>
               )}
               {onDelete && status !== 'delete' && (
@@ -1721,7 +1752,7 @@ function QuestionnaireRow({ q, status, onStage, onDelete, onDiscard }) {
 }
 
 // Metadata form for create/edit.
-function QuestionnaireMetaForm({ initial, onSave, onCancel }) {
+function QuestionnaireMetaForm({ initial, onSave, onCancel, changed = false }) {
   const metiv = useContext(AdminVariantContext) === 'metiv';
   const [draft, setDraft] = useState({
     langId: initial.langId ?? 'he', // the language tab's; not editable here
@@ -1738,6 +1769,7 @@ function QuestionnaireMetaForm({ initial, onSave, onCancel }) {
 
   return (
     <div className="space-y-3">
+      {changed && <ServerChangedNote />}
       {!metiv && (
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
           <div>
@@ -1789,7 +1821,10 @@ function QuestionnaireMetaForm({ initial, onSave, onCancel }) {
 // inline option editing, add/delete - all staged.
 function QuestionsEditor({ questionnaireId, questionnaireName }) {
   const metiv = useContext(AdminVariantContext) === 'metiv';
-  const { changes, stage, discard, newKey } = usePendingChanges();
+  const { changes, stage, discard, newKey, running } = usePendingChanges();
+  // The questionnaire is the tab's language; the review and the log file it there.
+  const { id: lang } = useAdminLang();
+  const langOf = lang === 'he' ? {} : { lang };
   const [detail, loading] = useAdminData(
     () => loadQuestionnaireDetail(questionnaireId), [questionnaireId], 'שגיאה בטעינת השאלות', null
   );
@@ -1807,7 +1842,7 @@ function QuestionsEditor({ questionnaireId, questionnaireName }) {
   const blankOptions = () => [0, 1, 2, 3, 4].map(n => ({ answer: '', score: n, order: n }));
 
   function stageCreate(key, draft) {
-    stage({ key, scope, section, action: 'create', title: draft.text || 'שאלה חדשה', draft, diff: fieldsDiff(QUESTION_FIELDS, {}, flatQuestion(draft)), run: () => addQuestion(questionnaireId, draft) });
+    stage({ key, scope, section, ...langOf, action: 'create', title: draft.text || 'שאלה חדשה', draft, diff: fieldsDiff(QUESTION_FIELDS, {}, flatQuestion(draft)), run: () => addQuestion(questionnaireId, draft) });
   }
 
   return (
@@ -1820,14 +1855,15 @@ function QuestionsEditor({ questionnaireId, questionnaireName }) {
             key={qn.id}
             index={i}
             question={p?.action === 'update' ? { ...qn, ...p.draft } : qn}
+            server={qn}
             status={p?.action}
             onDiscard={p ? () => discard(p.key) : undefined}
             onSave={draft => {
               const diff = fieldsDiff(QUESTION_FIELDS, flatQuestion(qn), flatQuestion(draft));
               if (!diff.length) { discard(key); return; }
-              stage({ key, scope, section, action: 'update', itemId: qn.id, title: draft.text || qn.text, draft, diff, run: () => updateQuestion(questionnaireId, qn.id, draft) });
+              stage({ key, scope, section, ...langOf, action: 'update', itemId: qn.id, title: draft.text || qn.text, draft, diff, run: () => updateQuestion(questionnaireId, qn.id, draft) });
             }}
-            onDelete={metiv ? undefined : () => stage({ key, scope, section, action: 'delete', itemId: qn.id, title: qn.text, diff: [], run: () => removeQuestion(questionnaireId, qn.id) })}
+            onDelete={metiv ? undefined : () => stage({ key, scope, section, ...langOf, action: 'delete', itemId: qn.id, title: qn.text, diff: [], run: () => removeQuestion(questionnaireId, qn.id) })}
           />
         );
       })}
@@ -1838,6 +1874,7 @@ function QuestionsEditor({ questionnaireId, questionnaireName }) {
           index={questions.length + i}
           question={c.draft}
           status="create"
+          locked={running.has(c)}
           onDiscard={() => discard(c.key)}
           onSave={draft => stageCreate(c.key, draft)}
         />
@@ -1869,8 +1906,10 @@ function QuestionsEditor({ questionnaireId, questionnaireName }) {
  * @param {() => void} [props.onDiscard]
  * @param {'create'|'update'|'delete'} [props.status]
  * @param {boolean} [props.startInEdit]
+ * @param {any} [props.server]  the server's copy, to tell when it changes under the open form
+ * @param {boolean} [props.locked]  a staged create the running save is writing
  */
-function QuestionRow({ index, question, onSave, onDelete, onCancel, onDiscard, status, startInEdit = false }) {
+function QuestionRow({ index, question, onSave, onDelete, onCancel, onDiscard, status, startInEdit = false, server, locked = false }) {
   // The Metiv admin edits the wording only: scores, order and the set of answers are the PCL-5 protocol.
   const metiv = useContext(AdminVariantContext) === 'metiv';
   const [editing, setEditing] = useState(startInEdit);
@@ -1880,6 +1919,9 @@ function QuestionRow({ index, question, onSave, onDelete, onCancel, onDiscard, s
   const [options, setOptions] = useState(seed(question));
   const inputCls = 'px-2 py-1.5 rounded-lg border border-border bg-background text-sm';
   const badge = status && STATUS_BADGES[status];
+  const changed = useChangedWhileOpen(editing, server, question, {
+    same: (a, b) => fieldsDiff(QUESTION_FIELDS, flatQuestion(a), flatQuestion(b)).length === 0,
+  });
 
   const setOpt = (i, k, v) => setOptions(os => os.map((o, j) => (j === i ? { ...o, [k]: v } : o)));
 
@@ -1896,15 +1938,15 @@ function QuestionRow({ index, question, onSave, onDelete, onCancel, onDiscard, s
     return (
       <div className={`p-3 rounded-lg border bg-background flex items-start justify-between gap-3 ${badge ? 'border-warning/60' : 'border-border'}`}>
         <div>
-          {badge && <div className="mb-1"><Badge color={badge.color}>{badge.label}</Badge></div>}
+          {badge && <div className="mb-1"><Badge color={badge.color}>{locked ? 'נשמר כעת...' : badge.label}</Badge></div>}
           <div className={status === 'delete' ? 'opacity-50 line-through' : ''}>
             <p className="text-sm text-foreground"><span className="text-muted-foreground/60">{index + 1}. </span>{question.text}</p>
             <p className="text-xs text-muted-foreground mt-1">{(question.options ?? []).map(o => (metiv ? o.answer : `${o.answer}=${o.score}`)).join(' · ')}</p>
           </div>
         </div>
         <div className="flex gap-2 flex-shrink-0 items-center">
-          {onDiscard && <DiscardButton onClick={onDiscard} />}
-          {status !== 'delete' && (
+          {onDiscard && !locked && <DiscardButton onClick={onDiscard} />}
+          {status !== 'delete' && !locked && (
             <Button variant="outline-subtle" size="none" onClick={startEdit} className="p-2 rounded-lg" title="עריכה"><Pencil className="w-4 h-4" /></Button>
           )}
           {onDelete && status !== 'delete' && (
@@ -1917,6 +1959,7 @@ function QuestionRow({ index, question, onSave, onDelete, onCancel, onDiscard, s
 
   return (
     <div className="p-3 rounded-lg border border-primary/30 bg-background space-y-2">
+      {changed && <ServerChangedNote />}
       <div className="flex gap-2">
         {!metiv && <input className={`${inputCls} w-16`} type="number" value={sortOrder} onChange={e => setSortOrder(e.target.value)} title="sortOrder" />}
         <input className={`${inputCls} flex-1`} value={text} onChange={e => setText(e.target.value)} placeholder="טקסט השאלה" aria-label="טקסט השאלה" />

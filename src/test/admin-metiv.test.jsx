@@ -31,6 +31,17 @@ vi.mock('@/api/adminClient', () => ({
   UnauthorizedError: class UnauthorizedError extends Error {},
   ReadOnlyPreviewError: class ReadOnlyPreviewError extends Error {},
 }));
+// The shared save-status row (src/api/adminStatus.js) is pinned in
+// admin-background-save.test.jsx; here it would add writes and shift ids.
+vi.mock('@/api/adminStatus', () => ({
+  createSaveStatus: async () => null,
+  patchSaveStatus: async () => {},
+  pruneSaveStatuses: async () => {},
+  loadSaveStatuses: async () => [],
+  isOwnSaveStatus: () => false,
+  isRunningStatus: () => false,
+  finishedAtMs: () => 0,
+}));
 vi.mock('@/api/reindex', () => ({
   reindexItem: vi.fn(async () => {}),
   ChatbotSyncError: class ChatbotSyncError extends Error {},
@@ -80,9 +91,12 @@ let translateCalls;
 let translateImpl;
 let created;
 let siteCopyCategory;
+// When set, every write waits for it - a background save still running.
+let writeGate;
 
 function resetDb() {
   created = 0;
+  writeGate = null;
   siteCopyCategory = false;
   writes = [];
   translateCalls = [];
@@ -131,6 +145,7 @@ h.api = async (method, path, body) => {
     throw new Error(`no GET fixture for ${path}`);
   }
   writes.push({ method, path, body });
+  if (writeGate) await writeGate;
   if (path === '/admin/categories') return { id: `cat-${body.slug}`, ...body };
   if (method === 'POST') {
     created += 1;
@@ -727,5 +742,62 @@ describe('metiv admin', () => {
     expect(apps.map(a => a.title)).toEqual(['Headspace', 'Calm', 'Wysa']);
     expect(apps[1]).toMatchObject({ description: 'מדיטציה מודרכת, שינה ונשימה.', ios_url: 'https://apps.apple.com/calm' });
     expect(apps[2]).toMatchObject({ ios_url: 'https://apps.apple.com/wysa', android_url: '' });
+  });
+
+  // A background save lands (or a refresh brings another session's save) while
+  // an editor is open: the lists re-read the server, the open editor keeps
+  // what was typed, and says so when its item changed meanwhile.
+  it('an open item editor keeps its draft through a background save and its refresh, with a note when the item changed', async () => {
+    renderAdmin({ variant: 'metiv' });
+    await openPage('קורסים והכשרות');
+    await editSyllabusTitle('שנה א - טראומה פשוטה');
+    await waitFor(() => expect(translateCalls).toHaveLength(4));
+
+    let release;
+    writeGate = new Promise(r => { release = r; });
+    const { dialog, save } = await openReview();
+    fireEvent.click(within(dialog).getByRole('checkbox', { name: /עברתי על כל השינויים/ }));
+    fireEvent.click(save);
+    await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull());
+
+    // While it saves: open the other course and type, without confirming.
+    fireEvent.click(within(await card(COURSE_2.title)).getByTitle('עריכה'));
+    fireEvent.change(screen.getByDisplayValue(COURSE_2.title), { target: { value: 'טיוטה פתוחה' } });
+    // Meanwhile another session changed that course.
+    db = db.map(r => (r.id === 'c2' ? { ...r, content: JSON.stringify({ ...COURSE_2, subtitle: 'כותרת משנה מעורך אחר' }) } : r));
+
+    release();
+    await waitFor(() => expect(writes.some(w => w.body?.categoryIds?.[0] === 'cat-admin-log')).toBe(true), { timeout: 4000 });
+    await screen.findByText(/שינויים נשמרו ומופיעים באתר/);
+    expect(screen.getByDisplayValue('טיוטה פתוחה')).toBeInTheDocument();
+    expect(await screen.findByText(/הפריט עודכן בינתיים - השמירה שלך תדרוס את הגרסה החדשה/)).toBeInTheDocument();
+    // Confirming stages the draft over the newer version.
+    fireEvent.click(screen.getByRole('button', { name: 'אישור' }));
+    expect(await screen.findByText('שינוי אחד ממתין לשמירה')).toBeInTheDocument();
+  });
+
+  it('the always-open singleton form keeps typing that was not confirmed when its own save lands', async () => {
+    renderAdmin({ variant: 'metiv' });
+    await openPage('יצירת קשר');
+    const address = await screen.findByLabelText('כתובת', {}, { timeout: 4000 });
+    fireEvent.change(address, { target: { value: 'גבעת שאול, ירושלים' } });
+    fireEvent.click(screen.getByRole('button', { name: 'אישור' }));
+    await waitFor(() => expect(translateCalls).toHaveLength(4));
+
+    let release;
+    writeGate = new Promise(r => { release = r; });
+    const { dialog, save } = await openReview();
+    fireEvent.click(within(dialog).getByRole('checkbox', { name: /עברתי על כל השינויים/ }));
+    fireEvent.click(save);
+    await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull());
+    fireEvent.change(screen.getByLabelText('כתובת'), { target: { value: 'גבעת שאול 5, ירושלים' } });
+
+    db = db.map(r => (r.id === 'org' ? { ...r, content: JSON.stringify({ ...JSON.parse(r.content), address: 'גבעת שאול, ירושלים' }) } : r));
+    release();
+    await waitFor(() => expect(writes.some(w => w.body?.categoryIds?.[0] === 'cat-admin-log')).toBe(true), { timeout: 4000 });
+    await screen.findByText(/שינויים נשמרו ומופיעים באתר/);
+    expect(screen.getByLabelText('כתובת')).toHaveValue('גבעת שאול 5, ירושלים');
+    // Its own save landing is not "changed meanwhile".
+    expect(screen.queryByText(/הפריט עודכן בינתיים/)).toBeNull();
   });
 });

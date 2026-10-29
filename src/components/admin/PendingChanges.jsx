@@ -4,10 +4,14 @@ import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { ForbiddenError, UnauthorizedError } from '@/api/adminClient';
-import { ChatbotSyncError } from '@/api/reindex';
+import { ChatbotSyncError, reindexItem } from '@/api/reindex';
+import { collectReindexes } from '@/api/reindexQueue';
+import { createSaveStatus, patchSaveStatus, pruneSaveStatuses } from '@/api/adminStatus';
 import { LANG_BY_ID } from '@/api/adminTranslate';
 import { appendEditLog } from '@/api/adminSource';
-import { getCurrentUser } from '@/lib/auth';
+import { getCurrentUser, inReadOnlyPreview } from '@/lib/auth';
+import { ADMIN_PREVIEW } from '@/lib/adminPreview';
+import { createLimiter } from '@/lib/concurrency';
 import { htmlToMd } from '@/lib/markdownHtml';
 
 // ─── Staged edits for /admin ────────────────────────────────────────────────
@@ -188,6 +192,89 @@ export function fieldsDiff(fields, before, after) {
 
 // ─── Context ────────────────────────────────────────────────────────────────
 
+// A batch writes this many changes at once. The order that matters is kept:
+// a change linked to a Hebrew one (its translations, which need the new row's
+// groupId, and its sibling deletes) starts only after that one landed, and
+// deletes start only after every other write, so a delete never races a write
+// to the same rows (a reorder of a list it is removed from).
+const WRITE_CONCURRENCY = 4;
+// Chatbot reindex calls after a batch; the worker is the slow side.
+const REINDEX_CONCURRENCY = 3;
+// The shared status row is PATCHed after every this many finished writes.
+const STATUS_EVERY = 3;
+
+/**
+ * @typedef {{ change: PendingChange, error: string }} FailedWrite
+ * @typedef {{
+ *   phase: 'saving'|'done',
+ *   done: number,
+ *   total: number,
+ *   saved: number,
+ *   failed: FailedWrite[],
+ *   unsaved: PendingChange[],
+ *   authLost: boolean,
+ *   untranslated: number,
+ * }} SaveJob
+ * @typedef {{ running: boolean, done: number, total: number, failedIds: string[], error?: string }} SyncState
+ */
+
+// One write of a batch. Unlike runWrite it reports instead of toasting - the
+// progress strip lists what failed. UnauthorizedError is re-thrown so the batch
+// stops. A ChatbotSyncError cannot happen inside a batch (its reindexes are
+// queued, src/api/reindexQueue.js) and would still mean the content is saved.
+async function attemptWrite(run) {
+  try {
+    await run();
+    return { ok: true, error: '' };
+  } catch (err) {
+    if (err instanceof UnauthorizedError) throw err;
+    if (err instanceof ChatbotSyncError) return { ok: true, error: '' };
+    if (err instanceof ForbiddenError) return { ok: false, error: 'אין לך הרשאה לבצע פעולה זו' };
+    return { ok: false, error: err?.message || 'אירעה שגיאה' };
+  }
+}
+
+// Keeps the batch's shared status row (src/api/adminStatus.js) current, so
+// other open admin sessions can say a save is running. Every request is
+// chained, so PATCHes land in order, and every failure is swallowed: the row is
+// advisory and never holds up or fails the content writes. Off in the dev
+// server's read-only mode, where nothing can be written.
+/** @param {PendingChange[]} batch */
+function statusReporter(batch) {
+  if (ADMIN_PREVIEW && inReadOnlyPreview()) return null;
+  const startedAt = new Date().toISOString();
+  const base = {
+    user: getCurrentUser(),
+    startedAt,
+    total: batch.length,
+    sections: [...new Set(batch.map(c => c.section))],
+  };
+  /** @type {Promise<string|null>} */
+  let chain = createSaveStatus({ ...base, updatedAt: startedAt, done: 0, failed: 0 }).catch(() => null);
+  chain.then(id => (id ? pruneSaveStatuses(id) : null)).catch(() => {});
+  let reported = 0;
+  const push = extra => {
+    const content = { ...base, ...extra, updatedAt: new Date().toISOString() };
+    chain = chain.then(async id => {
+      if (id) await patchSaveStatus(id, content).catch(() => {});
+      return id;
+    });
+    return chain;
+  };
+  return {
+    /** @param {number} done @param {number} failed */
+    progress(done, failed) {
+      if (done - reported < STATUS_EVERY) return;
+      reported = done;
+      push({ done, failed });
+    },
+    /** @param {number} done @param {number} failed */
+    finish(done, failed) {
+      return push({ done, failed, finishedAt: new Date().toISOString() });
+    },
+  };
+}
+
 const PendingChangesContext = createContext(null);
 
 export function PendingChangesProvider({ children }) {
@@ -196,6 +283,15 @@ export function PendingChangesProvider({ children }) {
   // re-fetch what the server now holds.
   const [version, setVersion] = useState(0);
   const counter = useRef(0);
+  // The batch running now (or last), and the chatbot reindex queue after it.
+  const [job, setJob] = useState(/** @type {SaveJob|null} */ (null));
+  const [sync, setSync] = useState(/** @type {SyncState|null} */ (null));
+  // The staged change objects the running batch is writing. Compared by
+  // identity: an item edited again during the save is a new object under the
+  // same key, which stays staged after the batch.
+  const [running, setRunning] = useState(/** @type {Set<PendingChange>} */ (new Set()));
+  const savingRef = useRef(false);
+  const syncQueue = useRef(/** @type {{ limit: ReturnType<typeof createLimiter>|null, waiting: Set<string>, failed: Set<string> }} */ ({ limit: null, waiting: new Set(), failed: new Set() }));
 
   const stage = useCallback((/** @type {PendingChange} */ change) => {
     setChanges(cs => {
@@ -229,58 +325,184 @@ export function PendingChangesProvider({ children }) {
     return `${scope}:new:${counter.current}`;
   }, []);
 
-  // Closing or reloading the tab would silently drop staged work.
+  // Panels re-fetch from the server (another session saved).
+  const refresh = useCallback(() => setVersion(v => v + 1), []);
+
+  const saving = job?.phase === 'saving';
+  const busy = saving || Boolean(sync?.running);
+
+  // Closing or reloading the tab would silently drop staged work, or stop a
+  // save (or its chatbot sync) half-way.
   useEffect(() => {
-    if (!changes.length) return undefined;
+    if (!changes.length && !busy) return undefined;
     const warn = e => { e.preventDefault(); e.returnValue = ''; };
     window.addEventListener('beforeunload', warn);
     return () => window.removeEventListener('beforeunload', warn);
-  }, [changes.length]);
+  }, [changes.length, busy]);
 
-  // Writes every staged change in the order it was staged. A failed change
-  // stays staged (its toast says why); the rest still go through, except the
-  // translations linked to a Hebrew change that failed. A dead session stops
-  // the batch - the remaining changes stay staged for after the editor signs
-  // back in. Translations that failed stay staged (with their retry) and are
-  // not written; ones the editor declined are dropped.
-  const saveAll = useCallback(async (/** @type {(done: number, total: number) => void} */ onProgress) => {
-    const declined = changes.filter(c => c.retranslate === false);
-    const left = changes.filter(c => c.translation && c.translation.state !== 'done' && c.retranslate !== false);
-    const batch = changes.filter(c => !declined.includes(c) && !left.includes(c));
-    const batchKeys = new Set(batch.map(c => c.key));
-    const saved = [];
-    const savedKeys = new Set();
-    let authLost = false;
-    for (let i = 0; i < batch.length; i++) {
-      onProgress?.(i + 1, batch.length);
-      const c = batch[i];
-      if (c.linkedTo && batchKeys.has(c.linkedTo) && !savedKeys.has(c.linkedTo)) continue;
+  // Queues chatbot reindexes. An id already waiting is not queued twice; a
+  // failed one is kept for "retry chatbot sync". The content is saved either way.
+  const enqueueSync = useCallback((/** @type {string[]} */ ids) => {
+    const q = syncQueue.current;
+    if (!q.limit) q.limit = createLimiter(REINDEX_CONCURRENCY);
+    const fresh = [...new Set(ids)].filter(id => !q.waiting.has(id));
+    if (!fresh.length) return Promise.resolve();
+    for (const id of fresh) { q.waiting.add(id); q.failed.delete(id); }
+    setSync(s => ({
+      running: true,
+      done: s?.running ? s.done : 0,
+      total: (s?.running ? s.total : 0) + fresh.length,
+      failedIds: [...q.failed],
+      error: s?.error,
+    }));
+    const settle = (/** @type {string} */ id, /** @type {string|null} */ error) => {
+      if (error !== null) q.failed.add(id);
+      setSync(s => {
+        const done = (s?.done ?? 0) + 1;
+        const total = s?.total ?? done;
+        return { running: done < total, done, total, failedIds: [...q.failed], error: error ?? s?.error };
+      });
+    };
+    return Promise.all(fresh.map(id => q.limit(async () => {
+      q.waiting.delete(id);
       try {
-        if (await runWrite(c.run)) { saved.push(c); savedKeys.add(c.key); }
+        await reindexItem(id);
+        settle(id, null);
       } catch (err) {
-        if (err instanceof UnauthorizedError) { authLost = true; break; }
-        throw err;
+        settle(id, err?.message || 'סנכרון הצ׳אטבוט נכשל');
       }
-    }
-    const declinedKeys = new Set(declined.map(c => c.key));
-    setChanges(cs => cs.filter(c => !savedKeys.has(c.key) && !declinedKeys.has(c.key)));
-    if (saved.length) {
-      try {
-        await appendEditLog({
-          user: getCurrentUser(),
-          changes: saved.map(c => ({ section: c.section, action: c.action, title: c.title, fields: c.diff })),
+    }))).then(() => {});
+  }, []);
+
+  const retrySync = useCallback(() => {
+    const ids = [...syncQueue.current.failed];
+    if (!ids.length) return Promise.resolve();
+    setSync(s => (s ? { ...s, error: undefined } : s));
+    return enqueueSync(ids);
+  }, [enqueueSync]);
+
+  const dismissJob = useCallback(() => {
+    if (!savingRef.current) setJob(null);
+  }, []);
+
+  // Writes `list` (normally every staged change) in the background: the
+  // progress strip follows it, and the editor keeps navigating and staging new
+  // edits, which are not part of it. Returns the batch's promise (resolved once
+  // its chatbot sync is done too), or null when a batch is already running.
+  //
+  // A failed change stays staged (the strip says why and offers a retry); the
+  // rest still go through, except the changes linked to a Hebrew change that
+  // failed. A dead session stops the batch - the remaining changes stay staged
+  // for after the editor signs back in. Translations that failed stay staged
+  // (with their retry) and are not written; ones the editor declined are
+  // dropped. The edit-log row is written after the last content write, then
+  // the chatbot reindexes run, queued.
+  const startSave = useCallback((/** @type {PendingChange[]} */ list) => {
+    if (savingRef.current || !list.length) return null;
+    savingRef.current = true;
+
+    const declined = list.filter(c => c.retranslate === false);
+    const left = list.filter(c => c.translation && c.translation.state !== 'done' && c.retranslate !== false);
+    const batch = list.filter(c => !declined.includes(c) && !left.includes(c));
+    const byKey = new Map(batch.map(c => [c.key, c]));
+    /** @type {PendingChange[]} */
+    const saved = [];
+    /** @type {FailedWrite[]} */
+    const failed = [];
+    let done = 0;
+    let authLost = false;
+
+    setRunning(new Set(batch));
+    setJob({ phase: 'saving', done: 0, total: batch.length, saved: 0, failed: [], unsaved: [], authLost: false, untranslated: left.length });
+    const status = statusReporter(batch);
+    const stopCollecting = collectReindexes();
+    const limit = createLimiter(WRITE_CONCURRENCY);
+
+    const finishOne = () => {
+      done += 1;
+      const d = done;
+      const f = failed.length;
+      setJob(j => (j ? { ...j, done: d, saved: saved.length, failed: failed.slice() } : j));
+      status?.progress(d, f);
+    };
+
+    /** @type {Map<string, Promise<boolean>>} */
+    const outcome = new Map();
+    const write = (/** @type {PendingChange} */ c) => {
+      if (!outcome.has(c.key)) outcome.set(c.key, (async () => {
+        const parent = c.linkedTo ? byKey.get(c.linkedTo) : undefined;
+        if (parent && !(await write(parent))) { finishOne(); return false; }
+        const ok = await limit(async () => {
+          if (authLost) return false;
+          try {
+            const r = await attemptWrite(c.run);
+            if (r.ok) saved.push(c);
+            else failed.push({ change: c, error: r.error });
+            return r.ok;
+          } catch (err) {
+            if (err instanceof UnauthorizedError) { authLost = true; return false; }
+            failed.push({ change: c, error: err?.message || 'אירעה שגיאה' });
+            return false;
+          }
         });
-      } catch {
-        toast.warning('השינויים נשמרו, אך הרישום ביומן העריכות נכשל.');
+        finishOne();
+        return ok;
+      })());
+      return outcome.get(c.key);
+    };
+    const isDelete = (/** @type {PendingChange} */ c) => c.action === 'delete' || byKey.get(c.linkedTo)?.action === 'delete';
+
+    const run = (async () => {
+      /** @type {string[]} */
+      let reindexIds = [];
+      try {
+        await Promise.all(batch.filter(c => !isDelete(c)).map(write));
+        await Promise.all(batch.filter(isDelete).map(write));
+      } finally {
+        reindexIds = stopCollecting();
       }
-      setVersion(v => v + 1);
-    }
-    return { saved: saved.length, failed: batch.length - saved.length, authLost, untranslated: left.length };
-  }, [changes]);
+      const savedSet = new Set(saved);
+      const declinedSet = new Set(declined);
+      setChanges(cs => cs.filter(c => !savedSet.has(c) && !declinedSet.has(c)));
+      if (saved.length) {
+        try {
+          await appendEditLog({
+            user: getCurrentUser(),
+            // In staged order, whatever order the concurrent writes landed in.
+            changes: batch.filter(c => savedSet.has(c)).map(c => ({ section: c.section, action: c.action, title: c.title, lang: c.lang || 'he', fields: c.diff })),
+          });
+        } catch {
+          toast.warning('השינויים נשמרו, אך הרישום ביומן העריכות נכשל.');
+        }
+      }
+      await status?.finish(done, failed.length);
+      if (saved.length) setVersion(v => v + 1);
+      if (authLost) toast.error('פג תוקף ההתחברות. התחברו מחדש - השינויים שלא נשמרו עדיין ממתינים.');
+      setJob({
+        phase: 'done',
+        done,
+        total: batch.length,
+        saved: saved.length,
+        failed: failed.slice(),
+        unsaved: batch.filter(c => !savedSet.has(c)),
+        authLost,
+        untranslated: left.length,
+      });
+      setRunning(new Set());
+      savingRef.current = false;
+      if (reindexIds.length) await enqueueSync(reindexIds);
+    })();
+    run.catch(() => {
+      savingRef.current = false;
+      setRunning(new Set());
+      setJob(j => (j ? { ...j, phase: 'done' } : j));
+    });
+    return run;
+  }, [enqueueSync]);
 
   const value = useMemo(
-    () => ({ changes, version, stage, discard, patch, clear, newKey, saveAll }),
-    [changes, version, stage, discard, patch, clear, newKey, saveAll]
+    () => ({ changes, version, stage, discard, patch, clear, newKey, refresh, startSave, job, sync, running, saving, retrySync, dismissJob }),
+    [changes, version, stage, discard, patch, clear, newKey, refresh, startSave, job, sync, running, saving, retrySync, dismissJob]
   );
   return <PendingChangesContext.Provider value={value}>{children}</PendingChangesContext.Provider>;
 }
@@ -404,8 +626,8 @@ function AutoTranslationsLine({ items }) {
   );
 }
 
-/** @param {{ change: PendingChange, onDiscard: () => void, disabled: boolean, autoTranslations?: PendingChange[] }} props */
-function ChangeItem({ change, onDiscard, disabled, autoTranslations = [] }) {
+/** @param {{ change: PendingChange, onDiscard: () => void, disabled?: boolean, autoTranslations?: PendingChange[] }} props */
+function ChangeItem({ change, onDiscard, disabled = false, autoTranslations = [] }) {
   const action = ACTION_LABELS[change.action];
   const t = change.translation;
   const badge = t && (t.state === 'done' ? t.status && TRANSLATION_BADGES[t.status] : TRANSLATION_BADGES[t.state]);
@@ -464,7 +686,10 @@ function barText(primary, linked) {
 }
 
 export function SaveAllBar() {
-  const { changes, discard, saveAll } = usePendingChanges();
+  const { changes: staged, running, saving, discard, startSave } = usePendingChanges();
+  // Changes the running batch is writing are out of the editor's hands; the
+  // bar and the review cover what is staged besides them.
+  const changes = staged.filter(c => !running.has(c));
   const translating = changes.filter(c => c.translation?.state === 'pending').length;
   // Translations and sibling deletes ride along with the Hebrew change that
   // caused them, so the bar counts the editor's own changes.
@@ -472,13 +697,11 @@ export function SaveAllBar() {
   const primary = changes.length - linked;
   const [open, setOpen] = useState(false);
   const [checked, setChecked] = useState(false);
-  const [progress, setProgress] = useState(/** @type {null | { done: number, total: number }} */ (null));
-  const saving = progress !== null;
 
   // Every time the dialog opens the editor confirms afresh.
   useEffect(() => { if (open) setChecked(false); }, [open]);
   // The last change discarded from inside the dialog leaves nothing to review.
-  useEffect(() => { if (open && !changes.length && !saving) setOpen(false); }, [open, changes.length, saving]);
+  useEffect(() => { if (open && !changes.length) setOpen(false); }, [open, changes.length]);
 
   if (!changes.length && !open) return null;
 
@@ -490,26 +713,11 @@ export function SaveAllBar() {
   const visible = changes.filter(c => !isAutoTranslation(c) || !c.linkedTo || !stagedKeys.has(c.linkedTo));
   const sections = [...new Set(visible.map(c => c.section))];
 
-  async function handleSave() {
-    setProgress({ done: 0, total: changes.length });
-    let result;
-    try {
-      result = await saveAll((done, total) => setProgress({ done, total }));
-    } finally {
-      setProgress(null);
-    }
-    if (result.authLost) {
-      toast.error('פג תוקף ההתחברות. התחברו מחדש - השינויים שלא נשמרו עדיין ממתינים.');
-      setOpen(false);
-      return;
-    }
-    if (result.failed === 0) {
-      toast.success(result.saved === 1 ? 'השינוי נשמר ומופיע באתר' : `${result.saved} שינויים נשמרו ומופיעים באתר`);
-      if (result.untranslated) toast.warning(`${result.untranslated} תרגומים שנכשלו לא נשמרו ונשארו ברשימה לניסיון חוזר`);
-      setOpen(false);
-    } else {
-      toast.error(`${result.saved} שינויים נשמרו, ${result.failed} נכשלו ונשארו ברשימה`);
-    }
+  // The save runs in the background (SaveProgressStrip follows it); the
+  // dialog closes at once and the editor carries on.
+  function handleSave() {
+    startSave(changes);
+    setOpen(false);
   }
 
   return (
@@ -534,7 +742,7 @@ export function SaveAllBar() {
         </div>
       )}
 
-      <Dialog open={open} onOpenChange={v => { if (!saving) setOpen(v); }}>
+      <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent dir="rtl" className="max-w-2xl max-h-[90vh] overflow-y-auto text-start">
           <DialogHeader className="text-start sm:text-start ps-8">
             <DialogTitle className="font-heading">סקירת שינויים לפני שמירה</DialogTitle>
@@ -560,7 +768,6 @@ export function SaveAllBar() {
                     <ChangeItem
                       key={c.key}
                       change={c}
-                      disabled={saving}
                       onDiscard={() => discard(c.key)}
                       autoTranslations={changes.filter(x => x.linkedTo === c.key && isAutoTranslation(x))}
                     />
@@ -574,12 +781,17 @@ export function SaveAllBar() {
             <input
               type="checkbox"
               checked={checked}
-              disabled={saving}
               onChange={e => setChecked(e.target.checked)}
               className="mt-1"
             />
             עברתי על כל השינויים ואני מאשר/ת שהם נכונים. ידוע לי שלא ניתן לבטל אותם אחרי השמירה.
           </label>
+
+          {saving && (
+            <p role="status" className="text-xs text-muted-foreground">
+              שמירה קודמת עדיין רצה ברקע. אפשר לשמור את השינויים האלה כשהיא תסתיים.
+            </p>
+          )}
 
           <div className="flex gap-2 flex-wrap">
             <Button
@@ -592,14 +804,13 @@ export function SaveAllBar() {
             >
               <Save className="w-3.5 h-3.5" />
               {saving
-                ? `שומר ${progress.done} מתוך ${progress.total}...`
+                ? 'ממתין לסיום השמירה הקודמת...'
                 : translating > 0 ? `ממתין לתרגומים (${translating})...` : 'שמירה סופית'}
             </Button>
             <Button
               type="button"
               variant="subtle"
               size="xs"
-              disabled={saving}
               onClick={() => setOpen(false)}
               className="rounded-lg font-semibold hover:bg-border"
             >

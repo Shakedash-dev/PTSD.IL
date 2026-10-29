@@ -161,6 +161,7 @@ function QaList({ store }) {
   const hebrew = lang.id === 'he';
   const s = useQaStaging(store);
   const { changes, stage, discard, newKey } = s;
+  const { running } = usePendingChanges();
   // A search result in the Metiv admin opens one question's editor.
   const focus = useAdminFocus();
   const [creating, setCreating] = useState(false);
@@ -231,6 +232,7 @@ function QaList({ store }) {
                 status={p?.action}
                 extra={p ? <TranslationSummary heKey={key} /> : null}
                 onDiscard={p ? () => discard(key) : undefined}
+                server={row.content}
                 onConfirm={c => { if (!check(c)) return false; s.stageHeUpdate(row, c); return true; }}
                 onDelete={() => s.stageHeDelete(row)}
                 onUp={i > 0 ? () => move(i, -1) : undefined}
@@ -247,9 +249,13 @@ function QaList({ store }) {
           const p = changes.find(c => c.key === key);
           const content = p ? p.draft.content : sib?.content ?? row.content;
           const translating = changes.some(c => c.linkedTo === `${QA_SCOPE}:${row.id}` && c.lang === lang.id);
+          // Keyed by the question and language: a save that creates the
+          // translation must not remount an open editor.
+          const cardKey = `${row.id}:${lang.id}`;
           return (
             <ItemCard
-              key={open ? `${key}:${focus.nonce}` : key}
+              key={open ? `${cardKey}:${focus.nonce}` : cardKey}
+              server={sib?.content}
               startInEdit={open}
               reveal={open}
               content={content}
@@ -275,6 +281,7 @@ function QaList({ store }) {
             title={c.title}
             summary={<QaSummary content={c.draft.content} />}
             status="create"
+            locked={running.has(c)}
             extra={<TranslationSummary heKey={c.key} />}
             onDiscard={() => discard(c.key)}
             onConfirm={content => { if (!check(content)) return false; s.stageHeCreate(c.key, content, c.draft.sortOrder, takenKeys); return true; }}
@@ -312,7 +319,8 @@ function QaList({ store }) {
   );
 }
 
-// Loads every Q&A row (all languages) once, and again after each save-all batch.
+// Loads every Q&A row (all languages) once, and again after each save-all
+// batch - in place, so open editors keep their drafts (ServerChanged.jsx).
 export default function ChatbotQaPanel() {
   const { version } = usePendingChanges();
   const [state, setState] = useState({ store: null, loading: true, error: '' });
@@ -324,7 +332,8 @@ export default function ChatbotQaPanel() {
       .catch(err => {
         if (cancelled) return;
         toast.error(err?.message || 'שגיאה בטעינת שאלות הצ׳אטבוט');
-        setState({ store: null, loading: false, error: err?.message || 'שגיאה בטעינת שאלות הצ׳אטבוט' });
+        // A failed refresh keeps what is on screen (and every open editor).
+        setState(st => ({ store: st.store, loading: false, error: err?.message || 'שגיאה בטעינת שאלות הצ׳אטבוט' }));
       });
     return () => { cancelled = true; };
   }, [version]);
