@@ -146,13 +146,13 @@ Response `200`:
 ```json
 { "target": "ar", "items": { "title": "...", "who": "..." },
   "status": "pass" | "fixed" | "flagged", "notes": ["..."],
-  "model": "gemini-4-argon" }
+  "model": "gemini-3.5-flash-lite" }
 ```
 Pipeline per request: translator call, deterministic checks (same keys, URLs,
 emails, phones, numbers and `{placeholders}` preserved, Markdown structure kept,
 no en/em dash), validator call (source + translation -> issues with fixes),
 apply fixes, re-check; one retranslate with the issues if still failing, then
-`flagged`. Model from `TRANSLATE_MODEL` (default `gemini-4-argon`). Glossary in
+`flagged`. Model from `TRANSLATE_MODEL` (default `gemini-3.5-flash-lite`). Glossary in
 `worker/src/lib/glossary.ts` - the same glossary the one-time bulk translation
 used.
 

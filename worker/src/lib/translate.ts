@@ -8,7 +8,7 @@ import { checkItems, checkText, normalizeDashes, type CheckIssue } from "./trans
 //   translator -> deterministic checks -> validator (issues + full-string fixes)
 //   -> apply fixes -> re-check -> one retranslate of what still fails -> status.
 
-export const DEFAULT_TRANSLATE_MODEL = "gemini-4-argon";
+export const DEFAULT_TRANSLATE_MODEL = "gemini-3.5-flash-lite";
 export const MAX_TOTAL_CHARS = 40_000;
 export const MAX_ITEMS = 500;
 const MAX_CONTEXT = 500;

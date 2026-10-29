@@ -541,7 +541,7 @@ Response `200`:
 
 ```json
 { "target": "ar", "items": { "title": "...", "sections.0.body": "..." },
-  "status": "pass", "notes": [], "model": "gemini-4-argon" }
+  "status": "pass", "notes": [], "model": "gemini-3.5-flash-lite" }
 ```
 
 - `pass`: the validator found nothing.
@@ -580,7 +580,7 @@ and the key in the `x-goog-api-key` header. The glossary of names and terms is
 | `API_BASE` | backend `/api` | Content source |
 | `ADMIN_VERIFY_URL` | admin articles URL | Admin token check |
 | `GEMINI_MODEL` | `gemini-flash-latest` | Chat model |
-| `TRANSLATE_MODEL` | `gemini-4-argon` | `/translate` model. Must accept `thinkingLevel` |
+| `TRANSLATE_MODEL` | `gemini-3.5-flash-lite` | `/translate` model. Must accept `thinkingLevel` |
 | `QA_STRONG` | `0.80` | Playbook "follow it" threshold |
 | `QA_WEAK` | `0.72` | Playbook "possibly relevant" threshold |
 | `QA_INDEX_KEY` | `qa:index:v1` (unset) | KV key of the playbook index. Only staging sets it ([§19](#19-staging)) |

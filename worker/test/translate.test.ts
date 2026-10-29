@@ -91,14 +91,14 @@ function mockGemini(translator: Reply[], validator: Reply[]) {
 const tr = (map: Record<string, string>) => () => ({ translations: Object.entries(map).map(([path, text]) => ({ path, text })) });
 const noIssues = () => ({ issues: [] });
 
-const env = () => ({ GEMINI_API_KEY: "secret-key", TRANSLATE_MODEL: "gemini-4-argon" }) as any;
+const env = () => ({ GEMINI_API_KEY: "secret-key", TRANSLATE_MODEL: "gemini-3.5-flash-lite" }) as any;
 const req = (items: Record<string, string>) => ({ source: "he" as const, target: "en" as const, items, context: "metiv / services: x" });
 
 describe("translate pipeline", () => {
   it("pass: clean translation, validator finds nothing", async () => {
     const calls = mockGemini([tr({ title: "Hello" })], [noIssues]);
     const out = await translate(env(), req({ title: "שלום" }));
-    expect(out).toEqual({ target: "en", items: { title: "Hello" }, status: "pass", notes: [], model: "gemini-4-argon" });
+    expect(out).toEqual({ target: "en", items: { title: "Hello" }, status: "pass", notes: [], model: "gemini-3.5-flash-lite" });
     expect(calls.map((c) => c.kind)).toEqual(["translator", "validator"]);
   });
 
@@ -106,7 +106,7 @@ describe("translate pipeline", () => {
     const calls = mockGemini([tr({ title: "Hello" })], [noIssues]);
     await translate(env(), req({ title: "שלום" }));
     const c = calls[0];
-    expect(c.url).toBe("https://generativelanguage.googleapis.com/v1beta/models/gemini-4-argon:generateContent");
+    expect(c.url).toBe("https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent");
     expect(c.url).not.toContain("secret-key");
     expect(c.headers["x-goog-api-key"]).toBe("secret-key");
     expect(c.body.generationConfig).toMatchObject({ responseMimeType: "application/json", thinkingConfig: { thinkingLevel: "low" } });
@@ -267,7 +267,7 @@ describe("POST /translate route", () => {
     mockGemini([tr({ a: "Bonjour" })], [noIssues]);
     const res = await post({ source: "he", target: "fr", items: { a: "שלום" } }, e);
     expect(res.status).toBe(200);
-    expect(await res.json()).toEqual({ target: "fr", items: { a: "Bonjour" }, status: "pass", notes: [], model: "gemini-4-argon" });
+    expect(await res.json()).toEqual({ target: "fr", items: { a: "Bonjour" }, status: "pass", notes: [], model: "gemini-3.5-flash-lite" });
   });
 
   it("502 when the translator call fails", async () => {
