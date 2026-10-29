@@ -5,13 +5,23 @@ import { detectLang } from "./lang";
 import { embed } from "./embed";
 import { query, type Hit } from "./vector";
 import { buildContents } from "./prompt";
-import { streamGemini } from "./gemini";
+import { streamGemini, ABNORMAL_FINISH, type StreamMeta } from "./gemini";
 import { loadQaIndex, matchPlaybooks, retrievalVector, thresholds, type PlaybookMatch } from "./qa";
 
 const RETRIEVAL_MIN_SCORE = 0.4;
 const TOP_K_FETCH = 20; // Vectorize caps topK at 20 with returnMetadata:"all"
 const TOP_K_USE = 15;
 const GUIDED_KEEP = 5; // playbook-guided hits always kept, when they pass the filters
+
+// Closing line when the model stops early on its own filters (e.g. RECITATION),
+// so the visitor never sees an answer that just breaks off mid-sentence.
+const CUT_SHORT: Record<string, string> = {
+  he: "התשובה נקטעה. אפשר לנסות לשאול שוב במילים אחרות, או לעיין בעמודים שבקישורים למטה. במצוקה: ער״ן 1201.",
+  ar: "انقطعت الإجابة. يمكنك إعادة طرح السؤال بكلمات أخرى، أو الاطلاع على الصفحات في الروابط أدناه. في حالة الضيق: عيران 1201.",
+  en: "This answer was cut short. You can ask again in other words, or see the pages linked below. If you are in distress: ERAN 1201.",
+  ru: "Ответ прервался. Можно спросить ещё раз другими словами или открыть страницы по ссылкам ниже. Если вам плохо: ЭРАН 1201.",
+  fr: "La réponse a été interrompue. Vous pouvez reformuler la question ou consulter les pages en lien ci-dessous. En cas de détresse : ERAN 1201.",
+};
 
 const REFUSAL: Record<string, string> = {
   he: "אני יכול לעזור רק בנושאים שמופיעים באתר. אפשר לנסח מחדש?",
@@ -180,7 +190,13 @@ export function handleChat(env: Env, body: { messages: Msg[]; lang: string; sess
         }
 
         const payload = buildContents(body.messages, hits, lang, playbooks, body.area);
-        for await (const delta of streamGemini(env, payload)) send("token", { text: delta });
+        const meta: StreamMeta = {};
+        for await (const delta of streamGemini(env, payload, meta)) send("token", { text: delta });
+        const cutShort = !!meta.finishReason && ABNORMAL_FINISH.has(meta.finishReason);
+        if (cutShort) {
+          console.log(`gemini-finish ${JSON.stringify({ finishReason: meta.finishReason, lang })}`);
+          send("token", { text: `\n\n${CUT_SHORT[lang] ?? CUT_SHORT.en}` });
+        }
 
         if (hits.length) {
           send("sources", hits.map((h, i) => ({
@@ -192,7 +208,7 @@ export function handleChat(env: Env, body: { messages: Msg[]; lang: string; sess
             ...(h.meta.section ? { section: h.meta.section } : {}),
           })));
         }
-        send("done", {});
+        send("done", meta.finishReason ? { finishReason: meta.finishReason } : {});
       } catch (e) {
         send("error", { message: (e as Error).message });
       } finally {

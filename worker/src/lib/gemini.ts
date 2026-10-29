@@ -7,8 +7,14 @@ type Payload = {
 
 const BASE = "https://generativelanguage.googleapis.com/v1beta/models";
 
+/** Filled in while streaming: Gemini's finishReason of the last frame that carried one. */
+export type StreamMeta = { finishReason?: string };
+
+// Reasons that mean the answer was cut by the model's own filters, not finished.
+export const ABNORMAL_FINISH = new Set(["RECITATION", "SAFETY", "BLOCKLIST", "PROHIBITED_CONTENT", "SPII", "OTHER", "MALFORMED_FUNCTION_CALL"]);
+
 // The API key goes in a header, never the URL (URLs end up in logs).
-export async function* streamGemini(env: Env, payload: Payload): AsyncGenerator<string> {
+export async function* streamGemini(env: Env, payload: Payload, meta: StreamMeta = {}): AsyncGenerator<string> {
   const url = `${BASE}/${env.GEMINI_MODEL}:streamGenerateContent?alt=sse`;
   const res = await fetch(url, {
     method: "POST",
@@ -25,22 +31,23 @@ export async function* streamGemini(env: Env, payload: Payload): AsyncGenerator<
     buf += value;
     let nl: number;
     while ((nl = buf.indexOf("\n")) >= 0) {
-      for (const t of extractTexts(buf.slice(0, nl))) yield t;
+      for (const t of extractTexts(buf.slice(0, nl), meta)) yield t;
       buf = buf.slice(nl + 1);
     }
   }
   // Flush a final frame that arrived without a trailing newline (truncated / early close).
-  for (const t of extractTexts(buf)) yield t;
+  for (const t of extractTexts(buf, meta)) yield t;
 }
 
-// Parse one SSE line into zero or more text deltas.
-function extractTexts(rawLine: string): string[] {
+// Parse one SSE line into zero or more text deltas (and note its finishReason).
+function extractTexts(rawLine: string, meta: StreamMeta = {}): string[] {
   const line = rawLine.trim();
   if (!line.startsWith("data:")) return [];
   const json = line.slice(5).trim();
   if (!json || json === "[DONE]") return [];
   try {
-    const obj = JSON.parse(json) as { candidates?: { content?: { parts?: { text?: string }[] } }[] };
+    const obj = JSON.parse(json) as { candidates?: { content?: { parts?: { text?: string }[] }; finishReason?: string }[] };
+    if (obj.candidates?.[0]?.finishReason) meta.finishReason = obj.candidates[0].finishReason;
     return (obj.candidates?.[0]?.content?.parts ?? []).map((p) => p.text).filter((t): t is string => !!t);
   } catch {
     return [];

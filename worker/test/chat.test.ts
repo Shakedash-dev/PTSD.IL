@@ -137,3 +137,31 @@ describe("handleChat", () => {
     expect("key" in sources[2]).toBe(false);
   });
 });
+
+describe("model stops early", () => {
+  const sseWith = (text: string, finishReason: string) => {
+    const enc = new TextEncoder();
+    const frame = `data: ${JSON.stringify({ candidates: [{ content: { parts: [{ text }] }, finishReason }] })}\n\n`;
+    return new Response(new ReadableStream({ start(c) { c.enqueue(enc.encode(frame)); c.close(); } }), { status: 200 });
+  };
+  const hit = { score: 0.9, metadata: { itemId: "1", groupId: "g", type: "faq", langId: "en", title: "T", text: "fact", chunkIndex: 0 } };
+
+  it("closes a RECITATION-cut answer with a line in the user's language and reports the reason", async () => {
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(sseWith("Breathe in slowly for 4 sec", "RECITATION"));
+    vi.spyOn(console, "log").mockImplementation(() => {});
+    const env = baseEnv();
+    env.VECTORIZE.query = async () => ({ matches: [hit, hit, hit] });
+    const body = await readSSE(await handleChat(env, { messages: [{ role: "user", content: "panic attack now what do I do" }], lang: "en", sessionId: "s" }));
+    expect(body).toContain("This answer was cut short");
+    expect(body).toContain('"finishReason":"RECITATION"');
+  });
+
+  it("adds nothing when the model finishes normally", async () => {
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(sseWith("All good.", "STOP"));
+    const env = baseEnv();
+    env.VECTORIZE.query = async () => ({ matches: [hit, hit, hit] });
+    const body = await readSSE(await handleChat(env, { messages: [{ role: "user", content: "hello there friend" }], lang: "en", sessionId: "s" }));
+    expect(body).not.toContain("cut short");
+    expect(body).toContain('"finishReason":"STOP"');
+  });
+});

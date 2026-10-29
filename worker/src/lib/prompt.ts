@@ -62,6 +62,7 @@ function system(lang: string, playbooks: Playbook[], area?: Area): string {
     "Never give medical, clinical, diagnostic, or treatment advice. Inform and refer to the site's",
     "resources and to professionals instead.",
     "Write your answer in Markdown - use paragraphs, **bold** for emphasis, and numbered or bulleted lists where they make the answer clearer.",
+    "Write the answer in your own words. Never copy long passages verbatim from the SOURCES, a playbook or anywhere else - summarize and rephrase, keeping facts, names, numbers and links exact.",
     // Ordering is the single most important rule: answer the question that was actually asked, first.
     "ANSWER THE ASKED QUESTION FIRST. Your opening sentence or short first paragraph must directly answer exactly what the user asked - the core answer comes before anything else. Only AFTER answering directly may you add related context, caveats, next steps, or adjacent topics. Never open with tangential or secondary material (for example: secondary/vicarious trauma, 'signs you might need support', or general disclaimers) unless the user specifically asked about it. If a definition was asked for, define it first; if 'what do I do' was asked, give the first concrete step first.",
     "Immediately after any sentence whose facts come from a source, append that source's number as a marker like [[1]] (or [[2]][[3]] for several) - but ONLY for the sources you actually used, not every source provided.",
