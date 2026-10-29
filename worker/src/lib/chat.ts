@@ -6,10 +6,10 @@ import { embed } from "./embed";
 import { query, type Hit } from "./vector";
 import { buildContents } from "./prompt";
 import { streamGemini, ABNORMAL_FINISH, type StreamMeta } from "./gemini";
-import { loadQaIndex, matchPlaybooks, retrievalVector, thresholds, type PlaybookMatch } from "./qa";
+import { findPlaybooks, loadPlaybookStore, thresholds, type FindInput, type Found, type PlaybookMatch, type PlaybookStore, type Thresholds } from "./qa";
 
 const RETRIEVAL_MIN_SCORE = 0.4;
-const TOP_K_FETCH = 20; // Vectorize caps topK at 20 with returnMetadata:"all"
+const TOP_K_FETCH = 20; // Vectorize allows 50 with returnMetadata:"all"; 20 keeps the response ~35 KB
 const TOP_K_USE = 15;
 const GUIDED_KEEP = 5; // playbook-guided hits always kept, when they pass the filters
 
@@ -31,15 +31,33 @@ const REFUSAL: Record<string, string> = {
   fr: "Je ne peux aider que sur les sujets présents sur ce site.",
 };
 
-// The playbook index is an enhancement: if KV is down or the value is bad, chat
-// carries on without playbooks.
-async function safeQaIndex(env: Env) {
+// Playbooks are an enhancement: if KV fails, chat carries on without them.
+// Until the full reindex after the shard deploy has written the user's
+// language, they come from the old one-value index (lib/qaLegacy.ts).
+async function safeStore(env: Env, lang: string): Promise<PlaybookStore | null> {
   try {
-    return await loadQaIndex(env);
+    return await loadPlaybookStore(env, lang);
   } catch (e) {
     console.log(`qa-index-error ${(e as Error).message}`);
     return null;
   }
+}
+
+async function safePlaybooks(env: Env, store: PlaybookStore | null, input: FindInput, th: Thresholds): Promise<Found | null> {
+  if (!store) return null;
+  try {
+    return await findPlaybooks(env, store, input, th);
+  } catch (e) {
+    console.log(`qa-index-error ${(e as Error).message}`);
+    return null;
+  }
+}
+
+// The first playbook injected (crisis, carried, current), for the SSE `done`
+// event: scripts/qa-match-compare.mjs reads it. The site ignores it.
+function donePlaybook(found: Found | null): { groupId: string; strength: PlaybookMatch["strength"]; score: number } | null {
+  const p = found && (found.m.crisisPlaybook ?? found.carried ?? found.m.playbook);
+  return p ? { groupId: p.row.groupId, strength: p.strength, score: Number(p.score.toFixed(4)) } : null;
 }
 
 const toPlaybook = (m: PlaybookMatch): Playbook => ({
@@ -127,33 +145,23 @@ export function handleChat(env: Env, body: { messages: Msg[]; lang: string; sess
         // it is matched too, when the bot answered it in between.
         const prev = previousUserMessage(body.messages);
         const texts = [...new Set([last, ...(prev ? [prev] : []), ...(crisisText ? [crisisText] : [])])];
-        const vecs = await embed(env.AI, texts);
+        // The playbook shards (user's language + Hebrew, cached) load during the embedding.
+        const [vecs, store] = await Promise.all([embed(env.AI, texts), safeStore(env, lang)]);
         const vecOf = (t: string | null) => (t ? vecs[texts.indexOf(t)] : undefined);
         const qv = vecs[0];
         const prevVec = vecOf(prev);
         const crisisVec = crisisText && crisisText !== last ? vecOf(crisisText) : undefined;
-        // The user query runs while the playbook index loads and matches.
+        // The user query runs while the playbooks are matched.
         const userHits = query(env.VECTORIZE, qv, TOP_K_FETCH);
         userHits.catch(() => {}); // awaited below; this only keeps it from counting as unhandled meanwhile
-        const qaIndex = await safeQaIndex(env);
 
-        // Curated playbooks, matched with the same query embedding.
+        // Curated playbooks, matched with the same query embedding. No strong
+        // match now: a strong match on the previous message carries over for this
+        // turn (as strong). A weak match of its own stays alongside.
         const th = thresholds(env);
-        const m: ReturnType<typeof matchPlaybooks> = qaIndex ? matchPlaybooks(qaIndex, qv, lang, crisis, th) : {};
-        // No strong match now: a strong match on the previous message carries
-        // over for this turn (as strong). A weak match of its own stays alongside.
-        let carried: PlaybookMatch | undefined;
-        if (qaIndex && prevVec && m.playbook?.strength !== "strong") {
-          const p = matchPlaybooks(qaIndex, prevVec, lang, false, th).playbook;
-          if (p?.strength === "strong") carried = p;
-          if (carried && m.playbook?.row.groupId === carried.row.groupId) delete m.playbook;
-        }
-        if (qaIndex && crisisVec) {
-          m.crisisPlaybook = matchPlaybooks(qaIndex, crisisVec, lang, true, th).crisisPlaybook;
-        }
-        const crisisGroup = m.crisisPlaybook?.row.groupId;
-        if (crisisGroup && m.playbook?.row.groupId === crisisGroup) delete m.playbook;
-        if (crisisGroup && carried?.row.groupId === crisisGroup) carried = undefined;
+        const found = await safePlaybooks(env, store, { qv, prevVec, crisisVec, lang, crisis }, th);
+        const m: Found["m"] = found?.m ?? {};
+        const carried = found?.carried;
         const playbooks = [m.crisisPlaybook, carried, m.playbook].filter((p): p is PlaybookMatch => !!p).map(toPlaybook);
         const strongMatch = (!!m.best && m.best.score >= th.strong) || !!carried;
 
@@ -161,15 +169,10 @@ export function handleChat(env: Env, body: { messages: Msg[]; lang: string; sess
         // vector (answer) of the first matched playbook that has one, in the
         // order crisis, carried, current. The playbook's facts often sit in rows
         // the user's own wording ranks below unrelated ones.
-        const guide = qaIndex
-          ? [m.crisisPlaybook, carried, m.playbook]
-            .filter((p): p is PlaybookMatch => !!p)
-            .map((p) => ({ p, vec: retrievalVector(qaIndex, p) }))
-            .find((g) => g.vec)
-          : undefined;
+        const guide = found?.guide;
         const [raw, guided] = await Promise.all([userHits, guidedQuery(env, guide?.vec)]);
         const hits = selectHits(raw, guided, lang);
-        if (qaIndex) {
+        if (found) {
           // Not part of the SSE stream: Worker logs only, for threshold tuning.
           console.log(`qa-match ${JSON.stringify({
             best: m.best && { groupId: m.best.groupId, score: Number(m.best.score.toFixed(4)) },
@@ -177,6 +180,7 @@ export function handleChat(env: Env, body: { messages: Msg[]; lang: string; sess
             carried: carried && { groupId: carried.row.groupId, score: Number(carried.score.toFixed(4)) },
             crisis: m.crisisPlaybook && { groupId: m.crisisPlaybook.row.groupId, score: Number(m.crisisPlaybook.score.toFixed(4)) },
             guide: guide && { groupId: guide.p.row.groupId, hits: guided.length },
+            store: store?.kind === "legacy" ? "legacy" : "shards",
           })}`);
         }
 
@@ -185,7 +189,7 @@ export function handleChat(env: Env, body: { messages: Msg[]; lang: string; sess
         // crisis playbook and the system prompt's ERAN rule even without sources.
         if (hits.length === 0 && !strongMatch && !crisis) {
           send("token", { text: REFUSAL[lang] ?? REFUSAL.en });
-          send("done", {});
+          send("done", { playbook: donePlaybook(found) });
           return; // the finally block is the sole closer of the controller
         }
 
@@ -208,7 +212,7 @@ export function handleChat(env: Env, body: { messages: Msg[]; lang: string; sess
             ...(h.meta.section ? { section: h.meta.section } : {}),
           })));
         }
-        send("done", meta.finishReason ? { finishReason: meta.finishReason } : {});
+        send("done", { ...(meta.finishReason ? { finishReason: meta.finishReason } : {}), playbook: donePlaybook(found) });
       } catch (e) {
         send("error", { message: (e as Error).message });
       } finally {

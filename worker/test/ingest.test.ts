@@ -14,7 +14,7 @@ const item: Item = {
 describe("reindexItem", () => {
   it("embeds chunks and upserts them with metadata", async () => {
     const upsert = vi.fn(async () => ({ mutationId: "m" }));
-    // reindexItem clears stale chunks (deleteItem → deleteByIds) before upserting,
+    // reindexItem clears stale chunks (deleteItem → deleteByIds) after upserting,
     // so the mock must provide deleteByIds too.
     const deleteByIds = vi.fn(async () => ({ mutationId: "m" }));
     const env = {
@@ -26,7 +26,15 @@ describe("reindexItem", () => {
     expect(out.upserted).toBeGreaterThan(0);
     const call = (upsert.mock.calls[0] as unknown[])[0] as Array<{ id: string; metadata: { itemId: string; categorySlug?: string } }>;
     expect(call[0].id).toBe("1:0");
+    expect(call[0]).not.toHaveProperty("namespace");
     expect(call[0].metadata.itemId).toBe("1");
+    // Then everything past the new chunks: 64 - 1 ids, one call.
+    const deleted = (deleteByIds.mock.calls as unknown as string[][][]).flatMap((c) => c[0]);
+    expect(deleteByIds).toHaveBeenCalledTimes(1);
+    expect(deleted).toHaveLength(63);
+    expect(deleted).not.toContain("1:0");
+    expect(deleted).toContain("1:1");
+    expect(upsert.mock.invocationCallOrder[0]).toBeLessThan(deleteByIds.mock.invocationCallOrder[0]);
     expect(call[0].metadata.categorySlug).toBe("second-circle");
   });
 

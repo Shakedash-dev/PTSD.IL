@@ -19,7 +19,8 @@ export type Env = {
   TRANSLATE_MODEL?: string;
   QA_STRONG?: string; // playbook "follow it" cosine threshold, default 0.80
   QA_WEAK?: string; // playbook "possibly relevant" threshold, default 0.72
-  QA_INDEX_KEY?: string; // KV key of the playbook index, default qa:index:v1 (staging sets its own)
+  QA_INDEX_KEY?: string; // KV key of the OLD playbook index, default qa:index:v1 (staging sets its own); read until the first full reindex deletes it
+  KV_PREFIX?: string; // prefix of the playbook KV keys (shards, rows), default "" (staging: "staging:")
 };
 
 // Per admin token. One Hebrew save sends 4 requests (one per target language),

@@ -1,10 +1,13 @@
 import { describe, it, expect, vi, afterEach } from "vitest";
 import { isIndexable, isQaItem, METIV_CHATBOT_SLUGS, METIV_COLLECTION_KEYS, EXCLUDED_SLUGS } from "../src/lib/api";
 import { reindexItem, reindexById } from "../src/lib/ingest";
-import { runFullReindex } from "./reindex";
-import { QA_INDEX_KEY } from "../src/lib/qa";
+import { runFullReindex, corpusResponse } from "./reindex";
+import { qaRowKey, shardKey } from "../src/lib/qa";
+import { decodeShard } from "../src/lib/qaShard";
+import { emptyShards } from "./qaEnv";
 import type { Item } from "../src/lib/content";
 import { fakeKV } from "./kv";
+import { fakeVectorize } from "./vectorize";
 
 afterEach(() => vi.restoreAllMocks());
 
@@ -86,8 +89,8 @@ const row = (id: string, slugs: string[], content: Record<string, unknown>, lang
   content: JSON.stringify(content), categories: slugs.map((slug) => ({ slug })),
 });
 
-describe("full reindex exclusions + QA index", () => {
-  it("indexes PTSD-IL and chatbot Metiv rows, deletes excluded ones' vectors, builds the QA index", async () => {
+describe("full reindex exclusions + QA rows", () => {
+  it("indexes PTSD-IL and chatbot Metiv rows, deletes excluded ones' vectors, writes the Q&A row", async () => {
     const articles = [
       row("ptsd", ["rights"], { answer: "זכויות" }),
       row("svc", ["metiv", "metiv-services"], { _key: "svc-key", title: "טיפול", $ref: "X#y", body: "שירות" }),
@@ -95,82 +98,94 @@ describe("full reindex exclusions + QA index", () => {
       row("nav", ["metiv", "metiv-nav"], { label: "תפריט" }),
       row("copy", ["metiv", "metiv-copy"], { hello: "שלום" }),
       row("log", ["admin-log"], { entry: "edit" }),
+      row("status", ["admin-status"], { saving: true }),
       row("qa", ["chatbot-qa"], { question: "איך מקבלים טיפול?", paraphrases: ["איפה יש טיפול?"], guidance: "קודם X ואז Y", crisis: false }),
     ];
-    vi.spyOn(globalThis, "fetch").mockImplementation(async (url: any) =>
-      new Response(JSON.stringify(String(url).endsWith("/communities") ? [] : articles), { status: 200 }));
-    const v = vectorizeMock();
+    vi.spyOn(globalThis, "fetch").mockImplementation(async (url: any) => corpusResponse({ articles, communities: [] }, String(url))!);
+    const v = fakeVectorize();
     const rl = fakeKV();
     const env = { API_BASE: "https://api/x", AI: aiMock(), VECTORIZE: v, RL: rl } as any;
 
     const out = await runFullReindex(env);
 
-    const upserted = (v.upsert.mock.calls[0] as unknown[])[0] as Array<{ id: string; metadata: any }>;
-    const ids = new Set(upserted.map((r) => r.metadata.itemId));
-    expect([...ids].sort()).toEqual(["course", "ptsd", "svc"]);
-    const course = upserted.find((r) => r.metadata.itemId === "course")!;
+    const content = v.inNs(undefined) as Array<{ id: string; metadata: any }>;
+    expect(v.store.size).toBe(content.length); // nothing in any namespace
+    expect([...new Set(content.map((r) => r.metadata.itemId))].sort()).toEqual(["course", "ptsd", "svc"]);
+    const course = content.find((r) => r.metadata.itemId === "course")!;
     expect(course.metadata.key).toBe("cbt-trauma"); // `_key` in metadata, for chip deep links
-    expect(upserted.find((r) => r.metadata.itemId === "ptsd")!.metadata.key).toBeUndefined();
-    const svc = upserted.find((r) => r.metadata.itemId === "svc")!;
+    expect(content.find((r) => r.metadata.itemId === "ptsd")!.metadata.key).toBeUndefined();
+    const svc = content.find((r) => r.metadata.itemId === "svc")!;
     expect(svc.metadata.categorySlug).toBe("metiv-services");
     expect(svc.metadata.categorySlugs).toEqual(["metiv", "metiv-services"]);
     expect(svc.metadata.text).not.toContain("svc-key"); // `_` keys skipped
     expect(svc.metadata.text).not.toContain("X#y"); // $ref skipped
 
-    const deleted = (v.deleteByIds.mock.calls.flat() as string[][]).flat();
-    for (const id of ["nav", "copy", "log", "qa"]) expect(deleted).toContain(`${id}:0`);
-    expect(deleted.some((d) => d.startsWith("ptsd:") || d.startsWith("svc:") || d.startsWith("course:"))).toBe(false);
+    const deleted = v.calls.filter((c) => c.op === "deleteByIds").flatMap((c) => c.arg as string[]);
+    for (const id of ["nav", "copy", "log", "status", "qa"]) expect(deleted).toContain(`${id}:0`);
+    expect(deleted.some((d) => /^(ptsd|svc|course):/.test(d))).toBe(false);
 
-    expect(out).toMatchObject({ excluded: 4, qa: 1 });
-    const qa = JSON.parse(rl.store.get(QA_INDEX_KEY)!);
-    expect(qa.entries).toHaveLength(2);
-    expect(qa.rows.qa.guidance).toBe("קודם X ואז Y");
+    expect(out).toMatchObject({ excluded: 5, qa: 1 });
+    expect(decodeShard(rl.store.get(shardKey(env, "he")) as ArrayBuffer)!.header.rows).toMatchObject([{ id: "qa", g: "g-qa", n: 2 }]);
+    expect(JSON.parse(rl.text(qaRowKey(env, "g-qa", "he"))!).guidance).toBe("קודם X ואז Y");
   });
 });
 
 describe("reindexById for Q&A rows", () => {
-  it("rebuilds the QA index (not Vectorize) when the item is a chatbot-qa row", async () => {
+  it("writes only that row's shard entries and KV row, never the whole Q&A set", async () => {
     const qaRow = row("qa1", ["chatbot-qa"], { question: "q", paraphrases: ["p"], guidance: "g", crisis: true }, "en");
-    const fetchSpy = vi.spyOn(globalThis, "fetch").mockImplementation(async (url: any) => {
-      const u = String(url);
-      if (u.endsWith("/articles/qa1")) return new Response(JSON.stringify(qaRow), { status: 200 });
-      if (u.includes("categorySlug=chatbot-qa")) return new Response(JSON.stringify([qaRow, row("other", ["rights"], { a: "b" })]), { status: 200 });
+    const urls: string[] = [];
+    vi.spyOn(globalThis, "fetch").mockImplementation(async (url: any) => {
+      urls.push(String(url));
+      if (String(url).endsWith("/articles/qa1")) return new Response(JSON.stringify(qaRow), { status: 200 });
       return new Response("nf", { status: 404 });
     });
-    const v = vectorizeMock();
+    const v = fakeVectorize();
     const rl = fakeKV();
     const env = { API_BASE: "https://api/x", AI: aiMock(), VECTORIZE: v, RL: rl } as any;
+    await emptyShards(env);
+    const puts = vi.spyOn(rl, "put");
 
-    const out = await reindexById(env, "qa1");
+    expect(await reindexById(env, "qa1")).toEqual({ upserted: 0, qa: 1 });
 
-    expect(out).toEqual({ upserted: 0, qa: 1 });
-    expect(v.upsert).not.toHaveBeenCalled();
-    expect(v.deleteByIds).toHaveBeenCalledTimes(1);
-    expect(fetchSpy).toHaveBeenCalledWith("https://api/x/articles?categorySlug=chatbot-qa");
-    const qa = JSON.parse(rl.store.get(QA_INDEX_KEY)!);
-    expect(Object.keys(qa.rows)).toEqual(["qa1"]); // the non-QA row from a loose filter is ignored
-    expect(qa.rows.qa1.crisis).toBe(true);
+    expect(urls).toEqual(["https://api/x/articles/qa1"]); // no fetch of the Q&A list
+    expect(env.AI.run).toHaveBeenCalledTimes(1);
+    expect(v.store.size).toBe(0);
+    expect(puts.mock.calls.map((c) => c[0]).sort()).toEqual([qaRowKey(env, "g-qa1", "en"), shardKey(env, "en")]);
+    expect(decodeShard(rl.store.get(shardKey(env, "en")) as ArrayBuffer)!.header.rows).toMatchObject([{ id: "qa1", c: 1, n: 2 }]);
+    expect(JSON.parse(rl.text(qaRowKey(env, "g-qa1", "en"))!).crisis).toBe(true);
   });
 
-  it("rebuilds the QA index when a deleted id was a QA row", async () => {
-    const rl = fakeKV({
-      [QA_INDEX_KEY]: JSON.stringify({ v: 1, builtAt: "x", entries: [], rows: { gone: { rowId: "gone", groupId: "g", langId: "he", question: "q", guidance: "g", crisis: false } } }),
-    });
+  it("a deleted or unpublished Q&A row drops its shard entries and KV row", async () => {
+    const qaRow = row("gone", ["chatbot-qa"], { question: "q", guidance: "g" });
+    let published = true;
     vi.spyOn(globalThis, "fetch").mockImplementation(async (url: any) =>
-      String(url).includes("categorySlug=chatbot-qa") ? new Response("[]", { status: 200 }) : new Response("nf", { status: 404 }));
-    const env = { API_BASE: "https://api/x", AI: aiMock(), VECTORIZE: vectorizeMock(), RL: rl } as any;
+      published && String(url).endsWith("/articles/gone") ? new Response(JSON.stringify(qaRow), { status: 200 }) : new Response("nf", { status: 404 }));
+    const v = fakeVectorize();
+    const rl = fakeKV();
+    const env = { API_BASE: "https://api/x", AI: aiMock(), VECTORIZE: v, RL: rl } as any;
+    await emptyShards(env);
+    await reindexById(env, "gone");
+    const he = () => decodeShard(rl.store.get(shardKey(env, "he")) as ArrayBuffer)!.header.rows.map((r) => r.id);
+    expect(he()).toEqual(["gone"]);
+    published = false;
 
     expect(await reindexById(env, "gone")).toEqual({ upserted: 0, qa: 0 });
-    expect(JSON.parse(rl.store.get(QA_INDEX_KEY)!).rows).toEqual({});
+    expect(he()).toEqual([]);
+    expect(rl.store.has(qaRowKey(env, "g-gone", "he"))).toBe(false);
   });
 
-  it("does not touch the QA index when a deleted id was not a QA row", async () => {
+  it("writes no KV when a deleted id was not a Q&A row (it only looks: 1 list + 5 shard gets)", async () => {
     vi.spyOn(globalThis, "fetch").mockImplementation(async () => new Response("nf", { status: 404 }));
     const rl = fakeKV();
+    const env = { API_BASE: "https://api/x", AI: aiMock(), VECTORIZE: fakeVectorize(), RL: rl } as any;
+    await emptyShards(env);
     const put = vi.spyOn(rl, "put");
-    const env = { API_BASE: "https://api/x", AI: aiMock(), VECTORIZE: vectorizeMock(), RL: rl } as any;
+    const del = vi.spyOn(rl, "delete");
+    const get = vi.spyOn(rl, "get");
     expect(await reindexById(env, "x")).toEqual({ upserted: 0 });
     expect(put).not.toHaveBeenCalled();
+    expect(del).not.toHaveBeenCalled();
+    expect(get).toHaveBeenCalledTimes(5);
   });
 });
 
@@ -187,13 +202,18 @@ describe("Metiv $ref resolution during ingest", () => {
       team("יאיר ברין", "רכז פניות"), team("רחלי ברוקס", "מנהלת מסע שחרור"),
       team("יאיר ברין", "Intake coordinator", "en"), rj("he"), rj("en"),
     ];
-    const fetchSpy = vi.spyOn(globalThis, "fetch").mockImplementation(async (url: any) =>
-      new Response(JSON.stringify(String(url).endsWith("/communities") ? [] : articles), { status: 200 }));
-    const v = vectorizeMock();
+    const urls: string[] = [];
+    vi.spyOn(globalThis, "fetch").mockImplementation(async (url: any) => {
+      urls.push(String(url));
+      return corpusResponse({ articles, communities: [] }, String(url))!;
+    });
+    const v = fakeVectorize();
     await runFullReindex({ API_BASE: "https://api/x", AI: aiMock(), VECTORIZE: v, RL: fakeKV() } as any);
 
-    expect(fetchSpy).toHaveBeenCalledTimes(2); // articles + communities, no extra ref fetch
-    const rows = (v.upsert.mock.calls[0] as unknown[])[0] as Array<{ metadata: any }>;
+    // The Hebrew list is fetched for refs only by the English chunks step: its
+    // director ref has no English row.
+    expect(urls.filter((u) => u.includes("categorySlug=metiv&"))).toEqual(["https://api/x/articles?categorySlug=metiv&langId=he"]);
+    const rows = v.inNs(undefined) as Array<{ metadata: any }>;
     expect(rows.some((r) => r.metadata.itemId.startsWith("team-"))).toBe(true); // TEAM is indexed on its own too
     const he = rows.find((r) => r.metadata.itemId === "rj-he")!.metadata.text;
     expect(he).toContain("רכז פניות");

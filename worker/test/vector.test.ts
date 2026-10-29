@@ -1,10 +1,10 @@
 import { describe, it, expect, vi } from "vitest";
-import { upsertItemChunks, query, deleteItem, type ChunkMeta } from "../src/lib/vector";
+import { upsertItemChunks, query, deleteItem, compact, type ChunkMeta } from "../src/lib/vector";
 
 const meta: ChunkMeta = { itemId: "1", groupId: "g", type: "faq", langId: "he", title: "T", text: "hello", chunkIndex: 0 };
 
 describe("vector", () => {
-  it("upsert builds id-prefixed vectors with metadata", async () => {
+  it("upsert builds id-prefixed vectors in the default namespace with metadata", async () => {
     const upsert = vi.fn(async () => ({ mutationId: "m" }));
     const index = { upsert } as unknown as VectorizeIndex;
     await upsertItemChunks(index, "1", [[0.1, 0.2]], [meta]);
@@ -52,19 +52,28 @@ describe("vector", () => {
     expect(hits).toEqual([]);
   });
 
-  it("deleteItem removes id-prefixed chunk ids", async () => {
-    const deleteByIds = vi.fn(async () => ({ mutationId: "m" }));
-    const index = { deleteByIds } as unknown as VectorizeIndex;
-    await deleteItem(index, "1", 3);
-    expect(deleteByIds).toHaveBeenCalledWith(["1:0", "1:1", "1:2"]);
+  it("query names no namespace", async () => {
+    const queryFn = vi.fn(async () => ({ matches: [] }));
+    await query({ query: queryFn } as unknown as VectorizeIndex, [0.1], 5);
+    expect(queryFn).toHaveBeenCalledWith([0.1], { topK: 5, returnMetadata: "all" });
   });
 
-  it("deleteItem defaults to maxChunks=64 when not provided", async () => {
-    const deleteByIds = vi.fn(async () => ({ mutationId: "m" }));
+  it("deleteItem removes the ids past `keep` in one call", async () => {
+    const deleteByIds = vi.fn(async (_ids: string[]) => ({ mutationId: "m" }));
     const index = { deleteByIds } as unknown as VectorizeIndex;
-    await deleteItem(index, "1");
-    const expected = Array.from({ length: 64 }, (_, i) => `1:${i}`);
-    expect(deleteByIds).toHaveBeenCalledWith(expected);
+    await deleteItem(index, "1", 3);
+    expect(deleteByIds).toHaveBeenCalledTimes(1);
+    expect(deleteByIds.mock.calls[0][0]).toEqual(Array.from({ length: 61 }, (_, i) => `1:${i + 3}`));
+  });
+
+  it("deleteItem defaults to every id up to MAX_CHUNKS", async () => {
+    const deleteByIds = vi.fn(async (_ids: string[]) => ({ mutationId: "m" }));
+    await deleteItem({ deleteByIds } as unknown as VectorizeIndex, "1");
+    expect(deleteByIds.mock.calls[0][0]).toEqual(Array.from({ length: 64 }, (_, i) => `1:${i}`));
+  });
+
+  it("compact rounds to 5 decimals", () => {
+    expect(compact([0.123456789, -0.000004, 1])).toEqual([0.12346, -0, 1]);
   });
 });
 

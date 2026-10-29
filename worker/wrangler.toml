@@ -26,8 +26,9 @@ id = "6167ce06f6fa4f859f9e314313ef59ae"
 # Staging: a second Worker for testing chat changes locally before they ship
 # (docs/chatbot-guide.md section 19). Vars and bindings are not inherited by an
 # env, so all of them are repeated here. Same content API and KV namespace as
-# production; its own Vectorize index, and its own KV key for the playbook
-# index, so a staging reindex never touches what the live chatbot reads.
+# production; its own Vectorize index, and its own KV keys (KV_PREFIX for the
+# playbook shards and rows, QA_INDEX_KEY for the old playbook index), so
+# a staging reindex never touches what the live chatbot reads.
 [env.staging]
 name = "ptsd-chatbot-worker-staging"
 
@@ -40,6 +41,7 @@ TRANSLATE_MODEL = "gemini-3.5-flash-lite"
 QA_STRONG = "0.80"
 QA_WEAK = "0.72"
 QA_INDEX_KEY = "qa:index:staging:v1"
+KV_PREFIX = "staging:"
 
 [env.staging.ai]
 binding = "AI"

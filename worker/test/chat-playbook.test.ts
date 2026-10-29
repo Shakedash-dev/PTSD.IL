@@ -1,10 +1,10 @@
 import { describe, it, expect, vi, afterEach } from "vitest";
 import { handleChat, selectHits } from "../src/lib/chat";
-import { buildQaIndex, QA_INDEX_KEY } from "../src/lib/qa";
+import { QA_INDEX_KEY } from "../src/lib/qaLegacy";
 import { buildContents } from "../src/lib/prompt";
-import type { Item } from "../src/lib/content";
 import type { Hit } from "../src/lib/vector";
 import { fakeKV } from "./kv";
+import { qaItem as qa, seededEnv, legacyBlob } from "./qaEnv";
 
 afterEach(() => vi.restoreAllMocks());
 
@@ -20,40 +20,47 @@ const VEC: Record<string, number[]> = {
   "REF-EN": [0.1, 0.2, 0.3], // t-en's retrieval text (its answer)
   "CRISIS-ANSWER": [0.3, 0.1, 0.2],
 };
-const ai = () => ({ run: async (_m: string, i: { text: string[] }) => ({ data: i.text.map((t) => VEC[t] ?? [0.3, 0.3, 0.3]) }) });
-
-const qa = (id: string, groupId: string, langId: string, c: Record<string, unknown>): Item => ({
-  id, groupId, langId, type: "article", title: "", content: JSON.stringify(c), categorySlug: "chatbot-qa", categorySlugs: ["chatbot-qa"],
-});
-
 const cos = (a: number[], b: number[]) => {
   const n = (v: number[]) => Math.hypot(...v);
   return a.reduce((s, x, i) => s + x * b[i], 0) / (n(a) * n(b));
 };
 
-// Vectorize answers a query with a retrieval-text vector (in `guided`) with
-// those matches, any other query with `matches`.
+const ROWS = (crisisAnswer = false) => [
+  qa("t-he", "g-treat", "he", { question: "איך מקבלים טיפול", paraphrases: [], guidance: "GUIDANCE-HE", crisis: false }),
+  qa("t-en", "g-treat", "en", { question: "how do i get treatment", paraphrases: [], guidance: "GUIDANCE-EN: first X, then Y", answer: "REF-EN", crisis: false }),
+  qa("c-he", "g-crisis", "he", {
+    question: "crisis question", paraphrases: [], guidance: "CRISIS-GUIDANCE: ERAN first", crisis: true,
+    ...(crisisAnswer ? { answer: "CRISIS-ANSWER" } : {}),
+  }),
+];
+
+// Playbooks stored the new way (item reindex into the language shards + KV
+// rows). Every Vectorize query is a content query and goes to `env.content`: a
+// query with a retrieval-text vector (in `guided`) gets those matches, any other
+// `matches`.
 async function envWith(matches: unknown[], opts: { guided?: Record<string, unknown[]>; crisisAnswer?: boolean } = {}) {
+  const env = await seededEnv(VEC, ROWS(opts.crisisAnswer), { GEMINI_MODEL: "m", GEMINI_API_KEY: "k" });
+  return withContent(env, matches, opts.guided);
+}
+
+function withContent(env: any, matches: unknown[], guided: Record<string, unknown[]> = {}) {
+  env.content = vi.fn(async (v: number[], _o?: unknown) => {
+    for (const [text, m] of Object.entries(guided)) if (cos(v, VEC[text]) > 0.999) return { matches: m };
+    return { matches };
+  });
+  env.VECTORIZE = { ...env.VECTORIZE, query: env.content };
+  return env;
+}
+
+// The state before the shard deploy's full reindex: no shards, the old one-value playbook index.
+function legacyEnv(matches: unknown[], opts: { guided?: Record<string, unknown[]>; retrieval?: boolean } = {}) {
   const env = {
-    AI: ai(),
-    RL: fakeKV(),
-    VECTORIZE: {
-      query: vi.fn(async (v: number[]) => {
-        for (const [text, m] of Object.entries(opts.guided ?? {})) if (cos(v, VEC[text]) > 0.999) return { matches: m };
-        return { matches };
-      }),
-    },
+    AI: { run: async (_m: string, i: { text: string[] }) => ({ data: i.text.map((t) => VEC[t] ?? [0.3, 0.3, 0.3]) }) },
+    RL: fakeKV({ [QA_INDEX_KEY]: legacyBlob(VEC, ROWS(), opts) }),
+    VECTORIZE: { query: async () => ({ matches: [] }) },
     GEMINI_MODEL: "m", GEMINI_API_KEY: "k",
   } as any;
-  await buildQaIndex(env, [
-    qa("t-he", "g-treat", "he", { question: "איך מקבלים טיפול", paraphrases: [], guidance: "GUIDANCE-HE", crisis: false }),
-    qa("t-en", "g-treat", "en", { question: "how do i get treatment", paraphrases: [], guidance: "GUIDANCE-EN: first X, then Y", answer: "REF-EN", crisis: false }),
-    qa("c-he", "g-crisis", "he", {
-      question: "crisis question", paraphrases: [], guidance: "CRISIS-GUIDANCE: ERAN first", crisis: true,
-      ...(opts.crisisAnswer ? { answer: "CRISIS-ANSWER" } : {}),
-    }),
-  ]);
-  return env;
+  return withContent(env, matches, opts.guided);
 }
 
 const HIT = { score: 0.9, metadata: { itemId: "1", groupId: "g", type: "faq", langId: "en", title: "T", text: "grounded fact", chunkIndex: 0, categorySlug: "rights" } };
@@ -137,6 +144,19 @@ describe("handleChat playbooks", () => {
     expect(r.body).not.toContain("qa-match");
   });
 
+  it("the done event names the playbook used (crisis, carried, current), null without one", async () => {
+    const done = (body: string) => JSON.parse(body.split("\n\n").find((f) => f.startsWith("event: done"))!.split("\ndata: ")[1]);
+    const strong = done((await run(await envWith([HIT]), "where do i find a therapist")).body);
+    expect(strong.playbook).toMatchObject({ groupId: "g-treat", strength: "strong" });
+    expect(strong.playbook.score).toBeGreaterThan(0.9);
+    vi.restoreAllMocks();
+    expect(done((await run(await envWith([HIT]), "i want to die")).body).playbook).toMatchObject({ groupId: "g-crisis", strength: "crisis" });
+    vi.restoreAllMocks();
+    expect(done((await run(await envWith([HIT]), "tell me about cats")).body)).toEqual({ playbook: null });
+    vi.restoreAllMocks();
+    expect(done((await run(await envWith([]), "something about treatment maybe")).body).playbook).toMatchObject({ strength: "weak" }); // refusal path
+  });
+
   it("chat still works when the QA index can't be read", async () => {
     const env = await envWith([HIT]);
     env.RL = { get: async () => { throw new Error("kv down"); } };
@@ -161,10 +181,10 @@ describe("playbook-guided retrieval", () => {
   it("a strong match runs exactly one extra query, with the row's answer vector, and its hits reach SOURCES", async () => {
     const env = await envWith(OTHER, { guided: { "REF-EN": METIV } });
     const r = await run(env, "where do i find a therapist");
-    expect(env.VECTORIZE.query).toHaveBeenCalledTimes(2);
-    const guidedVec = env.VECTORIZE.query.mock.calls[1][0] as number[];
+    expect(env.content).toHaveBeenCalledTimes(2);
+    const guidedVec = env.content.mock.calls[1][0] as number[];
     expect(cos(guidedVec, VEC["REF-EN"])).toBeGreaterThan(0.999);
-    expect(env.VECTORIZE.query.mock.calls[1][1]).toEqual({ topK: 20, returnMetadata: "all" });
+    expect(env.content.mock.calls[1][1]).toEqual({ topK: 20, returnMetadata: "all" });
     expect(r.userText).toContain("METIV PHONE 02-6449666");
     expect(sourcesOf(r.body).map((s) => s.itemId)).toEqual(["sc", "sc", "sc", "metiv-contacts", "metiv-org"]);
     const line = r.logs.find((l) => l.startsWith("qa-match "))!;
@@ -174,7 +194,7 @@ describe("playbook-guided retrieval", () => {
   it("a weak match and a carried strong match guide retrieval too", async () => {
     const weak = await envWith(OTHER, { guided: { "REF-EN": METIV } });
     expect(sourcesOf((await run(weak, "something about treatment maybe")).body).map((s) => s.itemId)).toContain("metiv-contacts");
-    expect(weak.VECTORIZE.query).toHaveBeenCalledTimes(2);
+    expect(weak.content).toHaveBeenCalledTimes(2);
     vi.restoreAllMocks();
     const carried = await envWith(OTHER, { guided: { "REF-EN": METIV } });
     vi.spyOn(globalThis, "fetch").mockImplementation(async () => geminiSSE("answer"));
@@ -183,24 +203,21 @@ describe("playbook-guided retrieval", () => {
       messages: [{ role: "user", content: "how do i get treatment" }, { role: "assistant", content: "how old?" }, { role: "user", content: "5" }],
       lang: "en", sessionId: "s",
     }).body).text();
-    expect(carried.VECTORIZE.query).toHaveBeenCalledTimes(2);
+    expect(carried.content).toHaveBeenCalledTimes(2);
     expect(sourcesOf(body).map((s) => s.itemId)).toContain("metiv-contacts");
   });
 
   it("no playbook match: no extra query", async () => {
     const env = await envWith(OTHER, { guided: { "REF-EN": METIV } });
     const r = await run(env, "tell me about cats");
-    expect(env.VECTORIZE.query).toHaveBeenCalledTimes(1);
+    expect(env.content).toHaveBeenCalledTimes(1);
     expect(r.userText).not.toContain("METIV PHONE");
   });
 
-  it("an index built before retrieval vectors: no extra query, chat as before", async () => {
-    const env = await envWith(OTHER, { guided: { "REF-EN": METIV } });
-    const raw = JSON.parse(env.RL.store.get(QA_INDEX_KEY));
-    delete raw.retrieval;
-    env.RL.store.set(QA_INDEX_KEY, JSON.stringify(raw));
+  it("an old index built before retrieval vectors: no extra query, chat as before", async () => {
+    const env = legacyEnv(OTHER, { guided: { "REF-EN": METIV }, retrieval: false });
     const r = await run(env, "where do i find a therapist");
-    expect(env.VECTORIZE.query).toHaveBeenCalledTimes(1);
+    expect(env.content).toHaveBeenCalledTimes(1);
     expect(r.userText).toMatch(/^PLAYBOOK:/);
     expect(sourcesOf(r.body).map((s) => s.itemId)).toEqual(["sc", "sc", "sc"]);
   });
@@ -208,19 +225,19 @@ describe("playbook-guided retrieval", () => {
   it("crisis guides retrieval only when its row has an answer", async () => {
     const plain = await envWith(OTHER, { guided: { "CRISIS-ANSWER": METIV } });
     await run(plain, "i want to die");
-    expect(plain.VECTORIZE.query).toHaveBeenCalledTimes(1);
+    expect(plain.content).toHaveBeenCalledTimes(1);
     vi.restoreAllMocks();
     const withAnswer = await envWith(OTHER, { guided: { "CRISIS-ANSWER": METIV }, crisisAnswer: true });
     const r = await run(withAnswer, "i want to die");
-    expect(withAnswer.VECTORIZE.query).toHaveBeenCalledTimes(2);
+    expect(withAnswer.content).toHaveBeenCalledTimes(2);
     expect(r.userText).toContain("METIV PHONE");
   });
 
   it("a failing guided query leaves the user-query SOURCES", async () => {
     const env = await envWith(OTHER);
-    const q = env.VECTORIZE.query.getMockImplementation();
+    const q = env.content.getMockImplementation();
     let n = 0;
-    env.VECTORIZE.query.mockImplementation(async (...a: any[]) => {
+    env.content.mockImplementation(async (...a: any[]) => {
       if (n++ === 1) throw new Error("vectorize down");
       return q(...a);
     });

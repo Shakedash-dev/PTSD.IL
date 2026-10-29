@@ -1,0 +1,33 @@
+# Playbook match comparison set: <lang>\t<question>. Mix of paraphrases users
+# actually type, other languages, near-misses and questions with no playbook.
+he	יש לי פוסט טראומה, מה לעשות?
+he	אני רוצה למות
+he	בא לי להיעלם
+he	אני חותכת את עצמי
+he	החבר שלי אמר שהוא לא רוצה לחיות יותר
+he	יש לי התקף חרדה עכשיו
+he	אני בפלשבק ולא מצליח להירגע
+he	איך מוצאים פסיכולוג?
+he	אין לי כסף לטיפול
+he	איך יוצרים קשר עם מטיב?
+he	מתי מתחיל הקורס CBT בטראומה וכמה הוא עולה?
+he	אני מילואימניק וקשה לי מאז שחזרתי
+he	לא ישנתי כבר שבוע בגלל סיוטים
+he	איך אני מדבר עם הילד שלי על מה שעובר עליי?
+he	מה זה פלאשבק?
+he	מי אתה? מישהו קורא את השיחה?
+he	מה מזג האוויר מחר?
+he	איך מגישים תביעה לביטוח לאומי?
+en	I want to kill myself
+en	Where can I find a therapist in Israel?
+en	I'm having a panic attack right now
+en	How do I contact Metiv?
+en	Does Metiv offer supervision for therapists?
+ar	أريد أن أموت
+ar	عندي نوبة هلع الآن، ماذا أفعل؟
+ar	كيف أجد معالجًا نفسيًا؟
+ru	Я хочу умереть
+ru	Как связаться с Метив?
+ru	У меня паническая атака, что делать?
+fr	Je veux mourir
+fr	Comment trouver un psychologue ?

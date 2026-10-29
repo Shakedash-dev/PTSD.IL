@@ -42,11 +42,12 @@ export const METIV_CHATBOT_SLUGS = [
   "metiv-papers", "metiv-articles", "metiv-events",
 ];
 
-// Categories that never go into the general Vectorize index: the admin log, UI
-// strings (`site-copy`, `metiv-copy`) and the Q&A rows, which feed the playbook
-// KV index instead (lib/qa.ts). The PTSD-IL `legal` rows (privacy policy, terms
-// of use) are indexed.
-export const EXCLUDED_SLUGS = ["admin-log", "site-copy", QA_SLUG, "metiv-copy"];
+// Categories that never go into the general Vectorize index: the admin log and
+// the admin's save-in-progress status rows (`admin-status`), UI strings
+// (`site-copy`, `metiv-copy`) and the Q&A rows, which feed the playbook KV index
+// instead (lib/qa.ts). The PTSD-IL `legal` rows (privacy policy, terms of use)
+// are indexed.
+export const EXCLUDED_SLUGS = ["admin-log", "admin-status", "site-copy", QA_SLUG, "metiv-copy"];
 
 // Collection slug -> registry key, for resolving `{ "$ref": "KEY#_key" }` cross
 // references (docs/metiv-db-spec.md section 1). Must equal registry.js
@@ -130,11 +131,22 @@ export async function fetchAllItems(apiBase: string): Promise<Item[]> {
   return rows.filter((r) => r.isPublished !== false).map(normalize);
 }
 
-// Published curated Q&A rows (all languages). The slug check guards against an
-// API that ignores the categorySlug filter.
-export async function fetchQaItems(apiBase: string): Promise<Item[]> {
-  const rows = await getJson(`${apiBase}/articles?categorySlug=${QA_SLUG}`);
-  return rows.filter((r) => r.isPublished !== false).map(normalize).filter(isQaItem);
+// Every published article of one language. The full reindex works one
+// language at a time: the whole /articles list is ~4.5 MB, and parsing it alone
+// is ~10 ms of CPU, the free plan's whole per-request allowance. The langId
+// check guards against an API that ignores the filter.
+export async function fetchItemsByLang(apiBase: string, langId: string): Promise<Item[]> {
+  const rows = await getJson(`${apiBase}/articles?langId=${encodeURIComponent(langId)}`);
+  return rows.filter((r) => r.isPublished !== false).map(normalize).filter((i) => i.langId === langId);
+}
+
+// Published curated Q&A rows, of one language or all. The slug check guards
+// against an API that ignores the categorySlug filter.
+export async function fetchQaItems(apiBase: string, langId?: string): Promise<Item[]> {
+  const lang = langId ? `&langId=${encodeURIComponent(langId)}` : "";
+  const rows = await getJson(`${apiBase}/articles?categorySlug=${QA_SLUG}${lang}`);
+  return rows.filter((r) => r.isPublished !== false).map(normalize)
+    .filter((i) => isQaItem(i) && (!langId || i.langId === langId));
 }
 
 // Every published Metiv row of one language (all collections, indexed or not),

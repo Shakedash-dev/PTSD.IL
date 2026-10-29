@@ -175,9 +175,11 @@ used.
   language, content `{ question, paraphrases: string[], guidance, answer?,
   crisis: boolean }`. `guidance` says what a good answer contains and in which
   order, and says to take facts that change (phones, addresses, names) from
-  SOURCES. The worker embeds `question` + `paraphrases` into a KV index (no new
-  Vectorize index); at chat time a strong match injects the row as a PLAYBOOK
-  block the model follows, adapting wording and language. Crisis rows always
+  SOURCES. The worker embeds `question` + `paraphrases` into one int8 KV
+  shard per language (no Vectorize index) and keeps the row's text in one small
+  KV value per row (docs/chatbot-guide.md section 15); at
+  chat time a strong match injects the row as a PLAYBOOK block the model
+  follows, adapting wording and language. Crisis rows always
   apply when `detectCrisis` fires.
 
 ## 6. One-time initialisation

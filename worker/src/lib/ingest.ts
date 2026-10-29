@@ -2,21 +2,29 @@ import type { Env } from "../index";
 import type { Item } from "./content";
 import { extractParts, dedupe, refsIn, buildRefIndex, refResolver, type RefIndex, type RefResolver } from "./content";
 import { chunk } from "./chunk";
-import { embed, EMBED_BATCH } from "./embed";
-import { upsertItemChunks, deleteItem, deleteIds, upsertVectors, DELETE_BATCH, type ChunkMeta, type VectorRow } from "./vector";
-import { fetchAllItems, fetchAllCommunities, fetchItem, fetchCommunity, fetchMetivItems, isIndexable, isQaItem, isMetivItem } from "./api";
-import { rebuildQaIndex, qaIndexHasRow, qaJobs, embedQaJobs, writeQaIndex, qaIndexKey, type QaEntry } from "./qa";
+import { embed, EMBED_BATCH, EMBED_DIMS } from "./embed";
+import { upsertItemChunks, deleteItem, deleteIds, upsertVectors, contentRow, chunkIds, DELETE_BATCH, type ChunkMeta, type VectorRow } from "./vector";
+import { fetchItemsByLang, fetchAllCommunities, fetchItem, fetchCommunity, fetchMetivItems, fetchQaItems, isIndexable, isQaItem, isMetivItem } from "./api";
+import {
+  parseQaRow, embedRows, recordValue, writeRecord, reindexQaRow, removeQaRow, listRecords, textCount, qaRowPrefix, shardKey, kvPrefix,
+  writeShard, LANGS, type ParsedQaRow,
+} from "./qa";
+import { decodeShard, encodeShard, shardRows, stamp, fnv, type RowVectors } from "./qaShard";
+import { qaIndexKey } from "./qaLegacy";
 
-// A single Worker invocation is capped at 50 subrequests on the free plan, and
-// fetches, Workers AI calls, Vectorize calls and KV operations all count. The
-// full reindex outgrew one invocation, so it runs in steps (reindexStep): each
-// call does a bounded slice and returns a cursor to continue from. Per-item
-// paths (reindexItem/reindexById) stay one-shot: they make a handful of calls.
-const UPSERT_BATCH = 500; // vectors per Vectorize upsert call (binding limit 1000)
+// Two Workers Free limits shape the full reindex: 50 subrequests per invocation
+// (fetches, Workers AI, Vectorize and KV calls all count) and 10 ms of CPU. The
+// CPU one binds first: the binding sends vectors as JSON, and parsing an
+// embedding response plus stringifying the upsert costs ~0.1 ms per vector
+// (measured in node with 1024-dim vectors), while parsing the whole 4.5 MB
+// /articles list is ~10 ms by itself. So the full reindex runs in many small
+// steps (reindexStep): each fetches ONE slice (the Q&A rows of a language, a
+// language of /articles, or the communities), writes at most STEP_VECTORS
+// content vectors or QA_STEP_TEXTS playbook texts, and returns a cursor.
+// Per-item paths (reindexItem/reindexById) stay one-shot.
 
 // Chunk ids an excluded item may still hold from before it was excluded. The
-// bulk path can't afford deleteItem's 64 ids per item across hundreds of Metiv
-// rows, so it deletes what the current text would chunk into, plus a margin.
+// bulk path deletes what the current text would chunk into, plus a margin.
 const STALE_CHUNK_MARGIN = 4;
 
 const CHUNK_MAX = 1600;
@@ -105,26 +113,53 @@ export async function reindexItem(env: Env, item: Item, resolve?: RefResolver): 
   const vectors = await embed(env.AI, chunks.map((c) => c.text));
   const key = metivKey(item);
   const metas: ChunkMeta[] = chunks.map((c) => metaFor(item, c, key));
-  await deleteItem(env.VECTORIZE, item.id); // clear stale chunks first
   await upsertItemChunks(env.VECTORIZE, item.id, vectors, metas);
+  // Then the chunks past the new count (1 delete).
+  await deleteItem(env.VECTORIZE, item.id, chunks.length);
   return { upserted: chunks.length };
 }
 
 // Subrequests one reindex step may make in total, with headroom under the 50
 // cap. STEP_FIXED of them are spent before any work: the admin token check
-// (index.ts) and the two corpus fetches (articles + communities).
+// (index.ts). A step's real spend is far lower (~4-15): the CPU caps bind first.
 export const STEP_BUDGET = 40;
-const STEP_FIXED = 3;
-// Playbook build parts live this long, so an abandoned run cleans itself up.
+const STEP_FIXED = 1;
+// Content vectors a step embeds and upserts at most. Measured in node on the
+// real corpus (docs/chatbot-guide.md section 18): ~0.1 ms of CPU per vector
+// (embedding response parse + rounding + upsert stringify), plus ~1.5-2 ms to
+// parse a language slice, ~1 ms to chunk the step's items and ~1 ms for the
+// `$ref` index when one of them has refs. An item is never split, so one with
+// more chunks goes alone (the largest today: 42).
+export const STEP_VECTORS = 40;
+// Q&A texts a step embeds at most (match texts plus one retrieval text per row,
+// whole rows): one Workers AI call. No upsert to stringify, so a text costs
+// only its share of the embedding response parse (~0.03 ms) and its int8
+// quantization.
+export const QA_STEP_TEXTS = 100;
+// A qa step writes its rows' vectors to a build part that lives this long, so an
+// abandoned run leaves nothing behind (and no KV delete is spent on it).
 const QA_PART_TTL = 3600;
+// Rounds of the `rework` cleanup slice before it gives up (and logs).
+const SWEEP_ROUNDS = 30;
 
-const PHASES = ["qa", "cleanup", "chunks"] as const;
+const SLICES = {
+  qa: [...LANGS],
+  chunks: [...LANGS, "communities"],
+  cleanup: [...LANGS, "qa", "rework", "legacy"],
+} as const;
+const PHASES = ["qa", "chunks", "cleanup"] as const;
 type Phase = (typeof PHASES)[number];
 
-// Opaque to the client. `fp` fingerprints the phase's work list: if the corpus
-// changes mid-run so that offsets no longer line up, the phase starts over.
-// `parts` counts the playbook build parts written so far (qa phase only).
-type Cursor = { v: 1; phase: Phase; offset: number; buildId: string; fp: string; parts: number };
+// Opaque to the client. `slice` indexes SLICES[phase], `offset` the slice's work
+// list, and `fp` fingerprints that list: if the corpus changes mid-slice so the
+// offsets no longer line up (or, for Q&A, a row's texts change), the slice
+// starts over. `n` counts the current slice's results; `up` / `qa` / `ex` the
+// finished slices' (chunks upserted, Q&A rows written, excluded rows). `b` and
+// `parts`: the current qa slice's build id and the build parts written so far.
+type Cursor = {
+  v: 3; phase: Phase; slice: number; offset: number; fp: string; n: number;
+  up: number; qa: number; ex: number; b: string; parts: number;
+};
 
 export class CursorError extends Error {}
 
@@ -141,22 +176,15 @@ function decodeCursor(s: unknown): Cursor {
     throw new CursorError("invalid cursor");
   }
   const int = (n: unknown) => typeof n === "number" && Number.isInteger(n) && n >= 0;
-  if (!c || c.v !== 1 || !PHASES.includes(c.phase as Phase) || !int(c.offset) || !int(c.parts)
-    || typeof c.buildId !== "string" || !c.buildId || typeof c.fp !== "string") {
+  if (!c || c.v !== 3 || !PHASES.includes(c.phase as Phase) || !int(c.slice) || c.slice! >= SLICES[c.phase as Phase].length
+    || !int(c.offset) || !int(c.n) || !int(c.up) || !int(c.qa) || !int(c.ex) || !int(c.parts)
+    || typeof c.fp !== "string" || typeof c.b !== "string") {
     throw new CursorError("invalid cursor");
   }
   return c as Cursor;
 }
 
-// FNV-1a over the work list's ids. Not cryptographic, only a change detector.
-function fingerprint(keys: string[]): string {
-  let h = 0x811c9dc5;
-  for (const k of keys) {
-    for (let i = 0; i < k.length; i++) h = Math.imul(h ^ k.charCodeAt(i), 0x01000193);
-    h = Math.imul(h ^ 0x1f, 0x01000193);
-  }
-  return `${keys.length}:${(h >>> 0).toString(16)}`;
-}
+const fingerprint = (keys: string[]) => `${keys.length}:${fnv(keys)}`;
 
 // Hands out the step's subrequests. Running out is a bug in the slicing math,
 // not a runtime condition, so it throws instead of letting Cloudflare do it.
@@ -168,213 +196,280 @@ class Budget {
   }
 }
 
-const lazy = <T>(f: () => T) => {
-  let v: { x: T } | undefined;
-  return () => (v ??= { x: f() }).x;
-};
+// Enter the slice's work list: a new or changed list starts from 0.
+const enter = (cur: Cursor, fp: string): Cursor => (fp === cur.fp ? cur : { ...cur, fp, offset: 0, n: 0, parts: 0, b: "" });
 
-// Every work list of a full reindex, from one corpus fetch. Pure and
-// deterministic, so each step recomputes it and resumes by offset; each list is
-// built only when its phase runs.
-function planReindex(articles: Item[], communities: Item[]) {
-  const all = [...articles, ...communities];
-  const excluded = all.filter((i) => !isIndexable(i));
-  // `$ref`s resolve against every Metiv row of the fetch (indexed or not).
-  const refIndex = buildRefIndex(articles);
-  const resolverFor = (item: Item) => refResolver(refIndex, item.langId);
-  return {
-    excluded: excluded.length,
-    qa: lazy(() => qaJobs(articles.filter(isQaItem))),
-    // Chunk ids excluded rows may still hold from before they were excluded.
-    staleIds: lazy(() => excluded.flatMap((item) => {
-      const n = chunkItem(item, resolverFor(item)).length + STALE_CHUNK_MARGIN;
-      return Array.from({ length: n }, (_, i) => `${item.id}:${i}`);
-    })),
-    metas: lazy(() => {
-      const metas: ChunkMeta[] = [];
-      for (const item of all.filter(isIndexable)) {
-        const key = metivKey(item);
-        for (const c of chunkItem(item, resolverFor(item))) metas.push(metaFor(item, c, key));
-      }
-      return metas;
-    }),
-  };
-}
-type Plan = ReturnType<typeof planReindex>;
+type Out = { cur: Cursor; finished: boolean; total: number };
 
-function phaseWork(plan: Plan, phase: Phase): { total: number; fp: string } {
-  if (phase === "qa") {
-    const { jobs } = plan.qa();
-    // Matching and retrieval texts alike: both are embedding jobs of the phase.
-    return { total: jobs.length, fp: fingerprint(jobs.map((j) => `${j.row.rowId}\u0000${j.retrieval ? "r\u0000" : ""}${j.text}`)) };
+// `$ref` resolver for the items a step chunks: the slice's own Metiv rows, plus
+// the Hebrew ones (1 more fetch) only when one of those items has a ref missing
+// in its language. None when no item in range has refs.
+async function sliceResolver(env: Env, lang: string, all: Item[], range: Item[], budget: Budget): Promise<RefResolver | undefined> {
+  const refs = range.filter(isMetivItem).flatMap(refsIn);
+  if (refs.length === 0) return undefined;
+  const index = buildRefIndex(all);
+  if (lang !== "he" && refs.some((r) => !index.get(lang)?.has(r))) {
+    budget.take(1);
+    buildRefIndex(await fetchMetivItems(env.API_BASE, "he"), index);
   }
-  if (phase === "cleanup") return { total: plan.staleIds().length, fp: fingerprint(plan.staleIds()) };
-  const metas = plan.metas();
-  return { total: metas.length, fp: fingerprint(metas.map((m) => `${m.itemId}:${m.chunkIndex}`)) };
+  return refResolver(index, lang);
 }
 
-type PhaseOut = { cur: Cursor; finished: boolean };
-
-const qaPartKey = (env: Env, buildId: string, part: number) => `${qaIndexKey(env)}:build:${buildId}:${part}`;
-type QaPart = { fp: string; from: number; entries: QaEntry[] };
-
-// Playbook index. Chat must never read a half-built index, so a build that
-// spans several steps writes each step's vectors to its own temporary part key
-// (TTL QA_PART_TTL) and only the finishing step writes the real key, once, then
-// deletes the parts. One key per part instead of one growing key: every part is
-// written once and read once, so KV's edge cache can never hand back an older
-// version of it.
-// The jobs are every row's matching texts plus its one retrieval text, embedded
-// together EMBED_BATCH per call, so the retrieval vectors add ceil(rows / 100)
-// calls at most and need no math of their own.
-// Cost: a middle step is n embeds + 1 part write; the finishing step is
-// `parts` reads + the remaining embeds + 1 index write + `parts` deletes.
-async function runQa(env: Env, plan: Plan, cur: Cursor, budget: Budget): Promise<PhaseOut> {
-  const { parsed, jobs } = plan.qa();
-  const rest = Math.ceil((jobs.length - cur.offset) / EMBED_BATCH);
-  const finishCost = 2 * cur.parts + rest + 1;
-  if (finishCost <= budget.left) {
-    budget.take(cur.parts);
-    const parts = await Promise.all(Array.from({ length: cur.parts }, async (_, i) => {
-      const raw = await env.RL.get(qaPartKey(env, cur.buildId, i));
-      return raw ? (JSON.parse(raw) as QaPart) : null;
-    }));
-    const entries: QaEntry[] = [];
-    for (const p of parts) {
-      if (!p || p.fp !== cur.fp || p.from !== entries.length) {
-        // Expired or not visible: start the playbook build over under a fresh
-        // id (a fresh key never has a cached "missing" read).
-        return { cur: { ...cur, offset: 0, parts: 0, buildId: crypto.randomUUID() }, finished: false };
-      }
-      entries.push(...p.entries);
-    }
-    budget.take(rest);
-    entries.push(...(await embedQaJobs(env, jobs.slice(cur.offset))));
-    budget.take(1 + cur.parts);
-    await writeQaIndex(env, parsed, entries);
-    await Promise.all(Array.from({ length: cur.parts }, (_, i) => env.RL.delete(qaPartKey(env, cur.buildId, i))));
-    return { cur: { ...cur, offset: jobs.length }, finished: true };
-  }
-  // One more part must still leave a full step able to read, write and delete
-  // them all (far past KV's 25MB value limit in practice).
-  if (2 * (cur.parts + 1) + 1 > STEP_BUDGET - STEP_FIXED) {
-    throw new Error(`playbook index needs more than ${cur.parts} build parts`);
-  }
-  if (budget.left < 2) return { cur, finished: false };
-  const n = Math.min(jobs.length - cur.offset, (budget.left - 1) * EMBED_BATCH);
-  budget.take(Math.ceil(n / EMBED_BATCH));
-  const entries = await embedQaJobs(env, jobs.slice(cur.offset, cur.offset + n));
+// Content chunks of one slice, whole items, at most STEP_VECTORS vectors.
+// Cost: 1 fetch, 1 embed, 1 upsert. Upserts overwrite by id, so a run stopped
+// halfway leaves a usable index. Chunks orphaned by a shrunk item are cleaned up
+// by reindexById, not here.
+async function runChunks(env: Env, cur: Cursor, budget: Budget): Promise<Out> {
+  const name = SLICES.chunks[cur.slice];
   budget.take(1);
-  const part: QaPart = { fp: cur.fp, from: cur.offset, entries };
-  await env.RL.put(qaPartKey(env, cur.buildId, cur.parts), JSON.stringify(part), { expirationTtl: QA_PART_TTL });
-  return { cur: { ...cur, offset: cur.offset + n, parts: cur.parts + 1 }, finished: false };
+  const items = name === "communities" ? await fetchAllCommunities(env.API_BASE) : await fetchItemsByLang(env.API_BASE, name);
+  const work = items.filter(isIndexable);
+  cur = enter(cur, fingerprint(work.map((i) => i.id)));
+  const end = Math.min(work.length, cur.offset + STEP_VECTORS);
+  const resolve = name === "communities" ? undefined : await sliceResolver(env, name, items, work.slice(cur.offset, end), budget);
+
+  const metas: ChunkMeta[] = [];
+  let i = cur.offset;
+  for (; i < end; i++) {
+    const item = work[i];
+    const chunks = chunkItem(item, resolve);
+    if (metas.length && metas.length + chunks.length > STEP_VECTORS) break;
+    const key = metivKey(item);
+    for (const c of chunks) metas.push(metaFor(item, c, key));
+  }
+  if (metas.length) {
+    budget.take(Math.ceil(metas.length / EMBED_BATCH) + 1);
+    const rows: VectorRow[] = [];
+    for (let k = 0; k < metas.length; k += EMBED_BATCH) {
+      const batch = metas.slice(k, k + EMBED_BATCH);
+      const vectors = await embed(env.AI, batch.map((m) => m.text));
+      batch.forEach((m, j) => rows.push(contentRow(m.itemId, vectors[j], m)));
+    }
+    await upsertVectors(env.VECTORIZE, rows);
+  }
+  const next = { ...cur, offset: i, n: cur.n + metas.length };
+  const finished = i >= work.length;
+  return { cur: finished ? { ...next, up: next.up + next.n } : next, finished, total: work.length };
 }
 
-// Drop vectors excluded rows may hold: ceil(n / DELETE_BATCH) Vectorize calls.
-async function runCleanup(env: Env, plan: Plan, cur: Cursor, budget: Budget): Promise<PhaseOut> {
-  const ids = plan.staleIds();
+const partKey = (env: Env, lang: string, b: string, k: number) => `${shardKey(env, lang)}:build:${b}:${k}`;
+
+// Q&A rows of one language into that language's shard. Each step embeds whole
+// rows, at most QA_STEP_TEXTS texts (one Workers AI call), writes their KV rows
+// (only the ones that changed: the KV list's hashes say which) and their
+// vectors to a build part (TTL QA_PART_TTL). The step that reaches the end
+// reads the earlier parts, adds its own rows and writes the shard in ONE put,
+// so chat never sees a half-built shard. One key per part, written once and
+// read once, so KV's edge cache can never hand back an older version of it.
+// Cost: 1 fetch, 1 KV list, 1 embed, 1 put per changed row, 1 part put; the
+// last step instead `parts` gets + 1 shard put. A language without rows still
+// gets an (empty) shard: a missing shard is what sends chat to the old index.
+async function runQa(env: Env, cur: Cursor, budget: Budget): Promise<Out> {
+  const lang = SLICES.qa[cur.slice];
+  budget.take(1);
+  const rows = (await fetchQaItems(env.API_BASE, lang)).map(parseQaRow).filter((r): r is ParsedQaRow => !!r);
+  cur = enter(cur, fingerprint(rows.map((r) => `${r.rowId}:${stamp(r)}`)));
+  if (!cur.b) cur = { ...cur, b: crypto.randomUUID().slice(0, 8) };
+  const take: ParsedQaRow[] = [];
+  let texts = 0;
+  let i = cur.offset;
+  for (; i < rows.length; i++) {
+    const t = textCount(rows[i]);
+    if (take.length && texts + t > QA_STEP_TEXTS) break;
+    take.push(rows[i]);
+    texts += t;
+  }
+  let fresh: RowVectors[] = [];
+  let dims = 0;
+  if (take.length) {
+    budget.take(Math.ceil(texts / EMBED_BATCH));
+    const [listed, built] = await Promise.all([listRecords(env, () => budget.take(1)), embedRows(env, take)]);
+    const stored = new Map(listed.map((r) => [r.name, r.meta.h]));
+    const changed = built.filter((b) => stored.get(`${qaRowPrefix(env)}${b.record.groupId}:${b.record.langId}`) !== recordValue(b.record).meta.h);
+    budget.take(changed.length);
+    await Promise.all(changed.map((b) => writeRecord(env, b.record)));
+    fresh = built.map((b) => b.vectors);
+    dims = built[0].dims;
+  }
+  const n = cur.n + take.length;
+  if (i < rows.length) {
+    budget.take(1);
+    const part = encodeShard({ v: 2, ver: cur.fp, b: `${cur.b}:${cur.parts}` }, dims, fresh);
+    await env.RL.put(partKey(env, lang, cur.b, cur.parts), part, { expirationTtl: QA_PART_TTL });
+    return { cur: { ...cur, offset: i, n, parts: cur.parts + 1 }, finished: false, total: rows.length };
+  }
+
+  budget.take(cur.parts);
+  const parts = await Promise.all(Array.from({ length: cur.parts }, (_, k) => env.RL.get(partKey(env, lang, cur.b, k), "arrayBuffer")));
+  const all: RowVectors[] = [];
+  for (let k = 0; k < parts.length; k++) {
+    const s = decodeShard(parts[k]);
+    if (!s || s.header.ver !== cur.fp || s.header.b !== `${cur.b}:${k}`) {
+      // Expired or not visible yet: build this language again under a fresh id.
+      console.log(`qa-build-restart ${JSON.stringify({ lang, part: k })}`);
+      return { cur: { ...cur, offset: 0, n: 0, parts: 0, b: "" }, finished: false, total: rows.length };
+    }
+    dims ||= s.dims;
+    all.push(...shardRows(s));
+  }
+  all.push(...fresh);
+  budget.take(1);
+  await writeShard(env, lang, encodeShard({ v: 2, ver: cur.b }, dims || EMBED_DIMS, all), cur.b);
+  return { cur: { ...cur, offset: rows.length, n, qa: cur.qa + n }, finished: true, total: rows.length };
+}
+
+// Stale chunk ids of one language's excluded rows (what their text would chunk
+// into, plus a margin): 1 fetch + ceil(ids / 100) deletes.
+async function cleanupExcluded(env: Env, cur: Cursor, budget: Budget, lang: string): Promise<Out> {
+  budget.take(1);
+  const items = await fetchItemsByLang(env.API_BASE, lang);
+  const excluded = items.filter((i) => !isIndexable(i));
+  const resolve = excluded.some((i) => isMetivItem(i) && refsIn(i).length) ? refResolver(buildRefIndex(items), lang) : undefined;
+  const ids = excluded.flatMap((item) => chunkIds(item.id, 0, chunkItem(item, resolve).length + STALE_CHUNK_MARGIN));
+  cur = enter(cur, fingerprint(ids));
   const n = Math.min(ids.length - cur.offset, budget.left * DELETE_BATCH);
   budget.take(Math.ceil(n / DELETE_BATCH));
   await deleteIds(env.VECTORIZE, ids.slice(cur.offset, cur.offset + n));
   const offset = cur.offset + n;
-  return { cur: { ...cur, offset }, finished: offset >= ids.length };
+  const finished = offset >= ids.length;
+  return { cur: { ...cur, offset, ...(finished ? { ex: cur.ex + excluded.length } : {}) }, finished, total: ids.length };
 }
 
-// Embed + upsert content chunks: ceil(n / EMBED_BATCH) + ceil(n / UPSERT_BATCH)
-// calls for n chunks. Upserts overwrite by id, so a run stopped halfway leaves a
-// usable index (some chunks new, the rest as before). The bulk path does not
-// per-item pre-clear, so chunks orphaned by a deleted/shrunk item are cleaned up
-// by reindexById, not here.
-async function runChunks(env: Env, plan: Plan, cur: Cursor, budget: Budget): Promise<PhaseOut> {
-  const metas = plan.metas();
-  const remaining = metas.length - cur.offset;
-  const cost = (k: number) => Math.ceil(k / EMBED_BATCH) + Math.ceil(k / UPSERT_BATCH);
-  let n = 0;
-  while (n < remaining && cost(Math.min(remaining, n + EMBED_BATCH)) <= budget.left) n = Math.min(remaining, n + EMBED_BATCH);
-  budget.take(cost(n));
-  const slice = metas.slice(cur.offset, cur.offset + n);
-  let pending: VectorRow[] = [];
-  for (let i = 0; i < slice.length; i += EMBED_BATCH) {
-    const batch = slice.slice(i, i + EMBED_BATCH);
-    const vectors = await embed(env.AI, batch.map((m) => m.text));
-    batch.forEach((m, j) => pending.push({ id: `${m.itemId}:${m.chunkIndex}`, values: vectors[j], metadata: m }));
-    while (pending.length >= UPSERT_BATCH) {
-      await upsertVectors(env.VECTORIZE, pending.slice(0, UPSERT_BATCH));
-      pending = pending.slice(UPSERT_BATCH);
+// KV rows the Q&A set no longer has: rows that are gone (deleted, unpublished,
+// unparseable) or moved to another group or language. Found from one KV list
+// (its metadata has each row's id), so no per-row reads. A KV row is only
+// deleted when no current row maps to its key: a key a current row maps to was
+// written by this run's qa phase, even if the (eventually consistent) list still
+// shows an older value. The shards need no cleanup: the qa phase built each one
+// from the current rows only. 1 fetch + 1 list + 1 delete per stale row.
+async function cleanupQa(env: Env, cur: Cursor, budget: Budget): Promise<Out> {
+  budget.take(1);
+  const rows = (await fetchQaItems(env.API_BASE)).map(parseQaRow).filter((r): r is ParsedQaRow => !!r);
+  const owned = new Set(rows.map((r) => `${qaRowPrefix(env)}${r.groupId}:${r.langId}`));
+  const keys = (await listRecords(env, () => budget.take(1))).map((r) => r.name).filter((k) => !owned.has(k));
+  cur = enter(cur, fingerprint(keys));
+  const n = Math.min(keys.length - cur.offset, budget.left);
+  budget.take(n);
+  await Promise.all(keys.slice(cur.offset, cur.offset + n).map((k) => env.RL.delete(k)));
+  const offset = cur.offset + n;
+  return { cur: { ...cur, offset }, finished: offset >= keys.length, total: keys.length };
+}
+
+// What a run of the never-deployed namespaced layout (playbook vectors in
+// Vectorize) would have left: vectors in its `qa`, `qa-crisis` and `content`
+// namespaces and its KV layout flag. Production never had them; this only makes
+// sure. Each round queries each namespace (topK 100, ids only) and deletes what
+// it returns, but only ids of that layout's formats, never a content id of the
+// default namespace. Done when every namespace comes back empty, which on an
+// index that never had them is the first round: 1 KV get + 3 queries.
+const REWORK_NS = ["qa", "qa-crisis", "content"];
+const REWORK_ID = /^(qa|qac|c):/;
+async function cleanupRework(env: Env, cur: Cursor, budget: Budget): Promise<Out> {
+  if (cur.offset === 0) {
+    const flag = `${kvPrefix(env)}vec:layout`;
+    budget.take(1);
+    if ((await env.RL.get(flag)) !== null) {
+      budget.take(1);
+      await env.RL.delete(flag);
     }
   }
-  await upsertVectors(env.VECTORIZE, pending);
-  const offset = cur.offset + n;
-  return { cur: { ...cur, offset }, finished: offset >= metas.length };
+  const probe = Array.from({ length: EMBED_DIMS }, (_, i) => (i === 0 ? 1 : 0));
+  let found = 0;
+  for (const namespace of REWORK_NS) {
+    budget.take(1);
+    let ids: string[] = [];
+    try {
+      const res = await env.VECTORIZE.query(probe, { topK: 100, namespace, returnValues: false, returnMetadata: "none" });
+      ids = (res.matches ?? []).map((m) => m.id).filter((id) => REWORK_ID.test(id));
+    } catch (e) {
+      console.log(`reindex-sweep-error ${JSON.stringify({ namespace, error: (e as Error).message })}`);
+    }
+    if (!ids.length) continue;
+    found += ids.length;
+    budget.take(1);
+    await env.VECTORIZE.deleteByIds(ids);
+  }
+  const offset = cur.offset + 1;
+  if (found && offset >= SWEEP_ROUNDS) console.log(`reindex-sweep-incomplete ${JSON.stringify({ rounds: offset, left: found })}`);
+  return { cur: { ...cur, offset, n: cur.n + found }, finished: !found || offset >= SWEEP_ROUNDS, total: cur.n + found };
 }
 
-const RUNNERS: Record<Phase, (env: Env, plan: Plan, cur: Cursor, budget: Budget) => Promise<PhaseOut>> = {
-  qa: runQa, cleanup: runCleanup, chunks: runChunks,
+// The old one-value playbook index, which chat stopped reading once every
+// language had its shard (the qa phase, first in the run). 1 KV delete.
+async function cleanupLegacy(env: Env, cur: Cursor, budget: Budget): Promise<Out> {
+  budget.take(1);
+  await env.RL.delete(qaIndexKey(env));
+  return { cur, finished: true, total: 1 };
+}
+
+async function runCleanup(env: Env, cur: Cursor, budget: Budget): Promise<Out> {
+  const name = SLICES.cleanup[cur.slice];
+  if (name === "qa") return cleanupQa(env, cur, budget);
+  if (name === "rework") return cleanupRework(env, cur, budget);
+  if (name === "legacy") return cleanupLegacy(env, cur, budget);
+  return cleanupExcluded(env, cur, budget, name);
+}
+
+const RUNNERS: Record<Phase, (env: Env, cur: Cursor, budget: Budget) => Promise<Out>> = {
+  qa: runQa, chunks: runChunks, cleanup: runCleanup,
 };
 
 export type ReindexStep = {
   done: boolean;
   cursor?: string;
-  progress: { phase: Phase; processed: number; total: number };
-  excluded: number;
-  qa: number;
+  progress: { phase: Phase; slice: string; processed: number; total: number };
+  excluded: number; // excluded rows, over the cleanup slices finished so far
+  qa: number; // Q&A rows written, over the qa slices finished so far
   upserted?: number; // on the final step: chunk vectors written by the run
 };
 
-// One step of the full reindex. Phases in order: `qa` (playbook index),
-// `cleanup` (stale vectors of excluded rows), `chunks` (content vectors). A step
-// works through as many phases as its budget allows and returns a cursor for the
-// next one until `done`. Without a cursor it starts a new run.
+// One step of the full reindex: one slice of one phase. Phases in order: `qa`
+// (one playbook shard per language, first so chat leaves the old 13 MB index as
+// early as possible), `chunks` (content vectors, per language then
+// communities), `cleanup` (stale vectors of excluded rows per language, KV rows
+// the Q&A set no longer has, leftovers of the namespaced layout, the old
+// playbook index). Without a cursor it starts a new run.
 export async function reindexStep(env: Env, cursor?: unknown): Promise<ReindexStep> {
+  const budget = new Budget(STEP_BUDGET - STEP_FIXED);
   let cur: Cursor = cursor !== undefined
     ? decodeCursor(cursor)
-    : { v: 1, phase: "qa", offset: 0, buildId: crypto.randomUUID(), fp: "", parts: 0 };
-  // 2 concurrent subrequests: articles + communities (each its own endpoint).
-  const [articles, communities] = await Promise.all([
-    fetchAllItems(env.API_BASE),
-    fetchAllCommunities(env.API_BASE),
-  ]);
-  const plan = planReindex(articles, communities);
-  const budget = new Budget(STEP_BUDGET - STEP_FIXED);
-  const counts = () => ({ excluded: plan.excluded, qa: plan.qa().parsed.length });
+    : { v: 3, phase: PHASES[0], slice: 0, offset: 0, fp: "", n: 0, up: 0, qa: 0, ex: 0, b: "", parts: 0 };
+  const out = await RUNNERS[cur.phase](env, cur, budget);
+  cur = out.cur;
+  const progress = { phase: cur.phase, slice: SLICES[cur.phase][cur.slice], processed: cur.offset, total: out.total };
+  const counts = () => ({ excluded: cur.ex, qa: cur.qa });
+  const reset = { offset: 0, fp: "", n: 0, b: "", parts: 0 };
+  if (!out.finished) return { done: false, cursor: encodeCursor(cur), progress, ...counts() };
 
-  for (;;) {
-    const work = phaseWork(plan, cur.phase);
-    if (work.fp !== cur.fp) {
-      // Entering the phase, or the corpus changed under it: start it over.
-      cur = { ...cur, fp: work.fp, offset: 0, parts: 0, ...(cur.parts ? { buildId: crypto.randomUUID() } : {}) };
-    }
-    const out = await RUNNERS[cur.phase](env, plan, cur, budget);
-    cur = out.cur;
-    if (!out.finished) {
-      return { done: false, cursor: encodeCursor(cur), progress: { phase: cur.phase, processed: cur.offset, total: work.total }, ...counts() };
-    }
-    const next = PHASES[PHASES.indexOf(cur.phase) + 1];
-    if (!next) {
-      return { done: true, progress: { phase: cur.phase, processed: cur.offset, total: work.total }, ...counts(), upserted: work.total };
-    }
-    cur = { ...cur, phase: next, offset: 0, fp: "", parts: 0 };
+  if (cur.slice + 1 < SLICES[cur.phase].length) {
+    cur = { ...cur, slice: cur.slice + 1, ...reset };
+    return { done: false, cursor: encodeCursor(cur), progress, ...counts() };
   }
+  const next = PHASES[PHASES.indexOf(cur.phase) + 1];
+  if (!next) return { done: true, progress, ...counts(), upserted: cur.up };
+  cur = { ...cur, phase: next, slice: 0, ...reset };
+  return { done: false, cursor: encodeCursor(cur), progress, ...counts() };
 }
 
 // Per-item reindex, type-agnostic so the admin console can sync any content on
 // create/update/delete. Resolves the id against articles first, then
 // communities (their own endpoint/shape). If it's neither - deleted, or a
 // deactivated community - drop its stale vectors. This is what keeps the vector
-// DB in step with all three admin operations. A Q&A row (or an id that was one
-// and is now gone or unpublished) rebuilds the playbook KV index instead.
+// DB in step with all three admin operations. A Q&A row reindexes only itself
+// (lib/qa.ts reindexQaRow); an id that was a Q&A row and is now gone or
+// unpublished drops only its own entries and KV rows.
 export async function reindexById(env: Env, itemId: string): Promise<{ upserted: number; qa?: number }> {
   const item = await fetchItem(env.API_BASE, itemId);
   if (item) {
     if (!isQaItem(item)) return reindexItem(env, item);
-    await deleteItem(env.VECTORIZE, itemId);
-    return { upserted: 0, ...(await rebuildQaIndex(env)) };
+    await deleteItem(env.VECTORIZE, itemId); // content vectors from before it was a Q&A row
+    return { upserted: 0, qa: (await reindexQaRow(env, item)).qa };
   }
 
   const community = await fetchCommunity(env.API_BASE, itemId);
   if (community) return reindexItem(env, community);
 
   await deleteItem(env.VECTORIZE, itemId);
-  if (await qaIndexHasRow(env, itemId)) return { upserted: 0, ...(await rebuildQaIndex(env)) };
+  if (await removeQaRow(env, itemId)) return { upserted: 0, qa: 0 };
   return { upserted: 0 };
 }

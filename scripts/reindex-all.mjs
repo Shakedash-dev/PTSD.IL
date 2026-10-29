@@ -1,11 +1,12 @@
-// Full reindex of the chatbot (vector DB + playbook index), step by step.
+// Full reindex of the chatbot (playbook shards and rows in KV, content vectors),
+// step by step. ~90 short steps today (docs/chatbot-guide.md section 18).
 //
 //   node scripts/reindex-all.mjs                                   # production Worker
 //   node scripts/reindex-all.mjs https://ptsd-chatbot-worker-staging.ptsd-il.workers.dev
 //
 // The Worker does one bounded slice per POST /reindex {scope:"all"} (the free
-// plan caps a call at 50 subrequests) and returns a cursor; this loops until it
-// says done. A failed call is retried up to 3 times with backoff, with the same
+// plan caps a call at 50 subrequests and 10 ms of CPU) and returns a cursor;
+// this loops until it says done. A failed call is retried up to 3 times with backoff, with the same
 // cursor, so a retry never redoes finished work.
 //
 // Auth: an admin JWT, read from ADMIN_TOKEN in the environment or from `.env.admin`
@@ -81,8 +82,8 @@ for (let i = 1; i <= MAX_STEPS; i++) {
   } catch (e) {
     die(`step ${i} failed: ${e.message}${cursor ? '\nRe-run to start over (finished chunks are already live).' : ''}`);
   }
-  const { phase, processed, total } = r.progress;
-  console.log(`step ${i}: ${phase} ${processed}/${total}${r.done ? ' - done' : ''}`);
+  const { phase, slice, processed, total } = r.progress;
+  console.log(`step ${i}: ${phase}${slice ? `/${slice}` : ''} ${processed}/${total}${r.done ? ' - done' : ''}`);
   if (r.done) {
     console.log(`\n✓ ${r.upserted} chunks upserted, ${r.qa} playbook rows, ${r.excluded} excluded rows (${Math.round((Date.now() - started) / 1000)}s)`);
     process.exit(0);
