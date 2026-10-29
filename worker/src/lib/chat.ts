@@ -23,6 +23,20 @@ const CUT_SHORT: Record<string, string> = {
   fr: "La réponse a été interrompue. Vous pouvez reformuler la question ou consulter les pages en lien ci-dessous. En cas de détresse : ERAN 1201.",
 };
 
+// The same request plus what was already streamed, asking Gemini to go on from
+// there (or to answer afresh when nothing was written yet).
+function continuation(payload: ReturnType<typeof buildContents>, written: string): ReturnType<typeof buildContents> {
+  if (!written.trim()) return payload;
+  return {
+    ...payload,
+    contents: [
+      ...payload.contents,
+      { role: "model", parts: [{ text: written }] },
+      { role: "user", parts: [{ text: "Continue your previous answer exactly where it stopped, without repeating anything already written. Same language, same format, in your own words." }] },
+    ],
+  };
+}
+
 const REFUSAL: Record<string, string> = {
   he: "אני יכול לעזור רק בנושאים שמופיעים באתר. אפשר לנסח מחדש?",
   ar: "يمكنني المساعدة فقط في المواضيع الموجودة على هذا الموقع.",
@@ -195,11 +209,23 @@ export function handleChat(env: Env, body: { messages: Msg[]; lang: string; sess
 
         const payload = buildContents(body.messages, hits, lang, playbooks, body.area);
         const meta: StreamMeta = {};
-        for await (const delta of streamGemini(env, payload, meta)) send("token", { text: delta });
-        const cutShort = !!meta.finishReason && ABNORMAL_FINISH.has(meta.finishReason);
-        if (cutShort) {
-          console.log(`gemini-finish ${JSON.stringify({ finishReason: meta.finishReason, lang })}`);
-          send("token", { text: `\n\n${CUT_SHORT[lang] ?? CUT_SHORT.en}` });
+        let written = "";
+        for await (const delta of streamGemini(env, payload, meta)) { written += delta; send("token", { text: delta }); }
+        // Gemini's filters occasionally stop a harmless answer (seen live: RECITATION,
+        // PROHIBITED_CONTENT on an Arabic panic-attack answer, ~1 in 15). Ask once
+        // to continue from where it stopped; only if that stops too, close with the
+        // fallback line so the answer never just breaks off.
+        let finish = meta.finishReason;
+        if (finish && ABNORMAL_FINISH.has(finish)) {
+          console.log(`gemini-finish ${JSON.stringify({ finishReason: finish, lang, chars: written.length, attempt: 1 })}`);
+          const again: StreamMeta = {};
+          for await (const delta of streamGemini(env, continuation(payload, written), again)) send("token", { text: delta });
+          finish = again.finishReason;
+          if (finish && ABNORMAL_FINISH.has(finish)) {
+            console.log(`gemini-finish ${JSON.stringify({ finishReason: finish, lang, attempt: 2 })}`);
+            send("token", { text: `\n\n${CUT_SHORT[lang] ?? CUT_SHORT.en}` });
+          }
+          meta.finishReason = finish;
         }
 
         if (hits.length) {

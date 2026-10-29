@@ -146,8 +146,26 @@ describe("model stops early", () => {
   };
   const hit = { score: 0.9, metadata: { itemId: "1", groupId: "g", type: "faq", langId: "en", title: "T", text: "fact", chunkIndex: 0 } };
 
-  it("closes a RECITATION-cut answer with a line in the user's language and reports the reason", async () => {
-    vi.spyOn(globalThis, "fetch").mockResolvedValue(sseWith("Breathe in slowly for 4 sec", "RECITATION"));
+  it("continues once after a filter stop: one continuous answer, no fallback line", async () => {
+    const fetchSpy = vi.spyOn(globalThis, "fetch")
+      .mockImplementationOnce(async () => sseWith("Breathe in slowly for 4 sec", "PROHIBITED_CONTENT"))
+      .mockImplementationOnce(async () => sseWith("onds, then breathe out slowly.", "STOP"));
+    vi.spyOn(console, "log").mockImplementation(() => {});
+    const env = baseEnv();
+    env.VECTORIZE.query = async () => ({ matches: [hit, hit, hit] });
+    const body = await readSSE(await handleChat(env, { messages: [{ role: "user", content: "panic attack now what do I do" }], lang: "en", sessionId: "s" }));
+    expect(body).toContain("onds, then breathe out slowly.");
+    expect(body).not.toContain("This answer was cut short");
+    expect(body).toContain('"finishReason":"STOP"');
+    expect(fetchSpy).toHaveBeenCalledTimes(2);
+    const second = JSON.parse(String((fetchSpy.mock.calls[1][1] as RequestInit).body));
+    const roles = second.contents.map((c: any) => c.role);
+    expect(roles.slice(-2)).toEqual(["model", "user"]);
+    expect(second.contents.at(-2).parts[0].text).toBe("Breathe in slowly for 4 sec");
+  });
+
+  it("closes with a line in the user's language when the continuation stops too", async () => {
+    vi.spyOn(globalThis, "fetch").mockImplementation(async () => sseWith("Breathe in slowly for 4 sec", "RECITATION"));
     vi.spyOn(console, "log").mockImplementation(() => {});
     const env = baseEnv();
     env.VECTORIZE.query = async () => ({ matches: [hit, hit, hit] });
@@ -157,7 +175,7 @@ describe("model stops early", () => {
   });
 
   it("adds nothing when the model finishes normally", async () => {
-    vi.spyOn(globalThis, "fetch").mockResolvedValue(sseWith("All good.", "STOP"));
+    vi.spyOn(globalThis, "fetch").mockImplementation(async () => sseWith("All good.", "STOP"));
     const env = baseEnv();
     env.VECTORIZE.query = async () => ({ matches: [hit, hit, hit] });
     const body = await readSSE(await handleChat(env, { messages: [{ role: "user", content: "hello there friend" }], lang: "en", sessionId: "s" }));
