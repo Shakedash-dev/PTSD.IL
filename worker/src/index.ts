@@ -1,6 +1,6 @@
 import { Hono } from "hono";
 import { cors } from "hono/cors";
-import { reindexAll, reindexById } from "./lib/ingest";
+import { reindexStep, reindexById, CursorError } from "./lib/ingest";
 import { handleChat } from "./lib/chat";
 import { verifyAdmin, verifyAdminCached, tokenHash } from "./lib/auth";
 import { checkLimit } from "./lib/ratelimit";
@@ -43,7 +43,9 @@ app.post("/reindex", async (c) => {
   if (!(await verifyAdmin(c.env, c.req.header("Authorization") ?? null))) {
     return c.json({ error: "unauthorized" }, 401);
   }
-  let body: { scope: "all" } | { scope: "item"; itemId: string };
+  // `scope: "all"` is stepped: each call does one bounded slice and returns
+  // `cursor` until `done` (scripts/reindex-all.mjs loops it).
+  let body: { scope: "all"; cursor?: string } | { scope: "item"; itemId: string };
   try {
     body = await c.req.json();
   } catch {
@@ -52,9 +54,10 @@ app.post("/reindex", async (c) => {
   try {
     const result = body.scope === "item"
       ? await reindexById(c.env, body.itemId)
-      : await reindexAll(c.env);
+      : await reindexStep(c.env, body.cursor);
     return c.json({ ok: true, ...result });
   } catch (e) {
+    if (e instanceof CursorError) return c.json({ error: "invalid_cursor" }, 400);
     return c.json({ error: "reindex_failed", message: (e as Error).message }, 500);
   }
 });

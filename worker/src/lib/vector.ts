@@ -44,7 +44,7 @@ export async function deleteItem(index: VectorizeIndex, itemId: string, maxChunk
   await index.deleteByIds(ids);
 }
 
-const DELETE_BATCH = 100; // Vectorize rejects deleteByIds with more than 100 ids (code 40007)
+export const DELETE_BATCH = 100; // Vectorize rejects deleteByIds with more than 100 ids (code 40007)
 
 // Batched cross-item delete for the bulk reindex: one subrequest per
 // DELETE_BATCH ids instead of one per item.

@@ -375,7 +375,7 @@ Everything below is about the Worker itself, not the app.
 |--------|------|------|---------|
 | `GET` | `/health` | none | `{ "ok": true }` |
 | `POST` | `/chat` | none (20/hour per `sessionId`) | The chat stream (sections 2-3) |
-| `POST` | `/reindex` | `Authorization: Bearer <admin JWT>` | `{ "scope": "all" }` or `{ "scope": "item", "itemId": "..." }` |
+| `POST` | `/reindex` | `Authorization: Bearer <admin JWT>` | `{ "scope": "all", "cursor"?: "..." }` (stepped, [§18](#18-deploy)) or `{ "scope": "item", "itemId": "..." }` |
 | `POST` | `/translate` | `Authorization: Bearer <admin JWT>` (240/hour per token) | Hebrew to ar/en/ru/fr for the admin (section 16) |
 
 Admin auth: the Worker forwards the header to `ADMIN_VERIFY_URL`; a 2xx means
@@ -383,10 +383,13 @@ admin. `/translate` caches a success in the `RL` KV namespace under
 `auth:<sha256 of the token>` for 300 seconds (the raw token is never stored), so a
 revoked token can keep translating for up to 5 minutes.
 
-`/reindex` responses: `scope: "all"` returns `{ ok, upserted, excluded, qa }`
-(vectors written, rows skipped by the exclusions below, Q&A rows in the playbook
-index). `scope: "item"` returns `{ ok, upserted }`, plus `qa` when the item was
-(or used to be) a Q&A row.
+`/reindex` responses: `scope: "all"` does one bounded step of the full reindex
+per call and returns `{ ok, done, cursor?, progress: { phase, processed, total },
+excluded, qa }` (rows skipped by the exclusions below, Q&A rows in the playbook
+index). While `done` is false, call again with the returned `cursor`; the final
+step also carries `upserted` (chunk vectors written by the run). A malformed
+cursor is a 400 `invalid_cursor`. `scope: "item"` returns `{ ok, upserted }`,
+plus `qa` when the item was (or used to be) a Q&A row.
 
 ## 14. What gets indexed
 
@@ -463,9 +466,9 @@ question per language, siblings sharing a `groupId`. `content`:
 }
 ```
 
-**Index.** Not in Vectorize. A full reindex, an item reindex of a Q&A row, and an
-item reindex of an id that was a Q&A row (deleted or unpublished) rebuild one KV
-value, `qa:index:v1` in the `RL` namespace (or the `QA_INDEX_KEY` var, which
+**Index.** Not in Vectorize. A full reindex (its `qa` phase), an item reindex of
+a Q&A row, and an item reindex of an id that was a Q&A row (deleted or
+unpublished) rebuild one KV value, `qa:index:v1` in the `RL` namespace (or the `QA_INDEX_KEY` var, which
 staging sets, [§19](#19-staging)): every `question` and `paraphrase` of
 every published Q&A row embedded with `@cf/baai/bge-m3` (the retrieval model),
 stored as L2-normalized base64 Float32 vectors, plus each row's text. About 5.5KB
@@ -599,18 +602,45 @@ npx wrangler deploy
 # collection (courses, events, papers, team, about, legal...) and the PTSD-IL
 # legal rows, rewrites every chunk with its title header, adds categorySlugs /
 # key / section to the vectors, drops the vectors of excluded rows, and builds
-# the playbook index (chat has no playbooks until it runs).
-curl -X POST https://ptsd-chatbot-worker.ptsd-il.workers.dev/reindex \
-  -H "Authorization: Bearer $ADMIN_JWT" -H "content-type: application/json" \
-  -d '{"scope":"all"}'
+# the playbook index (chat has no playbooks until it runs). From the repo root;
+# the admin JWT comes from ADMIN_TOKEN in .env.admin (or the environment).
+cd ..
+node scripts/reindex-all.mjs
 ```
 
-A full reindex makes about `2 + ceil(chunks / 50) + ceil(vectors / 500) +
-ceil(excluded ids / 500) + ceil(QA texts / 50) + 1` subrequests; on the free plan
-(50 per invocation) a large corpus can hit that cap. Indexing every Metiv
-collection adds roughly 300 chunks per language from the seed (about 1,500 for
-5 languages, so about 31 more embedding calls and 3 more upserts per full
-reindex).
+**Why it is stepped.** The free plan allows 50 subrequests per invocation, and
+fetches, Workers AI calls, Vectorize calls and KV operations all count. The
+corpus (3,000+ chunks, ~2,300 playbook texts, ~2,000 stale ids) needs far more
+than that, so `POST /reindex {"scope":"all"}` does one slice per call and returns
+a `cursor`; `scripts/reindex-all.mjs` calls again with it until `done`, printing
+each step, and retries a failed step up to 3 times with the same cursor.
+
+Each step re-fetches the corpus, rebuilds the same ordered work lists, and
+continues from the cursor's offset through three phases, as many as fit:
+
+| Phase | Work | Subrequests |
+|---|---|---|
+| `qa` | Playbook texts, 100 per embedding call | n embeds, then 1 KV write per step (see below) |
+| `cleanup` | Stale chunk ids of excluded rows | 1 `deleteByIds` per 100 ids |
+| `chunks` | Content chunks, embedded 100 per call, upserted 500 per call | `ceil(n / 100) + ceil(n / 500)` |
+
+A step spends at most `STEP_BUDGET` = 40 subrequests (`ingest.ts`): 3 fixed (the
+admin token check, `/articles`, `/communities`) and 37 of work. That is about
+3,600 playbook texts, 3,700 stale ids, or 3,000 chunks per step, so today's
+corpus takes about 3 steps, and a bigger one only takes more steps.
+
+- **Chat never sees a half-built playbook index.** A playbook build that spans
+  steps writes each step's vectors to its own part key,
+  `<QA_INDEX_KEY>:build:<buildId>:<n>` (1 hour TTL); the step that finishes reads
+  the parts, writes the real key once and deletes the parts. A build that fits
+  one step (today's) writes the real key directly.
+- **Content chunks are upserted in place** (overwrite by id), so a run that stops
+  halfway leaves a usable index: some chunks new, the rest as before. Re-run the
+  script from the start; it is idempotent.
+- **Edits during a run.** The cursor carries a fingerprint of the phase's work
+  list. If content changes so the list shifts (a row added or deleted), the phase
+  starts over on the next step. A text-only edit does not shift it; the admin
+  save reindexes that item anyway.
 
 ## 19. Staging
 
@@ -652,11 +682,10 @@ cd worker
 npx vitest run && npx tsc --noEmit
 npx wrangler deploy --env staging
 # Full reindex of the staging index (and the staging playbook key) from the live
-# DB. $ADMIN_JWT: a token from an admin login on the site (the admin keeps it in
-# sessionStorage).
-curl -X POST https://ptsd-chatbot-worker-staging.ptsd-il.workers.dev/reindex \
-  -H "Authorization: Bearer $ADMIN_JWT" -H "content-type: application/json" \
-  -d '{"scope":"all"}'
+# DB. ADMIN_TOKEN in .env.admin: a token from an admin login on the site (the
+# admin keeps it in sessionStorage).
+cd ..
+node scripts/reindex-all.mjs https://ptsd-chatbot-worker-staging.ptsd-il.workers.dev
 ```
 
 Then point the local site at it with `src/.env.development.local` (ignored by

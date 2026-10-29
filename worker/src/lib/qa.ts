@@ -1,6 +1,6 @@
 import type { Env } from "../index";
 import type { Item } from "./content";
-import { embed } from "./embed";
+import { embed, EMBED_BATCH } from "./embed";
 import { fetchQaItems } from "./api";
 
 // Curated Q&A playbooks (docs/metiv-db-spec.md section 5). Each `chatbot-qa`
@@ -14,7 +14,6 @@ export const QA_INDEX_KEY = "qa:index:v1";
 // The staging Worker shares the production KV namespace, so it keeps its
 // playbook index under its own key (wrangler.toml [env.staging] QA_INDEX_KEY).
 export const qaIndexKey = (env: Pick<Env, "QA_INDEX_KEY">) => env.QA_INDEX_KEY || QA_INDEX_KEY;
-const EMBED_BATCH = 50;
 const MEMO_MS = 60_000; // in-isolate cache; KV edge cache adds up to cacheTtl on top
 const KV_CACHE_TTL = 60;
 
@@ -31,8 +30,8 @@ export type QaRow = {
 // Vectors are L2-normalized Float32, base64-encoded: ~5.5KB per 1024-dim vector
 // against ~20KB as a JSON number array, which keeps the value far under KV's
 // 25MB cap.
-type StoredEntry = { rowId: string; groupId: string; langId: string; crisis: boolean; vector: string };
-type StoredIndex = { v: 1; builtAt: string; entries: StoredEntry[]; rows: Record<string, QaRow> };
+export type QaEntry = { rowId: string; groupId: string; langId: string; crisis: boolean; vector: string };
+type StoredIndex = { v: 1; builtAt: string; entries: QaEntry[]; rows: Record<string, QaRow> };
 
 export type QaIndex = {
   entries: { rowId: string; groupId: string; crisis: boolean; vec: Float32Array }[];
@@ -86,12 +85,19 @@ export function parseQaRow(item: Item): (QaRow & { texts: string[] }) | null {
   };
 }
 
-// Embed every row's texts and overwrite the KV index. An empty row list still
-// writes an empty index, so deleting the last row clears it.
-export async function buildQaIndex(env: Env, items: Item[]): Promise<{ qa: number }> {
-  const parsed = items.map(parseQaRow).filter((r): r is NonNullable<typeof r> => !!r);
-  const jobs = parsed.flatMap((r) => r.texts.map((text) => ({ row: r, text })));
-  const entries: StoredEntry[] = [];
+export type QaJob = { row: ParsedQaRow; text: string };
+type ParsedQaRow = QaRow & { texts: string[] };
+
+// The usable rows and one embedding job per question/paraphrase, in a fixed
+// order (rows as given, texts as listed), so a stepped build can resume by offset.
+export function qaJobs(items: Item[]): { parsed: ParsedQaRow[]; jobs: QaJob[] } {
+  const parsed = items.map(parseQaRow).filter((r): r is ParsedQaRow => !!r);
+  return { parsed, jobs: parsed.flatMap((row) => row.texts.map((text) => ({ row, text }))) };
+}
+
+// ceil(jobs / EMBED_BATCH) Workers AI calls.
+export async function embedQaJobs(env: Env, jobs: QaJob[]): Promise<QaEntry[]> {
+  const entries: QaEntry[] = [];
   for (let i = 0; i < jobs.length; i += EMBED_BATCH) {
     const batch = jobs.slice(i, i + EMBED_BATCH);
     const vectors = await embed(env.AI, batch.map((j) => j.text));
@@ -100,11 +106,23 @@ export async function buildQaIndex(env: Env, items: Item[]): Promise<{ qa: numbe
       crisis: j.row.crisis, vector: encode(unit(vectors[k])),
     }));
   }
+  return entries;
+}
+
+// One KV write of the finished index to the key chat reads.
+export async function writeQaIndex(env: Env, parsed: ParsedQaRow[], entries: QaEntry[]): Promise<void> {
   const rows: Record<string, QaRow> = {};
   for (const { texts: _texts, ...row } of parsed) rows[row.rowId] = row;
   const stored: StoredIndex = { v: 1, builtAt: new Date().toISOString(), entries, rows };
   await env.RL.put(qaIndexKey(env), JSON.stringify(stored));
   memo.get(env.RL)?.delete(qaIndexKey(env));
+}
+
+// Embed every row's texts and overwrite the KV index. An empty row list still
+// writes an empty index, so deleting the last row clears it.
+export async function buildQaIndex(env: Env, items: Item[]): Promise<{ qa: number }> {
+  const { parsed, jobs } = qaJobs(items);
+  await writeQaIndex(env, parsed, await embedQaJobs(env, jobs));
   return { qa: parsed.length };
 }
 

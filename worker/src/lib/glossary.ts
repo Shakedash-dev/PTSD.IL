@@ -29,7 +29,7 @@ export const GLOSSARY: GlossaryEntry[] = [
     ar: "ميتيف - المركز الإسرائيلي للصدمات النفسية",
     ru: "Метив - Израильский центр психотравмы",
     fr: "Metiv - Centre israélien de psychotraumatologie",
-    note: "Proper name, always transliterated, never translated as a word (מטיב also means 'benefactor'). Short form after the first mention: Metiv / ميتيف / Метив / Metiv.",
+    note: "Proper name, always transliterated, never translated as a word (מטיב also means 'benefactor'). Use the short form (Metiv / ميتيف / Метив / Metiv) unless the Hebrew itself spells out the full name (\"מטיב - המרכז הישראלי לטיפול בפסיכוטראומה\"); then use the full form above.",
   },
   {
     he: "מטיב ילדים",

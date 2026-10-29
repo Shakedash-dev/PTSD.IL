@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, afterEach } from "vitest";
 import { isIndexable, isQaItem, METIV_CHATBOT_SLUGS, METIV_COLLECTION_KEYS, EXCLUDED_SLUGS } from "../src/lib/api";
-import { reindexItem, reindexAll, reindexById } from "../src/lib/ingest";
+import { reindexItem, reindexById } from "../src/lib/ingest";
+import { runFullReindex } from "./reindex";
 import { QA_INDEX_KEY } from "../src/lib/qa";
 import type { Item } from "../src/lib/content";
 import { fakeKV } from "./kv";
@@ -85,7 +86,7 @@ const row = (id: string, slugs: string[], content: Record<string, unknown>, lang
   content: JSON.stringify(content), categories: slugs.map((slug) => ({ slug })),
 });
 
-describe("reindexAll exclusions + QA index", () => {
+describe("full reindex exclusions + QA index", () => {
   it("indexes PTSD-IL and chatbot Metiv rows, deletes excluded ones' vectors, builds the QA index", async () => {
     const articles = [
       row("ptsd", ["rights"], { answer: "זכויות" }),
@@ -102,7 +103,7 @@ describe("reindexAll exclusions + QA index", () => {
     const rl = fakeKV();
     const env = { API_BASE: "https://api/x", AI: aiMock(), VECTORIZE: v, RL: rl } as any;
 
-    const out = await reindexAll(env);
+    const out = await runFullReindex(env);
 
     const upserted = (v.upsert.mock.calls[0] as unknown[])[0] as Array<{ id: string; metadata: any }>;
     const ids = new Set(upserted.map((r) => r.metadata.itemId));
@@ -189,7 +190,7 @@ describe("Metiv $ref resolution during ingest", () => {
     const fetchSpy = vi.spyOn(globalThis, "fetch").mockImplementation(async (url: any) =>
       new Response(JSON.stringify(String(url).endsWith("/communities") ? [] : articles), { status: 200 }));
     const v = vectorizeMock();
-    await reindexAll({ API_BASE: "https://api/x", AI: aiMock(), VECTORIZE: v, RL: fakeKV() } as any);
+    await runFullReindex({ API_BASE: "https://api/x", AI: aiMock(), VECTORIZE: v, RL: fakeKV() } as any);
 
     expect(fetchSpy).toHaveBeenCalledTimes(2); // articles + communities, no extra ref fetch
     const rows = (v.upsert.mock.calls[0] as unknown[])[0] as Array<{ metadata: any }>;
