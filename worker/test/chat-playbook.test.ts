@@ -1,8 +1,9 @@
 import { describe, it, expect, vi, afterEach } from "vitest";
-import { handleChat } from "../src/lib/chat";
-import { buildQaIndex } from "../src/lib/qa";
+import { handleChat, selectHits } from "../src/lib/chat";
+import { buildQaIndex, QA_INDEX_KEY } from "../src/lib/qa";
 import { buildContents } from "../src/lib/prompt";
 import type { Item } from "../src/lib/content";
+import type { Hit } from "../src/lib/vector";
 import { fakeKV } from "./kv";
 
 afterEach(() => vi.restoreAllMocks());
@@ -16,6 +17,8 @@ const VEC: Record<string, number[]> = {
   "tell me about cats": [0, 1, 0], // cos 0 -> none
   "i want to die": [0, 0.2, 1],
   "crisis question": [0, 0, 1],
+  "REF-EN": [0.1, 0.2, 0.3], // t-en's retrieval text (its answer)
+  "CRISIS-ANSWER": [0.3, 0.1, 0.2],
 };
 const ai = () => ({ run: async (_m: string, i: { text: string[] }) => ({ data: i.text.map((t) => VEC[t] ?? [0.3, 0.3, 0.3]) }) });
 
@@ -23,17 +26,32 @@ const qa = (id: string, groupId: string, langId: string, c: Record<string, unkno
   id, groupId, langId, type: "article", title: "", content: JSON.stringify(c), categorySlug: "chatbot-qa", categorySlugs: ["chatbot-qa"],
 });
 
-async function envWith(matches: unknown[]) {
+const cos = (a: number[], b: number[]) => {
+  const n = (v: number[]) => Math.hypot(...v);
+  return a.reduce((s, x, i) => s + x * b[i], 0) / (n(a) * n(b));
+};
+
+// Vectorize answers a query with a retrieval-text vector (in `guided`) with
+// those matches, any other query with `matches`.
+async function envWith(matches: unknown[], opts: { guided?: Record<string, unknown[]>; crisisAnswer?: boolean } = {}) {
   const env = {
     AI: ai(),
     RL: fakeKV(),
-    VECTORIZE: { query: async () => ({ matches }) },
+    VECTORIZE: {
+      query: vi.fn(async (v: number[]) => {
+        for (const [text, m] of Object.entries(opts.guided ?? {})) if (cos(v, VEC[text]) > 0.999) return { matches: m };
+        return { matches };
+      }),
+    },
     GEMINI_MODEL: "m", GEMINI_API_KEY: "k",
   } as any;
   await buildQaIndex(env, [
     qa("t-he", "g-treat", "he", { question: "איך מקבלים טיפול", paraphrases: [], guidance: "GUIDANCE-HE", crisis: false }),
     qa("t-en", "g-treat", "en", { question: "how do i get treatment", paraphrases: [], guidance: "GUIDANCE-EN: first X, then Y", answer: "REF-EN", crisis: false }),
-    qa("c-he", "g-crisis", "he", { question: "crisis question", paraphrases: [], guidance: "CRISIS-GUIDANCE: ERAN first", crisis: true }),
+    qa("c-he", "g-crisis", "he", {
+      question: "crisis question", paraphrases: [], guidance: "CRISIS-GUIDANCE: ERAN first", crisis: true,
+      ...(opts.crisisAnswer ? { answer: "CRISIS-ANSWER" } : {}),
+    }),
   ]);
   return env;
 }
@@ -125,6 +143,146 @@ describe("handleChat playbooks", () => {
     const r = await run(env, "where do i find a therapist");
     expect(r.userText).toMatch(/^SOURCES:/);
     expect(r.body).toContain("event: sources");
+  });
+});
+
+const hit = (id: string, score: number, langId = "en", text = `text ${id}`) => ({
+  id, score, metadata: { itemId: id.split(":")[0], groupId: `g-${id}`, type: "article", langId, title: `T ${id}`, text, chunkIndex: Number(id.split(":")[1] ?? 0), categorySlug: "metiv" },
+});
+const sourcesOf = (body: string) => {
+  const frame = body.split("\n\n").find((f) => f.startsWith("event: sources"));
+  return frame ? (JSON.parse(frame.split("\ndata: ")[1]) as { itemId: string; text: string }[]) : [];
+};
+
+describe("playbook-guided retrieval", () => {
+  const METIV = [hit("metiv-contacts:0", 0.62, "en", "METIV PHONE 02-6449666"), hit("metiv-org:0", 0.55, "en", "metiv org")];
+  const OTHER = [hit("sc:0", 0.7), hit("sc:1", 0.68), hit("sc:2", 0.66)];
+
+  it("a strong match runs exactly one extra query, with the row's answer vector, and its hits reach SOURCES", async () => {
+    const env = await envWith(OTHER, { guided: { "REF-EN": METIV } });
+    const r = await run(env, "where do i find a therapist");
+    expect(env.VECTORIZE.query).toHaveBeenCalledTimes(2);
+    const guidedVec = env.VECTORIZE.query.mock.calls[1][0] as number[];
+    expect(cos(guidedVec, VEC["REF-EN"])).toBeGreaterThan(0.999);
+    expect(env.VECTORIZE.query.mock.calls[1][1]).toEqual({ topK: 20, returnMetadata: "all" });
+    expect(r.userText).toContain("METIV PHONE 02-6449666");
+    expect(sourcesOf(r.body).map((s) => s.itemId)).toEqual(["sc", "sc", "sc", "metiv-contacts", "metiv-org"]);
+    const line = r.logs.find((l) => l.startsWith("qa-match "))!;
+    expect(JSON.parse(line.slice("qa-match ".length)).guide).toEqual({ groupId: "g-treat", hits: 2 });
+  });
+
+  it("a weak match and a carried strong match guide retrieval too", async () => {
+    const weak = await envWith(OTHER, { guided: { "REF-EN": METIV } });
+    expect(sourcesOf((await run(weak, "something about treatment maybe")).body).map((s) => s.itemId)).toContain("metiv-contacts");
+    expect(weak.VECTORIZE.query).toHaveBeenCalledTimes(2);
+    vi.restoreAllMocks();
+    const carried = await envWith(OTHER, { guided: { "REF-EN": METIV } });
+    vi.spyOn(globalThis, "fetch").mockImplementation(async () => geminiSSE("answer"));
+    vi.spyOn(console, "log").mockImplementation(() => {});
+    const body = await new Response(handleChat(carried, {
+      messages: [{ role: "user", content: "how do i get treatment" }, { role: "assistant", content: "how old?" }, { role: "user", content: "5" }],
+      lang: "en", sessionId: "s",
+    }).body).text();
+    expect(carried.VECTORIZE.query).toHaveBeenCalledTimes(2);
+    expect(sourcesOf(body).map((s) => s.itemId)).toContain("metiv-contacts");
+  });
+
+  it("no playbook match: no extra query", async () => {
+    const env = await envWith(OTHER, { guided: { "REF-EN": METIV } });
+    const r = await run(env, "tell me about cats");
+    expect(env.VECTORIZE.query).toHaveBeenCalledTimes(1);
+    expect(r.userText).not.toContain("METIV PHONE");
+  });
+
+  it("an index built before retrieval vectors: no extra query, chat as before", async () => {
+    const env = await envWith(OTHER, { guided: { "REF-EN": METIV } });
+    const raw = JSON.parse(env.RL.store.get(QA_INDEX_KEY));
+    delete raw.retrieval;
+    env.RL.store.set(QA_INDEX_KEY, JSON.stringify(raw));
+    const r = await run(env, "where do i find a therapist");
+    expect(env.VECTORIZE.query).toHaveBeenCalledTimes(1);
+    expect(r.userText).toMatch(/^PLAYBOOK:/);
+    expect(sourcesOf(r.body).map((s) => s.itemId)).toEqual(["sc", "sc", "sc"]);
+  });
+
+  it("crisis guides retrieval only when its row has an answer", async () => {
+    const plain = await envWith(OTHER, { guided: { "CRISIS-ANSWER": METIV } });
+    await run(plain, "i want to die");
+    expect(plain.VECTORIZE.query).toHaveBeenCalledTimes(1);
+    vi.restoreAllMocks();
+    const withAnswer = await envWith(OTHER, { guided: { "CRISIS-ANSWER": METIV }, crisisAnswer: true });
+    const r = await run(withAnswer, "i want to die");
+    expect(withAnswer.VECTORIZE.query).toHaveBeenCalledTimes(2);
+    expect(r.userText).toContain("METIV PHONE");
+  });
+
+  it("a failing guided query leaves the user-query SOURCES", async () => {
+    const env = await envWith(OTHER);
+    const q = env.VECTORIZE.query.getMockImplementation();
+    let n = 0;
+    env.VECTORIZE.query.mockImplementation(async (...a: any[]) => {
+      if (n++ === 1) throw new Error("vectorize down");
+      return q(...a);
+    });
+    const r = await run(env, "where do i find a therapist");
+    expect(sourcesOf(r.body).map((s) => s.itemId)).toEqual(["sc", "sc", "sc"]);
+    expect(r.logs.some((l) => l.startsWith("qa-guide-error vectorize down"))).toBe(true);
+  });
+});
+
+describe("selectHits", () => {
+  const h = (id: string, score: number, langId = "en"): Hit => {
+    const r = hit(id, score, langId);
+    return { id: r.id, score: r.score, meta: r.metadata };
+  };
+  const ids = (hs: Hit[]) => hs.map((x) => x.id);
+
+  it("without guided hits it is the plain retrieval (min score, then top 15)", () => {
+    const user = Array.from({ length: 20 }, (_, i) => h(`u${i}:0`, 0.9 - i * 0.01));
+    expect(ids(selectHits(user, [], "en"))).toEqual(ids(user.slice(0, 15)));
+    expect(selectHits([h("a:0", 0.39), h("b:0", 0.4)], [], "en").map((x) => x.id)).toEqual(["b:0"]);
+  });
+
+  it("dedupes by vector id at the higher score", () => {
+    const out = selectHits([h("a:0", 0.5), h("b:0", 0.6), h("c:0", 0.7)], [h("a:0", 0.8), h("c:0", 0.45)], "en");
+    expect(out.map((x) => [x.id, x.score])).toEqual([["a:0", 0.8], ["c:0", 0.7], ["b:0", 0.6]]);
+  });
+
+  it("applies the min score to guided hits too", () => {
+    expect(ids(selectHits([h("a:0", 0.5)], [h("g:0", 0.39)], "en"))).toEqual(["a:0"]);
+  });
+
+  it("language rule runs on the union: 3+ in the user's language, else Hebrew, else all", () => {
+    // 2 English user hits + 1 English guided hit = 3 -> English only.
+    expect(ids(selectHits([h("a:0", 0.9), h("b:0", 0.8), h("he1:0", 0.85, "he")], [h("g:0", 0.5)], "en")))
+      .toEqual(["a:0", "b:0", "g:0"]);
+    // 2 English in all -> Hebrew rows, guided Hebrew rows included.
+    expect(ids(selectHits([h("a:0", 0.9), h("he1:0", 0.85, "he")], [h("g:0", 0.5), h("he2:0", 0.6, "he")], "en")))
+      .toEqual(["he1:0", "he2:0"]);
+    // Neither -> everything.
+    expect(ids(selectHits([h("a:0", 0.9)], [h("r:0", 0.5, "ru")], "en"))).toEqual(["a:0", "r:0"]);
+  });
+
+  it("keeps the top 5 guided hits even when 15 user hits outscore them", () => {
+    const user = Array.from({ length: 20 }, (_, i) => h(`u${i}:0`, 0.9 - i * 0.01));
+    const guided = Array.from({ length: 8 }, (_, i) => h(`g${i}:0`, 0.6 - i * 0.01));
+    const out = selectHits(user, guided, "en");
+    expect(out).toHaveLength(15);
+    expect(ids(out)).toEqual([...ids(user.slice(0, 10)), ...ids(guided.slice(0, 5))]);
+  });
+
+  it("a guided hit that is also a top user hit counts toward the 5 and appears once", () => {
+    const user = Array.from({ length: 20 }, (_, i) => h(`u${i}:0`, 0.9 - i * 0.01));
+    const guided = [h("u0:0", 0.7), ...Array.from({ length: 6 }, (_, i) => h(`g${i}:0`, 0.6 - i * 0.01))];
+    const out = selectHits(user, guided, "en");
+    expect(out).toHaveLength(15);
+    expect(new Set(ids(out)).size).toBe(15);
+    expect(ids(out).filter((x) => x!.startsWith("g"))).toEqual(["g0:0", "g1:0", "g2:0", "g3:0"]);
+  });
+
+  it("falls back to itemId:chunkIndex when a match has no id", () => {
+    const a = { score: 0.5, meta: h("x:0", 0).meta };
+    expect(selectHits([a], [h("x:0", 0.7)], "en")).toHaveLength(1);
   });
 });
 

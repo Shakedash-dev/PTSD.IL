@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
-import { buildQaIndex, loadQaIndex, matchPlaybooks, parseQaRow, thresholds, QA_INDEX_KEY } from "../src/lib/qa";
+import { buildQaIndex, loadQaIndex, matchPlaybooks, parseQaRow, retrievalText, retrievalVector, thresholds, QA_INDEX_KEY } from "../src/lib/qa";
 import type { Item } from "../src/lib/content";
 import { fakeKV } from "./kv";
 
@@ -51,6 +51,29 @@ describe("buildQaIndex", () => {
     expect(raw.entries.every((e: any) => typeof e.vector === "string")).toBe(true);
     expect(raw.rows["t-en"]).toMatchObject({ groupId: "g-treat", langId: "en", guidance: "English guidance", answer: "Ref answer", crisis: false });
     expect(raw.rows["c-he"].crisis).toBe(true);
+  });
+
+  it("embeds one retrieval text per row (answer, else question + first guidance lines), kept out of matching", async () => {
+    const { env, index } = await built();
+    const texts = env.AI.run.mock.calls.flatMap((c: any) => c[1].text);
+    expect(texts).toEqual([
+      "איך מקבלים טיפול", "איך מקבלים טיפול\nהנחיה בעברית",
+      "how do i get treatment", "where can i get therapy", "Ref answer",
+      "אני רוצה למות", "אני רוצה למות\nקודם כל ער\"ן 1201",
+      "what are my rights", "what are my rights\nrights guidance",
+    ]);
+    expect(env.AI.run).toHaveBeenCalledTimes(1); // batched with the matching texts
+    const raw = JSON.parse(env.RL.store.get(QA_INDEX_KEY));
+    expect(Object.keys(raw.retrieval).sort()).toEqual(["c-he", "r-he", "t-en", "t-he"]);
+    expect(raw.entries.some((e: any) => e.retrieval)).toBe(false);
+    expect(index.entries).toHaveLength(5);
+    expect(index.retrieval["t-en"]).toBeInstanceOf(Float32Array);
+  });
+
+  it("retrieval text takes at most the first 3 non-empty guidance lines", () => {
+    const r = { rowId: "x", groupId: "g", langId: "he", question: "Q", guidance: "1. a\n\n2. b\n3. c\n4. d", crisis: false };
+    expect(retrievalText(r)).toBe("Q\n1. a\n2. b\n3. c");
+    expect(retrievalText({ ...r, answer: "A" })).toBe("A");
   });
 
   it("writes an empty index when there are no rows (clears a deleted last row)", async () => {
@@ -111,6 +134,41 @@ describe("matchPlaybooks", () => {
   it("no crisis playbook when the detector did not fire", async () => {
     const { index } = await built();
     expect(matchPlaybooks(index, [0, 0, 1], "he", false, TH).crisisPlaybook).toBeUndefined();
+  });
+});
+
+describe("retrievalVector", () => {
+  it("uses the matched row's own retrieval vector", async () => {
+    const { index } = await built();
+    const m = matchPlaybooks(index, [1, 0, 0], "en", false, TH).playbook!;
+    expect(retrievalVector(index, m)).toEqual(Array.from(index.retrieval["t-en"]));
+  });
+
+  it("crisis: only from a row with an answer, falling back to the Hebrew row's", async () => {
+    const { index } = await built();
+    const crisis = matchPlaybooks(index, [0, 0, 1], "he", true, TH).crisisPlaybook!;
+    expect(retrievalVector(index, crisis)).toBeUndefined(); // c-he has no answer
+    const env = { AI: ai(), RL: fakeKV() } as any;
+    await buildQaIndex(env, [
+      row("c-he", "g-crisis", "he", { question: "אני רוצה למות", guidance: "g", answer: "ערן 1201", crisis: true }),
+      row("c-en", "g-crisis", "en", { question: "i want to die", guidance: "g", crisis: true }),
+    ]);
+    const idx = (await loadQaIndex(env))!;
+    const m = matchPlaybooks(idx, [0, 0, 1], "en", true, TH).crisisPlaybook!;
+    expect(m.row.rowId).toBe("c-en");
+    expect(retrievalVector(idx, m)).toEqual(Array.from(idx.retrieval["c-he"]));
+  });
+
+  it("an index built before retrieval vectors loads and gives none", async () => {
+    const { env } = await built();
+    const raw = JSON.parse(env.RL.store.get(QA_INDEX_KEY));
+    delete raw.retrieval;
+    const old = { AI: ai(), RL: fakeKV({ [QA_INDEX_KEY]: JSON.stringify(raw) }) } as any;
+    const index = (await loadQaIndex(old))!;
+    expect(index.retrieval).toEqual({});
+    const m = matchPlaybooks(index, [1, 0, 0], "en", false, TH).playbook!;
+    expect(m.row.rowId).toBe("t-en");
+    expect(retrievalVector(index, m)).toBeUndefined();
   });
 });
 

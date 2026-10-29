@@ -8,6 +8,9 @@ import { fetchQaItems } from "./api";
 // the retrieval model (bge-m3) and keep the vectors plus the row text in ONE KV
 // value, so a chat request costs a single KV read and no extra AI call (it
 // reuses the query embedding). No Vectorize index is involved.
+// Each row also gets one retrieval vector (its answer, see retrievalText): chat
+// queries Vectorize with the matched row's one, so SOURCES hold the content the
+// playbook needs even when the user's wording ranks it low.
 
 export const QA_INDEX_KEY = "qa:index:v1";
 
@@ -30,13 +33,20 @@ export type QaRow = {
 // Vectors are L2-normalized Float32, base64-encoded: ~5.5KB per 1024-dim vector
 // against ~20KB as a JSON number array, which keeps the value far under KV's
 // 25MB cap.
-export type QaEntry = { rowId: string; groupId: string; langId: string; crisis: boolean; vector: string };
-type StoredIndex = { v: 1; builtAt: string; entries: QaEntry[]; rows: Record<string, QaRow> };
+// `retrieval` marks a row's retrieval vector: it is stored apart from the
+// matching vectors and never scored against the query.
+export type QaEntry = { rowId: string; groupId: string; langId: string; crisis: boolean; vector: string; retrieval?: true };
+// `retrieval` (rowId -> vector) is absent from indexes built before it existed;
+// chat then runs no playbook-guided query.
+type StoredIndex = {
+  v: 1; builtAt: string; entries: QaEntry[]; rows: Record<string, QaRow>; retrieval?: Record<string, string>;
+};
 
 export type QaIndex = {
   entries: { rowId: string; groupId: string; crisis: boolean; vec: Float32Array }[];
   rows: Record<string, QaRow>;
   byGroup: Record<string, Record<string, string>>; // groupId -> langId -> rowId
+  retrieval: Record<string, Float32Array>; // rowId -> retrieval vector
 };
 
 function unit(v: ArrayLike<number>): Float32Array {
@@ -85,14 +95,29 @@ export function parseQaRow(item: Item): (QaRow & { texts: string[] }) | null {
   };
 }
 
-export type QaJob = { row: ParsedQaRow; text: string };
+export type QaJob = { row: ParsedQaRow; text: string; retrieval?: true };
 type ParsedQaRow = QaRow & { texts: string[] };
 
-// The usable rows and one embedding job per question/paraphrase, in a fixed
-// order (rows as given, texts as listed), so a stepped build can resume by offset.
+const GUIDANCE_LINES = 3;
+
+// What a row's content in the vector index looks like: its reference answer,
+// else the question and the first lines of its guidance.
+export function retrievalText(row: QaRow): string {
+  if (row.answer) return row.answer;
+  const lines = row.guidance.split("\n").map((l) => l.trim()).filter(Boolean).slice(0, GUIDANCE_LINES);
+  return [row.question, ...lines].join("\n");
+}
+
+// The usable rows and their embedding jobs in a fixed order (rows as given;
+// per row its question/paraphrases as listed, then its retrieval text), so a
+// stepped build can resume by offset.
 export function qaJobs(items: Item[]): { parsed: ParsedQaRow[]; jobs: QaJob[] } {
   const parsed = items.map(parseQaRow).filter((r): r is ParsedQaRow => !!r);
-  return { parsed, jobs: parsed.flatMap((row) => row.texts.map((text) => ({ row, text }))) };
+  const jobs = parsed.flatMap((row): QaJob[] => [
+    ...row.texts.map((text) => ({ row, text })),
+    { row, text: retrievalText(row), retrieval: true },
+  ]);
+  return { parsed, jobs };
 }
 
 // ceil(jobs / EMBED_BATCH) Workers AI calls.
@@ -103,7 +128,7 @@ export async function embedQaJobs(env: Env, jobs: QaJob[]): Promise<QaEntry[]> {
     const vectors = await embed(env.AI, batch.map((j) => j.text));
     batch.forEach((j, k) => entries.push({
       rowId: j.row.rowId, groupId: j.row.groupId, langId: j.row.langId,
-      crisis: j.row.crisis, vector: encode(unit(vectors[k])),
+      crisis: j.row.crisis, vector: encode(unit(vectors[k])), ...(j.retrieval ? { retrieval: true as const } : {}),
     }));
   }
   return entries;
@@ -113,7 +138,11 @@ export async function embedQaJobs(env: Env, jobs: QaJob[]): Promise<QaEntry[]> {
 export async function writeQaIndex(env: Env, parsed: ParsedQaRow[], entries: QaEntry[]): Promise<void> {
   const rows: Record<string, QaRow> = {};
   for (const { texts: _texts, ...row } of parsed) rows[row.rowId] = row;
-  const stored: StoredIndex = { v: 1, builtAt: new Date().toISOString(), entries, rows };
+  const retrieval: Record<string, string> = {};
+  for (const e of entries) if (e.retrieval) retrieval[e.rowId] = e.vector;
+  const stored: StoredIndex = {
+    v: 1, builtAt: new Date().toISOString(), entries: entries.filter((e) => !e.retrieval), rows, retrieval,
+  };
   await env.RL.put(qaIndexKey(env), JSON.stringify(stored));
   memo.get(env.RL)?.delete(qaIndexKey(env));
 }
@@ -150,6 +179,7 @@ export async function loadQaIndex(env: Env): Promise<QaIndex | null> {
       entries: s.entries.map((e) => ({ rowId: e.rowId, groupId: e.groupId, crisis: e.crisis, vec: decode(e.vector) })),
       rows: s.rows,
       byGroup,
+      retrieval: Object.fromEntries(Object.entries(s.retrieval ?? {}).map(([id, v]) => [id, decode(v)])),
     };
   }
   byKey.set(key, { at: Date.now(), index });
@@ -179,6 +209,19 @@ function rowFor(index: QaIndex, groupId: string, lang: string): QaRow {
   const langs = index.byGroup[groupId] ?? {};
   const id = langs[lang] ?? langs.he ?? Object.values(langs)[0];
   return index.rows[id];
+}
+
+// The retrieval vector for a matched playbook: its own row's (the user's
+// language when the group has one), else the group's Hebrew row's. A crisis
+// playbook only guides retrieval from a row with a reference answer. None for an
+// index built before retrieval vectors existed.
+export function retrievalVector(index: QaIndex, m: PlaybookMatch): number[] | undefined {
+  const ids = [m.row.rowId, index.byGroup[m.row.groupId]?.he];
+  for (const id of ids) {
+    const v = id ? index.retrieval[id] : undefined;
+    if (v && (m.strength !== "crisis" || index.rows[id!]?.answer)) return Array.from(v);
+  }
+  return undefined;
 }
 
 // Score the query against every QA vector, keep the best score per group, and

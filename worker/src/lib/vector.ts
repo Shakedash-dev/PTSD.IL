@@ -19,7 +19,8 @@ export type ChunkMeta = {
   section?: string;
 };
 
-export type Hit = { score: number; meta: ChunkMeta };
+// `id` is the vector id (`<itemId>:<chunkIndex>`).
+export type Hit = { id?: string; score: number; meta: ChunkMeta };
 
 export async function upsertItemChunks(
   index: VectorizeIndex,
@@ -56,5 +57,5 @@ export async function deleteIds(index: VectorizeIndex, ids: string[]): Promise<v
 
 export async function query(index: VectorizeIndex, vector: number[], topK: number): Promise<Hit[]> {
   const res = await index.query(vector, { topK, returnMetadata: "all" });
-  return (res.matches ?? []).map((m) => ({ score: m.score, meta: m.metadata as unknown as ChunkMeta }));
+  return (res.matches ?? []).map((m) => ({ id: m.id, score: m.score, meta: m.metadata as unknown as ChunkMeta }));
 }

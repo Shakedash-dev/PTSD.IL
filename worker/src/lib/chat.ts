@@ -3,14 +3,15 @@ import type { Area, Msg, Playbook } from "./prompt";
 import { recentCrisisMessage } from "./crisis";
 import { detectLang } from "./lang";
 import { embed } from "./embed";
-import { query } from "./vector";
+import { query, type Hit } from "./vector";
 import { buildContents } from "./prompt";
 import { streamGemini } from "./gemini";
-import { loadQaIndex, matchPlaybooks, thresholds, type PlaybookMatch } from "./qa";
+import { loadQaIndex, matchPlaybooks, retrievalVector, thresholds, type PlaybookMatch } from "./qa";
 
 const RETRIEVAL_MIN_SCORE = 0.4;
 const TOP_K_FETCH = 20; // Vectorize caps topK at 20 with returnMetadata:"all"
 const TOP_K_USE = 15;
+const GUIDED_KEEP = 5; // playbook-guided hits always kept, when they pass the filters
 
 const REFUSAL: Record<string, string> = {
   he: "אני יכול לעזור רק בנושאים שמופיעים באתר. אפשר לנסח מחדש?",
@@ -49,6 +50,47 @@ export function previousUserMessage(messages: Msg[]): string | null {
   return text && text !== messages[lastUser].content ? text : null;
 }
 
+const hitKey = (h: Hit) => h.id ?? `${h.meta.itemId}:${h.meta.chunkIndex}`;
+const byScore = (a: Hit, b: Hit) => b.score - a.score;
+
+// SOURCES from the user-query hits and the playbook-guided hits: the union,
+// deduped by vector id at the higher score, filtered by RETRIEVAL_MIN_SCORE and
+// language (the user's language if it has 3+ hits, else Hebrew, else all), then
+// capped at TOP_K_USE by score, keeping the top GUIDED_KEEP guided hits that
+// survived the filters. Without guided hits this is the plain retrieval.
+export function selectHits(user: Hit[], guided: Hit[], lang: string): Hit[] {
+  const best = new Map<string, Hit>();
+  for (const h of [...user, ...guided]) {
+    const cur = best.get(hitKey(h));
+    if (!cur || h.score > cur.score) best.set(hitKey(h), h);
+  }
+  const all = [...best.values()].filter((h) => h.score >= RETRIEVAL_MIN_SCORE).sort(byScore);
+  const sameLang = all.filter((h) => h.meta.langId === lang);
+  const chosen = sameLang.length >= 3 ? sameLang : all.filter((h) => h.meta.langId === "he");
+  const pool = chosen.length ? chosen : all;
+  const inPool = new Map(pool.map((h) => [hitKey(h), h]));
+  const keep = new Set<Hit>();
+  for (const g of [...guided].sort(byScore)) {
+    if (keep.size >= GUIDED_KEEP) break;
+    const h = inPool.get(hitKey(g));
+    if (h) keep.add(h);
+  }
+  const rest = pool.filter((h) => !keep.has(h)).slice(0, TOP_K_USE - keep.size);
+  return [...keep, ...rest].sort(byScore);
+}
+
+// The playbook-guided query is an enhancement too: if it fails, SOURCES come
+// from the user query alone.
+async function guidedQuery(env: Env, vec: number[] | undefined): Promise<Hit[]> {
+  if (!vec) return [];
+  try {
+    return await query(env.VECTORIZE, vec, TOP_K_FETCH);
+  } catch (e) {
+    console.log(`qa-guide-error ${(e as Error).message}`);
+    return [];
+  }
+}
+
 function sse(event: string, data: unknown): string {
   return `event: ${event}\ndata: ${JSON.stringify(data)}\n\n`;
 }
@@ -80,11 +122,10 @@ export function handleChat(env: Env, body: { messages: Msg[]; lang: string; sess
         const qv = vecs[0];
         const prevVec = vecOf(prev);
         const crisisVec = crisisText && crisisText !== last ? vecOf(crisisText) : undefined;
-        const [raw, qaIndex] = await Promise.all([query(env.VECTORIZE, qv, TOP_K_FETCH), safeQaIndex(env)]);
-        const all = raw.filter((h) => h.score >= RETRIEVAL_MIN_SCORE);
-        const sameLang = all.filter((h) => h.meta.langId === lang);
-        const chosen = sameLang.length >= 3 ? sameLang : all.filter((h) => h.meta.langId === "he");
-        const hits = (chosen.length ? chosen : all).slice(0, TOP_K_USE);
+        // The user query runs while the playbook index loads and matches.
+        const userHits = query(env.VECTORIZE, qv, TOP_K_FETCH);
+        userHits.catch(() => {}); // awaited below; this only keeps it from counting as unhandled meanwhile
+        const qaIndex = await safeQaIndex(env);
 
         // Curated playbooks, matched with the same query embedding.
         const th = thresholds(env);
@@ -105,6 +146,19 @@ export function handleChat(env: Env, body: { messages: Msg[]; lang: string; sess
         if (crisisGroup && carried?.row.groupId === crisisGroup) carried = undefined;
         const playbooks = [m.crisisPlaybook, carried, m.playbook].filter((p): p is PlaybookMatch => !!p).map(toPlaybook);
         const strongMatch = (!!m.best && m.best.score >= th.strong) || !!carried;
+
+        // Playbook-guided retrieval: ONE more Vectorize query, with the retrieval
+        // vector (answer) of the first matched playbook that has one, in the
+        // order crisis, carried, current. The playbook's facts often sit in rows
+        // the user's own wording ranks below unrelated ones.
+        const guide = qaIndex
+          ? [m.crisisPlaybook, carried, m.playbook]
+            .filter((p): p is PlaybookMatch => !!p)
+            .map((p) => ({ p, vec: retrievalVector(qaIndex, p) }))
+            .find((g) => g.vec)
+          : undefined;
+        const [raw, guided] = await Promise.all([userHits, guidedQuery(env, guide?.vec)]);
+        const hits = selectHits(raw, guided, lang);
         if (qaIndex) {
           // Not part of the SSE stream: Worker logs only, for threshold tuning.
           console.log(`qa-match ${JSON.stringify({
@@ -112,6 +166,7 @@ export function handleChat(env: Env, body: { messages: Msg[]; lang: string; sess
             used: m.playbook && { groupId: m.playbook.row.groupId, strength: m.playbook.strength },
             carried: carried && { groupId: carried.row.groupId, score: Number(carried.score.toFixed(4)) },
             crisis: m.crisisPlaybook && { groupId: m.crisisPlaybook.row.groupId, score: Number(m.crisisPlaybook.score.toFixed(4)) },
+            guide: guide && { groupId: guide.p.row.groupId, hits: guided.length },
           })}`);
         }
 

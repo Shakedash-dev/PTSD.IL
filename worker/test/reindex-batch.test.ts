@@ -123,7 +123,7 @@ describe("stepped full reindex (POST /reindex scope all)", () => {
       ...Array.from({ length: 3480 }, (_, i) => item(`a${i}`, ["rights"], { answer: `answer text number ${i}` })),
       ...Array.from({ length: 20 }, (_, i) => item(`c${i}`, ["metiv", "metiv-courses"], { _key: `course-${i}`, body: `course ${i}` })),
     ];
-    // 500 Q&A rows x 5 texts = 2,500 playbook texts.
+    // 500 Q&A rows x (5 matching texts + 1 retrieval text) = 3,000 playbook texts.
     const qa = Array.from({ length: 500 }, (_, i) => qaItem(i, 4));
     // 500 navigation rows: 5 stale ids each (1 chunk + margin 4) = 2,500, plus the Q&A rows' own.
     const nav = Array.from({ length: 500 }, (_, i) => item(`n${i}`, ["metiv", "metiv-nav"], { label: `menu ${i}` }));
@@ -162,10 +162,31 @@ describe("stepped full reindex (POST /reindex scope all)", () => {
     expect(t.kvPuts.filter((k) => k === QA_INDEX_KEY)).toHaveLength(1);
     expect(withoutBuiltAt(t.kv.store.get(QA_INDEX_KEY)!)).toEqual(await referenceQa(qa));
     expect([...t.kv.store.keys()]).toEqual([QA_INDEX_KEY]);
+    expect(Object.keys(JSON.parse(t.kv.store.get(QA_INDEX_KEY)!).retrieval)).toHaveLength(500);
+  });
+
+  it("counts the retrieval embeds: 37 work calls fit one step, one more splits the build", async () => {
+    // 600 rows x 6 texts = 3,600 = 36 embeds + 1 index write = 37, the whole work budget.
+    const fits = countingEnv(Array.from({ length: 600 }, (_, i) => qaItem(i, 4)).map(asRaw));
+    const [first] = await loop(fits);
+    expect(first.subrequests).toBe(STEP_BUDGET);
+    expect(fits.embeds).toHaveLength(36);
+    expect(fits.kvPuts).toEqual([QA_INDEX_KEY]);
+    vi.restoreAllMocks();
+
+    // 610 rows x 6 = 3,660 = 37 embeds + 1 write: over, so it goes through a part.
+    const qa = Array.from({ length: 610 }, (_, i) => qaItem(i, 4));
+    const over = countingEnv(qa.map(asRaw));
+    const steps = await loop(over);
+    for (const s of steps) expect(s.subrequests).toBeLessThanOrEqual(STEP_BUDGET);
+    expect(steps[0].json.progress).toMatchObject({ phase: "qa", total: 3660 });
+    expect(over.kvPuts.filter((k) => k === QA_INDEX_KEY)).toHaveLength(1);
+    expect(over.kvPuts.some((k) => k.startsWith(`${QA_INDEX_KEY}:build:`))).toBe(true);
+    expect(withoutBuiltAt(over.kv.store.get(QA_INDEX_KEY)!)).toEqual(await referenceQa(qa));
   });
 
   it("builds a playbook index too big for one call in temporary parts, publishing it only at the end", async () => {
-    // 1,600 rows x 5 texts = 8,000 texts: 80 embedding calls, more than one step.
+    // 1,600 rows x 6 texts = 9,600 texts: 96 embedding calls, more than one step.
     const qa = Array.from({ length: 1600 }, (_, i) => qaItem(i, 4));
     const t = countingEnv([item("a", ["rights"], { answer: "x" }), ...qa].map(asRaw));
     const seen: string[][] = [];
@@ -184,6 +205,7 @@ describe("stepped full reindex (POST /reindex scope all)", () => {
     expect(t.kvPuts.filter((k) => k === QA_INDEX_KEY)).toHaveLength(1);
     expect(withoutBuiltAt(t.kv.store.get(QA_INDEX_KEY)!)).toEqual(await referenceQa(qa));
     expect([...t.kv.store.keys()]).toEqual([QA_INDEX_KEY]); // parts deleted
+    expect(Object.keys(JSON.parse(t.kv.store.get(QA_INDEX_KEY)!).retrieval)).toHaveLength(1600);
   });
 
   it("restarts a phase when the corpus changes under it", async () => {

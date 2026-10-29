@@ -471,8 +471,9 @@ a Q&A row, and an item reindex of an id that was a Q&A row (deleted or
 unpublished) rebuild one KV value, `qa:index:v1` in the `RL` namespace (or the `QA_INDEX_KEY` var, which
 staging sets, [§19](#19-staging)): every `question` and `paraphrase` of
 every published Q&A row embedded with `@cf/baai/bge-m3` (the retrieval model),
-stored as L2-normalized base64 Float32 vectors, plus each row's text. About 5.5KB
-per embedded text; the KV value limit is 25MB (roughly 4,000 texts). A chat
+stored as L2-normalized base64 Float32 vectors, plus each row's text, plus one
+**retrieval vector** per row (below). About 5.5KB per embedded text; the KV value
+limit is 25MB (roughly 4,000 texts, retrieval vectors included). A chat
 request reads it once (in-isolate cache 60s, KV edge cache 60s, so an edit can
 take up to ~2 minutes to reach chat).
 
@@ -507,6 +508,31 @@ messages go in the same embedding call. Retrieval (SOURCES) still uses only the
 latest message.
 If the KV value can't be read, chat carries on without playbooks.
 
+**Playbook-guided retrieval.** A playbook tells the bot what to say, but the
+facts (phone numbers, dates, prices) must come from SOURCES, and the user's
+wording does not always rank the right rows: "איך יוצרים קשר עם מטיב?" ranked
+second-circle "איך לתקשר ביומיום" above `metiv-contacts`, and the bot said the
+details were not available. So each row also has one retrieval vector, the
+embedding of its `answer` (no answer: its `question` plus the first 3 lines of
+`guidance`), stored under `retrieval` in the KV value and never scored for
+matching. When a playbook is used (strong, carried, weak, or the crisis one, but
+crisis only when its row has an `answer`), chat sends ONE more Vectorize query
+(topK 20) with that row's retrieval vector: the user's language row's own, else
+the group's Hebrew row's. With several playbooks the first that has one wins, in
+the order crisis, carried, current. The query starts once the index has loaded
+and runs alongside the user query.
+
+The two hit lists are merged: deduped by vector id at the higher score, the
+same `0.4` minimum score and language rule as before (the user's language if it
+has 3+ hits, else Hebrew, else all) applied to the union, then the top 15 by
+score, with the top 5 guided hits that passed the filters always kept. A failed
+guided query only logs `qa-guide-error` and leaves the user-query hits. An index
+built before retrieval vectors existed has no `retrieval` field: chat runs no
+extra query and behaves exactly as before, so deploy first and reindex after.
+Cost: one extra Vectorize subrequest per chat that uses a playbook, none
+otherwise. So write the `answer` as the content it points to would read: it is
+what pulls that content into SOURCES.
+
 **Tuning.** Every chat writes one Worker log line (not part of the stream):
 
 ```
@@ -514,7 +540,8 @@ qa-match {"best":{"groupId":"...","score":0.8312},"used":{"groupId":"...","stren
 ```
 
 `carried` (`{ groupId, score }`) is added when the previous message's playbook
-was used.
+was used, and `guide` (`{ groupId, hits }`) when a playbook guided retrieval
+(`hits`: what the guided query returned, before filtering).
 
 Watch it with `npx wrangler tail` while asking real questions and their near
 misses. Raise `QA_STRONG` if unrelated questions get a strong playbook; lower it
@@ -608,9 +635,14 @@ cd ..
 node scripts/reindex-all.mjs
 ```
 
+After the deploy that added playbook-guided retrieval ([§15](#15-curated-qa-playbooks)),
+run `node scripts/reindex-all.mjs` once more so the playbook index gets the
+retrieval vectors. Until then chat works as before, without the guided query.
+
 **Why it is stepped.** The free plan allows 50 subrequests per invocation, and
 fetches, Workers AI calls, Vectorize calls and KV operations all count. The
-corpus (3,000+ chunks, ~2,300 playbook texts, ~2,000 stale ids) needs far more
+corpus (3,000+ chunks, ~2,300 playbook texts plus one retrieval text per Q&A
+row, ~2,000 stale ids) needs far more
 than that, so `POST /reindex {"scope":"all"}` does one slice per call and returns
 a `cursor`; `scripts/reindex-all.mjs` calls again with it until `done`, printing
 each step, and retries a failed step up to 3 times with the same cursor.
@@ -620,7 +652,7 @@ continues from the cursor's offset through three phases, as many as fit:
 
 | Phase | Work | Subrequests |
 |---|---|---|
-| `qa` | Playbook texts, 100 per embedding call | n embeds, then 1 KV write per step (see below) |
+| `qa` | Playbook texts (matching texts and each row's retrieval text, in the same batches), 100 per embedding call | n embeds, then 1 KV write per step (see below) |
 | `cleanup` | Stale chunk ids of excluded rows | 1 `deleteByIds` per 100 ids |
 | `chunks` | Content chunks, embedded 100 per call, upserted 500 per call | `ceil(n / 100) + ceil(n / 500)` |
 

@@ -205,7 +205,8 @@ type Plan = ReturnType<typeof planReindex>;
 function phaseWork(plan: Plan, phase: Phase): { total: number; fp: string } {
   if (phase === "qa") {
     const { jobs } = plan.qa();
-    return { total: jobs.length, fp: fingerprint(jobs.map((j) => `${j.row.rowId}\u0000${j.text}`)) };
+    // Matching and retrieval texts alike: both are embedding jobs of the phase.
+    return { total: jobs.length, fp: fingerprint(jobs.map((j) => `${j.row.rowId}\u0000${j.retrieval ? "r\u0000" : ""}${j.text}`)) };
   }
   if (phase === "cleanup") return { total: plan.staleIds().length, fp: fingerprint(plan.staleIds()) };
   const metas = plan.metas();
@@ -223,6 +224,9 @@ type QaPart = { fp: string; from: number; entries: QaEntry[] };
 // deletes the parts. One key per part instead of one growing key: every part is
 // written once and read once, so KV's edge cache can never hand back an older
 // version of it.
+// The jobs are every row's matching texts plus its one retrieval text, embedded
+// together EMBED_BATCH per call, so the retrieval vectors add ceil(rows / 100)
+// calls at most and need no math of their own.
 // Cost: a middle step is n embeds + 1 part write; the finishing step is
 // `parts` reads + the remaining embeds + 1 index write + `parts` deletes.
 async function runQa(env: Env, plan: Plan, cur: Cursor, budget: Budget): Promise<PhaseOut> {
